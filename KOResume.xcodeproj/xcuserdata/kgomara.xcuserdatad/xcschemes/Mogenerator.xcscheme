@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "D6D571F2179363BC00034AF3"
+               BlueprintIdentifier = "D6D571F817937C9100034AF3"
                BuildableName = "Mogenerator"
                BlueprintName = "Mogenerator"
-               ReferencedContainer = "container:KOResume2.xcodeproj">
+               ReferencedContainer = "container:KOResume.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>

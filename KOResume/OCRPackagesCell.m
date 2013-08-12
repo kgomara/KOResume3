@@ -15,77 +15,59 @@
 @synthesize coverLtrButton  = _coverLtrButton;
 @synthesize resumeButton    = _resumeButton;
 
-// TODO - it appears initWithStyle:reuseIdentifier: is never called, but prepareForReuse is...
-// this seems wrong, and I'm not sure what will happen if a cell gets reused a lot - will it register for and
-// get multiple notifications?
-
-//- (id)init
-//{
-//    if ((self = [super init]) == nil) {
-//        return nil;
-//    }
-//    
-//    [self calculateAndSetFonts];
-//    
-//    return self;
-// 
-//}
-//
-////----------------------------------------------------------------------------------------------------------
-//- (id)initWithFrame:(CGRect)frame
-//{
-//    DLog();
-//    
-//    if ((self = [super initWithFrame:frame]) == nil) {
-//        return nil;
-//    }
-//    
-//    [self calculateAndSetFonts];
-//    
-//    return self;
-//}
-////----------------------------------------------------------------------------------------------------------
-//- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-//{
-//    DLog();
-//    
-//    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-//    if (self) {
-//        [[NSNotificationCenter defaultCenter] addObserver: self
-//                                                 selector: @selector(preferredContentSizeChanged:)
-//                                                     name: UIContentSizeCategoryDidChangeNotification
-//                                                   object: nil];
-//        // Initialization code
-//    }
-//    return self;
-//
-//}
 
 //----------------------------------------------------------------------------------------------------------
-- (void)prepareForReuse
+- (void)awakeFromNib
 {
     DLog();
+    
+    [super awakeFromNib];
+    
+    self.backgroundColor = [UIColor darkGrayColor];
+    
+    self.layer.cornerRadius = 5.0f;
+    self.viewForBaselineLayout.layer.cornerRadius = 2.0f;
     
     [[NSNotificationCenter defaultCenter] addObserver: self
                                              selector: @selector(preferredContentSizeChanged:)
                                                  name: UIContentSizeCategoryDidChangeNotification
                                                object: nil];
+
+    [self calculateAndSetFonts];
 }
 
 //----------------------------------------------------------------------------------------------------------
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated
+- (void)dealloc
 {
-    [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
+
+//----------------------------------------------------------------------------------------------------------
+//- (void)prepareForReuse
+//{
+//    DLog();
+//    
+//    self.backgroundColor = [UIColor lightGrayColor];
+//    
+//    self.layer.cornerRadius = 5.;
+////    self.viewForBaselineLayout.layer.cornerRadius = 2.;
+//    
+//}
+
+//----------------------------------------------------------------------------------------------------------
+//- (void)setSelected:(BOOL)selected animated:(BOOL)animated
+//{
+//    [super setSelected:selected animated:animated];
+//
+//    // Configure the view for the selected state
+//}
 
 //----------------------------------------------------------------------------------------------------------
 - (IBAction)coverLtrBtnTapped:(id)sender
 {
     DLog();
     
-    [_delegate coverLtrButtonTapped:(id)sender];
+    [_delegate coverLtrButtonTapped:self];
 }
 
 //----------------------------------------------------------------------------------------------------------
@@ -93,14 +75,16 @@
 {
     DLog();
     
-    [_delegate resumeButtonTapped:(id)sender];
+    [_delegate resumeButtonTapped:self];
 }
 
+//----------------------------------------------------------------------------------------------------------
 - (void)preferredContentSizeChanged:(NSNotification *)aNotification
 {
     [self calculateAndSetFonts];
 }
 
+//----------------------------------------------------------------------------------------------------------
 - (void) calculateAndSetFonts
 {
     DLog();

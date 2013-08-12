@@ -31,7 +31,7 @@
 
 - (void)promptForPackageName;
 - (void)addPackage;
-- (void)configureCell:(UITableViewCell *)cell
+- (void)configureCell:(UICollectionViewCell *)cell
           atIndexPath:(NSIndexPath *)indexPath;
 - (void)configureDefaultNavBar;
 - (BOOL)saveMoc:(NSManagedObjectContext *)moc;
@@ -48,6 +48,8 @@
 //----------------------------------------------------------------------------------------------------------
 - (void)awakeFromNib
 {
+    DLog();
+    
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         self.clearsSelectionOnViewWillAppear = NO;
         self.preferredContentSize = CGSizeMake(320.0, 600.0);
@@ -58,6 +60,7 @@
 //----------------------------------------------------------------------------------------------------------
 - (void)viewDidLoad
 {
+    DLog();
     [super viewDidLoad];
     
     // Set the App name as the Title in the Navigation bar
@@ -327,16 +330,18 @@
 #pragma mark - OCRPackagesCellDelegate methods
 
 //----------------------------------------------------------------------------------------------------------
-- (void)coverLtrButtonTapped:(id)sender
+- (void)coverLtrButtonTapped: (UICollectionViewCell *)aCell
 {
-    DLog();
+    // configureCell:atIndexPath sets the tag on the cell
+    DLog(@"button %d", aCell.tag);
     
 }
 
 //----------------------------------------------------------------------------------------------------------
-- (void)resumeButtonTapped:(id)sender
+- (void)resumeButtonTapped: (UICollectionViewCell *)aCell
 {
-    DLog();
+    // configureCell:atIndexPath sets the tag on the cell
+    DLog(@"button %d", aCell.tag);
     
 }
 
@@ -352,8 +357,8 @@
 
 
 //----------------------------------------------------------------------------------------------------------
-- (NSInteger)tableView:(UITableView *)tableView
- numberOfRowsInSection:(NSInteger)section
+- (NSInteger)collectionView: (UICollectionView *)collectionView
+     numberOfItemsInSection: (NSInteger)section
 {
     DLog(@"section=%d", [[self.fetchedResultsController sections] count]);
     
@@ -371,13 +376,13 @@
 
 
 //----------------------------------------------------------------------------------------------------------
-- (UITableViewCell *)tableView:(UITableView *)tableView
-         cellForRowAtIndexPath:(NSIndexPath *)indexPath
+- (UICollectionViewCell *)collectionView: (UICollectionView *)collectionView
+                  cellForItemAtIndexPath: (NSIndexPath *)indexPath
 {
     DLog();
     
-    OCRPackagesCell *cell = [tableView dequeueReusableCellWithIdentifier: OCRPackagesCellID
-                                                            forIndexPath: indexPath];
+    OCRPackagesCell *cell = (OCRPackagesCell *)[collectionView dequeueReusableCellWithReuseIdentifier: OCRPackagesCellID
+                                                                                         forIndexPath: indexPath];
     
 	// Configure the cell.
     [self configureCell: cell
@@ -387,8 +392,8 @@
 }
 
 //----------------------------------------------------------------------------------------------------------
-- (void)configureCell:(OCRPackagesCell *)cell
-          atIndexPath:(NSIndexPath *)indexPath
+- (void)configureCell: (OCRPackagesCell *)cell
+          atIndexPath: (NSIndexPath *)indexPath
 {
     DLog(@"%@", indexPath.debugDescription);
     
@@ -400,7 +405,8 @@
      The tag property is often used carry identifying information for later use, in our case, we'll use it in the
      button handling routines to know which cover_ltr or resume to segue to.
      */
-    cell.tag            = indexPath.row;
+    cell.tag        = indexPath.row;
+    cell.delegate   = self;
 
     cell.title.text = aPackage.name;
     [cell.resumeButton setTitle: aPackage.resume.name
@@ -411,18 +417,18 @@
                        forState: UIControlStateNormal];
     [cell.coverLtrButton setTitleColor: [UIColor redColor]
                               forState: UIControlStateSelected];
-	cell.accessoryType  = UITableViewCellAccessoryNone;
+//	cell.accessoryType  = UITableViewCellAccessoryNone;
 }
 
 #pragma mark - Table view delegates
 
 //----------------------------------------------------------------------------------------------------------
-- (BOOL)    tableView:(UITableView *)tableView
-canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
+//- (BOOL)    tableView:(UITableView *)tableView
+//canEditRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    // Return NO if you do not want the specified item to be editable.
+//    return YES;
+//}
 
 
 //----------------------------------------------------------------------------------------------------------
@@ -445,45 +451,45 @@ canEditRowAtIndexPath:(NSIndexPath *)indexPath
 
 
 //----------------------------------------------------------------------------------------------------------
-- (BOOL)     tableView:(UITableView *)tableView
-canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return YES;
-}
+//- (BOOL)     tableView:(UITableView *)tableView
+//canMoveRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    return YES;
+//}
 
 
 //----------------------------------------------------------------------------------------------------------
--  (void)tableView:(UITableView *)tableView
-moveRowAtIndexPath:(NSIndexPath *)fromIndexPath
-       toIndexPath:(NSIndexPath *)toIndexPath
-{
-    DLog();
-    
-    NSMutableArray *packages = [[self.fetchedResultsController fetchedObjects] mutableCopy];
-    
-    // Grab the item we're moving.
-    NSManagedObject *movedPackage = [[self fetchedResultsController] objectAtIndexPath: fromIndexPath];
-    
-    // Remove the object we're moving from the array.
-    [packages removeObject: movedPackage];
-    // Now re-insert it at the destination.
-    [packages insertObject: movedPackage
-                   atIndex: toIndexPath.row];
-    
-    // All of the objects are now in their correct order. Update each
-    // object's sequence_number field by iterating through the array.
-    int i = 0;
-    for (Packages *aPackage in packages) {
-        [aPackage setSequence_numberValue: i++];
-    }
-    
-    [self doneButtonTapped];
-}
+//-  (void)tableView:(UITableView *)tableView
+//moveRowAtIndexPath:(NSIndexPath *)fromIndexPath
+//       toIndexPath:(NSIndexPath *)toIndexPath
+//{
+//    DLog();
+//    
+//    NSMutableArray *packages = [[self.fetchedResultsController fetchedObjects] mutableCopy];
+//    
+//    // Grab the item we're moving.
+//    NSManagedObject *movedPackage = [[self fetchedResultsController] objectAtIndexPath: fromIndexPath];
+//    
+//    // Remove the object we're moving from the array.
+//    [packages removeObject: movedPackage];
+//    // Now re-insert it at the destination.
+//    [packages insertObject: movedPackage
+//                   atIndex: toIndexPath.row];
+//    
+//    // All of the objects are now in their correct order. Update each
+//    // object's sequence_number field by iterating through the array.
+//    int i = 0;
+//    for (Packages *aPackage in packages) {
+//        [aPackage setSequence_numberValue: i++];
+//    }
+//    
+//    [self doneButtonTapped];
+//}
 
 
 //----------------------------------------------------------------------------------------------------------
--       (void)tableView:(UITableView *)tableView
-didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+- (void)   collectionView: (UICollectionView *)collectionView
+ didSelectItemAtIndexPath: (NSIndexPath *)indexPath
 {
     DLog();
     
@@ -493,21 +499,55 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
     id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController.sections objectAtIndex:indexPath.section];
     Packages *aPackage  = (Packages *) [sectionInfo.objects objectAtIndex: indexPath.section];
     DLog(@"aPackage.name=%@", aPackage.name);
-
+    
     switch (indexPath.row) {
         case k_cover_ltrRow:
             // setup the cover_ltr view controller and segue to it
             break;
             
         case k_resumeRow:
-        // set up the resume view controller and segue to it
-        break;
+            // set up the resume view controller and segue to it
+            break;
             
         default:
             ALog(@"unexpected row=%d", indexPath.row);
             break;
     }
-    
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+- (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
+    // TODO: Deselect item
+}
+
+
+//-       (void)tableView:(UITableView *)tableView
+//didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    DLog();
+//    
+//    /*
+//     See the comment in - configureCell:atIndexPath: to understand why we are only using the section with fetchedResultsController
+//     */
+//    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController.sections objectAtIndex:indexPath.section];
+//    Packages *aPackage  = (Packages *) [sectionInfo.objects objectAtIndex: indexPath.section];
+//    DLog(@"aPackage.name=%@", aPackage.name);
+//
+//    switch (indexPath.row) {
+//        case k_cover_ltrRow:
+//            // setup the cover_ltr view controller and segue to it
+//            break;
+//            
+//        case k_resumeRow:
+//        // set up the resume view controller and segue to it
+//        break;
+//            
+//        default:
+//            ALog(@"unexpected row=%d", indexPath.row);
+//            break;
+//    }
+
 //    PackagesViewController *packagesViewController = [[[PackagesViewController alloc] initWithNibName: KOPackagesViewController
 //                                                                                               bundle: nil] autorelease];
 //    // Pass the selected object to the new view controller.
@@ -521,7 +561,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
     // Clear the selected row
 //	[self.collectionView deselectRowAtIndexPath: indexPath
 //                                       animated: YES];
-}
+//}
 
 #pragma mark - Seque handling
 

@@ -16,8 +16,8 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "D63D82B8179311350065F0A9"
                BuildableName = "koresume.app"
-               BlueprintName = "KOResume2"
-               ReferencedContainer = "container:KOResume2.xcodeproj">
+               BlueprintName = "KOResume"
+               ReferencedContainer = "container:KOResume.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "D63D82E4179311350065F0A9"
-               BuildableName = "KOResume2Tests.xctest"
-               BlueprintName = "KOResume2Tests"
-               ReferencedContainer = "container:KOResume2.xcodeproj">
+               BuildableName = "KOResumeTests.xctest"
+               BlueprintName = "KOResumeTests"
+               ReferencedContainer = "container:KOResume.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -44,8 +44,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D63D82B8179311350065F0A9"
             BuildableName = "koresume.app"
-            BlueprintName = "KOResume2"
-            ReferencedContainer = "container:KOResume2.xcodeproj">
+            BlueprintName = "KOResume"
+            ReferencedContainer = "container:KOResume.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -63,8 +63,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D63D82B8179311350065F0A9"
             BuildableName = "koresume.app"
-            BlueprintName = "KOResume2"
-            ReferencedContainer = "container:KOResume2.xcodeproj">
+            BlueprintName = "KOResume"
+            ReferencedContainer = "container:KOResume.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -81,8 +81,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D63D82B8179311350065F0A9"
             BuildableName = "koresume.app"
-            BlueprintName = "KOResume2"
-            ReferencedContainer = "container:KOResume2.xcodeproj">
+            BlueprintName = "KOResume"
+            ReferencedContainer = "container:KOResume.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

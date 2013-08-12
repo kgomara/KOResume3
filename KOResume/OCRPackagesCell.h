@@ -9,14 +9,15 @@
 // TODO add protocal definition
 @protocol OCRPackageCellDelegate <NSObject>
 
-- (void)coverLtrButtonTapped:(id)sender;
-- (void)resumeButtonTapped:(id)sender;
+- (void)coverLtrButtonTapped: (UICollectionViewCell *)aCell;
+
+- (void)resumeButtonTapped: (UICollectionViewCell *)aCell;
 
 @end
 
 #import <UIKit/UIKit.h>
 
-@interface OCRPackagesCell : UITableViewCell
+@interface OCRPackagesCell : UICollectionViewCell
 
 @property (nonatomic, strong) IBOutlet UILabel      *title;
 @property (nonatomic, strong) IBOutlet UIButton     *coverLtrButton;
@@ -24,8 +25,8 @@
 
 @property (nonatomic, strong) UIViewController<OCRPackageCellDelegate>      *delegate;
 
-- (IBAction)coverLtrBtnTapped:(id)sender;
-- (IBAction)resumeBtnTapped:(id)sender;
+- (IBAction)coverLtrBtnTapped: (id)sender;
+- (IBAction)resumeBtnTapped: (id)sender;
 
 
 @end

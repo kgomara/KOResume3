@@ -58,6 +58,8 @@
 		D6B4864B1796487C009E6A14 /* Jobs.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D572001793991500034AF3 /* Jobs.m */; };
 		D6B4864C17964881009E6A14 /* Resumes.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D571FE1793991400034AF3 /* Resumes.m */; };
 		D6B4864D17964882009E6A14 /* Resumes.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D571FE1793991400034AF3 /* Resumes.m */; };
+		D6BA20EE17B881E90068F4D9 /* OCRCoverLtrViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6BA20ED17B881E90068F4D9 /* OCRCoverLtrViewController.m */; };
+		D6BA20EF17B881E90068F4D9 /* OCRCoverLtrViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6BA20ED17B881E90068F4D9 /* OCRCoverLtrViewController.m */; };
 		D6D571B11793366000034AF3 /* OCRCoreDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D571B0179335FF00034AF3 /* OCRCoreDataController.m */; };
 		D6D571B71793395F00034AF3 /* GlobalConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D571B31793395F00034AF3 /* GlobalConstants.m */; };
 		D6D571B81793395F00034AF3 /* GlobalConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D571B31793395F00034AF3 /* GlobalConstants.m */; };
@@ -93,10 +95,10 @@
 		D63D82BE179311350065F0A9 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		D63D82C0179311350065F0A9 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		D63D82C2179311350065F0A9 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		D63D82C6179311350065F0A9 /* KOResume2-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "KOResume2-Info.plist"; sourceTree = "<group>"; };
+		D63D82C6179311350065F0A9 /* KOResume-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "KOResume-Info.plist"; sourceTree = "<group>"; };
 		D63D82C8179311350065F0A9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		D63D82CA179311350065F0A9 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		D63D82CC179311350065F0A9 /* KOResume2-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "KOResume2-Prefix.pch"; sourceTree = "<group>"; };
+		D63D82CC179311350065F0A9 /* KOResume-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "KOResume-Prefix.pch"; sourceTree = "<group>"; };
 		D63D82CD179311350065F0A9 /* OCRAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCRAppDelegate.h; sourceTree = "<group>"; };
 		D63D82CE179311350065F0A9 /* OCRAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCRAppDelegate.m; sourceTree = "<group>"; };
 		D63D82D1179311350065F0A9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPhone.storyboard; sourceTree = "<group>"; };
@@ -106,15 +108,17 @@
 		D63D82DC179311350065F0A9 /* OCRDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCRDetailViewController.h; sourceTree = "<group>"; };
 		D63D82DD179311350065F0A9 /* OCRDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCRDetailViewController.m; sourceTree = "<group>"; };
 		D63D82DF179311350065F0A9 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		D63D82E5179311350065F0A9 /* KOResume2Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KOResume2Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D63D82E5179311350065F0A9 /* KOResumeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KOResumeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D63D82E6179311350065F0A9 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		D63D82EF179311350065F0A9 /* KOResume2Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "KOResume2Tests-Info.plist"; sourceTree = "<group>"; };
+		D63D82EF179311350065F0A9 /* KOResumeTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "KOResumeTests-Info.plist"; sourceTree = "<group>"; };
 		D63D82F1179311350065F0A9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		D63D82F3179311350065F0A9 /* KOResumeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KOResumeTests.m; sourceTree = "<group>"; };
 		D63D82FD179312F80065F0A9 /* KOResume.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = KOResume.entitlements; sourceTree = "<group>"; };
 		D6AC3D3C179A3F21001D8D75 /* OCRPackagesCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCRPackagesCell.h; sourceTree = "<group>"; };
 		D6AC3D3D179A3F21001D8D75 /* OCRPackagesCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCRPackagesCell.m; sourceTree = "<group>"; };
 		D6B016B41793C16900B86B8D /* KOResume.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; name = KOResume.sqlite; path = Resources/KOResume.sqlite; sourceTree = "<group>"; };
+		D6BA20EC17B881E90068F4D9 /* OCRCoverLtrViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRCoverLtrViewController.h; path = Classes/OCRCoverLtrViewController.h; sourceTree = "<group>"; };
+		D6BA20ED17B881E90068F4D9 /* OCRCoverLtrViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRCoverLtrViewController.m; path = Classes/OCRCoverLtrViewController.m; sourceTree = "<group>"; };
 		D6D571AF179335FF00034AF3 /* OCRCoreDataController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCRCoreDataController.h; sourceTree = "<group>"; };
 		D6D571B0179335FF00034AF3 /* OCRCoreDataController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCRCoreDataController.m; sourceTree = "<group>"; };
 		D6D571B21793395F00034AF3 /* GlobalConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GlobalConstants.h; path = Classes/GlobalConstants.h; sourceTree = "<group>"; };
@@ -189,7 +193,7 @@
 			isa = PBXGroup;
 			children = (
 				D63D82B9179311350065F0A9 /* koresume.app */,
-				D63D82E5179311350065F0A9 /* KOResume2Tests.xctest */,
+				D63D82E5179311350065F0A9 /* KOResumeTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -227,10 +231,10 @@
 				D6D571B61793395F00034AF3 /* OCAExtensions.m */,
 				D6D571AF179335FF00034AF3 /* OCRCoreDataController.h */,
 				D6D571B0179335FF00034AF3 /* OCRCoreDataController.m */,
-				D63D82C6179311350065F0A9 /* KOResume2-Info.plist */,
+				D63D82C6179311350065F0A9 /* KOResume-Info.plist */,
 				D63D82C7179311350065F0A9 /* InfoPlist.strings */,
 				D63D82CA179311350065F0A9 /* main.m */,
-				D63D82CC179311350065F0A9 /* KOResume2-Prefix.pch */,
+				D63D82CC179311350065F0A9 /* KOResume-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -247,7 +251,7 @@
 		D63D82EE179311350065F0A9 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				D63D82EF179311350065F0A9 /* KOResume2Tests-Info.plist */,
+				D63D82EF179311350065F0A9 /* KOResumeTests-Info.plist */,
 				D63D82F0179311350065F0A9 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
@@ -270,6 +274,8 @@
 				D6D571C11793585E00034AF3 /* DataModel */,
 				D63D82CD179311350065F0A9 /* OCRAppDelegate.h */,
 				D63D82CE179311350065F0A9 /* OCRAppDelegate.m */,
+				D6BA20EC17B881E90068F4D9 /* OCRCoverLtrViewController.h */,
+				D6BA20ED17B881E90068F4D9 /* OCRCoverLtrViewController.m */,
 				D63D82DC179311350065F0A9 /* OCRDetailViewController.h */,
 				D63D82DD179311350065F0A9 /* OCRDetailViewController.m */,
 				D63D82D9179311350065F0A9 /* OCRMasterViewController.h */,
@@ -311,9 +317,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		D63D82B8179311350065F0A9 /* KOResume2 */ = {
+		D63D82B8179311350065F0A9 /* KOResume */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D63D82F7179311350065F0A9 /* Build configuration list for PBXNativeTarget "KOResume2" */;
+			buildConfigurationList = D63D82F7179311350065F0A9 /* Build configuration list for PBXNativeTarget "KOResume" */;
 			buildPhases = (
 				D63D82B5179311350065F0A9 /* Sources */,
 				D63D82B6179311350065F0A9 /* Frameworks */,
@@ -323,14 +329,14 @@
 			);
 			dependencies = (
 			);
-			name = KOResume2;
+			name = KOResume;
 			productName = KOResume;
 			productReference = D63D82B9179311350065F0A9 /* koresume.app */;
 			productType = "com.apple.product-type.application";
 		};
-		D63D82E4179311350065F0A9 /* KOResume2Tests */ = {
+		D63D82E4179311350065F0A9 /* KOResumeTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D63D82FA179311350065F0A9 /* Build configuration list for PBXNativeTarget "KOResume2Tests" */;
+			buildConfigurationList = D63D82FA179311350065F0A9 /* Build configuration list for PBXNativeTarget "KOResumeTests" */;
 			buildPhases = (
 				D63D82E1179311350065F0A9 /* Sources */,
 				D63D82E2179311350065F0A9 /* Frameworks */,
@@ -341,9 +347,9 @@
 			dependencies = (
 				D63D82EC179311350065F0A9 /* PBXTargetDependency */,
 			);
-			name = KOResume2Tests;
+			name = KOResumeTests;
 			productName = KOResumeTests;
-			productReference = D63D82E5179311350065F0A9 /* KOResume2Tests.xctest */;
+			productReference = D63D82E5179311350065F0A9 /* KOResumeTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -369,7 +375,7 @@
 					};
 				};
 			};
-			buildConfigurationList = D63D82B4179311350065F0A9 /* Build configuration list for PBXProject "KOResume2" */;
+			buildConfigurationList = D63D82B4179311350065F0A9 /* Build configuration list for PBXProject "KOResume" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -382,8 +388,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				D63D82B8179311350065F0A9 /* KOResume2 */,
-				D63D82E4179311350065F0A9 /* KOResume2Tests */,
+				D63D82B8179311350065F0A9 /* KOResume */,
+				D63D82E4179311350065F0A9 /* KOResumeTests */,
 				D6D571F817937C9100034AF3 /* Mogenerator */,
 			);
 		};
@@ -444,6 +450,7 @@
 				D6D572171793A78600034AF3 /* _Packages.m in Sources */,
 				D6B4864C17964881009E6A14 /* Resumes.m in Sources */,
 				D6D572111793A78600034AF3 /* _Accomplishments.m in Sources */,
+				D6BA20EE17B881E90068F4D9 /* OCRCoverLtrViewController.m in Sources */,
 				D63D82CF179311350065F0A9 /* OCRAppDelegate.m in Sources */,
 				D6D571B91793395F00034AF3 /* OCAExtensions.m in Sources */,
 				D6D571B11793366000034AF3 /* OCRCoreDataController.m in Sources */,
@@ -466,6 +473,7 @@
 				D6D571B81793395F00034AF3 /* GlobalConstants.m in Sources */,
 				D6D572121793A78600034AF3 /* _Accomplishments.m in Sources */,
 				D6B408131798EA5100C567FF /* OCRCoreDataController.m in Sources */,
+				D6BA20EF17B881E90068F4D9 /* OCRCoverLtrViewController.m in Sources */,
 				D6D571BA1793395F00034AF3 /* OCAExtensions.m in Sources */,
 				D6D572161793A78600034AF3 /* _Jobs.m in Sources */,
 				D6B408141798EA5B00C567FF /* main.m in Sources */,
@@ -488,7 +496,7 @@
 /* Begin PBXTargetDependency section */
 		D63D82EC179311350065F0A9 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = D63D82B8179311350065F0A9 /* KOResume2 */;
+			target = D63D82B8179311350065F0A9 /* KOResume */;
 			targetProxy = D63D82EB179311350065F0A9 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -608,9 +616,9 @@
 				CODE_SIGN_ENTITLEMENTS = KOResume/KOResume.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "KOResume/KOResume2-Prefix.pch";
+				GCC_PREFIX_HEADER = "KOResume/KOResume-Prefix.pch";
 				GENERATE_PKGINFO_FILE = NO;
-				INFOPLIST_FILE = "KOResume/KOResume2-Info.plist";
+				INFOPLIST_FILE = "KOResume/KOResume-Info.plist";
 				PRODUCT_NAME = koresume;
 				WRAPPER_EXTENSION = app;
 			};
@@ -624,9 +632,9 @@
 				CODE_SIGN_ENTITLEMENTS = KOResume/KOResume.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "KOResume/KOResume2-Prefix.pch";
+				GCC_PREFIX_HEADER = "KOResume/KOResume-Prefix.pch";
 				GENERATE_PKGINFO_FILE = NO;
-				INFOPLIST_FILE = "KOResume/KOResume2-Info.plist";
+				INFOPLIST_FILE = "KOResume/KOResume-Info.plist";
 				PRODUCT_NAME = koresume;
 				WRAPPER_EXTENSION = app;
 			};
@@ -647,8 +655,8 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = "KOResumeTests/KOResume2Tests-Info.plist";
-				PRODUCT_NAME = KOResume2Tests;
+				INFOPLIST_FILE = "KOResumeTests/KOResumeTests-Info.plist";
+				PRODUCT_NAME = KOResumeTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -665,8 +673,8 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KOResume/KOResume-Prefix.pch";
-				INFOPLIST_FILE = "KOResumeTests/KOResume2Tests-Info.plist";
-				PRODUCT_NAME = KOResume2Tests;
+				INFOPLIST_FILE = "KOResumeTests/KOResumeTests-Info.plist";
+				PRODUCT_NAME = KOResumeTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -689,7 +697,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		D63D82B4179311350065F0A9 /* Build configuration list for PBXProject "KOResume2" */ = {
+		D63D82B4179311350065F0A9 /* Build configuration list for PBXProject "KOResume" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D63D82F5179311350065F0A9 /* Debug */,
@@ -698,7 +706,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D63D82F7179311350065F0A9 /* Build configuration list for PBXNativeTarget "KOResume2" */ = {
+		D63D82F7179311350065F0A9 /* Build configuration list for PBXNativeTarget "KOResume" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D63D82F8179311350065F0A9 /* Debug */,
@@ -707,7 +715,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D63D82FA179311350065F0A9 /* Build configuration list for PBXNativeTarget "KOResume2Tests" */ = {
+		D63D82FA179311350065F0A9 /* Build configuration list for PBXNativeTarget "KOResumeTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D63D82FB179311350065F0A9 /* Debug */,
