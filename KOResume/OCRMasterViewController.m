@@ -9,7 +9,7 @@
 #import "OCRMasterViewController.h"
 #import "OCRDetailViewController.h"
 #import "OCRAppDelegate.h"
-//#import "PackagesViewController.h"
+#import "OCRCoverLtrViewController.h"
 #import "Packages.h"
 #import "Resumes.h"
 #import <CoreData/CoreData.h>
@@ -333,8 +333,27 @@
 - (void)coverLtrButtonTapped: (UICollectionViewCell *)aCell
 {
     // configureCell:atIndexPath sets the tag on the cell
-    DLog(@"button %d", aCell.tag);
+    DLog(@"tag = %d", aCell.tag);
     
+    UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName: @"Main_iPhone"
+                                                             bundle: nil];
+
+    OCRCoverLtrViewController *coverLtrViewController = [mainStoryboard instantiateViewControllerWithIdentifier: OCACoverLtrID];
+    
+    /*
+     See the comment in - configureCell:atIndexPath: to understand how we are using sender.tag with fetchedResultsController
+     */
+    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController.sections objectAtIndex: aCell.tag];
+    Packages *aPackage  = (Packages *) [sectionInfo.objects objectAtIndex:0];
+    
+    [coverLtrViewController setSelectedPackage:aPackage];
+    [coverLtrViewController setManagedObjectContext: self.managedObjectContext];
+    [coverLtrViewController setFetchedResultsController: self.fetchedResultsController];
+    
+    // Push the cover letter view controller
+    [self presentViewController: coverLtrViewController
+                       animated: YES
+                     completion: nil];
 }
 
 //----------------------------------------------------------------------------------------------------------

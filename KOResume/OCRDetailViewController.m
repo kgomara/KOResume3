@@ -220,7 +220,7 @@ viewForHeaderInSection:(NSInteger)section
     // There is only 1 section, so ignore it.
     switch (indexPath.row) {
 		case kSummaryTableCell: {
-//			CoverLtrViewController *coverLtrViewController = [[CoverLtrViewController alloc] initWithNibName: KOCoverLtrViewController
+//			CoverLtrViewController *coverLtrViewController = [[CoverLtrViewController alloc] initWithNibName: OCACoverLtrViewController
 //                                                                                                      bundle: nil];
 //			coverLtrViewController.title                    = NSLocalizedString(@"Cover Letter", nil);
 //            coverLtrViewController.selectedPackage          = self.selectedPackage;

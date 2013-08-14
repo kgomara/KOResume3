@@ -29,7 +29,7 @@ FOUNDATION_EXPORT NSString *const KOJobsDetailViewController;
 FOUNDATION_EXPORT NSString *const KOEducationViewController;
 FOUNDATION_EXPORT NSString *const KOPackagesViewController;
 FOUNDATION_EXPORT NSString *const KOAccomplishmentsViewController;
-FOUNDATION_EXPORT NSString *const KOCoverLtrViewController;
+FOUNDATION_EXPORT NSString *const OCACoverLtrID;
 FOUNDATION_EXPORT NSString *const KOResumeViewController;
 FOUNDATION_EXPORT NSString *const KOInfoViewController;
 

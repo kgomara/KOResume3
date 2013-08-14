@@ -151,7 +151,7 @@
         <!--Cover Ltr View Controller-->
         <scene sceneID="ccf-jn-Ky2">
             <objects>
-                <viewController id="0K7-yT-4r4" customClass="OCRCoverLtrViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="OCACoverLtrID" useStoryboardIdentifierAsRestorationIdentifier="YES" id="0K7-yT-4r4" customClass="OCRCoverLtrViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="3Yg-ag-1cj"/>
                         <viewControllerLayoutGuide type="bottom" id="6kZ-dw-wUp"/>
@@ -185,6 +185,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
+                    <navigationItem key="navigationItem" id="ZM5-6w-iX5"/>
                     <connections>
                         <outlet property="coverLtrFld" destination="hZU-Kz-Tel" id="bye-xL-acB"/>
                         <outlet property="scrollView" destination="aKP-No-kEf" id="0Xx-4t-kda"/>

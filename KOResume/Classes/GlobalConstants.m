@@ -29,7 +29,7 @@ NSString *const KOJobsDetailViewController                                  = @"
 NSString *const KOEducationViewController                                   = @"EducationViewController";
 NSString *const KOPackagesViewController                                    = @"PackagesViewController";
 NSString *const KOAccomplishmentsViewController                             = @"AccomplishmentViewController";
-NSString *const KOCoverLtrViewController                                    = @"CoverLtrViewController";
+NSString *const OCACoverLtrID                                               = @"OCACoverLtrID";
 NSString *const KOResumeViewController                                      = @"ResumeViewController";
 NSString *const KOInfoViewController                                        = @"InfoViewController";
 
