@@ -2,7 +2,7 @@
 
 @implementation Packages
 
-NSString *const KOPackagesEntity         = @"Packages";
+NSString *const OCRPackagesEntity         = @"Packages";
 
 -(void)logAllFields
 {

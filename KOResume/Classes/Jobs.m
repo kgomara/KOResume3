@@ -4,7 +4,7 @@
 
 @implementation Jobs
 
-NSString *const KOJobsEntity         = @"Jobs";
+NSString *const OCRJobsEntity         = @"Jobs";
 
 -(void)logAllFields
 {

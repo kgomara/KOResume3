@@ -3,7 +3,7 @@
 
 @implementation Accomplishments
 
-NSString *const KOAccomplishmentsEntity      = @"Accomplishments";
+NSString *const OCRAccomplishmentsEntity      = @"Accomplishments";
 
 -(void)logAllFields
 {

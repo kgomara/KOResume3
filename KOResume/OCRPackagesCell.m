@@ -107,26 +107,4 @@
     // TODO - need to change the contentSize/tableCellHeight?
 }
 
-#pragma mark - Seque handling
-
-//----------------------------------------------------------------------------------------------------------
-- (void)prepareForSegue:(UIStoryboardSegue *)segue
-                 sender:(id)sender
-{
-    DLog();
-    
-//    if ([[segue identifier] isEqualToString: @"OCACoverLtrID"]) {
-//        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-//        /*
-//         See the comment in - configureCell:atIndexPath: to understand why we are only using the section with fetchedResultsController
-//         */
-//        id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController.sections objectAtIndex:indexPath.section];
-//        Packages *aPackage  = (Packages *) [sectionInfo.objects objectAtIndex:0];
-//        
-//        [[segue destinationViewController] setSelectedPackage:aPackage];
-//        [[segue destinationViewController] setManagedObjectContext: self.managedObjectContext];
-//        [[segue destinationViewController] setFetchedResultsController: self.fetchedResultsController];
-//    }
-}
-
 @end

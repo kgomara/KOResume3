@@ -71,7 +71,7 @@
     // Register for iCloud notifications
     [[NSNotificationCenter defaultCenter] addObserver: self
                                              selector: @selector(reloadFetchedResults:)
-                                                 name: KOApplicationDidMergeChangesFrom_iCloudNotification
+                                                 name: OCRApplicationDidMergeChangesFrom_iCloudNotification
                                                object: nil];
 }
 
@@ -125,7 +125,12 @@
     DLog();
     
     // get the cover letter into the view
-	self.coverLtrFld.text	= self.selectedPackage.cover_ltr;
+    if (self.selectedPackage.cover_ltr) {
+        self.coverLtrFld.text	= self.selectedPackage.cover_ltr;
+    } else {
+        self.coverLtrFld.text	= @"";
+        [self editButtonTapped];
+    }
 }
 
 
@@ -158,6 +163,7 @@
     // Start an undo group...it will either be commited in saveButtonTapped or
     //    undone in cancelButtonTapped
     [[self.managedObjectContext undoManager] beginUndoGrouping];
+    [self.coverLtrFld becomeFirstResponder];
 }
 
 
@@ -191,7 +197,7 @@
     DLog();
     
     // Undo any changes the user has made
-    [[self.managedObjectContext undoManager] setActionName:KOUndoActionName];
+    [[self.managedObjectContext undoManager] setActionName:OCRUndoActionName];
     [[self.managedObjectContext undoManager] endUndoGrouping];
     
     if ([[self.managedObjectContext undoManager] canUndo]) {

@@ -66,7 +66,7 @@
     // Set an observer for iCloud changes
     [[NSNotificationCenter defaultCenter] addObserver: self
                                              selector: @selector(reloadFetchedResults:)
-                                                 name: KOApplicationDidMergeChangesFrom_iCloudNotification
+                                                 name: OCRApplicationDidMergeChangesFrom_iCloudNotification
                                                object: nil];
 }
 
@@ -151,7 +151,7 @@
 {
     DLog();
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: KOCellID
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: OCRCellID
                                                             forIndexPath: indexPath];
     
 	// Configure the cell.
@@ -232,7 +232,7 @@ viewForHeaderInSection:(NSInteger)section
 			break;
 		}
 		case kResumeTableCell: {
-//			ResumeViewController* resumeViewController = [[ResumeViewController alloc] initWithNibName: KOResumeViewController
+//			ResumeViewController* resumeViewController = [[ResumeViewController alloc] initWithNibName: OCRResumeViewController
 //                                                                                                bundle: nil];
 //			resumeViewController.title                      = NSLocalizedString(@"Resume", nil);
 //            resumeViewController.selectedResume             = self.selectedPackage.resume;

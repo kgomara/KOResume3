@@ -23,11 +23,10 @@
 
 @interface OCRMasterViewController ()
 {
-@private
-    NSString                    *_packageName;
+
 }
 
-@property (nonatomic, strong) NSString                      *packageName;
+@property (nonatomic, strong) NSString  *packageName;
 
 - (void)promptForPackageName;
 - (void)addPackage;
@@ -81,7 +80,7 @@
     // Observe the app delegate telling us when it's finished asynchronously adding the store coordinator
     [[NSNotificationCenter defaultCenter] addObserver: self
                                              selector: @selector(reloadFetchedResults:)
-                                                 name: KOApplicationDidAddPersistentStoreCoordinatorNotification
+                                                 name: OCRApplicationDidAddPersistentStoreCoordinatorNotification
                                                object: nil];
     
     // ...add an observer for Dynamic Text size changes
@@ -94,19 +93,20 @@
     // ...add an observer for asynchronous iCloud merges - not used in this version
     [[NSNotificationCenter defaultCenter] addObserver: self
                                              selector: @selector(reloadFetchedResults:)
-                                                 name: KOApplicationDidMergeChangesFrom_iCloudNotification
+                                                 name: OCRApplicationDidMergeChangesFrom_iCloudNotification
                                                object: nil];
     
     // Push the InfoViewController onto the stack so the user knows we're waiting for the persistentStoreCoordinator
     // to load the database. The user will be able to dismiss it once the coordinator posts an NSNotification
     // indicating we're ready.
-//    InfoViewController *infoViewController = [[[InfoViewController alloc] initWithNibName: KOInfoViewController
+//    InfoViewController *infoViewController = [[[InfoViewController alloc] initWithNibName: OCRInfoViewController
 //                                                                                   bundle: nil] autorelease];
 //    [infoViewController setTitle: NSLocalizedString(@"Loading Database", nil)];
 //    [infoViewController.navigationItem setHidesBackButton: YES];
 //    [self.navigationController pushViewController: infoViewController
 //                                         animated: YES];
     
+    // TODO patch up master/detail business
     self.detailViewController = (OCRDetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
 }
 
@@ -189,17 +189,6 @@
     DLog();
     
     [self.collectionView reloadData];
-//    static const CGFloat cellTitleTextScaleFactor = .85;
-//    static const CGFloat cellBodyTextScaleFactor = .7;
-//    
-//    NSString *cellTitleTextStyle = [self.navigationItem.titleView OCATextStyle];
-//    UIFont *cellTitleFont = [UIFont tkd_preferredFontWithTextStyle:cellTitleTextStyle scale:cellTitleTextScaleFactor];
-//    
-//    NSString *cellBodyTextStyle = [aCell.bodyTextView tkd_textStyle];
-//    UIFont *cellBodyFont = [UIFont tkd_preferredFontWithTextStyle:cellBodyTextStyle scale:cellBodyTextScaleFactor];
-//    
-//    aCell.titleLabel.font = cellTitleFont;
-//    aCell.bodyTextView.font = cellBodyFont;
 }
 
 
@@ -254,7 +243,7 @@
 {
     DLog();
     // Undo any changes the user has made
-    [[self.managedObjectContext undoManager] setActionName: KOUndoActionName];
+    [[self.managedObjectContext undoManager] setActionName: OCRUndoActionName];
     [[self.managedObjectContext undoManager] endUndoGrouping];
     
     if ([[self.managedObjectContext undoManager] canUndo]) {
@@ -274,14 +263,14 @@
 - (void)addPackage
 {
     DLog();
-    Packages *nuPackage = (Packages *)[NSEntityDescription insertNewObjectForEntityForName: KOPackagesEntity
+    Packages *nuPackage = (Packages *)[NSEntityDescription insertNewObjectForEntityForName: OCRPackagesEntity
                                                                     inManagedObjectContext: self.managedObjectContext];
     nuPackage.name                  = self.packageName;
     nuPackage.created_date          = [NSDate date];                    // TODO - need to resequence
     nuPackage.sequence_numberValue  = [[self.fetchedResultsController fetchedObjects] count];
     
     //  Add a Resume for the package
-    Resumes *nuResume  = (Resumes *)[NSEntityDescription insertNewObjectForEntityForName: KOResumesEntity
+    Resumes *nuResume  = (Resumes *)[NSEntityDescription insertNewObjectForEntityForName: OCRResumesEntity
                                                                   inManagedObjectContext: self.managedObjectContext];
     nuResume.name                 = NSLocalizedString(@"Resume", nil);
     nuResume.created_date         = [NSDate date];
@@ -335,25 +324,8 @@
     // configureCell:atIndexPath sets the tag on the cell
     DLog(@"tag = %d", aCell.tag);
     
-    UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName: @"Main_iPhone"
-                                                             bundle: nil];
-
-    OCRCoverLtrViewController *coverLtrViewController = [mainStoryboard instantiateViewControllerWithIdentifier: OCACoverLtrID];
-    
-    /*
-     See the comment in - configureCell:atIndexPath: to understand how we are using sender.tag with fetchedResultsController
-     */
-    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController.sections objectAtIndex: aCell.tag];
-    Packages *aPackage  = (Packages *) [sectionInfo.objects objectAtIndex:0];
-    
-    [coverLtrViewController setSelectedPackage:aPackage];
-    [coverLtrViewController setManagedObjectContext: self.managedObjectContext];
-    [coverLtrViewController setFetchedResultsController: self.fetchedResultsController];
-    
-    // Push the cover letter view controller
-    [self presentViewController: coverLtrViewController
-                       animated: YES
-                     completion: nil];
+    [self performSegueWithIdentifier: OCRCvrLtrSegue
+                              sender: aCell];
 }
 
 //----------------------------------------------------------------------------------------------------------
@@ -385,7 +357,6 @@
      Hardcoded to 2 here because we want to want to show the cover_ltr from Packages (first row)
      and resume (second row).
      */
-
     id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController.sections objectAtIndex:0];
     NSUInteger rows = [sectionInfo numberOfObjects];
     DLog(@"rows=%d", rows);
@@ -418,7 +389,6 @@
     
     id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController.sections objectAtIndex:indexPath.section];
     Packages *aPackage  = (Packages *) [sectionInfo.objects objectAtIndex: indexPath.row];
-    //        Packages *aPackage = (Packages *) [self.fetchedResultsController objectAtIndexPath: indexPath];
     /*
      Set the tag for the cell to the index of the Packages object.
      The tag property is often used carry identifying information for later use, in our case, we'll use it in the
@@ -436,7 +406,6 @@
                        forState: UIControlStateNormal];
     [cell.coverLtrButton setTitleColor: [UIColor redColor]
                               forState: UIControlStateSelected];
-//	cell.accessoryType  = UITableViewCellAccessoryNone;
 }
 
 #pragma mark - Table view delegates
@@ -536,51 +505,12 @@
 
 
 //----------------------------------------------------------------------------------------------------------
-- (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
+- (void)     collectionView: (UICollectionView *)collectionView
+ didDeselectItemAtIndexPath: (NSIndexPath *)indexPath {
     // TODO: Deselect item
 }
 
 
-//-       (void)tableView:(UITableView *)tableView
-//didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    DLog();
-//    
-//    /*
-//     See the comment in - configureCell:atIndexPath: to understand why we are only using the section with fetchedResultsController
-//     */
-//    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController.sections objectAtIndex:indexPath.section];
-//    Packages *aPackage  = (Packages *) [sectionInfo.objects objectAtIndex: indexPath.section];
-//    DLog(@"aPackage.name=%@", aPackage.name);
-//
-//    switch (indexPath.row) {
-//        case k_cover_ltrRow:
-//            // setup the cover_ltr view controller and segue to it
-//            break;
-//            
-//        case k_resumeRow:
-//        // set up the resume view controller and segue to it
-//        break;
-//            
-//        default:
-//            ALog(@"unexpected row=%d", indexPath.row);
-//            break;
-//    }
-
-//    PackagesViewController *packagesViewController = [[[PackagesViewController alloc] initWithNibName: KOPackagesViewController
-//                                                                                               bundle: nil] autorelease];
-//    // Pass the selected object to the new view controller.
-//    packagesViewController.title                    = [[self.fetchedResultsController objectAtIndexPath: indexPath] name];
-//    packagesViewController.selectedPackage          = [self.fetchedResultsController objectAtIndexPath: indexPath];
-//    packagesViewController.managedObjectContext     = self.managedObjectContext;
-//    packagesViewController.fetchedResultsController = self.fetchedResultsController;
-//    [self.navigationController pushViewController: packagesViewController
-//                                         animated: YES];
-    
-    // Clear the selected row
-//	[self.collectionView deselectRowAtIndexPath: indexPath
-//                                       animated: YES];
-//}
 
 #pragma mark - Seque handling
 
@@ -588,15 +518,23 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue
                  sender:(id)sender
 {
-    if ([[segue identifier] isEqualToString:@"showDetail"]) {
-        NSIndexPath *indexPath = [[self.collectionView indexPathsForSelectedItems] lastObject];
-
+    if ([[segue identifier] isEqualToString: OCRCvrLtrSegue]) {
         /*
-         See the comment in - configureCell:atIndexPath: to understand why we are only using the section with fetchedResultsController
+         See the comment in - configureCell:atIndexPath: to understand how we are using sender.tag with fetchedResultsController
          */
-        id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController.sections objectAtIndex:indexPath.section];
-        Packages *aPackage  = (Packages *) [sectionInfo.objects objectAtIndex:0];
-        
+        Packages *aPackage = [self.fetchedResultsController objectAtIndexPath:[NSIndexPath indexPathForRow: [(UICollectionViewCell *)sender tag]
+                                                                                                 inSection: 0]];
+        /*
+         A common strategy for passing data between controller objects is to declare public properties in the receiving object
+         and have the instantiator set those properties.
+         Here we pass the Package represented by the cell the user tapped, as well as the ManagedObjectContext and FetchedResultsController
+         
+         An alternative strategy for data that is global scope by nature would be to set those properties on the UIApplication
+         delegate and reference them as [[[UIApplication sharedApplication] delegate] foo_bar]. In our case, that's perfectly OK for
+         ManagedObjectContext and FetchedResultsController, but probably not for the selected Package.
+         
+         My preference is to minimize globals, hence I pass all three references here.
+         */
         [[segue destinationViewController] setSelectedPackage:aPackage];
         [[segue destinationViewController] setManagedObjectContext: self.managedObjectContext];
         [[segue destinationViewController] setFetchedResultsController: self.fetchedResultsController];
@@ -616,14 +554,14 @@
     
     // Create the fetch request for the entity
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    NSEntityDescription *entity  = [NSEntityDescription entityForName: @"Packages"
+    NSEntityDescription *entity  = [NSEntityDescription entityForName: OCRPackagesEntity
                                                inManagedObjectContext: self.managedObjectContext];
     [fetchRequest setEntity:entity];
     
     // Set the batch size to a suitable number
     [fetchRequest setFetchBatchSize: 25];
     // Sort by package sequence_number
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey: KOSequenceNumberAttributeName
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey: OCRSequenceNumberAttributeName
                                                                    ascending: YES];
     NSArray *sortDescriptors = [[NSArray alloc] initWithObjects: sortDescriptor, nil];
     [fetchRequest setSortDescriptors:sortDescriptors];
@@ -642,9 +580,9 @@
     
 	NSError *error = nil;
 	if (![self.fetchedResultsController performFetch:&error]) {
-	     // Replace this implementation with code to handle the error appropriately.
+	     // TODO Replace this implementation with code to handle the error appropriately.
 	     // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
-	    NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+	    ELog(error, @"Unresolved error");
 	    abort();
 	}
     

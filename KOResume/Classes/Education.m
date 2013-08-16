@@ -3,7 +3,7 @@
 
 @implementation Education
 
-NSString *const KOEducationEntity        = @"Education";
+NSString *const OCREducationEntity        = @"Education";
 
 -(void)logAllFields
 {

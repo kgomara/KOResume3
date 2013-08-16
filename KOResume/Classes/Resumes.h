@@ -2,7 +2,7 @@
 
 @interface Resumes : _Resumes {}
 
-FOUNDATION_EXPORT NSString *const KOResumesEntity;
+FOUNDATION_EXPORT NSString *const OCRResumesEntity;
 
 // TODO - consider make this a Description
 - (void)logAllFields;

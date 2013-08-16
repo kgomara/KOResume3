@@ -6,7 +6,7 @@
 
 @implementation Resumes
 
-NSString *const KOResumesEntity      = @"Resumes";
+NSString *const OCRResumesEntity      = @"Resumes";
 
 -(void)logAllFields
 {

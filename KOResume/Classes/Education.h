@@ -2,7 +2,7 @@
 
 @interface Education : _Education {}
 
-FOUNDATION_EXPORT NSString *const KOEducationEntity;
+FOUNDATION_EXPORT NSString *const OCREducationEntity;
 
 // TODO - consider make this a Description
 - (void)logAllFields;
