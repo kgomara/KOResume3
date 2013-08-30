@@ -1,12 +1,19 @@
 //
-//  OCRMasterViewController.m
+//  OCRPackagesViewController.m
 //  KOResume
 //
 //  Created by Kevin O'Mara on 7/14/13.
 //  Copyright (c) 2013 O'Mara Consulting Associates. All rights reserved.
 //
 
-#import "OCRMasterViewController.h"
+/* Credits:
+ 
+ Akiehl Kahn's "Springboard-like layout with Collection Views" - http://mobile.tutsplus.com/tutorials/iphone/uicollectionview-layouts/
+ 
+ Stan Chang, Khin Boon's "LXReorderableCollectionViewFlowLayout" https://github.com/lxcid/LXReorderableCollectionViewFlowLayout
+ */
+
+#import "OCRPackagesViewController.h"
 #import "OCRDetailViewController.h"
 #import "OCRAppDelegate.h"
 #import "OCRCoverLtrViewController.h"
@@ -21,9 +28,11 @@
 #define k_cover_ltrRow      0
 #define k_resumeRow         1
 
-@interface OCRMasterViewController ()
+@interface OCRPackagesViewController ()
 {
-
+@private
+    NSMutableArray *_sectionChanges;
+    NSMutableArray *_objectChanges;
 }
 
 @property (nonatomic, strong) NSString  *packageName;
@@ -37,7 +46,7 @@
 
 @end
 
-@implementation OCRMasterViewController
+@implementation OCRPackagesViewController
 
 @synthesize managedObjectContext        = _managedObjectContext;
 @synthesize fetchedResultsController    = _fetchedResultsController;
@@ -48,6 +57,8 @@
 - (void)awakeFromNib
 {
     DLog();
+    
+    self.collectionView.collectionViewLayout = [[OCRReorderableCollectionViewFlowLayout alloc] init];
     
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         self.clearsSelectionOnViewWillAppear = NO;
@@ -76,6 +87,7 @@
     [self configureDefaultNavBar];
     
     [self.collectionView setTintColor: [UIColor redColor]];
+    [(UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout setItemSize: CGSizeMake(150.0f, 150.0f)];
     
     // Observe the app delegate telling us when it's finished asynchronously adding the store coordinator
     [[NSNotificationCenter defaultCenter] addObserver: self
@@ -135,6 +147,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     DLog();
+    
     [self.navigationItem setHidesBackButton: NO];
     self.fetchedResultsController.delegate = self;
     
@@ -336,13 +349,14 @@
     
 }
 
-#pragma mark - Table view data source
+#pragma mark - UICollectionView data source
 
 //----------------------------------------------------------------------------------------------------------
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
-    DLog();
-    
+    /*
+     We are hardcoding to 1 here because we want a single section containing all the packages.
+     */
     return 1;
 }
 
@@ -354,8 +368,8 @@
     DLog(@"section=%d", [[self.fetchedResultsController sections] count]);
     
     /*
-     Hardcoded to 2 here because we want to want to show the cover_ltr from Packages (first row)
-     and resume (second row).
+     In our case, we only want a single section, so our fetchedResultsController is set up to retrieve everything
+     in one section, and we just return the number of objects in section[0]
      */
     id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController.sections objectAtIndex:0];
     NSUInteger rows = [sectionInfo numberOfObjects];
@@ -408,72 +422,69 @@
                               forState: UIControlStateSelected];
 }
 
-#pragma mark - Table view delegates
+#pragma mark - UICollectionView delegates
 
 //----------------------------------------------------------------------------------------------------------
-//- (BOOL)    tableView:(UITableView *)tableView
-//canEditRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    // Return NO if you do not want the specified item to be editable.
-//    return YES;
-//}
-
-
-//----------------------------------------------------------------------------------------------------------
-//-  (void)tableView:(UITableView *)tableView
-//commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
-// forRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    DLog();
-//    
-//    if (editingStyle == UITableViewCellEditingStyleDelete) {
-//        // Delete the row from the data source
-//        [self editButtonTapped];
-//        // Delete the managed object at the given index path.
-//        NSManagedObject *packageToDelete = [self.fetchedResultsController objectAtIndexPath: indexPath];
-//        [self.managedObjectContext deleteObject: packageToDelete];
-//        
-//        [self.tableView reloadData];
-//    }
-//}
-
-
-//----------------------------------------------------------------------------------------------------------
-//- (BOOL)     tableView:(UITableView *)tableView
-//canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    return YES;
-//}
+- (void)moveItemAtIndexPath:(NSIndexPath *)indexPath
+                toIndexPath:(NSIndexPath *)newIndexPath
+{
+    DLog();
+    
+    NSMutableArray *packages = [[self.fetchedResultsController fetchedObjects] mutableCopy];
+    
+    // Grab the item we're moving.
+    NSManagedObject *movedPackage = [[self fetchedResultsController] objectAtIndexPath: indexPath];
+    
+    // Remove the object we're moving from the array.
+    [packages removeObject: movedPackage];
+    // Now re-insert it at the destination.
+    [packages insertObject: movedPackage
+                   atIndex: newIndexPath.row];
+    
+    // All of the objects are now in their correct order. Update each
+    // object's sequence_number field by iterating through the array.
+    int i = 0;
+    for (Packages *aPackage in packages) {
+        [aPackage setSequence_numberValue: i++];
+    }
+    
+    [self doneButtonTapped];
+}
 
 
 //----------------------------------------------------------------------------------------------------------
-//-  (void)tableView:(UITableView *)tableView
-//moveRowAtIndexPath:(NSIndexPath *)fromIndexPath
-//       toIndexPath:(NSIndexPath *)toIndexPath
-//{
-//    DLog();
-//    
-//    NSMutableArray *packages = [[self.fetchedResultsController fetchedObjects] mutableCopy];
-//    
-//    // Grab the item we're moving.
-//    NSManagedObject *movedPackage = [[self fetchedResultsController] objectAtIndexPath: fromIndexPath];
-//    
-//    // Remove the object we're moving from the array.
-//    [packages removeObject: movedPackage];
-//    // Now re-insert it at the destination.
-//    [packages insertObject: movedPackage
-//                   atIndex: toIndexPath.row];
-//    
-//    // All of the objects are now in their correct order. Update each
-//    // object's sequence_number field by iterating through the array.
-//    int i = 0;
-//    for (Packages *aPackage in packages) {
-//        [aPackage setSequence_numberValue: i++];
-//    }
-//    
-//    [self doneButtonTapped];
-//}
+- (BOOL)            collectionView:(UICollectionView *)collectionView
+  shouldShowMenuForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    DLog();
+    
+    return YES;
+}
 
+
+//----------------------------------------------------------------------------------------------------------
+- (BOOL)collectionView:(UICollectionView *)collectionView
+      canPerformAction:(SEL)action
+    forItemAtIndexPath:(NSIndexPath *)indexPath
+            withSender:(id)sender
+{
+    DLog(@"action=%@", NSStringFromSelector(action));
+    
+    return NO;
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+- (BOOL)        collectionView:(UICollectionView *)collectionView
+   shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    /*
+     We want the buttons in the collectionView cells to perform all the actions, so we return NO.
+     */
+    DLog();
+    
+    return YES;
+}
 
 //----------------------------------------------------------------------------------------------------------
 - (void)   collectionView: (UICollectionView *)collectionView
@@ -482,34 +493,27 @@
     DLog();
     
     /*
-     See the comment in - configureCell:atIndexPath: to understand why we are only using the section with fetchedResultsController
+     As above, the cells handle all the action, given we return NO above - this method should never be called.
      */
-    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController.sections objectAtIndex:indexPath.section];
-    Packages *aPackage  = (Packages *) [sectionInfo.objects objectAtIndex: indexPath.section];
-    DLog(@"aPackage.name=%@", aPackage.name);
-    
-    switch (indexPath.row) {
-        case k_cover_ltrRow:
-            // setup the cover_ltr view controller and segue to it
-            break;
-            
-        case k_resumeRow:
-            // set up the resume view controller and segue to it
-            break;
-            
-        default:
-            ALog(@"unexpected row=%d", indexPath.row);
-            break;
-    }
 }
 
+#pragma mark - OCRReorderableCollectionViewDelegateFlowLayout methods
 
-//----------------------------------------------------------------------------------------------------------
-- (void)     collectionView: (UICollectionView *)collectionView
- didDeselectItemAtIndexPath: (NSIndexPath *)indexPath {
-    // TODO: Deselect item
+- (void)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout willBeginDraggingItemAtIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"will begin drag");
 }
 
+- (void)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout didBeginDraggingItemAtIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"did begin drag");
+}
+
+- (void)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout willEndDraggingItemAtIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"will end drag");
+}
+
+- (void)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout didEndDraggingItemAtIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"did end drag");
+}
 
 
 #pragma mark - Seque handling
@@ -560,6 +564,7 @@
     
     // Set the batch size to a suitable number
     [fetchRequest setFetchBatchSize: 25];
+    
     // Sort by package sequence_number
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey: OCRSequenceNumberAttributeName
                                                                    ascending: YES];
@@ -567,23 +572,28 @@
     [fetchRequest setSortDescriptors:sortDescriptors];
     
     // Alloc and initialize the controller
+    /*
+     By setting sectionNameKeyPath to nil, we are stating we want everything in a single section
+     */
     NSFetchedResultsController *fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest: fetchRequest
                                                                                                managedObjectContext: self.managedObjectContext
                                                                                                  sectionNameKeyPath: nil
                                                                                                           cacheName: @"Root"];
-    
-    // Edit the section name key path and cache name if appropriate.
-    // nil for section name key path means "no sections".
-//    NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:@"Master"];
+    // Set the delegate as self
     fetchedResultsController.delegate = self;
+    
+    // Save the just created fetchedResultsController as a property of our class
     self.fetchedResultsController = fetchedResultsController;
     
+    // ...and start fetching results
 	NSError *error = nil;
 	if (![self.fetchedResultsController performFetch:&error]) {
-	     // TODO Replace this implementation with code to handle the error appropriately.
-	     // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
+	     /*
+          This is a case where something serious has gone wrong. Let the user know and try to give them some options that might actually help.
+          I'm providing my direct contact information in the hope I can help the user and avoid a bad review.
+          */
 	    ELog(error, @"Unresolved error");
-	    abort();
+	    [OCAExtensions showErrorWithMessage: NSLocalizedString(@"Could not read the database. Try quitting the app. If that fails, try deleting KOResume and restoring from iCould or iTunes backup. Please contact the developer by emailing kevin@omaraconsultingassoc.com", nil)];
 	}
     
     return _fetchedResultsController;
@@ -613,6 +623,8 @@
 
 #pragma mark - Fetched results controller delegate
 
+// TODO need to throughly comment this section
+
 //----------------------------------------------------------------------------------------------------------
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
 {
@@ -623,69 +635,56 @@
 
 
 //----------------------------------------------------------------------------------------------------------
-//- (void)controller:(NSFetchedResultsController *)controller
-//  didChangeSection:(id<NSFetchedResultsSectionInfo>)sectionInfo
-//           atIndex:(NSUInteger)sectionIndex
-//     forChangeType:(NSFetchedResultsChangeType)type
-//{
-//    DLog();
-//    
-//    switch (type) {
-//        case NSFetchedResultsChangeInsert:
-//            [self.collectionView insertSections: [NSIndexSet indexSetWithIndex: sectionIndex]
-//                          withRowAnimation: UITableViewRowAnimationFade];
-//            break;
-//        case NSFetchedResultsChangeDelete:
-//            [self.collectionView deleteSections: [NSIndexSet indexSetWithIndex: sectionIndex]
-//                          withRowAnimation: UITableViewRowAnimationFade];
-//            break;
-//        default:
-//            ALog();
-//            break;
-//    }
-//    
-//    [self.collectionView reloadData];
-//}
+- (void)controller:(NSFetchedResultsController *)controller
+  didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo
+           atIndex:(NSUInteger)sectionIndex
+     forChangeType:(NSFetchedResultsChangeType)type
+{
+    DLog();
+    
+    NSMutableDictionary *change = [NSMutableDictionary new];
+    
+    switch(type) {
+        case NSFetchedResultsChangeInsert:
+            change[@(type)] = @[@(sectionIndex)];
+            break;
+        case NSFetchedResultsChangeDelete:
+            change[@(type)] = @[@(sectionIndex)];
+            break;
+    }
+    
+    [_sectionChanges addObject:change];
+}
+
 
 
 //----------------------------------------------------------------------------------------------------------
-//- (void)controller:(NSFetchedResultsController *)controller
-//   didChangeObject:(id)anObject
-//       atIndexPath:(NSIndexPath *)indexPath
-//     forChangeType:(NSFetchedResultsChangeType)type
-//      newIndexPath:(NSIndexPath *)newIndexPath
-//{
-//    DLog();
-//    
-//    switch (type) {
-//        case NSFetchedResultsChangeInsert:
-//            [self.collectionView insertRowsAtIndexPaths: [NSArray arrayWithObject: newIndexPath]
-//                                  withRowAnimation: UITableViewRowAnimationFade];
-//            break;
-//        case NSFetchedResultsChangeDelete:
-//            [self.collectionView deleteRowsAtIndexPaths: [NSArray arrayWithObject: indexPath]
-//                                  withRowAnimation: UITableViewRowAnimationFade];
-////            // Clear the selected row
-////            [self.tableView deselectRowAtIndexPath: indexPath
-////                                          animated: YES];
-//            break;
-//        case NSFetchedResultsChangeUpdate:
-//            [self collectionView: [self.tableView cellForRowAtIndexPath: indexPath]
-//                    atIndexPath: indexPath];
-//            break;
-//        case NSFetchedResultsChangeMove:
-//            [self.collectionView deleteRowsAtIndexPaths: [NSArray arrayWithObject: indexPath]
-//                                  withRowAnimation: UITableViewRowAnimationFade];
-//            [self.collectionView insertRowsAtIndexPaths: [NSArray arrayWithObject: newIndexPath]
-//                                  withRowAnimation: UITableViewRowAnimationFade];
-//            break;
-//            
-//        default:
-//            break;
-//    }
-//    
-//    [self.tableView reloadData];
-//}
+- (void)controller:(NSFetchedResultsController *)controller
+   didChangeObject:(id)anObject
+       atIndexPath:(NSIndexPath *)indexPath
+     forChangeType:(NSFetchedResultsChangeType)type
+      newIndexPath:(NSIndexPath *)newIndexPath
+{
+    DLog();
+    
+    NSMutableDictionary *change = [NSMutableDictionary new];
+    switch(type) {
+        case NSFetchedResultsChangeInsert:
+            change[@(type)] = newIndexPath;
+            break;
+        case NSFetchedResultsChangeDelete:
+            change[@(type)] = indexPath;
+            break;
+        case NSFetchedResultsChangeUpdate:
+            change[@(type)] = indexPath;
+            break;
+        case NSFetchedResultsChangeMove:
+            change[@(type)] = @[indexPath, newIndexPath];
+            break;
+    }
+    
+    [_objectChanges addObject:change];
+}
 
 
 //----------------------------------------------------------------------------------------------------------
@@ -693,7 +692,59 @@
 {
     DLog();
     
-//    [self.collectionView endUpdates];
+    
+    if ([_sectionChanges count] > 0) {
+        [self.collectionView performBatchUpdates: ^{
+            
+            for (NSDictionary *change in _sectionChanges) {
+                [change enumerateKeysAndObjectsUsingBlock:^(NSNumber *key, id obj, BOOL *stop) {
+                    
+                    NSFetchedResultsChangeType type = [key unsignedIntegerValue];
+                    switch (type) {
+                        case NSFetchedResultsChangeInsert:
+                            [self.collectionView insertSections: [NSIndexSet indexSetWithIndex: [obj unsignedIntegerValue]]];
+                            break;
+                        case NSFetchedResultsChangeDelete:
+                            [self.collectionView deleteSections: [NSIndexSet indexSetWithIndex: [obj unsignedIntegerValue]]];
+                            break;
+                        case NSFetchedResultsChangeUpdate:
+                            [self.collectionView reloadSections: [NSIndexSet indexSetWithIndex: [obj unsignedIntegerValue]]];
+                            break;
+                    }
+                }];
+            }
+        } completion:nil];
+    }
+    
+    if ([_objectChanges count] > 0 && [_sectionChanges count] == 0) {
+        [self.collectionView performBatchUpdates: ^{
+            
+            for (NSDictionary *change in _objectChanges) {
+                [change enumerateKeysAndObjectsUsingBlock: ^(NSNumber *key, id obj, BOOL *stop) {
+                    
+                    NSFetchedResultsChangeType type = [key unsignedIntegerValue];
+                    switch (type) {
+                        case NSFetchedResultsChangeInsert:
+                            [self.collectionView insertItemsAtIndexPaths: @[obj]];
+                            break;
+                        case NSFetchedResultsChangeDelete:
+                            [self.collectionView deleteItemsAtIndexPaths: @[obj]];
+                            break;
+                        case NSFetchedResultsChangeUpdate:
+                            [self.collectionView reloadItemsAtIndexPaths: @[obj]];
+                            break;
+                        case NSFetchedResultsChangeMove:
+                            [self.collectionView moveItemAtIndexPath: obj[0]
+                                                         toIndexPath: obj[1]];
+                            break;
+                    }
+                }];
+            }
+        } completion:nil];
+    }
+    
+    [_sectionChanges removeAllObjects];
+    [_objectChanges removeAllObjects];
 }
 
 //----------------------------------------------------------------------------------------------------------

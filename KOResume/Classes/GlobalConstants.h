@@ -27,7 +27,7 @@ FOUNDATION_EXPORT NSString *const OCRSequenceNumberAttributeName;
 FOUNDATION_EXPORT NSString *const OCRSummaryViewController;
 FOUNDATION_EXPORT NSString *const OCRJobsDetailViewController;
 FOUNDATION_EXPORT NSString *const OCREducationViewController;
-FOUNDATION_EXPORT NSString *const OCRPackagesViewController;
+//FOUNDATION_EXPORT NSString *const OCRPackagesViewController;
 FOUNDATION_EXPORT NSString *const OCRAccomplishmentsViewController;
 FOUNDATION_EXPORT NSString *const OCACoverLtrID;
 FOUNDATION_EXPORT NSString *const OCRResumeViewController;
