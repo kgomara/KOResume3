@@ -10,6 +10,10 @@
 //  https://github.com/lxcid/LXReorderableCollectionViewFlowLayout
 //  Copyright (c) 2012 d--buzz. All rights reserved.
 //
+//  And:
+//  MobileTuts+, Akiel Khan
+//  http://mobile.tutsplus.com/tutorials/iphone/uicollectionview-layouts/
+//
 
 #import "OCRReorderableCollectionViewFlowLayout.h"
 
