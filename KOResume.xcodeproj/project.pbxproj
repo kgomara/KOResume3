@@ -39,6 +39,8 @@
 		D63D82EA179311350065F0A9 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D63D82C2179311350065F0A9 /* CoreData.framework */; };
 		D63D82F2179311350065F0A9 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D63D82F0179311350065F0A9 /* InfoPlist.strings */; };
 		D63D82F4179311350065F0A9 /* KOResumeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D63D82F3179311350065F0A9 /* KOResumeTests.m */; };
+		D667B7EB17D2E88E00FBD6CD /* OCRReorderableLayoutAttributes.m in Sources */ = {isa = PBXBuildFile; fileRef = D667B7EA17D2E88E00FBD6CD /* OCRReorderableLayoutAttributes.m */; };
+		D667B7EC17D2E88E00FBD6CD /* OCRReorderableLayoutAttributes.m in Sources */ = {isa = PBXBuildFile; fileRef = D667B7EA17D2E88E00FBD6CD /* OCRReorderableLayoutAttributes.m */; };
 		D6A8EEC817CEE30F00A8C6DA /* OCRReorderableCollectionViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = D6A8EEC717CEE30F00A8C6DA /* OCRReorderableCollectionViewFlowLayout.m */; };
 		D6A8EEC917CEE30F00A8C6DA /* OCRReorderableCollectionViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = D6A8EEC717CEE30F00A8C6DA /* OCRReorderableCollectionViewFlowLayout.m */; };
 		D6AC3D3E179A3F21001D8D75 /* OCRPackagesCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D6AC3D3D179A3F21001D8D75 /* OCRPackagesCell.m */; };
@@ -116,6 +118,8 @@
 		D63D82F1179311350065F0A9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		D63D82F3179311350065F0A9 /* KOResumeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KOResumeTests.m; sourceTree = "<group>"; };
 		D63D82FD179312F80065F0A9 /* KOResume.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = KOResume.entitlements; sourceTree = "<group>"; };
+		D667B7E917D2E88E00FBD6CD /* OCRReorderableLayoutAttributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRReorderableLayoutAttributes.h; path = Classes/OCRReorderableLayoutAttributes.h; sourceTree = "<group>"; };
+		D667B7EA17D2E88E00FBD6CD /* OCRReorderableLayoutAttributes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRReorderableLayoutAttributes.m; path = Classes/OCRReorderableLayoutAttributes.m; sourceTree = "<group>"; };
 		D6A8EEC617CEE30F00A8C6DA /* OCRReorderableCollectionViewFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRReorderableCollectionViewFlowLayout.h; path = Classes/OCRReorderableCollectionViewFlowLayout.h; sourceTree = "<group>"; };
 		D6A8EEC717CEE30F00A8C6DA /* OCRReorderableCollectionViewFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRReorderableCollectionViewFlowLayout.m; path = Classes/OCRReorderableCollectionViewFlowLayout.m; sourceTree = "<group>"; };
 		D6AC3D3C179A3F21001D8D75 /* OCRPackagesCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCRPackagesCell.h; sourceTree = "<group>"; };
@@ -282,12 +286,14 @@
 				D6BA20ED17B881E90068F4D9 /* OCRCoverLtrViewController.m */,
 				D63D82DC179311350065F0A9 /* OCRDetailViewController.h */,
 				D63D82DD179311350065F0A9 /* OCRDetailViewController.m */,
-				D63D82D9179311350065F0A9 /* OCRPackagesViewController.h */,
-				D63D82DA179311350065F0A9 /* OCRPackagesViewController.m */,
 				D6AC3D3C179A3F21001D8D75 /* OCRPackagesCell.h */,
 				D6AC3D3D179A3F21001D8D75 /* OCRPackagesCell.m */,
+				D63D82D9179311350065F0A9 /* OCRPackagesViewController.h */,
+				D63D82DA179311350065F0A9 /* OCRPackagesViewController.m */,
 				D6A8EEC617CEE30F00A8C6DA /* OCRReorderableCollectionViewFlowLayout.h */,
 				D6A8EEC717CEE30F00A8C6DA /* OCRReorderableCollectionViewFlowLayout.m */,
+				D667B7E917D2E88E00FBD6CD /* OCRReorderableLayoutAttributes.h */,
+				D667B7EA17D2E88E00FBD6CD /* OCRReorderableLayoutAttributes.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -460,6 +466,7 @@
 				D63D82CF179311350065F0A9 /* OCRAppDelegate.m in Sources */,
 				D6A8EEC817CEE30F00A8C6DA /* OCRReorderableCollectionViewFlowLayout.m in Sources */,
 				D6D571B91793395F00034AF3 /* OCAExtensions.m in Sources */,
+				D667B7EB17D2E88E00FBD6CD /* OCRReorderableLayoutAttributes.m in Sources */,
 				D6D571B11793366000034AF3 /* OCRCoreDataController.m in Sources */,
 				D63D82DE179311350065F0A9 /* OCRDetailViewController.m in Sources */,
 				D6AC3D3E179A3F21001D8D75 /* OCRPackagesCell.m in Sources */,
@@ -476,6 +483,7 @@
 			files = (
 				D6B408121798E9F600C567FF /* OCRDetailViewController.m in Sources */,
 				D6B408101798E9DF00C567FF /* OCRPackagesViewController.m in Sources */,
+				D667B7EC17D2E88E00FBD6CD /* OCRReorderableLayoutAttributes.m in Sources */,
 				D6B4864B1796487C009E6A14 /* Jobs.m in Sources */,
 				D6D571B81793395F00034AF3 /* GlobalConstants.m in Sources */,
 				D6D572121793A78600034AF3 /* _Accomplishments.m in Sources */,

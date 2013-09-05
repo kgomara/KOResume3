@@ -199,6 +199,15 @@
 
 @end
 
+@implementation NSIndexPath (StringForCollection)
+
+-(NSString *)stringForCollection
+{
+    return [NSString stringWithFormat:@"%d-%d",self.section,self.row];
+}
+
+@end
+
 @implementation UIFont (OCAExtensions)
 
 //----------------------------------------------------------------------------------------------------------

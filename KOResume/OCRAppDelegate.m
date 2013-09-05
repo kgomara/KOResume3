@@ -32,20 +32,22 @@
         ALog(@"Could not get managedObjectContext");
         NSString *msg = NSLocalizedString(@"Failed to open database.", nil);
         [OCAExtensions showErrorWithMessage: msg];
-        abort();
     }
     
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-        UISplitViewController *splitViewController      = (UISplitViewController *)self.window.rootViewController;
-        UINavigationController *navigationController    = [splitViewController.viewControllers lastObject];
-        splitViewController.delegate                    = (id)navigationController.topViewController;
+        // Setup Master-Detail controller paradigm for iPad
+        UISplitViewController *splitViewController          = (UISplitViewController *)self.window.rootViewController;
+        UINavigationController *navigationController        = [splitViewController.viewControllers lastObject];
+        splitViewController.delegate                        = (id)navigationController.topViewController;
         
+        // ...and setup OCRPackagesViewController as Master
         UINavigationController *masterNavigationController  = splitViewController.viewControllers[0];
-        OCRPackagesViewController *controller                 = (OCRPackagesViewController *)masterNavigationController.topViewController;
+        OCRPackagesViewController *controller               = (OCRPackagesViewController *)masterNavigationController.topViewController;
         controller.managedObjectContext                     = self.managedObjectContext;
     } else {
+        // ...setup navigationController paradigm for iPhone
         UINavigationController *navigationController    = (UINavigationController *)self.window.rootViewController;
-        OCRPackagesViewController *controller             = (OCRPackagesViewController *)navigationController.topViewController;
+        OCRPackagesViewController *controller           = (OCRPackagesViewController *)navigationController.topViewController;
         controller.managedObjectContext                 = self.managedObjectContext;
     }
     return YES;

@@ -37,6 +37,13 @@
 
 @end
 
+@interface NSIndexPath (KOExtensions)
+
+-(NSString *)stringForCollection;
+
+@end
+
+
 /*
  * These categories are taken from the TextKitDemo code provided by Apple
  * and are covered by their license agreement, which follows:

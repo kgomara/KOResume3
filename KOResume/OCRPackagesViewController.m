@@ -51,6 +51,8 @@
 @synthesize managedObjectContext        = _managedObjectContext;
 @synthesize fetchedResultsController    = _fetchedResultsController;
 
+BOOL isEditModeActive;
+
 #pragma mark - View lifecycle
 
 //----------------------------------------------------------------------------------------------------------
@@ -58,12 +60,24 @@
 {
     DLog();
     
-    self.collectionView.collectionViewLayout = [[OCRReorderableCollectionViewFlowLayout alloc] init];
+    // Allocate our customer collectionView layout
+    OCRReorderableCollectionViewFlowLayout *layout = [[OCRReorderableCollectionViewFlowLayout alloc] init];
+    // ...set some parameters to control its behavior
+    layout.minimumInteritemSpacing  = 6;
+    layout.minimumLineSpacing       = 6;
+    layout.scrollDirection          = UICollectionViewScrollDirectionHorizontal;
+    layout.sectionInset             = UIEdgeInsetsMake(5, 5, 5, 5);
+    
+    // Set our layout on the collectionView
+    self.collectionView.collectionViewLayout = layout;
+    // ...and set the collectionView into paging mode
+    self.collectionView.pagingEnabled = YES;
     
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         self.clearsSelectionOnViewWillAppear = NO;
         self.preferredContentSize = CGSizeMake(320.0, 600.0);
     }
+    
     [super awakeFromNib];
 }
 
@@ -337,9 +351,15 @@
     // configureCell:atIndexPath sets the tag on the cell
     DLog(@"tag = %d", aCell.tag);
     
-    [self performSegueWithIdentifier: OCRCvrLtrSegue
-                              sender: aCell];
+    // Check to see if we're in editMode
+    if (isEditModeActive) {
+        // ignore the tap
+    } else {
+        [self performSegueWithIdentifier: OCRCvrLtrSegue
+                                  sender: aCell];
+    }
 }
+
 
 //----------------------------------------------------------------------------------------------------------
 - (void)resumeButtonTapped: (UICollectionViewCell *)aCell
@@ -347,6 +367,29 @@
     // configureCell:atIndexPath sets the tag on the cell
     DLog(@"button %d", aCell.tag);
     
+    // Check to see if we're in editMode
+    if (isEditModeActive) {
+        // ignore the tap
+    } else {
+        // perform segue
+    }
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+- (void)deleteButtonTapped: (UICollectionViewCell *)aCell
+{
+    // configureCell:atIndexPath sets the tag on the cell
+    DLog(@"button %d", aCell.tag);
+    
+    // We shouldn't get here if we're not editing, but...
+    if (isEditModeActive) {
+        // TODO implement an alertview for confirmation before actually deleting
+//    NSIndexPath *indexPath = [self.collectionView indexPathForCell: (OCRPackagesCell *)aCell.superview.superview];
+//    [self.collectionView deleteItemsAtIndexPaths: [NSArray arrayWithObject: indexPath]];
+    } else {
+        ALog(@"[ERROR] delete button tapped while editMode false");
+    }
 }
 
 #pragma mark - UICollectionView data source
@@ -420,6 +463,11 @@
                        forState: UIControlStateNormal];
     [cell.coverLtrButton setTitleColor: [UIColor redColor]
                               forState: UIControlStateSelected];
+    if (isEditModeActive) {
+        [cell.deleteButton setHidden: NO];
+    } else {
+        [cell.deleteButton setHidden: YES];
+    }
 }
 
 #pragma mark - UICollectionView delegates
@@ -483,14 +531,18 @@
      */
     DLog();
     
-    return YES;
+    if (isEditModeActive) {
+        return NO;
+    } else {
+        return YES;
+    }
 }
 
 //----------------------------------------------------------------------------------------------------------
 - (void)   collectionView: (UICollectionView *)collectionView
  didSelectItemAtIndexPath: (NSIndexPath *)indexPath
 {
-    DLog();
+    DLog(@"Don't think this should be called");
     
     /*
      As above, the cells handle all the action, given we return NO above - this method should never be called.
@@ -499,20 +551,59 @@
 
 #pragma mark - OCRReorderableCollectionViewDelegateFlowLayout methods
 
-- (void)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout willBeginDraggingItemAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"will begin drag");
+//----------------------------------------------------------------------------------------------------------
+- (void) didBeginEditingForCollectionView: (UICollectionView *)collectionView
+                                   layout: (UICollectionViewLayout*)collectionViewLayout
+{
+    DLog();
+    
+    isEditModeActive = YES;
 }
 
-- (void)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout didBeginDraggingItemAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"did begin drag");
+
+//----------------------------------------------------------------------------------------------------------
+- (void) didEndEditingForCollectionView: (UICollectionView *)collectionView
+                                 layout: (UICollectionViewLayout*)collectionViewLayout
+{
+    DLog();
+    
+    isEditModeActive = NO;
 }
 
-- (void)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout willEndDraggingItemAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"will end drag");
+
+//----------------------------------------------------------------------------------------------------------
+- (void)            collectionView: (UICollectionView *)collectionView
+                            layout: (UICollectionViewLayout *)collectionViewLayout
+  willBeginDraggingItemAtIndexPath: (NSIndexPath *)indexPath
+{
+    DLog(@"will begin drag");
 }
 
-- (void)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout didEndDraggingItemAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"did end drag");
+
+//----------------------------------------------------------------------------------------------------------
+- (void)            collectionView: (UICollectionView *)collectionView
+                            layout: (UICollectionViewLayout *)collectionViewLayout
+   didBeginDraggingItemAtIndexPath: (NSIndexPath *)indexPath
+{
+    DLog(@"did begin drag");
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+- (void)        collectionView:(UICollectionView *)collectionView
+                        layout:(UICollectionViewLayout *)collectionViewLayout
+willEndDraggingItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    DLog(@"will end drag");
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+- (void)        collectionView:(UICollectionView *)collectionView
+                        layout:(UICollectionViewLayout *)collectionViewLayout
+ didEndDraggingItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    DLog(@"did end drag");
 }
 
 

@@ -15,17 +15,17 @@
 
 @interface OCRReorderableCollectionViewFlowLayout : UICollectionViewFlowLayout <UIGestureRecognizerDelegate>
 
-@property (assign, nonatomic) CGFloat                                   scrollingSpeed;
-@property (assign, nonatomic) UIEdgeInsets                              scrollingTriggerEdgeInsets;
+@property (assign, nonatomic)           CGFloat                         scrollingSpeed;
+@property (assign, nonatomic)           UIEdgeInsets                    scrollingTriggerEdgeInsets;
 @property (strong, nonatomic, readonly) UILongPressGestureRecognizer    *longPressGestureRecognizer;
 @property (strong, nonatomic, readonly) UIPanGestureRecognizer          *panGestureRecognizer;
+@property (strong, nonatomic, readonly) UITapGestureRecognizer          *tapGestureRecognizer;
 
 @end
 
 @protocol OCRReorderableCollectionViewDataSource <UICollectionViewDataSource>
 
 @optional
-
 - (void)collectionView: (UICollectionView *)collectionView
        itemAtIndexPath: (NSIndexPath *)fromIndexPath
    willMoveToIndexPath: (NSIndexPath *)toIndexPath;
@@ -44,6 +44,15 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath;
 @end
 
 @protocol OCRReorderableCollectionViewDelegateFlowLayout <UICollectionViewDelegateFlowLayout>
+
+@required
+
+- (void)didBeginEditingForCollectionView: (UICollectionView *)collectionView
+                                  layout: (UICollectionViewLayout *)collectionViewLayout;
+
+- (void)didEndEditingForCollectionView: (UICollectionView *)collectionView
+                                layout: (UICollectionViewLayout *)collectionViewLayout;
+
 @optional
 
 - (void)            collectionView: (UICollectionView *)collectionView
@@ -61,6 +70,9 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath;
 - (void)            collectionView: (UICollectionView *)collectionView
                             layout: (UICollectionViewLayout *)collectionViewLayout
      didEndDraggingItemAtIndexPath: (NSIndexPath *)indexPath;
+
+- (BOOL)shouldEnableEditingForCollectionView: (UICollectionView *)collectionView
+                                      layout: (UICollectionViewLayout *)collectionViewLayout;
 
 
 @end

@@ -6,12 +6,14 @@
 //  Copyright (c) 2013 O'Mara Consulting Associates. All rights reserved.
 //
 
-// TODO add protocal definition
 @protocol OCRPackageCellDelegate <NSObject>
 
+@required
 - (void)coverLtrButtonTapped: (UICollectionViewCell *)aCell;
 
 - (void)resumeButtonTapped: (UICollectionViewCell *)aCell;
+
+- (void)deleteButtonTapped: (UICollectionViewCell *)aCell;
 
 @end
 
@@ -22,6 +24,8 @@
 @property (nonatomic, strong) IBOutlet UILabel      *title;
 @property (nonatomic, strong) IBOutlet UIButton     *coverLtrButton;
 @property (nonatomic, strong) IBOutlet UIButton     *resumeButton;
+@property (nonatomic, strong)          UIButton     *deleteButton;
+
 
 @property (nonatomic, strong) UIViewController<OCRPackageCellDelegate>      *delegate;
 
