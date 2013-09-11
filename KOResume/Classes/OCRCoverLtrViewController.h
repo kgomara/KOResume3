@@ -20,8 +20,8 @@
 @property (nonatomic, strong) NSManagedObjectContext        *managedObjectContext;
 @property (nonatomic, strong) NSFetchedResultsController    *fetchedResultsController;
 
-@property (nonatomic, strong) IBOutlet  UIScrollView        *scrollView;
-@property (nonatomic, strong) IBOutlet	UITextView          *coverLtrFld;
+@property (nonatomic, weak) IBOutlet UIScrollView           *scrollView;
+@property (nonatomic, weak) IBOutlet UITextView             *coverLtrFld;
 
 
 @end

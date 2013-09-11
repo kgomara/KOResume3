@@ -14,7 +14,7 @@
 
 #import <CoreData/CoreData.h>
 
-@interface OCRPackagesViewController : UICollectionViewController <NSFetchedResultsControllerDelegate, OCRPackageCellDelegate,
+@interface OCRPackagesViewController : UICollectionViewController <NSFetchedResultsControllerDelegate,
                                                                     OCRReorderableCollectionViewDataSource, OCRReorderableCollectionViewDelegateFlowLayout>
 
 @property (nonatomic, strong) OCRDetailViewController       *detailViewController;

@@ -269,15 +269,15 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
 //----------------------------------------------------------------------------------------------------------
 - (void)applyLayoutAttributes: (OCRReorderableLayoutAttributes *)layoutAttributes
 {
-    DLog(@"layoutAttributes.indexPath=%@", layoutAttributes.indexPath.stringForCollection);
+    DLog();
     
-    if ([layoutAttributes.indexPath isEqual: self.selectedItemIndexPath]) {
-//        layoutAttributes.hidden = YES;
+    if (_isEditModeOn) {
+        layoutAttributes.deleteButtonHidden = NO;
+    } else {
+        layoutAttributes.deleteButtonHidden = YES;
     }
-    DLog(@"isDeleteButtonHidden=%@", layoutAttributes.isDeleteButtonHidden ? @"YES" : @"NO");
     
-    // TODO - it seems like the cell implementation of applyLayoutAttributes isn't called (sometimes)
-        
+    // TODO - need to get the cells to re-draw. It seems like the cell implementation of applyLayoutAttributes isn't called (sometimes)
 //    if (layoutAttributes.isDeleteButtonHidden) {
 //        self.deleteButton.layer.opacity = 0.0;
 //        [self stopQuivering];
@@ -285,7 +285,6 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
 //        self.deleteButton.layer.opacity = 1.0;
 //        [self startQuivering];
 //    }
-    
  }
 
 
@@ -320,20 +319,21 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
     
     // First, check to see if a move is really necessary
     if ((newIndexPath == nil) ||
-        [newIndexPath isEqual:previousIndexPath]) {
-        // Just return is there is no newIndexPath or no movement
+        [newIndexPath isEqual: previousIndexPath]) {
+        // Just return as there is no newIndexPath or no movement
         return;
     }
     
     // ...if the dataSource implements the canMoveToIndexPath delegate method,
-    if ( [self.dataSource respondsToSelector: @selector(collectionView:itemAtIndexPath:canMoveToIndexPath:)] &&
+    if ( [self.dataSource respondsToSelector: @selector(collectionView:itemAtIndexPath:canMoveToIndexPath:)]) {
         // ...call it
-        ![self.dataSource collectionView: self.collectionView
-                         itemAtIndexPath: previousIndexPath
-                      canMoveToIndexPath: newIndexPath])
-    {
-        // ...and return if the delegate denies the move request
-        return;
+        if (![self.dataSource collectionView: self.collectionView
+                             itemAtIndexPath: previousIndexPath
+                          canMoveToIndexPath: newIndexPath])
+        {
+            // ...and return if the delegate denies the move request
+            return;
+        }
     }
     
     self.selectedItemIndexPath = newIndexPath;
@@ -347,7 +347,10 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
     }
     
     // ...and finally, do the move by deleting the item from where it was and inserting it where it is now
-    // TODO document use of __weak and __strong
+    /*
+     * To understand the purpose of declaring the __weak reference to self, see:
+     * https://developer.apple.com/library/ios/documentation/cocoa/conceptual/ProgrammingWithObjectiveC/WorkingwithBlocks/WorkingwithBlocks.html#//apple_ref/doc/uid/TP40011210-CH8-SW16
+     */
     __weak typeof(self) weakSelf = self;
     [self.collectionView performBatchUpdates: ^{
         __strong typeof(self) strongSelf = weakSelf;
@@ -362,7 +365,7 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
             // ...call it
             [strongSelf.dataSource collectionView: strongSelf.collectionView
                                   itemAtIndexPath: previousIndexPath
-                               didMoveToIndexPath:newIndexPath];
+                               didMoveToIndexPath: newIndexPath];
         }
     }];
 }
@@ -510,6 +513,7 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
     
     switch(gestureRecognizer.state) {
         case UIGestureRecognizerStateBegan: {
+            // TODO - ideally, user would be able to long tap and begin dragging
             if (_isEditModeOn) {
                 DLog(@"StateBegan with isEditModeOn");
             } else {
@@ -519,68 +523,100 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
                     [self.delegate didBeginEditingForCollectionView: self.collectionView
                                                              layout: self];
                 }
-                [self invalidateLayout];
+                [self.collectionView reloadData];       // TODO - this seems like overkill, why can't we just invalidate ourself?
+//                [self invalidateLayout];              // ...does not seem to be forcing cell layout
             }
-//            break;
-//        }
-//            
-//        case UIGestureRecognizerStateChanged: {
-//            DLog(@"StateChanged");
+
+            /*
+             * Communicate with the delegate methods (if implemented) to inform of the user's (potential) move gesture
+             */
             NSIndexPath *currentIndexPath = [self.collectionView indexPathForItemAtPoint: [gestureRecognizer locationInView: self.collectionView]];
             
-            if ( [self.dataSource respondsToSelector: @selector(collectionView:canMoveItemAtIndexPath:)] &&
-                ![self.dataSource collectionView: self.collectionView
-                          canMoveItemAtIndexPath: currentIndexPath])
-            {
-                return;
+            // If the delegate wants to OK moving an item
+            if ([self.dataSource respondsToSelector: @selector(collectionView:canMoveItemAtIndexPath:)]) {
+                // ...ask for permission
+                if (![self.dataSource collectionView: self.collectionView
+                              canMoveItemAtIndexPath: currentIndexPath]) {
+                    // ...delegate says NO, just return
+                    return;
+                }
             }
             
             self.selectedItemIndexPath = currentIndexPath;
             
             if ([self.delegate respondsToSelector: @selector(collectionView:layout:willBeginDraggingItemAtIndexPath:)]) {
+                // Inform the delegate we are starting a drag
                 [self.delegate collectionView: self.collectionView
                                        layout: self
              willBeginDraggingItemAtIndexPath: self.selectedItemIndexPath];
             }
             
+            /*
+             * Animate the selected cell 10% larger than normal
+             */
+            // First, get the cell selected cell
             UICollectionViewCell *collectionViewCell = [self.collectionView cellForItemAtIndexPath: self.selectedItemIndexPath];
             
+            // Make a new UIView with a frame matching the selected cell's
             self.currentView = [[UIView alloc] initWithFrame: collectionViewCell.frame];
             
+            // ...first we'll get the highlighted image, start by setting highlighted state YES, in case the delegate implements a different
+            //    visual effect for highlighted
             collectionViewCell.highlighted          = YES;
+            // ...make an imageView of it
             UIImageView *highlightedImageView       = [[UIImageView alloc] initWithImage: [collectionViewCell OCR_rasterizedImage]];
+            DLog(@"highlightedImageView=%@", highlightedImageView);
+            // ...and set autoresizing mask to flexible width and height
             highlightedImageView.autoresizingMask   = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
             highlightedImageView.alpha              = 1.0f;
             
+            // ...second, we get the normal image
             collectionViewCell.highlighted  = NO;
+            // ...make an imageView of it
             UIImageView *imageView          = [[UIImageView alloc] initWithImage: [collectionViewCell OCR_rasterizedImage]];
+            // ...and set autoresizing mask to flexible width and height
             imageView.autoresizingMask      = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
             imageView.alpha                 = 0.0f;
             
+            // Add the two imageViews to the new UIView
             [self.currentView addSubview: imageView];
-            [self.currentView addSubview: highlightedImageView];
+            [self.currentView addSubview: highlightedImageView];        // Note - highlighted image is "on top"
+            // and add the new UIView to the collection view
             [self.collectionView addSubview: self.currentView];
             
             self.currentViewCenter = self.currentView.center;
             
+            // Now that all the setup is complete, do the animation
             __weak typeof(self) weakSelf = self;
+            /*
+             * To understand the purpose of declaring the __weak reference to self, see:
+             * https://developer.apple.com/library/ios/documentation/cocoa/conceptual/ProgrammingWithObjectiveC/WorkingwithBlocks/WorkingwithBlocks.html#//apple_ref/doc/uid/TP40011210-CH8-SW16
+             */
             [UIView animateWithDuration: 0.3
                                   delay: 0.0
                                 options: UIViewAnimationOptionBeginFromCurrentState
                              animations: ^{
                  __strong typeof(self) strongSelf = weakSelf;
                  if (strongSelf) {
+                     // Set the make scale transform to 1.1 (or 110%) in both height and width
                      strongSelf.currentView.transform   = CGAffineTransformMakeScale(1.1f, 1.1f);
+                     // ...fade out the highlightedImageView
                      highlightedImageView.alpha         = 0.0f;
+                     // ...and fade in the regular view
                      imageView.alpha                    = 1.0f;
                  }
-             }
-             completion: ^(BOOL finished) {
+             } completion: ^(BOOL finished) {
+                 // When the animation completes,
                  __strong typeof(self) strongSelf = weakSelf;
                  if (strongSelf) {
+                     // ...remove the highlighted view
                      [highlightedImageView removeFromSuperview];
+                     // ...and invalidate
+                     [strongSelf invalidateLayout];
                      
+                     // Check if the delegate wants to know when dragging starts,
                      if ([strongSelf.delegate respondsToSelector: @selector(collectionView:layout:didBeginDraggingItemAtIndexPath:)]) {
+                         // ...inform the delegate we're dragging
                          [strongSelf.delegate collectionView: strongSelf.collectionView
                                                       layout: strongSelf
                              didBeginDraggingItemAtIndexPath: strongSelf.selectedItemIndexPath];
@@ -598,7 +634,9 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
             NSIndexPath *currentIndexPath = self.selectedItemIndexPath;
             
             if (currentIndexPath) {
+                // Check if the delegate wants to know if dragging will end
                 if ([self.delegate respondsToSelector: @selector(collectionView:layout:willEndDraggingItemAtIndexPath:)]) {
+                    // ...inform the delegate dragging will end
                     [self.delegate collectionView: self.collectionView
                                            layout: self
                    willEndDraggingItemAtIndexPath: currentIndexPath];
@@ -609,6 +647,9 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
                 
                 UICollectionViewLayoutAttributes *layoutAttributes = [self layoutAttributesForItemAtIndexPath: currentIndexPath];
                 
+                /*
+                 * See comment above regarding __weak reference to self
+                 */
                 __weak typeof(self) weakSelf = self;
                 [UIView animateWithDuration: 0.3
                                       delay: 0.0
@@ -616,18 +657,23 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
                                  animations: ^{
                      __strong typeof(self) strongSelf = weakSelf;
                      if (strongSelf) {
+                         // Set the make scale transform back to 100%
                          strongSelf.currentView.transform   = CGAffineTransformMakeScale(1.0f, 1.0f);
                          strongSelf.currentView.center      = layoutAttributes.center;
                      }
-                 }
-                 completion: ^(BOOL finished) {
+                 } completion: ^(BOOL finished) {
+                     // When animation completes,
                      __strong typeof(self) strongSelf = weakSelf;
                      if (strongSelf) {
+                         // ...remove the rasterized image (if we don't, it would cover the real buttons and make them unclickable)
                          [strongSelf.currentView removeFromSuperview];
                          strongSelf.currentView = nil;
+                         // ...and invalidate
                          [strongSelf invalidateLayout];
                          
+                         // Check if the delegate wants to know when dragging ends,
                          if ([strongSelf.delegate respondsToSelector: @selector(collectionView:layout:didEndDraggingItemAtIndexPath:)]) {
+                             // ...inform the delegate dragging has ended
                              [strongSelf.delegate collectionView: strongSelf.collectionView
                                                           layout: strongSelf
                                    didEndDraggingItemAtIndexPath: currentIndexPath];
@@ -689,6 +735,7 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
             
         case UIGestureRecognizerStateCancelled:
         case UIGestureRecognizerStateEnded: {
+            DLog(@"State ended or cancelled");
             [self invalidatesScrollTimer];
         }
             break;
@@ -733,13 +780,21 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
 {
     DLog();
     
+    // The only purpose of a tap is to end editing, so first check to ensure editModeOn is YES
     if (_isEditModeOn) {
+        // The above gestureRecognizer:shouldReceiveTouch: should prevent us from being invoked if the tap was on a cell, but just in case...
         NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint: [gestureRecognizer locationInView: self.collectionView]];
         if (!indexPath) {
+            // Tap is not on any cell, end editing
             self.isEditModeOn = NO;
-//            OCRReorderableCollectionViewFlowLayout *layout = (OCRReorderableCollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
-//            [layout invalidateLayout];              // TODO - does not seem to be forcing a layout
-            [self invalidateLayout];
+            // Inform the delegate (if it wants to know)
+            if ([self.delegate respondsToSelector: @selector(didEndEditingForCollectionView:layout:)]) {
+                // ...the delegate wants to know
+                [self.delegate didEndEditingForCollectionView: self.collectionView
+                                                       layout: self];
+            }
+            [self.collectionView reloadData];       // TODO - this seems like overkill, why can't we just invalidate ourself?
+//            [self invalidateLayout];              // ...does not seem to be forcing cell layout
         }
     }
 }

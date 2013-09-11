@@ -66,9 +66,6 @@
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <color key="tintColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <state key="normal" title="Cover Letter"/>
-                                                    <connections>
-                                                        <action selector="coverLtrBtnTapped:" destination="pnB-bS-sPa" eventType="touchUpInside" id="Cth-ga-riE"/>
-                                                    </connections>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YCV-sV-WxM">
                                                     <rect key="frame" x="7" y="76" width="130" height="44"/>
@@ -84,9 +81,6 @@
                                                     <state key="highlighted">
                                                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
-                                                    <connections>
-                                                        <action selector="resumeBtnTapped:" destination="pnB-bS-sPa" eventType="touchUpInside" id="X6B-Gz-MJx"/>
-                                                    </connections>
                                                 </button>
                                             </subviews>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -106,6 +100,7 @@
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
+                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="aOg-E0-I40" firstAttribute="leading" secondItem="pnB-bS-sPa" secondAttribute="leading" constant="3" id="6MF-g2-Yq4"/>
                                     <constraint firstItem="aOg-E0-I40" firstAttribute="top" secondItem="pnB-bS-sPa" secondAttribute="top" constant="3" id="CmH-cM-1jM"/>

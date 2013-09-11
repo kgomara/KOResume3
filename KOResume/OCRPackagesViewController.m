@@ -193,19 +193,14 @@ BOOL isEditModeActive;
 - (void)configureDefaultNavBar
 {
     DLog();
+    
     // Initialize the buttons
-    UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemEdit
-                                                                                target: self
-                                                                                action: @selector(editButtonTapped)];
     UIBarButtonItem *addButton  = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemAdd
                                                                                 target: self
                                                                                 action: @selector(promptForPackageName)];
     
-    // Set them into the nav bar.
+    // Set into the nav bar.
     self.navigationItem.rightBarButtonItem = addButton;
-    self.navigationItem.leftBarButtonItem  = editButton;
-    
-//    [self.collectionView setEditing:NO];
 }
 
 #pragma mark - UITextKit handlers
@@ -220,71 +215,6 @@ BOOL isEditModeActive;
 
 
 #pragma mark - UI handlers
-
-//----------------------------------------------------------------------------------------------------------
-- (void)editButtonTapped
-{
-    DLog();
-//    [self.collectionView setEditing:YES];
-    
-    // Set up the navigation item and save button
-    UIBarButtonItem *doneButton   = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemDone
-                                                                                  target: self
-                                                                                  action: @selector(doneButtonTapped)];
-    UIBarButtonItem *cancelBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel
-                                                                               target: self
-                                                                               action: @selector(cancelButtonTapped)];
-    self.navigationItem.leftBarButtonItem  = cancelBtn;
-    self.navigationItem.rightBarButtonItem = doneButton;
-    
-    // Start an undo group...it will either be commited in doneButtonTapped or
-    //    undone in cancelButtonTapped
-    [[self.managedObjectContext undoManager] beginUndoGrouping];
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-- (void)doneButtonTapped
-{
-    DLog();
-    
-    // Save the changes
-    [[self.managedObjectContext undoManager] endUndoGrouping];
-    
-    if (![self saveMoc: self.managedObjectContext]) {
-        ALog(@"Failed to save data");
-        NSString* msg = NSLocalizedString(@"Failed to save data.", nil);
-        [OCAExtensions showErrorWithMessage: msg];
-    }
-    
-    // Cleanup the undoManager
-    [[self.managedObjectContext undoManager] removeAllActionsWithTarget: self];
-    // ...and reset the NavigationBar defaults
-    [self configureDefaultNavBar];
-    [self.collectionView reloadData];
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-- (void)cancelButtonTapped
-{
-    DLog();
-    // Undo any changes the user has made
-    [[self.managedObjectContext undoManager] setActionName: OCRUndoActionName];
-    [[self.managedObjectContext undoManager] endUndoGrouping];
-    
-    if ([[self.managedObjectContext undoManager] canUndo]) {
-        // Changes were made - discard them
-        [[self.managedObjectContext undoManager] undoNestedGroup];
-    }
-    
-    // Cleanup the undoManager
-    [[self.managedObjectContext undoManager] removeAllActionsWithTarget: self];
-    // ...and reset Packages tableView
-    [self configureDefaultNavBar];
-    [self.collectionView reloadData];
-}
-
 
 //----------------------------------------------------------------------------------------------------------
 - (void)addPackage
@@ -346,26 +276,26 @@ BOOL isEditModeActive;
 #pragma mark - OCRPackagesCellDelegate methods
 
 //----------------------------------------------------------------------------------------------------------
-- (void)coverLtrButtonTapped: (UICollectionViewCell *)aCell
+- (IBAction)coverLtrButtonTapped: (id)sender
 {
-    // configureCell:atIndexPath sets the tag on the cell
-    DLog(@"tag = %d", aCell.tag);
+    // configureCell:atIndexPath sets the tag on the button
+    DLog(@"sender = %d", [(UIButton *)sender tag]);
     
     // Check to see if we're in editMode
     if (isEditModeActive) {
         // ignore the tap
     } else {
         [self performSegueWithIdentifier: OCRCvrLtrSegue
-                                  sender: aCell];
+                                  sender: sender];
     }
 }
 
 
 //----------------------------------------------------------------------------------------------------------
-- (void)resumeButtonTapped: (UICollectionViewCell *)aCell
+- (IBAction)resumeButtonTapped: (id)sender
 {
-    // configureCell:atIndexPath sets the tag on the cell
-    DLog(@"button %d", aCell.tag);
+    // configureCell:atIndexPath sets the tag on the button
+    DLog(@"sender = %d", [(UIButton *)sender tag]);
     
     // Check to see if we're in editMode
     if (isEditModeActive) {
@@ -377,15 +307,15 @@ BOOL isEditModeActive;
 
 
 //----------------------------------------------------------------------------------------------------------
-- (void)deleteButtonTapped: (UICollectionViewCell *)aCell
+- (IBAction)deleteButtonTapped: (id)sender
 {
-    // configureCell:atIndexPath sets the tag on the cell
-    DLog(@"button %d", aCell.tag);
+    // configureCell:atIndexPath sets the tag on the button
+    DLog(@"sender = %d", [(UIButton *)sender tag]);
     
     // We shouldn't get here if we're not editing, but...
     if (isEditModeActive) {
         // TODO implement an alertview for confirmation before actually deleting
-//    NSIndexPath *indexPath = [self.collectionView indexPathForCell: (OCRPackagesCell *)aCell.superview.superview];
+//    NSIndexPath *indexPath = [self.collectionView indexPathForCell: (OCRPackagesCell *)sender.superview];
 //    [self.collectionView deleteItemsAtIndexPaths: [NSArray arrayWithObject: indexPath]];
     } else {
         ALog(@"[ERROR] delete button tapped while editMode false");
@@ -447,24 +377,44 @@ BOOL isEditModeActive;
     id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController.sections objectAtIndex:indexPath.section];
     Packages *aPackage  = (Packages *) [sectionInfo.objects objectAtIndex: indexPath.row];
     /*
-     Set the tag for the cell to the index of the Packages object.
-     The tag property is often used carry identifying information for later use, in our case, we'll use it in the
+     Set the tag for the cell and its buttons to the index of the Packages object.
+     The tag property is often used to carry identifying information for later use, in our case, we'll use it in the
      button handling routines to know which cover_ltr or resume to segue to.
      */
-    cell.tag        = indexPath.row;
-    cell.delegate   = self;
+    cell.tag                = indexPath.row;
+    cell.coverLtrButton.tag = indexPath.row;
+    cell.resumeButton.tag   = indexPath.row;
 
     cell.title.text = aPackage.name;
-    [cell.resumeButton setTitle: aPackage.resume.name
-                       forState: UIControlStateSelected];
-    [cell.resumeButton setTitleColor: [UIColor redColor]
-                            forState: UIControlStateSelected];
+    
+    // Set the title
     [cell.resumeButton setTitle: aPackage.resume.name
                        forState: UIControlStateNormal];
-    [cell.coverLtrButton setTitleColor: [UIColor redColor]
+    // ...give it a different color when selected
+    [cell.resumeButton setTitleColor: [UIColor greenColor]
+                            forState: UIControlStateSelected];
+    // ...and add us as target for the cell's resume button
+    [cell.resumeButton addTarget: self
+                          action: @selector(resumeButtonTapped:)
+                forControlEvents: UIControlEventTouchUpInside];
+    
+    // Cover letters don't have a specific name attribute, so just
+    // ...give it a different color when selected
+    [cell.coverLtrButton setTitleColor: [UIColor greenColor]
                               forState: UIControlStateSelected];
+    // ...and add us as target for the cell's resume button
+    [cell.coverLtrButton addTarget: self
+                            action: @selector(coverLtrButtonTapped:)
+                  forControlEvents: UIControlEventTouchUpInside];
+    
     if (isEditModeActive) {
+        // Unhide it
         [cell.deleteButton setHidden: NO];
+        // ...and add us as target for the cell's resume button
+        [cell.deleteButton addTarget: self
+                              action: @selector(deleteButtonTapped:)
+                    forControlEvents: UIControlEventTouchUpInside];
+        
     } else {
         [cell.deleteButton setHidden: YES];
     }
@@ -496,7 +446,7 @@ BOOL isEditModeActive;
         [aPackage setSequence_numberValue: i++];
     }
     
-    [self doneButtonTapped];
+//    [self doneButtonTapped];
 }
 
 
@@ -506,7 +456,7 @@ BOOL isEditModeActive;
 {
     DLog();
     
-    return YES;
+    return NO;
 }
 
 
@@ -558,6 +508,7 @@ BOOL isEditModeActive;
     DLog();
     
     isEditModeActive = YES;
+//    [self.collectionViewLayout invalidateLayout];
 }
 
 
@@ -568,6 +519,11 @@ BOOL isEditModeActive;
     DLog();
     
     isEditModeActive = NO;
+
+    // TODO reorder and save any changes
+    [self resequencePackages];
+    [self saveMoc: _managedObjectContext];
+    [self.collectionView reloadData];
 }
 
 
@@ -604,6 +560,37 @@ willEndDraggingItemAtIndexPath:(NSIndexPath *)indexPath
  didEndDraggingItemAtIndexPath:(NSIndexPath *)indexPath
 {
     DLog(@"did end drag");
+    
+}
+
+#pragma mark - Private methods
+
+//----------------------------------------------------------------------------------------------------------
+- (void)resequencePackages
+{
+    DLog();
+    
+    NSArray *packages = [self.fetchedResultsController fetchedObjects];
+    
+    NSInteger sectionCount = [self.collectionView numberOfSections];
+    NSIndexPath *indexPath;
+    OCRPackagesCell *packagesCell;
+    Packages *aPackage;
+    
+    int i = 1;
+    for (NSInteger section = 0; section < sectionCount; section++) {
+        NSInteger itemCount = [self.collectionView numberOfItemsInSection: section];
+        for (NSInteger item = 0; item < itemCount; item++) {
+            indexPath       = [NSIndexPath indexPathForItem: item
+                                                  inSection: section];
+            packagesCell    = (OCRPackagesCell *)[self.collectionView cellForItemAtIndexPath: indexPath];
+
+            DLog(@"indexPath=%@, tag=%d", indexPath, packagesCell.tag);
+            aPackage = [packages objectAtIndex: packagesCell.tag];
+            [aPackage setSequence_number: [NSNumber numberWithInt: i++]];       // TODO - sequence number does not seem to stick
+            [aPackage logAllFields];
+        }
+    }
 }
 
 
@@ -708,22 +695,18 @@ willEndDraggingItemAtIndexPath:(NSIndexPath *)indexPath
         NSString* msg = NSLocalizedString( @"Failed to reload data after syncing with iCloud.", nil);
         [OCAExtensions showErrorWithMessage: msg];
     }
-    
-    [self.collectionView reloadData];
+    DLog(@"reloadingData");
+//    [self.collectionView reloadData];
 }
 
 #pragma mark - Fetched results controller delegate
 
 // TODO need to throughly comment this section
 
-//----------------------------------------------------------------------------------------------------------
-- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
-{
-    DLog();
-    
-//    [self.collectionView beginUpdates];
-}
-
+/*
+ * The fetched results controller can "batch" updates to improve performance and preserve battery life.
+ * See http://ashfurrow.com/blog/uicollectionview-example for a tutorial on how this processs works.
+ */
 
 //----------------------------------------------------------------------------------------------------------
 - (void)controller:(NSFetchedResultsController *)controller
