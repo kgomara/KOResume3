@@ -61,7 +61,7 @@ BOOL isEditModeActive;
     DLog();
     
     // Allocate our customer collectionView layout
-    OCRReorderableCollectionViewFlowLayout *layout = [[OCRReorderableCollectionViewFlowLayout alloc] init];
+    OCAEditableCollectionViewFlowLayout *layout = [[OCAEditableCollectionViewFlowLayout alloc] init];
     // ...set some parameters to control its behavior
     layout.minimumInteritemSpacing  = 6;
     layout.minimumLineSpacing       = 6;
@@ -499,7 +499,7 @@ BOOL isEditModeActive;
      */
 }
 
-#pragma mark - OCRReorderableCollectionViewDelegateFlowLayout methods
+#pragma mark - OCAEditableCollectionViewDelegateFlowLayout methods
 
 //----------------------------------------------------------------------------------------------------------
 - (void) didBeginEditingForCollectionView: (UICollectionView *)collectionView

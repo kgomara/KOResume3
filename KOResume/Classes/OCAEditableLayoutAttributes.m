@@ -1,19 +1,19 @@
 //
-//  OCRReorderableLayoutAttributes.m
+//  OCAEditableLayoutAttributes.m
 //  KOResume
 //
 //  Created by Kevin O'Mara on 8/31/13.
 //  Copyright (c) 2013 O'Mara Consulting Associates. All rights reserved.
 //
 
-#import "OCRReorderableLayoutAttributes.h"
+#import "OCAEditableLayoutAttributes.h"
 
-@implementation OCRReorderableLayoutAttributes
+@implementation OCAEditableLayoutAttributes
 
 //----------------------------------------------------------------------------------------------------------
 - (id)copyWithZone:(NSZone *)zone
 {
-    OCRReorderableLayoutAttributes *attributes = [super copyWithZone:zone];
+    OCAEditableLayoutAttributes *attributes = [super copyWithZone:zone];
     attributes.deleteButtonHidden = _deleteButtonHidden;
     
     return attributes;

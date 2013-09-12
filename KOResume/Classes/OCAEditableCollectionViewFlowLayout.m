@@ -1,5 +1,5 @@
 //
-//  OCRReorderableCollectionViewFlowLayout.m
+//  OCAEditableCollectionViewFlowLayout.m
 //  KOResume
 //
 //  Created by Kevin O'Mara on 8/28/13.
@@ -15,8 +15,8 @@
 //  http://mobile.tutsplus.com/tutorials/iphone/uicollectionview-layouts/
 //
 
-#import "OCRReorderableCollectionViewFlowLayout.h"
-#import "OCRReorderableLayoutAttributes.h"
+#import "OCAEditableCollectionViewFlowLayout.h"
+#import "OCAEditableLayoutAttributes.h"
 
 #import <QuartzCore/QuartzCore.h>
 #import <objc/runtime.h>
@@ -131,7 +131,7 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
 
 @end
 
-@interface OCRReorderableCollectionViewFlowLayout ()
+@interface OCAEditableCollectionViewFlowLayout ()
 
 @property (strong, nonatomic) NSIndexPath   *selectedItemIndexPath;
 @property (strong, nonatomic) UIView        *currentView;
@@ -144,12 +144,12 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
  */
 @property (strong, nonatomic) CADisplayLink *displayLink;
 
-@property (assign, nonatomic, readonly) id<OCRReorderableCollectionViewDataSource>          dataSource;
-@property (assign, nonatomic, readonly) id<OCRReorderableCollectionViewDelegateFlowLayout>  delegate;
+@property (assign, nonatomic, readonly) id<OCAEditableCollectionViewDataSource>          dataSource;
+@property (assign, nonatomic, readonly) id<OCAEditableCollectionViewDelegateFlowLayout>  delegate;
 
 @end
 
-@implementation OCRReorderableCollectionViewFlowLayout
+@implementation OCAEditableCollectionViewFlowLayout
 
 //----------------------------------------------------------------------------------------------------------
 - (void)setDefaults
@@ -267,7 +267,7 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
 
 
 //----------------------------------------------------------------------------------------------------------
-- (void)applyLayoutAttributes: (OCRReorderableLayoutAttributes *)layoutAttributes
+- (void)applyLayoutAttributes: (OCAEditableLayoutAttributes *)layoutAttributes
 {
     DLog();
     
@@ -289,20 +289,20 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
 
 
 //----------------------------------------------------------------------------------------------------------
-- (id<OCRReorderableCollectionViewDataSource>)dataSource
+- (id<OCAEditableCollectionViewDataSource>)dataSource
 {
     DLog();
     
-    return (id<OCRReorderableCollectionViewDataSource>)self.collectionView.dataSource;
+    return (id<OCAEditableCollectionViewDataSource>)self.collectionView.dataSource;
 }
 
 
 //----------------------------------------------------------------------------------------------------------
-- (id<OCRReorderableCollectionViewDelegateFlowLayout>)delegate
+- (id<OCAEditableCollectionViewDelegateFlowLayout>)delegate
 {
     DLog();
     
-    return (id<OCRReorderableCollectionViewDelegateFlowLayout>)self.collectionView.delegate;
+    return (id<OCAEditableCollectionViewDelegateFlowLayout>)self.collectionView.delegate;
 }
 
 
@@ -419,7 +419,7 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
 //----------------------------------------------------------------------------------------------------------
 + (Class)layoutAttributesClass
 {
-    return [OCRReorderableLayoutAttributes class];
+    return [OCAEditableLayoutAttributes class];
 }
 
 #pragma mark - Target/Action methods
@@ -808,7 +808,7 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
     
     NSArray *layoutAttributesForElementsInRect = [super layoutAttributesForElementsInRect: rect];
     
-    for (OCRReorderableLayoutAttributes *layoutAttributes in layoutAttributesForElementsInRect) {
+    for (OCAEditableLayoutAttributes *layoutAttributes in layoutAttributesForElementsInRect) {
         switch (layoutAttributes.representedElementCategory) {
             case UICollectionElementCategoryCell: {
                 if (_isEditModeOn) {
@@ -833,7 +833,7 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
 {
     DLog();
     
-    OCRReorderableLayoutAttributes *layoutAttributes = (OCRReorderableLayoutAttributes *)[super layoutAttributesForItemAtIndexPath: indexPath];
+    OCAEditableLayoutAttributes *layoutAttributes = (OCAEditableLayoutAttributes *)[super layoutAttributesForItemAtIndexPath: indexPath];
     
     switch (layoutAttributes.representedElementCategory) {
         case UICollectionElementCategoryCell: {

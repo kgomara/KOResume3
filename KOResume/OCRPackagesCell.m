@@ -7,7 +7,7 @@
 //
 
 #import "OCRPackagesCell.h"
-#import "OCRReorderableLayoutAttributes.h"
+#import "OCAEditableLayoutAttributes.h"
 
 #define MARGIN 10
 
@@ -163,7 +163,7 @@ static UIImage *deleteButtonImg;
 }
 
 //----------------------------------------------------------------------------------------------------------
-- (void)applyLayoutAttributes:(OCRReorderableLayoutAttributes *)layoutAttributes
+- (void)applyLayoutAttributes:(OCAEditableLayoutAttributes *)layoutAttributes
 {
     DLog(/*@"isDeleteButtonHidden=%@", layoutAttributes.isDeleteButtonHidden ? @"YES" : @"NO"*/);
     

@@ -1,5 +1,5 @@
 //
-//  OCRReorderableCollectionViewFlowLayout.h
+//  OCAEditableCollectionViewFlowLayout.h
 //  KOResume
 //
 //  Created by Kevin O'Mara on 8/28/13.
@@ -13,7 +13,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface OCRReorderableCollectionViewFlowLayout : UICollectionViewFlowLayout <UIGestureRecognizerDelegate>
+@interface OCAEditableCollectionViewFlowLayout : UICollectionViewFlowLayout <UIGestureRecognizerDelegate>
 
 @property (assign, nonatomic)           CGFloat                         scrollingSpeed;
 @property (assign, nonatomic)           UIEdgeInsets                    scrollingTriggerEdgeInsets;
@@ -23,7 +23,7 @@
 
 @end
 
-@protocol OCRReorderableCollectionViewDataSource <UICollectionViewDataSource>
+@protocol OCAEditableCollectionViewDataSource <UICollectionViewDataSource>
 
 @optional
 - (void)collectionView: (UICollectionView *)collectionView
@@ -43,7 +43,7 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath;
 
 @end
 
-@protocol OCRReorderableCollectionViewDelegateFlowLayout <UICollectionViewDelegateFlowLayout>
+@protocol OCAEditableCollectionViewDelegateFlowLayout <UICollectionViewDelegateFlowLayout>
 
 @required
 
