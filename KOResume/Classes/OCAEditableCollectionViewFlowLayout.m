@@ -21,21 +21,21 @@
 #import <QuartzCore/QuartzCore.h>
 #import <objc/runtime.h>
 
-#define OCR_FRAMES_PER_SECOND 60.0
+#define OCA_FRAMES_PER_SECOND 60.0
 
-#ifndef CGGEOMETRY_OCRSUPPORT_H_
-CG_INLINE CGPoint
-OCRS_CGPointAdd(CGPoint point1, CGPoint point2) {
+#ifndef CGGEOMETRY_OCASUPPORT_H_
+CG_INLINE CGPoint OCA_CGPointAdd(CGPoint point1, CGPoint point2)
+{
     return CGPointMake(point1.x + point2.x, point1.y + point2.y);
 }
 #endif
 
-typedef NS_ENUM(NSInteger, OCRScrollingDirection) {
-    OCRScrollingDirectionUnknown = 0,
-    OCRScrollingDirectionUp,
-    OCRScrollingDirectionDown,
-    OCRScrollingDirectionLeft,
-    OCRScrollingDirectionRight
+typedef NS_ENUM(NSInteger, OCAScrollingDirection) {
+    OCAScrollingDirectionUnknown = 0,
+    OCAScrollingDirectionUp,
+    OCAScrollingDirectionDown,
+    OCAScrollingDirectionLeft,
+    OCAScrollingDirectionRight
 };
 
 /*
@@ -43,22 +43,22 @@ typedef NS_ENUM(NSInteger, OCRScrollingDirection) {
     1. They are not referenced outside of this scope.
     2. I hope to make this class reusable beyond KOResume, so it needs to be self-contained.
  */
-static NSString * const kOCRScrollingDirectionKey   = @"OCRScrollingDirection";
-static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
+static NSString * const kOCAScrollingDirectionKey   = @"OCAScrollingDirection";
+static NSString * const kOCACollectionViewKeyPath   = @"collectionView";
 
 /*
  Category to allow adding variables
  */
-@interface CADisplayLink (OCR_userInfo)
+@interface CADisplayLink (OCA_userInfo)
 
-@property (nonatomic, copy) NSDictionary *OCR_userInfo;
+@property (nonatomic, copy) NSDictionary *OCA_userInfo;
 
 @end
 
-@implementation CADisplayLink (OCR_userInfo)
+@implementation CADisplayLink (OCA_userInfo)
 
 //----------------------------------------------------------------------------------------------------------
-- (void) setOCR_userInfo:(NSDictionary *) OCR_userInfo
+- (void) setOCA_userInfo:(NSDictionary *) OCA_userInfo
 {
     /*
      objc_setAssociatedObject adds a key value store to each Objective-C object. It lets you store additional state 
@@ -70,13 +70,13 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
      
      When using the right association policy your objects will be released when the main object is deallocated.
      */
-    objc_setAssociatedObject(self, "OCR_userInfo", OCR_userInfo, OBJC_ASSOCIATION_COPY);
+    objc_setAssociatedObject(self, "OCA_userInfo", OCA_userInfo, OBJC_ASSOCIATION_COPY);
 }
 
 //----------------------------------------------------------------------------------------------------------
-- (NSDictionary *) OCR_userInfo
+- (NSDictionary *) OCA_userInfo
 {
-    return objc_getAssociatedObject(self, "OCR_userInfo");
+    return objc_getAssociatedObject(self, "OCA_userInfo");
 }
 
 @end
@@ -85,16 +85,16 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
  Category to add capabilities to our UICollectionViewCell objects
  
  A UICollectionViewCell may be composed of an arbitrarily large number of subviews. Dragging the real cell
- would cause the system to re-draw, probably with animation, every subview on each move increment.
- Rasterizing "flattens" the cell into one image.
+ would cause the system to re-draw (probably with animation) every subview on each move increment.
+ Rasterizing "flattens" the cell into one image and thus improves app responsiveness for the user.
  */
-@interface UICollectionViewCell (OCRPackagesCollectionViewFlowLayout)
+@interface UICollectionViewCell (OCAEditableCollectionViewFlowLayout)
 
-- (UIImage *)OCR_rasterizedImage;
+- (UIImage *)OCA_rasterizedImage;
 
 @end
 
-@implementation UICollectionViewCell (OCRPackagesCollectionViewFlowLayout)
+@implementation UICollectionViewCell (OCAEditableCollectionViewFlowLayout)
 
 //----------------------------------------------------------------------------------------------------------
 /**
@@ -102,7 +102,7 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
  would cause the system to re-draw, probably with animation, every subview on each move increment.
  Rasterizing "flattens" the cell into one image.
  */
-- (UIImage *)OCR_rasterizedImage
+- (UIImage *)OCA_rasterizedImage
 {
     DLog();
     
@@ -122,13 +122,6 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
     return image;
 }
 
-- (void)addDeleteButton
-{
-    DLog();
-    
-    
-}
-
 @end
 
 @interface OCAEditableCollectionViewFlowLayout ()
@@ -136,11 +129,16 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
 @property (strong, nonatomic) NSIndexPath   *selectedItemIndexPath;
 @property (strong, nonatomic) UIView        *currentView;
 @property (assign, nonatomic) CGPoint       currentViewCenter;
-@property (assign, nonatomic) CGPoint       panTranslationInCollectionView;
+@property (assign, nonatomic) CGPoint       panTranslationViewCenter;
 @property (assign, nonatomic) BOOL          isEditModeOn;
 /**
  CADisplayLink is a timer object that allows us to synchronize drawing to the refresh rate of the display.
- see - https://developer.apple.com/library/ios/documentation/QuartzCore/Reference/CADisplayLink_ClassRef/Reference/Reference.html#//apple_ref/occ/instp/CADisplayLink/paused
+ *
+ * see - https://developer.apple.com/library/ios/documentation/QuartzCore/Reference/CADisplayLink_ClassRef/Reference/Reference.html#//apple_ref/occ/instp/CADisplayLink/paused
+ *
+ * In our case, it is used to ensure a collectionView scrolling operation is called no more than once per screen update.
+ * Movement of individual cells (in handlePanGesture) could be invoked many times between screen updates. Limiting
+ * scrolling to the screen update cycle helps keep the app responsive to rapid dragging.
  */
 @property (strong, nonatomic) CADisplayLink *displayLink;
 
@@ -151,16 +149,7 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
 
 @implementation OCAEditableCollectionViewFlowLayout
 
-//----------------------------------------------------------------------------------------------------------
-- (void)setDefaults
-{
-    DLog();
-    
-    _scrollingSpeed             = 300.0f;
-    _scrollingTriggerEdgeInsets = UIEdgeInsetsMake(50.0f, 50.0f, 50.0f, 50.0f);
-    _isEditModeOn               = NO;
-}
-
+#pragma mark - Lifecycle methods
 
 //----------------------------------------------------------------------------------------------------------
 - (void)setupCollectionView
@@ -178,8 +167,8 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
             /*
              This call delay's the default longPressGestureRecognizer transition until our long press gesture recognizer
              enters the UIGestureRecognizerStateFailed state (meaning we are not handling the long press). If we enter
-             UIGestureRecognizerStateRecognized or UIGestureRecognizerStateBegan states, it will fail - meaning it won't
-             interfere with what we're doing.
+             UIGestureRecognizerStateRecognized or UIGestureRecognizerStateBegan states, this forces the default 
+             longPressGestureRecognizer to fail - meaning it won't interfere with what we're doing.
              */
             [gestureRecognizer requireGestureRecognizerToFail: _longPressGestureRecognizer];
         }
@@ -188,19 +177,20 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
     // ...add our long press recognizer to the collection view
     [self.collectionView addGestureRecognizer:_longPressGestureRecognizer];
     
-    // Create a pan gesture recognizer to handle swipes
+    // Create a pan gesture recognizer to handle cell moves
     _panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget: self
                                                                     action: @selector(handlePanGesture:)];
     _panGestureRecognizer.delegate = self;
     [self.collectionView addGestureRecognizer: _panGestureRecognizer];
     
     // Create a tap gesture recognizer to detect user taps away from cells, signifying they are finished
-    // reordering or deleting
+    // moving or deleting
     _tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget: self
                                                                     action: @selector(handleTapGesture:)];
     _tapGestureRecognizer.delegate = self;
     [self.collectionView addGestureRecognizer: _tapGestureRecognizer];
     
+    // Register for notifications that an external event is causing us to resign active state
     // Useful in multiple scenarios: one common scenario being when the Notification Center drawer is pulled down
     [[NSNotificationCenter defaultCenter] addObserver: self
                                              selector: @selector(handleApplicationWillResignActive:)
@@ -213,11 +203,16 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
 - (void)initialize
 {
     DLog();
-    [self setDefaults];
     
-    // Register to be notified of any changes to self.collectionView (see Key-Value Observing methods)
+    _scrollingSpeed             = 300.0f;
+    // Create an inset to trigger scrolling before the user's drag actually gets to the extreme edges of the screen
+    _scrollingTriggerEdgeInsets = UIEdgeInsetsMake(50.0f, 50.0f, 50.0f, 50.0f);
+    _isEditModeOn               = NO;
+    
+    // Register to be notified of any changes to self.collectionView.
+    // see https://developer.apple.com/library/ios/documentation/cocoa/conceptual/KeyValueObserving/KeyValueObserving.html#//apple_ref/doc/uid/10000177-BCICJDHA
     [self addObserver: self
-           forKeyPath: kOCRCollectionViewKeyPath
+           forKeyPath: kOCACollectionViewKeyPath
               options: NSKeyValueObservingOptionNew
               context: nil];
 }
@@ -259,7 +254,7 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
     
     // ...and remove ourself as observer as needed
     [self removeObserver: self
-              forKeyPath: kOCRCollectionViewKeyPath];
+              forKeyPath: kOCACollectionViewKeyPath];
     [[NSNotificationCenter defaultCenter] removeObserver: self
                                                     name: UIApplicationWillResignActiveNotification
                                                   object: nil];
@@ -287,6 +282,7 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
 //    }
  }
 
+#pragma mark - Convenience methods to get delegate references
 
 //----------------------------------------------------------------------------------------------------------
 - (id<OCAEditableCollectionViewDataSource>)dataSource
@@ -305,6 +301,7 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
     return (id<OCAEditableCollectionViewDelegateFlowLayout>)self.collectionView.delegate;
 }
 
+#pragma mark - Support for Springboard-like movement
 
 /*
  This method is called when the pan gesture recognizer wants to move an item in the collection view.
@@ -386,14 +383,14 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
 
 
 //----------------------------------------------------------------------------------------------------------
-- (void)setupScrollTimerInDirection: (OCRScrollingDirection)direction
+- (void)setupScrollTimerInDirection: (OCAScrollingDirection)direction
 {
     DLog();
     
     // Check to see if the display link is currently running
     if (!self.displayLink.paused) {
         // it is running - check to see if we're going in the same direction as last time
-        OCRScrollingDirection oldDirection = [self.displayLink.OCR_userInfo[kOCRScrollingDirectionKey] integerValue];
+        OCAScrollingDirection oldDirection = [self.displayLink.OCA_userInfo[kOCAScrollingDirectionKey] integerValue];
         if (direction == oldDirection) {
             // ...and just return if we are
             return;
@@ -407,14 +404,14 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
     self.displayLink = [CADisplayLink displayLinkWithTarget: self
                                                    selector: @selector(handleScroll:)];
     // ...add the direction as our userInfo (see Category definition above)
-    self.displayLink.OCR_userInfo = @{ kOCRScrollingDirectionKey : @(direction) };
+    self.displayLink.OCA_userInfo = @{ kOCAScrollingDirectionKey : @(direction) };
     
-    // ...and add it to the mainRunLoop so we start getting notifications
+    // ...and add it to the mainRunLoop so handleScroll: starts getting notifications
     [self.displayLink addToRunLoop: [NSRunLoop mainRunLoop]
                            forMode: NSRunLoopCommonModes];
 }
 
-#pragma mark - OCRReorderableLayoutAttributes helper methods
+#pragma mark - OCAEditableLayoutAttributes helper methods
 
 //----------------------------------------------------------------------------------------------------------
 + (Class)layoutAttributesClass
@@ -434,22 +431,22 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
 {
 //    DLog();
     
-    OCRScrollingDirection direction = (OCRScrollingDirection)[displayLink.OCR_userInfo[kOCRScrollingDirectionKey] integerValue];
-    if (direction == OCRScrollingDirectionUnknown) {
+    OCAScrollingDirection direction = (OCAScrollingDirection)[displayLink.OCA_userInfo[kOCAScrollingDirectionKey] integerValue];
+    if (direction == OCAScrollingDirectionUnknown) {
         return;
     }
     
     CGSize frameSize        = self.collectionView.bounds.size;
     CGSize contentSize      = self.collectionView.contentSize;
     CGPoint contentOffset   = self.collectionView.contentOffset;
-    CGFloat distance        = self.scrollingSpeed / OCR_FRAMES_PER_SECOND;
+    CGFloat distance        = self.scrollingSpeed / OCA_FRAMES_PER_SECOND;
     CGPoint translation     = CGPointZero;
     
     /*
      In the switch statement, we determine a translation point, allowing for top, bottom, right, left as appropriate
      */
     switch(direction) {
-        case OCRScrollingDirectionUp: {
+        case OCAScrollingDirectionUp: {
             distance = -distance;
             CGFloat minY = 0.0f;
             
@@ -461,7 +458,7 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
             break;
         }
             
-        case OCRScrollingDirectionDown: {
+        case OCAScrollingDirectionDown: {
             CGFloat maxY = MAX(contentSize.height, frameSize.height) - frameSize.height;
             
             if ((contentOffset.y + distance) >= maxY) {
@@ -472,7 +469,7 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
             break;
         }
             
-        case OCRScrollingDirectionLeft: {
+        case OCAScrollingDirectionLeft: {
             distance = -distance;
             CGFloat minX = 0.0f;
             
@@ -484,7 +481,7 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
             break;
         }
             
-        case OCRScrollingDirectionRight: {
+        case OCAScrollingDirectionRight: {
             CGFloat maxX = MAX(contentSize.width, frameSize.width) - frameSize.width;
             
             if ((contentOffset.x + distance) >= maxX) {
@@ -498,11 +495,12 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
         default:
             break;
     }
-    
     // translation now has a deltaX or deltaY for the scroll
-    self.currentViewCenter              = OCRS_CGPointAdd(self.currentViewCenter, translation);
-    self.currentView.center             = OCRS_CGPointAdd(self.currentViewCenter, self.panTranslationInCollectionView);
-    self.collectionView.contentOffset   = OCRS_CGPointAdd(contentOffset, translation);
+    
+    // Finally, update center points and content offset
+    self.currentViewCenter              = OCA_CGPointAdd(self.currentViewCenter, translation);
+    self.currentView.center             = OCA_CGPointAdd(self.currentViewCenter, self.panTranslationViewCenter);
+    self.collectionView.contentOffset   = OCA_CGPointAdd(contentOffset, translation);
 }
 
 
@@ -513,28 +511,30 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
     
     switch(gestureRecognizer.state) {
         case UIGestureRecognizerStateBegan: {
-            // TODO - ideally, user would be able to long tap and begin dragging
+            // TODO - ideally, user should be able to long tap and begin dragging
             if (_isEditModeOn) {
                 DLog(@"StateBegan with isEditModeOn");
             } else {
                 DLog(@"setting editMode On");
                 _isEditModeOn = YES;
+                // Check if the delegate wants to know editing began
                 if ([self.delegate respondsToSelector: @selector(didBeginEditingForCollectionView:layout:)]) {
+                    // ...if so, inform delegate we're editing
                     [self.delegate didBeginEditingForCollectionView: self.collectionView
                                                              layout: self];
                 }
-                [self.collectionView reloadData];       // TODO - this seems like overkill, why can't we just invalidate ourself?
-//                [self invalidateLayout];              // ...does not seem to be forcing cell layout
             }
 
             /*
              * Communicate with the delegate methods (if implemented) to inform of the user's (potential) move gesture
              */
             NSIndexPath *currentIndexPath = [self.collectionView indexPathForItemAtPoint: [gestureRecognizer locationInView: self.collectionView]];
+            DLog(@"currentIndexPath=%@", currentIndexPath.debugDescription);
+            //TODO - should be check to make sure we have long-tapped a cell?
             
-            // If the delegate wants to OK moving an item
+            // If the delegate wants to OK moving items
             if ([self.dataSource respondsToSelector: @selector(collectionView:canMoveItemAtIndexPath:)]) {
-                // ...ask for permission
+                // ...ask for permission to move this item
                 if (![self.dataSource collectionView: self.collectionView
                               canMoveItemAtIndexPath: currentIndexPath]) {
                     // ...delegate says NO, just return
@@ -544,8 +544,9 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
             
             self.selectedItemIndexPath = currentIndexPath;
             
+            // Check if the delegate wants to know dragging began
             if ([self.delegate respondsToSelector: @selector(collectionView:layout:willBeginDraggingItemAtIndexPath:)]) {
-                // Inform the delegate we are starting a drag
+                // ...if so, inform the we are starting a drag with the item at indexPath
                 [self.delegate collectionView: self.collectionView
                                        layout: self
              willBeginDraggingItemAtIndexPath: self.selectedItemIndexPath];
@@ -560,36 +561,35 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
             // Make a new UIView with a frame matching the selected cell's
             self.currentView = [[UIView alloc] initWithFrame: collectionViewCell.frame];
             
-            // ...first we'll get the highlighted image, start by setting highlighted state YES, in case the delegate implements a different
+            // ...first we'll get the highlighted image, start by setting highlighted state YES, in case there is a different
             //    visual effect for highlighted
             collectionViewCell.highlighted          = YES;
             // ...make an imageView of it
-            UIImageView *highlightedImageView       = [[UIImageView alloc] initWithImage: [collectionViewCell OCR_rasterizedImage]];
-            DLog(@"highlightedImageView=%@", highlightedImageView);
+            UIImageView *highlightedImageView       = [[UIImageView alloc] initWithImage: [collectionViewCell OCA_rasterizedImage]];
             // ...and set autoresizing mask to flexible width and height
             highlightedImageView.autoresizingMask   = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
             highlightedImageView.alpha              = 1.0f;
             
             // ...second, we get the normal image
-            collectionViewCell.highlighted  = NO;
+            collectionViewCell.highlighted          = NO;
             // ...make an imageView of it
-            UIImageView *imageView          = [[UIImageView alloc] initWithImage: [collectionViewCell OCR_rasterizedImage]];
+            UIImageView *unHighlightedImageView     = [[UIImageView alloc] initWithImage: [collectionViewCell OCA_rasterizedImage]];
             // ...and set autoresizing mask to flexible width and height
-            imageView.autoresizingMask      = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-            imageView.alpha                 = 0.0f;
+            unHighlightedImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+            unHighlightedImageView.alpha            = 0.0f;
             
-            // Add the two imageViews to the new UIView
-            [self.currentView addSubview: imageView];
-            [self.currentView addSubview: highlightedImageView];        // Note - highlighted image is "on top"
-            // and add the new UIView to the collection view
+            // ...add the two imageViews to the new UIView
+            [self.currentView addSubview: unHighlightedImageView];
+            [self.currentView addSubview: highlightedImageView];        // Note - highlighted image is the topmost view
+            // ...and add the new UIView to the collection view
             [self.collectionView addSubview: self.currentView];
             
             self.currentViewCenter = self.currentView.center;
             
-            // Now that all the setup is complete, do the animation
+            // ...Now that all the setup is complete, do the animation
             __weak typeof(self) weakSelf = self;
             /*
-             * To understand the purpose of declaring the __weak reference to self, see:
+             * The purpose of declaring the __weak reference to self is to avoid a strong reference cycle warning, see:
              * https://developer.apple.com/library/ios/documentation/cocoa/conceptual/ProgrammingWithObjectiveC/WorkingwithBlocks/WorkingwithBlocks.html#//apple_ref/doc/uid/TP40011210-CH8-SW16
              */
             [UIView animateWithDuration: 0.3
@@ -603,20 +603,21 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
                      // ...fade out the highlightedImageView
                      highlightedImageView.alpha         = 0.0f;
                      // ...and fade in the regular view
-                     imageView.alpha                    = 1.0f;
+                     unHighlightedImageView.alpha       = 1.0f;
                  }
              } completion: ^(BOOL finished) {
                  // When the animation completes,
                  __strong typeof(self) strongSelf = weakSelf;
                  if (strongSelf) {
                      // ...remove the highlighted view
+                     DLog(@"removing highlightedImageView=%@", highlightedImageView);
                      [highlightedImageView removeFromSuperview];
                      // ...and invalidate
                      [strongSelf invalidateLayout];
                      
                      // Check if the delegate wants to know when dragging starts,
                      if ([strongSelf.delegate respondsToSelector: @selector(collectionView:layout:didBeginDraggingItemAtIndexPath:)]) {
-                         // ...inform the delegate we're dragging
+                         // ...if so, inform the delegate we're dragging
                          [strongSelf.delegate collectionView: strongSelf.collectionView
                                                       layout: strongSelf
                              didBeginDraggingItemAtIndexPath: strongSelf.selectedItemIndexPath];
@@ -624,11 +625,12 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
                  }
              }];
             
-            [self invalidateLayout];
+//            [self invalidateLayout];
+            [self.collectionView reloadData];       // TODO - this seems like overkill, why can't we just invalidate ourself?
             break;
         }
             
-        case UIGestureRecognizerStateCancelled:
+        case UIGestureRecognizerStateCancelled:     // This case falls through into UIGestureRecognizerStateEnded:
         case UIGestureRecognizerStateEnded: {
             DLog(@"StateEnded or Cancelled");
             NSIndexPath *currentIndexPath = self.selectedItemIndexPath;
@@ -636,7 +638,7 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
             if (currentIndexPath) {
                 // Check if the delegate wants to know if dragging will end
                 if ([self.delegate respondsToSelector: @selector(collectionView:layout:willEndDraggingItemAtIndexPath:)]) {
-                    // ...inform the delegate dragging will end
+                    // ...if so, inform the delegate dragging this item will end
                     [self.delegate collectionView: self.collectionView
                                            layout: self
                    willEndDraggingItemAtIndexPath: currentIndexPath];
@@ -669,7 +671,7 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
                          [strongSelf.currentView removeFromSuperview];
                          strongSelf.currentView = nil;
                          // ...and invalidate
-                         [strongSelf invalidateLayout];
+                         [strongSelf.collectionView reloadData];
                          
                          // Check if the delegate wants to know when dragging ends,
                          if ([strongSelf.delegate respondsToSelector: @selector(collectionView:layout:didEndDraggingItemAtIndexPath:)]) {
@@ -683,64 +685,92 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
             }
             break;
         }
-            
-        default:
+
+        default:        // Several states (changed, failed, possible, recognized) are ignored
             break;
     }
 }
 
-
+/**
+ * Handles dragging a cell around the screen, modeling Springboard behavior.
+ *
+ * Note - animating the cell larger is handled in handleLongPressGesture's UIGestureRecognizerStateBegan switch
+ *
+ * @param gestureRecognizer the gestureRecognizer for which we are the action target
+ */
 //----------------------------------------------------------------------------------------------------------
 - (void)handlePanGesture: (UIPanGestureRecognizer *)gestureRecognizer
 {
-    DLog();
+//    DLog();
     
     switch (gestureRecognizer.state) {
-        case UIGestureRecognizerStateBegan:
+        case UIGestureRecognizerStateBegan:         // This case falls through into UIGestureRecognizerStateChanged:
         case UIGestureRecognizerStateChanged: {
-            self.panTranslationInCollectionView = [gestureRecognizer translationInView: self.collectionView];
-            CGPoint viewCenter = self.currentView.center = OCRS_CGPointAdd(self.currentViewCenter, self.panTranslationInCollectionView);
-            
+            // First, move the cell by updating its center point
+            // Get the "translation point" - i.e., the delta, of the new center point
+            self.panTranslationViewCenter = [gestureRecognizer translationInView: self.collectionView];
+            // ...add the delta to our tracking variable
+            self.currentView.center = OCA_CGPointAdd(self.currentViewCenter, self.panTranslationViewCenter);
+            // ...and create a local variable
+            CGPoint viewCenter      = self.currentView.center;
+            // Check to see if we need to re-layout
             [self invalidateLayoutIfNecessary];
             
+            // Second, check to see if the collectionView needs to be scrolled
             switch (self.scrollDirection) {
                 case UICollectionViewScrollDirectionVertical: {
+                    // The collectionView is setup for vertical scrolling, is the cell center above the collectionView bounds + inset?
                     if (viewCenter.y < (CGRectGetMinY(self.collectionView.bounds) + self.scrollingTriggerEdgeInsets.top)) {
-                        [self setupScrollTimerInDirection: OCRScrollingDirectionUp];
+                        // Yes - the user is moving the cell upwards and has gone beyond the top of the currently visible view
+                        // ...start the scroll timer
+                        [self setupScrollTimerInDirection: OCAScrollingDirectionUp];
                     } else {
+                        // ...is the cell center below the collectionView bounds - inset?
                         if (viewCenter.y > (CGRectGetMaxY(self.collectionView.bounds) - self.scrollingTriggerEdgeInsets.bottom)) {
-                            [self setupScrollTimerInDirection: OCRScrollingDirectionDown];
+                            // Yes - user is moving the cell downwards and has gone beyond the bottom of the currently visible view
+                            // ...start the scroll timer
+                            [self setupScrollTimerInDirection: OCAScrollingDirectionDown];
                         } else {
+                            // ...the cell is somewhere between top and bottom - no scrolling required, so invalidate the scroll timer
                             [self invalidatesScrollTimer];
                         }
                     }
-                }
                     break;
+                }
                     
                 case UICollectionViewScrollDirectionHorizontal: {
+                    // The collectionView is setup for horizontal scrolling, is the cell center to the left of collectionView bounds + inset?
                     if (viewCenter.x < (CGRectGetMinX(self.collectionView.bounds) + self.scrollingTriggerEdgeInsets.left)) {
-                        [self setupScrollTimerInDirection: OCRScrollingDirectionLeft];
+                        // Yes - the user is moving the cell leftwards and has gone beyond the left edge of the currently visible view
+                        // ...start the scroll timer
+                        [self setupScrollTimerInDirection: OCAScrollingDirectionLeft];
                     } else {
+                        // ...is the cell center to the right of collectionView bounds - inset?
                         if (viewCenter.x > (CGRectGetMaxX(self.collectionView.bounds) - self.scrollingTriggerEdgeInsets.right)) {
-                            [self setupScrollTimerInDirection: OCRScrollingDirectionRight];
+                            // Yes - the user is moving the cell rightwards and has gone beyond the right edge of the currently visible view
+                            // ...start the scroll timer
+                            [self setupScrollTimerInDirection: OCAScrollingDirectionRight];
                         } else {
+                            // ...the cell is somewhere between left and right - no scrolling required, so invalidate the scroll timer
                             [self invalidatesScrollTimer];
                         }
                     }
+                    break;
                 }
+                default:
                     break;
             }
-        }
             break;
+        }
             
-        case UIGestureRecognizerStateCancelled:
+        case UIGestureRecognizerStateCancelled:     // This case falls through into UIGestureRecognizerStateEnded:
         case UIGestureRecognizerStateEnded: {
-            DLog(@"State ended or cancelled");
+            // User has finished dragging, invalidate the scroll timer
             [self invalidatesScrollTimer];
-        }
             break;
+        }
             
-        default:
+        default:        // Several states (failed, possible, recognized) are ignored
             break;
     }
 }
@@ -748,10 +778,10 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
 //----------------------------------------------------------------------------------------------------------
 /**
  Determine whether or not we want to handle the gesture.
- In particular, we want to "fail" on single taps so the tap event is passed on to the cell button handlers.
+ In particular, we want to "fail" on single taps in the cell so the tap event is passed on to the cell button handlers.
  
- @param gestureRecognizer the gestureRecognizer in question (could be longPress, pan, or tap
- @return BOOL   NO if we are fail - i.e., we don't want to handle it, YES otherwise
+ @param gestureRecognizer the gestureRecognizer in question (could be longPress, pan, or tap)
+ @return BOOL   NO if we don't want to handle it, YES otherwise
  */
 - (BOOL)gestureRecognizer: (UIGestureRecognizer *)gestureRecognizer
        shouldReceiveTouch: (UITouch *)touch
@@ -761,8 +791,12 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
     CGPoint touchPoint      = [touch locationInView: self.collectionView];
     NSIndexPath *indexPath  = [self.collectionView indexPathForItemAtPoint: touchPoint];
     
-    if (indexPath && [gestureRecognizer isKindOfClass:[UITapGestureRecognizer class]]) {
-        return NO;
+    if (indexPath) {
+        // If indexPath is not NULL, the tap is inside a cell.
+        if ([gestureRecognizer isKindOfClass:[UITapGestureRecognizer class]]) {
+            // If the gestureRecognizer is a tap recognizer, fail the event
+            return NO;
+        }
     }
     
     return YES;
@@ -793,8 +827,8 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
                 [self.delegate didEndEditingForCollectionView: self.collectionView
                                                        layout: self];
             }
-            [self.collectionView reloadData];       // TODO - this seems like overkill, why can't we just invalidate ourself?
-//            [self invalidateLayout];              // ...does not seem to be forcing cell layout
+            // Tell the collectionView to reload the visible cells, which will remove our delete button and stop the quivering
+            [self.collectionView reloadData];
         }
     }
 }
@@ -806,9 +840,11 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
 {
     DLog(@"rect=%@", NSStringFromCGRect(rect));
     
+    // First, call super to get all elements attributes in the rect
     NSArray *layoutAttributesForElementsInRect = [super layoutAttributesForElementsInRect: rect];
     
     for (OCAEditableLayoutAttributes *layoutAttributes in layoutAttributesForElementsInRect) {
+        // For each element's attributes, update our custom attribute(s)
         switch (layoutAttributes.representedElementCategory) {
             case UICollectionElementCategoryCell: {
                 if (_isEditModeOn) {
@@ -816,9 +852,10 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
                 } else {
                     layoutAttributes.deleteButtonHidden = YES;
                 }
-                [self applyLayoutAttributes: layoutAttributes];
-            }
                 break;
+            }
+            // There are no custom attributes for supplementary or decoration views, if there were
+            //  they would be handled with the corresponding case statements here.
             default:
                 break;
         }
@@ -833,18 +870,21 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
 {
     DLog();
     
+    // First, call super to get the attributes of the cell at indexPath
     OCAEditableLayoutAttributes *layoutAttributes = (OCAEditableLayoutAttributes *)[super layoutAttributesForItemAtIndexPath: indexPath];
     
     switch (layoutAttributes.representedElementCategory) {
+        // Update our custom attribute
         case UICollectionElementCategoryCell: {
             if (_isEditModeOn) {
                 layoutAttributes.deleteButtonHidden = NO;
             } else {
                 layoutAttributes.deleteButtonHidden = YES;
             }
-            [self applyLayoutAttributes: layoutAttributes];
-        }
             break;
+        }
+        // There are no custom attributes for supplementary or decoration views, if there were
+        //  they would be handled with the corresponding case statements here.
         default:
             break;
     }
@@ -861,18 +901,40 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
     DLog();
     
     if ([self.panGestureRecognizer isEqual:gestureRecognizer]) {
+        // Check to see if we're currently handling a pan, return YES if so, NO otherwise
         return (self.selectedItemIndexPath != nil);
     }
+    
+    if ([self.longPressGestureRecognizer isEqual:gestureRecognizer]) {
+        // Check to see if the long press is on a cell
+        NSIndexPath *currentIndexPath = [self.collectionView indexPathForItemAtPoint: [gestureRecognizer locationInView: self.collectionView]];
+        if (!currentIndexPath) {
+            // ...it's not on a cell. "Fail" our long press handler and allow the default handler to process
+            return NO;
+        }
+    }
+    
     return YES;
 }
 
-
+/**
+ * Determine if the two gestureRecognizers allow simultaneous recognition
+ *
+ * see https://developer.apple.com/library/ios/documentation/uikit/reference/UIGestureRecognizerDelegate_Protocol/Reference/Reference.html#//apple_ref/occ/intfm/UIGestureRecognizerDelegate/gestureRecognizer:shouldRecognizeSimultaneouslyWithGestureRecognizer:
+ * @param   gestureRecognizer sending the message
+ * @param   otherGestureRecognizer  the candidate to receive simultaneous events
+ * @return  YES if simultaneous recognition is OK, NO otherwise
+ */
 //----------------------------------------------------------------------------------------------------------
 - (BOOL)                            gestureRecognizer: (UIGestureRecognizer *)gestureRecognizer
    shouldRecognizeSimultaneouslyWithGestureRecognizer: (UIGestureRecognizer *)otherGestureRecognizer
 {
     DLog();
     
+    /**
+     * Note the two if statements are complementary. This is just a precaution. If either recognizer returns YES for the "other"
+     * simultaneous recognition will be allowed
+     */
     if ([self.longPressGestureRecognizer isEqual: gestureRecognizer]) {
         return [self.panGestureRecognizer isEqual: otherGestureRecognizer];
     }
@@ -884,8 +946,16 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
     return NO;
 }
 
-#pragma mark - Key-Value Observing methods
+#pragma mark - Notifications
 
+/**
+ * Called when the observed object changes. (We registered for in our initialize method.)
+ *
+ * @param keyPath   the string we assigned to this notification
+ * @param object    the object that changed (in our case, the collectionView)
+ * @param change    an NSDictionary of changes
+ * @param context   the context we provided (in our case, nil)
+ */
 //----------------------------------------------------------------------------------------------------------
 - (void)observeValueForKeyPath: (NSString *)keyPath
                       ofObject: (id)object
@@ -894,16 +964,19 @@ static NSString * const kOCRCollectionViewKeyPath   = @"collectionView";
 {
     DLog();
     
-    if ([keyPath isEqualToString: kOCRCollectionViewKeyPath]) {
+    // Check to make sure its the notification we expected
+    if ([keyPath isEqualToString: kOCACollectionViewKeyPath]) {
+        // If we have a reference to a collection view...
         if (self.collectionView != nil) {
+            // ...something happened like a rotation or the collectionView was just "popped" into view
             [self setupCollectionView];
         } else {
+            // ...we're probably going away
             [self invalidatesScrollTimer];
         }
     }
 }
 
-#pragma mark - Notifications
 
 //----------------------------------------------------------------------------------------------------------
 - (void)handleApplicationWillResignActive:(NSNotification *)notification

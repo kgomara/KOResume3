@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+// TODO - refactor to extract OCACollectionViewCell behavior and inherit from that
+
 @interface OCRPackagesCell : UICollectionViewCell
 
 @property (nonatomic, strong)   IBOutlet UILabel    *title;

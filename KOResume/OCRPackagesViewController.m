@@ -420,35 +420,30 @@ BOOL isEditModeActive;
     }
 }
 
-#pragma mark - UICollectionView delegates
 
 //----------------------------------------------------------------------------------------------------------
-- (void)moveItemAtIndexPath:(NSIndexPath *)indexPath
-                toIndexPath:(NSIndexPath *)newIndexPath
+- (void)        collectionView: (UICollectionView *)collectionView
+   didHighlightItemAtIndexPath: (NSIndexPath *)indexPath
 {
     DLog();
     
-    NSMutableArray *packages = [[self.fetchedResultsController fetchedObjects] mutableCopy];
-    
-    // Grab the item we're moving.
-    NSManagedObject *movedPackage = [[self fetchedResultsController] objectAtIndexPath: indexPath];
-    
-    // Remove the object we're moving from the array.
-    [packages removeObject: movedPackage];
-    // Now re-insert it at the destination.
-    [packages insertObject: movedPackage
-                   atIndex: newIndexPath.row];
-    
-    // All of the objects are now in their correct order. Update each
-    // object's sequence_number field by iterating through the array.
-    int i = 0;
-    for (Packages *aPackage in packages) {
-        [aPackage setSequence_numberValue: i++];
-    }
-    
-//    [self doneButtonTapped];
+//    OCRPackagesCell *cell = (OCRPackagesCell *)[collectionView cellForItemAtIndexPath:indexPath];
+//    [cell setHighlighted: YES];
 }
 
+
+//----------------------------------------------------------------------------------------------------------
+- (void)        collectionView: (UICollectionView *)collectionView
+ didUnhighlightItemAtIndexPath: (NSIndexPath *)indexPath
+{
+    DLog();
+    
+//    OCRPackagesCell *cell = (OCRPackagesCell *)[collectionView cellForItemAtIndexPath:indexPath];
+//    [cell setHighlighted: NO];
+}
+
+
+#pragma mark - UICollectionView delegates
 
 //----------------------------------------------------------------------------------------------------------
 - (BOOL)            collectionView:(UICollectionView *)collectionView
@@ -492,11 +487,7 @@ BOOL isEditModeActive;
 - (void)   collectionView: (UICollectionView *)collectionView
  didSelectItemAtIndexPath: (NSIndexPath *)indexPath
 {
-    DLog(@"Don't think this should be called");
-    
-    /*
-     As above, the cells handle all the action, given we return NO above - this method should never be called.
-     */
+    DLog();
 }
 
 #pragma mark - OCAEditableCollectionViewDelegateFlowLayout methods
@@ -508,7 +499,6 @@ BOOL isEditModeActive;
     DLog();
     
     isEditModeActive = YES;
-//    [self.collectionViewLayout invalidateLayout];
 }
 
 
@@ -520,10 +510,8 @@ BOOL isEditModeActive;
     
     isEditModeActive = NO;
 
-    // TODO reorder and save any changes
     [self resequencePackages];
     [self saveMoc: _managedObjectContext];
-    [self.collectionView reloadData];
 }
 
 
@@ -560,8 +548,39 @@ willEndDraggingItemAtIndexPath:(NSIndexPath *)indexPath
  didEndDraggingItemAtIndexPath:(NSIndexPath *)indexPath
 {
     DLog(@"did end drag");
-    
 }
+
+//----------------------------------------------------------------------------------------------------------
+- (BOOL)collectionView: (UICollectionView *)collectionView
+       itemAtIndexPath: (NSIndexPath *)fromIndexPath
+    canMoveToIndexPath: (NSIndexPath *)toIndexPath
+{
+    DLog();
+    
+    return YES;
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+- (void)collectionView: (UICollectionView *)collectionView
+       itemAtIndexPath: (NSIndexPath *)fromIndexPath
+   willMoveToIndexPath: (NSIndexPath *)toIndexPath
+{
+    DLog();
+}
+
+//----------------------------------------------------------------------------------------------------------
+- (void)collectionView: (UICollectionView *)collectionView
+       itemAtIndexPath: (NSIndexPath *)fromIndexPath
+    didMoveToIndexPath: (NSIndexPath *)toIndexPath;
+{
+    DLog();
+    
+    [self moveItemAtIndexPath: fromIndexPath
+                  toIndexPath: toIndexPath];
+}
+
+
 
 #pragma mark - Private methods
 
@@ -590,6 +609,32 @@ willEndDraggingItemAtIndexPath:(NSIndexPath *)indexPath
             [aPackage setSequence_number: [NSNumber numberWithInt: i++]];       // TODO - sequence number does not seem to stick
             [aPackage logAllFields];
         }
+    }
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+- (void)moveItemAtIndexPath:(NSIndexPath *)indexPath
+                toIndexPath:(NSIndexPath *)newIndexPath
+{
+    DLog();
+    
+    NSMutableArray *packages = [[self.fetchedResultsController fetchedObjects] mutableCopy];
+    
+    // Grab the item we're moving.
+    NSManagedObject *movedPackage = [[self fetchedResultsController] objectAtIndexPath: indexPath];
+    
+    // Remove the object we're moving from the array.
+    [packages removeObject: movedPackage];
+    // Now re-insert it at the destination.
+    [packages insertObject: movedPackage
+                   atIndex: newIndexPath.row];
+    
+    // All of the objects are now in their correct order. Update each
+    // object's sequence_number field by iterating through the array.
+    int i = 0;
+    for (Packages *aPackage in packages) {
+        [aPackage setSequence_numberValue: i++];
     }
 }
 

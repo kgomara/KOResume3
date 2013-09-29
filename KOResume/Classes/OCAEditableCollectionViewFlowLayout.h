@@ -26,6 +26,10 @@
 @protocol OCAEditableCollectionViewDataSource <UICollectionViewDataSource>
 
 @optional
+
+- (BOOL)collectionView: (UICollectionView *)collectionView
+canMoveItemAtIndexPath: (NSIndexPath *)indexPath;
+
 - (void)collectionView: (UICollectionView *)collectionView
        itemAtIndexPath: (NSIndexPath *)fromIndexPath
    willMoveToIndexPath: (NSIndexPath *)toIndexPath;
@@ -35,11 +39,10 @@
     didMoveToIndexPath: (NSIndexPath *)toIndexPath;
 
 - (BOOL)collectionView: (UICollectionView *)collectionView
-canMoveItemAtIndexPath: (NSIndexPath *)indexPath;
-
-- (BOOL)collectionView: (UICollectionView *)collectionView
        itemAtIndexPath: (NSIndexPath *)fromIndexPath
     canMoveToIndexPath: (NSIndexPath *)toIndexPath;
+
+// TODO add can, will, didDelete
 
 @end
 

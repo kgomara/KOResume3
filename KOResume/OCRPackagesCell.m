@@ -124,7 +124,10 @@ static UIImage *deleteButtonImg;
 
 - (void)setHighlighted:(BOOL)highlighted
 {
-    DLog();
+    DLog(@"highlighted=%@", highlighted ? @"YES" : @"NO");
+    
+    [super setHighlighted: highlighted];
+    
     if (highlighted) {
         [self setBackgroundColor:[UIColor redColor]];
     } else {

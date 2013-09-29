@@ -43,6 +43,13 @@
 
 @end
 
+@interface UIStoryboard (KOExtensions)
+
++ (UIStoryboard *)main_iPhoneStoryboard;
++ (UIStoryboard *)main_iPadStoryboard;
+
+@end
+
 
 /*
  * These categories are taken from the TextKitDemo code provided by Apple

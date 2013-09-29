@@ -81,6 +81,8 @@
 		D6D572181793A78600034AF3 /* _Packages.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D5720E1793A78600034AF3 /* _Packages.m */; };
 		D6D572191793A78600034AF3 /* _Resumes.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D572101793A78600034AF3 /* _Resumes.m */; };
 		D6D5721A1793A78600034AF3 /* _Resumes.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D572101793A78600034AF3 /* _Resumes.m */; };
+		KIYDQKWBMRKIEYEVRWSLKUDQ /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = HYXIFWTDXJPPRRMDCEPMDTJH /* QuartzCore.framework */; };
+		KNPONLATPTEBRUFEBXNXFHCQ /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = THBDITSPYVFDWQYYBDCIDIXG /* libz.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -157,6 +159,8 @@
 		D6D5720E1793A78600034AF3 /* _Packages.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = _Packages.m; path = Classes/_Packages.m; sourceTree = "<group>"; };
 		D6D5720F1793A78600034AF3 /* _Resumes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = _Resumes.h; path = Classes/_Resumes.h; sourceTree = "<group>"; };
 		D6D572101793A78600034AF3 /* _Resumes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = _Resumes.m; path = Classes/_Resumes.m; sourceTree = "<group>"; };
+		HYXIFWTDXJPPRRMDCEPMDTJH /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		THBDITSPYVFDWQYYBDCIDIXG /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -168,6 +172,8 @@
 				D63D82C3179311350065F0A9 /* CoreData.framework in Frameworks */,
 				D63D82C1179311350065F0A9 /* UIKit.framework in Frameworks */,
 				D63D82BD179311350065F0A9 /* Foundation.framework in Frameworks */,
+				KIYDQKWBMRKIEYEVRWSLKUDQ /* QuartzCore.framework in Frameworks */,
+				KNPONLATPTEBRUFEBXNXFHCQ /* libz.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -214,6 +220,8 @@
 				D63D82C0179311350065F0A9 /* UIKit.framework */,
 				D63D82C2179311350065F0A9 /* CoreData.framework */,
 				D63D82E6179311350065F0A9 /* XCTest.framework */,
+				HYXIFWTDXJPPRRMDCEPMDTJH /* QuartzCore.framework */,
+				THBDITSPYVFDWQYYBDCIDIXG /* libz.dylib */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -235,10 +243,6 @@
 				D6D571B21793395F00034AF3 /* GlobalConstants.h */,
 				D6D571B31793395F00034AF3 /* GlobalConstants.m */,
 				D6D571B41793395F00034AF3 /* GlobalMacros.h */,
-				D6D571B51793395F00034AF3 /* OCAExtensions.h */,
-				D6D571B61793395F00034AF3 /* OCAExtensions.m */,
-				D6D571AF179335FF00034AF3 /* OCRCoreDataController.h */,
-				D6D571B0179335FF00034AF3 /* OCRCoreDataController.m */,
 				D63D82C6179311350065F0A9 /* KOResume-Info.plist */,
 				D63D82C7179311350065F0A9 /* InfoPlist.strings */,
 				D63D82CA179311350065F0A9 /* main.m */,
@@ -276,9 +280,23 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
+		D6BB508817E4DF58005827FF /* OCAClasses */ = {
+			isa = PBXGroup;
+			children = (
+				D6A8EEC617CEE30F00A8C6DA /* OCAEditableCollectionViewFlowLayout.h */,
+				D6A8EEC717CEE30F00A8C6DA /* OCAEditableCollectionViewFlowLayout.m */,
+				D667B7E917D2E88E00FBD6CD /* OCAEditableLayoutAttributes.h */,
+				D667B7EA17D2E88E00FBD6CD /* OCAEditableLayoutAttributes.m */,
+				D6D571B51793395F00034AF3 /* OCAExtensions.h */,
+				D6D571B61793395F00034AF3 /* OCAExtensions.m */,
+			);
+			name = OCAClasses;
+			sourceTree = "<group>";
+		};
 		D6D571C01793585000034AF3 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				D6BB508817E4DF58005827FF /* OCAClasses */,
 				D6D571C11793585E00034AF3 /* DataModel */,
 				D63D82CD179311350065F0A9 /* OCRAppDelegate.h */,
 				D63D82CE179311350065F0A9 /* OCRAppDelegate.m */,
@@ -290,10 +308,6 @@
 				D6AC3D3D179A3F21001D8D75 /* OCRPackagesCell.m */,
 				D63D82D9179311350065F0A9 /* OCRPackagesViewController.h */,
 				D63D82DA179311350065F0A9 /* OCRPackagesViewController.m */,
-				D6A8EEC617CEE30F00A8C6DA /* OCAEditableCollectionViewFlowLayout.h */,
-				D6A8EEC717CEE30F00A8C6DA /* OCAEditableCollectionViewFlowLayout.m */,
-				D667B7E917D2E88E00FBD6CD /* OCAEditableLayoutAttributes.h */,
-				D667B7EA17D2E88E00FBD6CD /* OCAEditableLayoutAttributes.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -320,6 +334,8 @@
 				D6D572021793991500034AF3 /* Education.m */,
 				D6D571FF1793991500034AF3 /* Jobs.h */,
 				D6D572001793991500034AF3 /* Jobs.m */,
+				D6D571AF179335FF00034AF3 /* OCRCoreDataController.h */,
+				D6D571B0179335FF00034AF3 /* OCRCoreDataController.m */,
 				D6D571FD1793991400034AF3 /* Resumes.h */,
 				D6D571FE1793991400034AF3 /* Resumes.m */,
 			);
@@ -571,6 +587,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = "\"/Applications/Spark Inspector.app/Contents/Resources/Frameworks\"";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -586,6 +603,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "-ObjC";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WARNING_CFLAGS = "";
@@ -618,6 +636,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				OTHER_LDFLAGS = "-ObjC";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -631,10 +650,12 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = KOResume/KOResume.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = "\"/Applications/Spark Inspector.app/Contents/Resources/Frameworks\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KOResume/KOResume-Prefix.pch";
 				GENERATE_PKGINFO_FILE = NO;
 				INFOPLIST_FILE = "KOResume/KOResume-Info.plist";
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = koresume;
 				WRAPPER_EXTENSION = app;
 			};
@@ -699,6 +720,12 @@
 		D6D571FA17937C9100034AF3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = "\"/Applications/Spark Inspector.app/Contents/Resources/Frameworks\"";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-framework",
+					SparkInspector,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
