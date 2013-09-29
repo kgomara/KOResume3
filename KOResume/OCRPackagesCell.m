@@ -108,11 +108,7 @@ static UIImage *deleteButtonImg;
 //{
 //    DLog();
 //    
-//    self.backgroundColor = [UIColor lightGrayColor];
-//    
-//    self.layer.cornerRadius = 5.;
-////    self.viewForBaselineLayout.layer.cornerRadius = 2.;
-//    
+//    self.highlighted = NO;              // TODO - shouldn't have to do this, something wrong in highlighting logic (or something)
 //}
 
 //----------------------------------------------------------------------------------------------------------
@@ -122,12 +118,18 @@ static UIImage *deleteButtonImg;
 //    [self setBackgroundColor:[UIColor lightGrayColor]];
 //}
 
-- (void)setHighlighted:(BOOL)highlighted
+- (void)setHighlighted: (BOOL)highlighted
 {
     DLog(@"highlighted=%@", highlighted ? @"YES" : @"NO");
     
+    // Set the highlighted property on the cell
     [super setHighlighted: highlighted];
     
+    /*
+     * In our cell prototype we created a view inset a few pixels and set its background to white.
+     * Our highlight visual effect is acheived by changing the background color of the cell, which is
+     * occluded by our inset view, leaving a border of the background color.
+     */
     if (highlighted) {
         [self setBackgroundColor:[UIColor redColor]];
     } else {
@@ -137,7 +139,7 @@ static UIImage *deleteButtonImg;
 
 
 //----------------------------------------------------------------------------------------------------------
-- (void)preferredContentSizeChanged:(NSNotification *)aNotification
+- (void)preferredContentSizeChanged: (NSNotification *)aNotification
 {
     [self calculateAndSetFonts];
 }
@@ -163,6 +165,7 @@ static UIImage *deleteButtonImg;
     self.resumeButton.titleLabel.font   = cellBodyFont;
         
     // TODO - need to change the contentSize/tableCellHeight?
+    [self invalidateIntrinsicContentSize];
 }
 
 //----------------------------------------------------------------------------------------------------------

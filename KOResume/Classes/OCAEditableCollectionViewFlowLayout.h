@@ -56,6 +56,14 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath;
 - (void)didEndEditingForCollectionView: (UICollectionView *)collectionView
                                 layout: (UICollectionViewLayout *)collectionViewLayout;
 
+- (void)            collectionView: (UICollectionView *)collectionView
+                            layout: (UICollectionViewLayout *)collectionViewLayout
+   didBeginDraggingItemAtIndexPath: (NSIndexPath *)indexPath;
+
+- (void)            collectionView: (UICollectionView *)collectionView
+                            layout: (UICollectionViewLayout *)collectionViewLayout
+     didEndDraggingItemAtIndexPath: (NSIndexPath *)indexPath;
+
 @optional
 
 - (void)            collectionView: (UICollectionView *)collectionView
@@ -64,15 +72,7 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath;
 
 - (void)            collectionView: (UICollectionView *)collectionView
                             layout: (UICollectionViewLayout *)collectionViewLayout
-   didBeginDraggingItemAtIndexPath: (NSIndexPath *)indexPath;
-
-- (void)            collectionView: (UICollectionView *)collectionView
-                            layout: (UICollectionViewLayout *)collectionViewLayout
     willEndDraggingItemAtIndexPath: (NSIndexPath *)indexPath;
-
-- (void)            collectionView: (UICollectionView *)collectionView
-                            layout: (UICollectionViewLayout *)collectionViewLayout
-     didEndDraggingItemAtIndexPath: (NSIndexPath *)indexPath;
 
 - (BOOL)shouldEnableEditingForCollectionView: (UICollectionView *)collectionView
                                       layout: (UICollectionViewLayout *)collectionViewLayout;

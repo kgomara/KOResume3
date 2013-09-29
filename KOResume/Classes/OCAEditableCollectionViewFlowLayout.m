@@ -21,7 +21,9 @@
 #import <QuartzCore/QuartzCore.h>
 #import <objc/runtime.h>
 
-#define OCA_FRAMES_PER_SECOND 60.0
+#define OCA_FRAMES_PER_SECOND           60.0
+#define kOCAHighlightedImageViewTag     9797
+#define kOCAUnHighlightedImageViewTag   9798
 
 #ifndef CGGEOMETRY_OCASUPPORT_H_
 CG_INLINE CGPoint OCA_CGPointAdd(CGPoint point1, CGPoint point2)
@@ -569,6 +571,8 @@ static NSString * const kOCACollectionViewKeyPath   = @"collectionView";
             // ...and set autoresizing mask to flexible width and height
             highlightedImageView.autoresizingMask   = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
             highlightedImageView.alpha              = 1.0f;
+            // ...assign a value to the highlighted view to make it easy to identify when we want to remove it (see the cancelled and ended states below)
+            highlightedImageView.tag                = kOCAHighlightedImageViewTag;
             
             // ...second, we get the normal image
             collectionViewCell.highlighted          = NO;
@@ -596,37 +600,48 @@ static NSString * const kOCACollectionViewKeyPath   = @"collectionView";
                                   delay: 0.0
                                 options: UIViewAnimationOptionBeginFromCurrentState
                              animations: ^{
-                 __strong typeof(self) strongSelf = weakSelf;
-                 if (strongSelf) {
-                     // Set the make scale transform to 1.1 (or 110%) in both height and width
-                     strongSelf.currentView.transform   = CGAffineTransformMakeScale(1.1f, 1.1f);
-                     // ...fade out the highlightedImageView
-                     highlightedImageView.alpha         = 0.0f;
-                     // ...and fade in the regular view
-                     unHighlightedImageView.alpha       = 1.0f;
-                 }
-             } completion: ^(BOOL finished) {
-                 // When the animation completes,
-                 __strong typeof(self) strongSelf = weakSelf;
-                 if (strongSelf) {
-                     // ...remove the highlighted view
-                     DLog(@"removing highlightedImageView=%@", highlightedImageView);
-                     [highlightedImageView removeFromSuperview];
-                     // ...and invalidate
-                     [strongSelf invalidateLayout];
-                     
-                     // Check if the delegate wants to know when dragging starts,
-                     if ([strongSelf.delegate respondsToSelector: @selector(collectionView:layout:didBeginDraggingItemAtIndexPath:)]) {
-                         // ...if so, inform the delegate we're dragging
-                         [strongSelf.delegate collectionView: strongSelf.collectionView
-                                                      layout: strongSelf
-                             didBeginDraggingItemAtIndexPath: strongSelf.selectedItemIndexPath];
-                     }
-                 }
-             }];
-            
-//            [self invalidateLayout];
-            [self.collectionView reloadData];       // TODO - this seems like overkill, why can't we just invalidate ourself?
+                                 __strong typeof(self) strongSelf = weakSelf;
+                                 if (strongSelf) {
+                                     // Set the make scale transform to 1.1 (or 110%) in both height and width
+                                     strongSelf.currentView.transform   = CGAffineTransformMakeScale(1.1f, 1.1f);
+                                     // ...fade in the highlightedImageView
+                                     highlightedImageView.alpha         = 1.0f;
+                                     // ...and fade out the regular view
+                                     unHighlightedImageView.alpha       = 0.0f;
+                                 }
+                             } completion: ^(BOOL finished) {
+                                 // When the animation completes,
+                                 __strong typeof(self) strongSelf = weakSelf;
+                                 if (strongSelf) {
+                                     /*
+                                      * Check if the delegate has implemented collectionView:layout:didBeginDraggingItemAtIndexPath:
+                                      * Using an assertion allows the check to be performed (at runtime) during the development process.
+                                      *
+                                      * We are using 3 "guards" to ensure the required methods are implemented:
+                                      *     1.  In the OCAEditableCollectionViewDelegateFlowLayout protocol definiton, we declare the method
+                                      *         required. However the compiler only flags this as a warning.
+                                      *     2.  The assert statement will throw an Assertion failed exception identifying the missing method.
+                                      *         This should catch 99.999% of coding mistakes, but assertions are NOT compiled into Release builds.
+                                      *     3.  To cover the Release build, we throw our own "Required method not implemented" exception. There is
+                                      *         an argument to be made that throwing an exception is not only unnecessary (we could just fail on the
+                                      *         method call), but actually undesirable. Throwing an exception means the app WILL crash, and in this
+                                      *         case, the respondsToSelector test could just skip the method. That would result in the UI not being
+                                      *         updated correctly, but the user could work-around the error. I implemented an exception to illustrate
+                                      *         the technique - knowing that I've implemented the method and the exception will never be raised.
+                                      */
+                                     assert([strongSelf.delegate respondsToSelector: @selector(collectionView:layout:didBeginDraggingItemAtIndexPath:)]);
+                                     if ([strongSelf.delegate respondsToSelector: @selector(collectionView:layout:didBeginDraggingItemAtIndexPath:)]) {
+                                         // ...if so, inform the delegate we're dragging
+                                         [strongSelf.delegate collectionView: strongSelf.collectionView
+                                                                      layout: strongSelf
+                                             didBeginDraggingItemAtIndexPath: strongSelf.selectedItemIndexPath];
+                                     } else {
+                                         [NSException raise: @"Required method not implemented"
+                                                     format: @"collectionView:layout:didBeginDraggingItemAtIndexPath:"];
+                                     }
+                                     [self.collectionView reloadData];       // TODO - this seems like overkill, why can't we just invalidate ourself?
+                                 }
+                             }];
             break;
         }
             
@@ -644,44 +659,76 @@ static NSString * const kOCACollectionViewKeyPath   = @"collectionView";
                    willEndDraggingItemAtIndexPath: currentIndexPath];
                 }
                 
-                self.selectedItemIndexPath  = nil;
-                self.currentViewCenter      = CGPointZero;
-                
-                UICollectionViewLayoutAttributes *layoutAttributes = [self layoutAttributesForItemAtIndexPath: currentIndexPath];
-                
-                /*
-                 * See comment above regarding __weak reference to self
-                 */
-                __weak typeof(self) weakSelf = self;
+                __weak typeof(self) weakSelf = self;                // See above discussion regarding strong reference cycle warning
+                // Animate the highlighted, enlarged cell back to normal
                 [UIView animateWithDuration: 0.3
                                       delay: 0.0
                                     options: UIViewAnimationOptionBeginFromCurrentState
                                  animations: ^{
-                     __strong typeof(self) strongSelf = weakSelf;
-                     if (strongSelf) {
-                         // Set the make scale transform back to 100%
-                         strongSelf.currentView.transform   = CGAffineTransformMakeScale(1.0f, 1.0f);
-                         strongSelf.currentView.center      = layoutAttributes.center;
-                     }
-                 } completion: ^(BOOL finished) {
-                     // When animation completes,
-                     __strong typeof(self) strongSelf = weakSelf;
-                     if (strongSelf) {
-                         // ...remove the rasterized image (if we don't, it would cover the real buttons and make them unclickable)
-                         [strongSelf.currentView removeFromSuperview];
-                         strongSelf.currentView = nil;
-                         // ...and invalidate
-                         [strongSelf.collectionView reloadData];
-                         
-                         // Check if the delegate wants to know when dragging ends,
-                         if ([strongSelf.delegate respondsToSelector: @selector(collectionView:layout:didEndDraggingItemAtIndexPath:)]) {
-                             // ...inform the delegate dragging has ended
-                             [strongSelf.delegate collectionView: strongSelf.collectionView
-                                                          layout: strongSelf
-                                   didEndDraggingItemAtIndexPath: currentIndexPath];
-                         }
-                     }
-                 }];
+                                     __strong typeof(self) strongSelf = weakSelf;
+                                     if (strongSelf) {
+                                         // Set the make scale transform to 1.1 (or 110%) in both height and width
+                                         strongSelf.currentView.transform   = CGAffineTransformMakeScale(1.0f, 1.0f);
+                                         // ...get the layout attributes for the cell
+                                         UICollectionViewLayoutAttributes *layoutAttributes = [self layoutAttributesForItemAtIndexPath: currentIndexPath];
+                                         // ...and set its center point
+                                         strongSelf.currentView.center      = layoutAttributes.center;
+                                         // ...find the views we're interested in using the tags we set above (see comments above)
+                                         UIView *hilightedView              = [self.currentView viewWithTag: kOCAHighlightedImageViewTag];
+                                         UIView *unHilightedView            = [self.currentView viewWithTag: kOCAUnHighlightedImageViewTag];
+                                         // ...fade out the highlightedImageView
+                                         hilightedView.alpha                = 0.0f;
+                                         // ...and fade in the regular view
+                                         unHilightedView.alpha              = 1.0f;
+                                     }
+                                 } completion: ^(BOOL finished) {
+                                     // When the animation completes,
+                                     __strong typeof(self) strongSelf = weakSelf;
+                                     if (strongSelf) {
+                                         // ...remove the highlighted view
+                                         UIView *hilightedView      = [self.currentView viewWithTag: kOCAHighlightedImageViewTag];
+                                         DLog(@"removing highlightedImageView=%@", hilightedView);
+                                         [hilightedView removeFromSuperview];
+                                         UICollectionViewCell *collectionViewCell = [self.collectionView cellForItemAtIndexPath: self.selectedItemIndexPath];
+                                         [collectionViewCell setHighlighted: NO];
+                                         // ...and invalidate
+                                         [strongSelf invalidateLayout];
+                                         // ...remove the rasterized image (if we don't, it would cover the real buttons and make them unclickable)
+                                         [strongSelf.currentView removeFromSuperview];
+                                         strongSelf.currentView = nil;
+                                         // ...and invalidate
+                                         [strongSelf.collectionView reloadData];
+                                         
+                                         /*
+                                          * Check if the delegate has implemented collectionView:layout:didBeginDraggingItemAtIndexPath:
+                                          * Using an assertion allows the check to be performed (at runtime) during the development process.
+                                          *
+                                          * We are using 3 "guards" to ensure the required methods are implemented:
+                                          *     1.  In the OCAEditableCollectionViewDelegateFlowLayout protocol definiton, we declare the method
+                                          *         required. However the compiler only flags this as a warning.
+                                          *     2.  The assert statement will throw an Assertion failed exception identifying the missing method.
+                                          *         This should catch 99.999% of coding mistakes, but assertions are NOT compiled into Release builds.
+                                          *     3.  To cover the Release build, we throw our own "Required method not implemented" exception. There is
+                                          *         an argument to be made that throwing an exception is not only unnecessary (we could just fail on the
+                                          *         method call), but actually undesirable. Throwing an exception means the app WILL crash, and in this
+                                          *         case, the respondsToSelector test could just skip the method. That would result in the UI not being
+                                          *         updated correctly, but the user could work-around the error. I implemented an exception to illustrate
+                                          *         the technique - knowing that I've implemented the method and the exception will never be raised.
+                                          */
+                                         assert([strongSelf.delegate respondsToSelector: @selector(collectionView:layout:didEndDraggingItemAtIndexPath:)]);
+                                         if ([strongSelf.delegate respondsToSelector: @selector(collectionView:layout:didEndDraggingItemAtIndexPath:)]) {
+                                             // ...inform the delegate dragging has ended
+                                             [strongSelf.delegate collectionView: strongSelf.collectionView
+                                                                          layout: strongSelf
+                                                   didEndDraggingItemAtIndexPath: currentIndexPath];
+                                         } else {
+                                             [NSException raise: @"Required method not implemented"
+                                                         format: @"collectionView:layout:didEndDraggingItemAtIndexPath:"];
+                                         }
+                                         self.selectedItemIndexPath  = nil;
+                                         self.currentViewCenter      = CGPointZero;
+                                     }
+                                 }];
             }
             break;
         }

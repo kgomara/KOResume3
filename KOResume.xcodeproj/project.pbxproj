@@ -136,7 +136,6 @@
 		D6D571B41793395F00034AF3 /* GlobalMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GlobalMacros.h; path = Classes/GlobalMacros.h; sourceTree = "<group>"; };
 		D6D571B51793395F00034AF3 /* OCAExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCAExtensions.h; path = Classes/OCAExtensions.h; sourceTree = "<group>"; };
 		D6D571B61793395F00034AF3 /* OCAExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCAExtensions.m; path = Classes/OCAExtensions.m; sourceTree = "<group>"; };
-		D6D571BB179339D700034AF3 /* README */ = {isa = PBXFileReference; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		D6D571BC179339D700034AF3 /* README.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = README.rtf; sourceTree = "<group>"; };
 		D6D571D51793589A00034AF3 /* KOResume.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = KOResume.xcdatamodel; sourceTree = "<group>"; };
 		D6D571FD1793991400034AF3 /* Resumes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Resumes.h; path = Classes/Resumes.h; sourceTree = "<group>"; };
@@ -194,7 +193,6 @@
 		D63D82B0179311350065F0A9 = {
 			isa = PBXGroup;
 			children = (
-				D6D571BB179339D700034AF3 /* README */,
 				D6D571BC179339D700034AF3 /* README.rtf */,
 				D63D82C4179311350065F0A9 /* KOResume */,
 				D63D82ED179311350065F0A9 /* KOResumeTests */,

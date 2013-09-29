@@ -530,6 +530,16 @@ BOOL isEditModeActive;
    didBeginDraggingItemAtIndexPath: (NSIndexPath *)indexPath
 {
     DLog(@"did begin drag");
+    
+    [self performSelector: @selector(invalidateLayout:)
+               withObject: collectionViewLayout
+               afterDelay: 0.1f];
+}
+
+//----------------------------------------------------------------------------------------------------------
+- (void)invalidateLayout: (UICollectionViewLayout *)collectionViewLayout
+{
+    [self.collectionViewLayout invalidateLayout];
 }
 
 
@@ -548,6 +558,10 @@ willEndDraggingItemAtIndexPath:(NSIndexPath *)indexPath
  didEndDraggingItemAtIndexPath:(NSIndexPath *)indexPath
 {
     DLog(@"did end drag");
+
+    [self performSelector: @selector(invalidateLayout:)
+               withObject: collectionViewLayout
+               afterDelay: 0.1f];
 }
 
 //----------------------------------------------------------------------------------------------------------
