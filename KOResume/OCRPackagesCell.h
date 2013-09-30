@@ -6,31 +6,15 @@
 //  Copyright (c) 2013 O'Mara Consulting Associates. All rights reserved.
 //
 
-@protocol OCRPackageCellDelegate <NSObject>
-
-@required
-- (void)coverLtrButtonTapped: (UICollectionViewCell *)aCell;
-
-- (void)resumeButtonTapped: (UICollectionViewCell *)aCell;
-
-- (void)deleteButtonTapped: (UICollectionViewCell *)aCell;
-
-@end
-
 #import <UIKit/UIKit.h>
+
+// TODO - refactor to extract OCACollectionViewCell behavior and inherit from that
 
 @interface OCRPackagesCell : UICollectionViewCell
 
-@property (nonatomic, strong) IBOutlet UILabel      *title;
-@property (nonatomic, strong) IBOutlet UIButton     *coverLtrButton;
-@property (nonatomic, strong) IBOutlet UIButton     *resumeButton;
-@property (nonatomic, strong)          UIButton     *deleteButton;
-
-
-@property (nonatomic, strong) UIViewController<OCRPackageCellDelegate>      *delegate;
-
-- (IBAction)coverLtrBtnTapped: (id)sender;
-- (IBAction)resumeBtnTapped: (id)sender;
-
+@property (nonatomic, strong)   IBOutlet UILabel    *title;
+@property (nonatomic, strong)   IBOutlet UIButton   *coverLtrButton;
+@property (nonatomic, strong)   IBOutlet UIButton   *resumeButton;
+@property (nonatomic, strong)   IBOutlet UIButton   *deleteButton;
 
 @end

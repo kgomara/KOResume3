@@ -1,5 +1,5 @@
 //
-//  OCRReorderableLayoutAttributes.h
+//  OCAEditableLayoutAttributes.h
 //  KOResume
 //
 //  Created by Kevin O'Mara on 8/31/13.
@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface OCRReorderableLayoutAttributes : UICollectionViewLayoutAttributes
+@interface OCAEditableLayoutAttributes : UICollectionViewLayoutAttributes
 
 @property (nonatomic, getter = isDeleteButtonHidden) BOOL deleteButtonHidden;
 

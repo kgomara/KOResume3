@@ -39,10 +39,10 @@
 		D63D82EA179311350065F0A9 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D63D82C2179311350065F0A9 /* CoreData.framework */; };
 		D63D82F2179311350065F0A9 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D63D82F0179311350065F0A9 /* InfoPlist.strings */; };
 		D63D82F4179311350065F0A9 /* KOResumeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D63D82F3179311350065F0A9 /* KOResumeTests.m */; };
-		D667B7EB17D2E88E00FBD6CD /* OCRReorderableLayoutAttributes.m in Sources */ = {isa = PBXBuildFile; fileRef = D667B7EA17D2E88E00FBD6CD /* OCRReorderableLayoutAttributes.m */; };
-		D667B7EC17D2E88E00FBD6CD /* OCRReorderableLayoutAttributes.m in Sources */ = {isa = PBXBuildFile; fileRef = D667B7EA17D2E88E00FBD6CD /* OCRReorderableLayoutAttributes.m */; };
-		D6A8EEC817CEE30F00A8C6DA /* OCRReorderableCollectionViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = D6A8EEC717CEE30F00A8C6DA /* OCRReorderableCollectionViewFlowLayout.m */; };
-		D6A8EEC917CEE30F00A8C6DA /* OCRReorderableCollectionViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = D6A8EEC717CEE30F00A8C6DA /* OCRReorderableCollectionViewFlowLayout.m */; };
+		D667B7EB17D2E88E00FBD6CD /* OCAEditableLayoutAttributes.m in Sources */ = {isa = PBXBuildFile; fileRef = D667B7EA17D2E88E00FBD6CD /* OCAEditableLayoutAttributes.m */; };
+		D667B7EC17D2E88E00FBD6CD /* OCAEditableLayoutAttributes.m in Sources */ = {isa = PBXBuildFile; fileRef = D667B7EA17D2E88E00FBD6CD /* OCAEditableLayoutAttributes.m */; };
+		D6A8EEC817CEE30F00A8C6DA /* OCAEditableCollectionViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = D6A8EEC717CEE30F00A8C6DA /* OCAEditableCollectionViewFlowLayout.m */; };
+		D6A8EEC917CEE30F00A8C6DA /* OCAEditableCollectionViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = D6A8EEC717CEE30F00A8C6DA /* OCAEditableCollectionViewFlowLayout.m */; };
 		D6AC3D3E179A3F21001D8D75 /* OCRPackagesCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D6AC3D3D179A3F21001D8D75 /* OCRPackagesCell.m */; };
 		D6AC3D3F179A3F21001D8D75 /* OCRPackagesCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D6AC3D3D179A3F21001D8D75 /* OCRPackagesCell.m */; };
 		D6B016B51793C16900B86B8D /* KOResume.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = D6B016B41793C16900B86B8D /* KOResume.sqlite */; };
@@ -81,6 +81,8 @@
 		D6D572181793A78600034AF3 /* _Packages.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D5720E1793A78600034AF3 /* _Packages.m */; };
 		D6D572191793A78600034AF3 /* _Resumes.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D572101793A78600034AF3 /* _Resumes.m */; };
 		D6D5721A1793A78600034AF3 /* _Resumes.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D572101793A78600034AF3 /* _Resumes.m */; };
+		KIYDQKWBMRKIEYEVRWSLKUDQ /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = HYXIFWTDXJPPRRMDCEPMDTJH /* QuartzCore.framework */; };
+		KNPONLATPTEBRUFEBXNXFHCQ /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = THBDITSPYVFDWQYYBDCIDIXG /* libz.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -118,10 +120,10 @@
 		D63D82F1179311350065F0A9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		D63D82F3179311350065F0A9 /* KOResumeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KOResumeTests.m; sourceTree = "<group>"; };
 		D63D82FD179312F80065F0A9 /* KOResume.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = KOResume.entitlements; sourceTree = "<group>"; };
-		D667B7E917D2E88E00FBD6CD /* OCRReorderableLayoutAttributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRReorderableLayoutAttributes.h; path = Classes/OCRReorderableLayoutAttributes.h; sourceTree = "<group>"; };
-		D667B7EA17D2E88E00FBD6CD /* OCRReorderableLayoutAttributes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRReorderableLayoutAttributes.m; path = Classes/OCRReorderableLayoutAttributes.m; sourceTree = "<group>"; };
-		D6A8EEC617CEE30F00A8C6DA /* OCRReorderableCollectionViewFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRReorderableCollectionViewFlowLayout.h; path = Classes/OCRReorderableCollectionViewFlowLayout.h; sourceTree = "<group>"; };
-		D6A8EEC717CEE30F00A8C6DA /* OCRReorderableCollectionViewFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRReorderableCollectionViewFlowLayout.m; path = Classes/OCRReorderableCollectionViewFlowLayout.m; sourceTree = "<group>"; };
+		D667B7E917D2E88E00FBD6CD /* OCAEditableLayoutAttributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCAEditableLayoutAttributes.h; path = Classes/OCAEditableLayoutAttributes.h; sourceTree = "<group>"; };
+		D667B7EA17D2E88E00FBD6CD /* OCAEditableLayoutAttributes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCAEditableLayoutAttributes.m; path = Classes/OCAEditableLayoutAttributes.m; sourceTree = "<group>"; };
+		D6A8EEC617CEE30F00A8C6DA /* OCAEditableCollectionViewFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCAEditableCollectionViewFlowLayout.h; path = Classes/OCAEditableCollectionViewFlowLayout.h; sourceTree = "<group>"; };
+		D6A8EEC717CEE30F00A8C6DA /* OCAEditableCollectionViewFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCAEditableCollectionViewFlowLayout.m; path = Classes/OCAEditableCollectionViewFlowLayout.m; sourceTree = "<group>"; };
 		D6AC3D3C179A3F21001D8D75 /* OCRPackagesCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCRPackagesCell.h; sourceTree = "<group>"; };
 		D6AC3D3D179A3F21001D8D75 /* OCRPackagesCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCRPackagesCell.m; sourceTree = "<group>"; };
 		D6B016B41793C16900B86B8D /* KOResume.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; name = KOResume.sqlite; path = Resources/KOResume.sqlite; sourceTree = "<group>"; };
@@ -134,7 +136,6 @@
 		D6D571B41793395F00034AF3 /* GlobalMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GlobalMacros.h; path = Classes/GlobalMacros.h; sourceTree = "<group>"; };
 		D6D571B51793395F00034AF3 /* OCAExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCAExtensions.h; path = Classes/OCAExtensions.h; sourceTree = "<group>"; };
 		D6D571B61793395F00034AF3 /* OCAExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCAExtensions.m; path = Classes/OCAExtensions.m; sourceTree = "<group>"; };
-		D6D571BB179339D700034AF3 /* README */ = {isa = PBXFileReference; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		D6D571BC179339D700034AF3 /* README.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = README.rtf; sourceTree = "<group>"; };
 		D6D571D51793589A00034AF3 /* KOResume.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = KOResume.xcdatamodel; sourceTree = "<group>"; };
 		D6D571FD1793991400034AF3 /* Resumes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Resumes.h; path = Classes/Resumes.h; sourceTree = "<group>"; };
@@ -157,6 +158,8 @@
 		D6D5720E1793A78600034AF3 /* _Packages.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = _Packages.m; path = Classes/_Packages.m; sourceTree = "<group>"; };
 		D6D5720F1793A78600034AF3 /* _Resumes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = _Resumes.h; path = Classes/_Resumes.h; sourceTree = "<group>"; };
 		D6D572101793A78600034AF3 /* _Resumes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = _Resumes.m; path = Classes/_Resumes.m; sourceTree = "<group>"; };
+		HYXIFWTDXJPPRRMDCEPMDTJH /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		THBDITSPYVFDWQYYBDCIDIXG /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -168,6 +171,8 @@
 				D63D82C3179311350065F0A9 /* CoreData.framework in Frameworks */,
 				D63D82C1179311350065F0A9 /* UIKit.framework in Frameworks */,
 				D63D82BD179311350065F0A9 /* Foundation.framework in Frameworks */,
+				KIYDQKWBMRKIEYEVRWSLKUDQ /* QuartzCore.framework in Frameworks */,
+				KNPONLATPTEBRUFEBXNXFHCQ /* libz.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -188,7 +193,6 @@
 		D63D82B0179311350065F0A9 = {
 			isa = PBXGroup;
 			children = (
-				D6D571BB179339D700034AF3 /* README */,
 				D6D571BC179339D700034AF3 /* README.rtf */,
 				D63D82C4179311350065F0A9 /* KOResume */,
 				D63D82ED179311350065F0A9 /* KOResumeTests */,
@@ -214,6 +218,8 @@
 				D63D82C0179311350065F0A9 /* UIKit.framework */,
 				D63D82C2179311350065F0A9 /* CoreData.framework */,
 				D63D82E6179311350065F0A9 /* XCTest.framework */,
+				HYXIFWTDXJPPRRMDCEPMDTJH /* QuartzCore.framework */,
+				THBDITSPYVFDWQYYBDCIDIXG /* libz.dylib */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -235,10 +241,6 @@
 				D6D571B21793395F00034AF3 /* GlobalConstants.h */,
 				D6D571B31793395F00034AF3 /* GlobalConstants.m */,
 				D6D571B41793395F00034AF3 /* GlobalMacros.h */,
-				D6D571B51793395F00034AF3 /* OCAExtensions.h */,
-				D6D571B61793395F00034AF3 /* OCAExtensions.m */,
-				D6D571AF179335FF00034AF3 /* OCRCoreDataController.h */,
-				D6D571B0179335FF00034AF3 /* OCRCoreDataController.m */,
 				D63D82C6179311350065F0A9 /* KOResume-Info.plist */,
 				D63D82C7179311350065F0A9 /* InfoPlist.strings */,
 				D63D82CA179311350065F0A9 /* main.m */,
@@ -276,9 +278,23 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
+		D6BB508817E4DF58005827FF /* OCAClasses */ = {
+			isa = PBXGroup;
+			children = (
+				D6A8EEC617CEE30F00A8C6DA /* OCAEditableCollectionViewFlowLayout.h */,
+				D6A8EEC717CEE30F00A8C6DA /* OCAEditableCollectionViewFlowLayout.m */,
+				D667B7E917D2E88E00FBD6CD /* OCAEditableLayoutAttributes.h */,
+				D667B7EA17D2E88E00FBD6CD /* OCAEditableLayoutAttributes.m */,
+				D6D571B51793395F00034AF3 /* OCAExtensions.h */,
+				D6D571B61793395F00034AF3 /* OCAExtensions.m */,
+			);
+			name = OCAClasses;
+			sourceTree = "<group>";
+		};
 		D6D571C01793585000034AF3 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				D6BB508817E4DF58005827FF /* OCAClasses */,
 				D6D571C11793585E00034AF3 /* DataModel */,
 				D63D82CD179311350065F0A9 /* OCRAppDelegate.h */,
 				D63D82CE179311350065F0A9 /* OCRAppDelegate.m */,
@@ -290,10 +306,6 @@
 				D6AC3D3D179A3F21001D8D75 /* OCRPackagesCell.m */,
 				D63D82D9179311350065F0A9 /* OCRPackagesViewController.h */,
 				D63D82DA179311350065F0A9 /* OCRPackagesViewController.m */,
-				D6A8EEC617CEE30F00A8C6DA /* OCRReorderableCollectionViewFlowLayout.h */,
-				D6A8EEC717CEE30F00A8C6DA /* OCRReorderableCollectionViewFlowLayout.m */,
-				D667B7E917D2E88E00FBD6CD /* OCRReorderableLayoutAttributes.h */,
-				D667B7EA17D2E88E00FBD6CD /* OCRReorderableLayoutAttributes.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -320,6 +332,8 @@
 				D6D572021793991500034AF3 /* Education.m */,
 				D6D571FF1793991500034AF3 /* Jobs.h */,
 				D6D572001793991500034AF3 /* Jobs.m */,
+				D6D571AF179335FF00034AF3 /* OCRCoreDataController.h */,
+				D6D571B0179335FF00034AF3 /* OCRCoreDataController.m */,
 				D6D571FD1793991400034AF3 /* Resumes.h */,
 				D6D571FE1793991400034AF3 /* Resumes.m */,
 			);
@@ -464,9 +478,9 @@
 				D6D572111793A78600034AF3 /* _Accomplishments.m in Sources */,
 				D6BA20EE17B881E90068F4D9 /* OCRCoverLtrViewController.m in Sources */,
 				D63D82CF179311350065F0A9 /* OCRAppDelegate.m in Sources */,
-				D6A8EEC817CEE30F00A8C6DA /* OCRReorderableCollectionViewFlowLayout.m in Sources */,
+				D6A8EEC817CEE30F00A8C6DA /* OCAEditableCollectionViewFlowLayout.m in Sources */,
 				D6D571B91793395F00034AF3 /* OCAExtensions.m in Sources */,
-				D667B7EB17D2E88E00FBD6CD /* OCRReorderableLayoutAttributes.m in Sources */,
+				D667B7EB17D2E88E00FBD6CD /* OCAEditableLayoutAttributes.m in Sources */,
 				D6D571B11793366000034AF3 /* OCRCoreDataController.m in Sources */,
 				D63D82DE179311350065F0A9 /* OCRDetailViewController.m in Sources */,
 				D6AC3D3E179A3F21001D8D75 /* OCRPackagesCell.m in Sources */,
@@ -483,7 +497,7 @@
 			files = (
 				D6B408121798E9F600C567FF /* OCRDetailViewController.m in Sources */,
 				D6B408101798E9DF00C567FF /* OCRPackagesViewController.m in Sources */,
-				D667B7EC17D2E88E00FBD6CD /* OCRReorderableLayoutAttributes.m in Sources */,
+				D667B7EC17D2E88E00FBD6CD /* OCAEditableLayoutAttributes.m in Sources */,
 				D6B4864B1796487C009E6A14 /* Jobs.m in Sources */,
 				D6D571B81793395F00034AF3 /* GlobalConstants.m in Sources */,
 				D6D572121793A78600034AF3 /* _Accomplishments.m in Sources */,
@@ -498,7 +512,7 @@
 				D6D571ED1793589A00034AF3 /* KOResume.xcdatamodeld in Sources */,
 				D6D572141793A78600034AF3 /* _Education.m in Sources */,
 				D6B408111798E9ED00C567FF /* OCRAppDelegate.m in Sources */,
-				D6A8EEC917CEE30F00A8C6DA /* OCRReorderableCollectionViewFlowLayout.m in Sources */,
+				D6A8EEC917CEE30F00A8C6DA /* OCAEditableCollectionViewFlowLayout.m in Sources */,
 				D6AC3D3F179A3F21001D8D75 /* OCRPackagesCell.m in Sources */,
 				D6B486471796486B009E6A14 /* Accomplishments.m in Sources */,
 				D6B4864917964876009E6A14 /* Education.m in Sources */,
@@ -571,6 +585,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = "\"/Applications/Spark Inspector.app/Contents/Resources/Frameworks\"";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -586,6 +601,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "-ObjC";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WARNING_CFLAGS = "";
@@ -618,6 +634,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				OTHER_LDFLAGS = "-ObjC";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -631,10 +648,12 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = KOResume/KOResume.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = "\"/Applications/Spark Inspector.app/Contents/Resources/Frameworks\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KOResume/KOResume-Prefix.pch";
 				GENERATE_PKGINFO_FILE = NO;
 				INFOPLIST_FILE = "KOResume/KOResume-Info.plist";
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = koresume;
 				WRAPPER_EXTENSION = app;
 			};
@@ -699,6 +718,12 @@
 		D6D571FA17937C9100034AF3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = "\"/Applications/Spark Inspector.app/Contents/Resources/Frameworks\"";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-framework",
+					SparkInspector,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;

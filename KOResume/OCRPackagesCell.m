@@ -7,17 +7,11 @@
 //
 
 #import "OCRPackagesCell.h"
-#import "OCRReorderableLayoutAttributes.h"
+#import "OCAEditableLayoutAttributes.h"
 
-#define MARGIN 2
+#define MARGIN 10
 
 @implementation OCRPackagesCell
-
-@synthesize delegate        = _delegate;
-@synthesize title           = _title;
-@synthesize coverLtrButton  = _coverLtrButton;
-@synthesize resumeButton    = _resumeButton;
-@synthesize deleteButton    = _deleteButton;
 
 static UIImage *deleteButtonImg;
 
@@ -40,27 +34,25 @@ static UIImage *deleteButtonImg;
         UIGraphicsBeginImageContext(buttonFrame.size);
         CGFloat sz          = MIN(buttonFrame.size.width, buttonFrame.size.height);
         UIBezierPath *path  = [UIBezierPath bezierPathWithArcCenter: CGPointMake(buttonFrame.size.width/2, buttonFrame.size.height/2)
-                                                             radius: sz/2-MARGIN
+                                                             radius: sz/2-2
                                                          startAngle: 0
                                                            endAngle: M_PI * 2
                                                           clockwise: YES];
-        [path moveToPoint:CGPointMake(MARGIN, MARGIN)];
-        [path addLineToPoint:CGPointMake(sz-MARGIN, sz-MARGIN)];
-        [path moveToPoint:CGPointMake(MARGIN, sz-MARGIN)];
-        [path addLineToPoint:CGPointMake(sz-MARGIN, MARGIN)];
-        [[UIColor redColor] setFill];
-        [[UIColor whiteColor] setStroke];
-        [path setLineWidth: 3.0];
+        [path moveToPoint: CGPointMake(MARGIN, MARGIN)];
+        [path addLineToPoint: CGPointMake(sz-MARGIN, sz-MARGIN)];
+        [path moveToPoint: CGPointMake(MARGIN, sz-MARGIN)];
+        [path addLineToPoint: CGPointMake(sz-MARGIN, MARGIN)];
+        [[self tintColor] setFill];
+        [[UIColor lightGrayColor] setStroke];
+        [path setLineWidth: 2.0];
         [path fill];
         [path stroke];
+        // TODO - add drop shadow
         deleteButtonImg = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
     }
     [self.deleteButton setImage: deleteButtonImg
                        forState: UIControlStateNormal];
-    [self.deleteButton addTarget: self
-                          action: @selector(deleteBtnTapped:)
-                forControlEvents: UIControlEventTouchUpInside];
     [self.deleteButton setHidden: YES];
     
     [self.contentView addSubview: self.deleteButton];
@@ -72,7 +64,6 @@ static UIImage *deleteButtonImg;
 
     [self calculateAndSetFonts];
 }
-
 
 
 //----------------------------------------------------------------------------------------------------------
@@ -117,47 +108,38 @@ static UIImage *deleteButtonImg;
 //{
 //    DLog();
 //    
-//    self.backgroundColor = [UIColor lightGrayColor];
-//    
-//    self.layer.cornerRadius = 5.;
-////    self.viewForBaselineLayout.layer.cornerRadius = 2.;
-//    
+//    self.highlighted = NO;              // TODO - shouldn't have to do this, something wrong in highlighting logic (or something)
 //}
 
 //----------------------------------------------------------------------------------------------------------
 //- (void)setSelected:(BOOL)selected animated:(BOOL)animated
 //{
-//    [super setSelected:selected animated:animated];
-//
-//    // Configure the view for the selected state
+//    DLog();
+//    [self setBackgroundColor:[UIColor lightGrayColor]];
 //}
 
-//----------------------------------------------------------------------------------------------------------
-- (IBAction)coverLtrBtnTapped:(id)sender
+- (void)setHighlighted: (BOOL)highlighted
 {
-    DLog();
+    DLog(@"highlighted=%@", highlighted ? @"YES" : @"NO");
     
-    [_delegate coverLtrButtonTapped: self];
+    // Set the highlighted property on the cell
+    [super setHighlighted: highlighted];
+    
+    /*
+     * In our cell prototype we created a view inset a few pixels and set its background to white.
+     * Our highlight visual effect is acheived by changing the background color of the cell, which is
+     * occluded by our inset view, leaving a border of the background color.
+     */
+    if (highlighted) {
+        [self setBackgroundColor:[UIColor redColor]];
+    } else {
+        [self setBackgroundColor:[UIColor darkGrayColor]];
+    }
 }
 
-//----------------------------------------------------------------------------------------------------------
-- (IBAction)resumeBtnTapped:(id)sender
-{
-    DLog();
-    
-    [_delegate resumeButtonTapped: self];
-}
 
 //----------------------------------------------------------------------------------------------------------
-- (IBAction)deleteBtnTapped:(id)sender
-{
-    DLog();
-    
-    [_delegate deleteButtonTapped: self];
-}
-
-//----------------------------------------------------------------------------------------------------------
-- (void)preferredContentSizeChanged:(NSNotification *)aNotification
+- (void)preferredContentSizeChanged: (NSNotification *)aNotification
 {
     [self calculateAndSetFonts];
 }
@@ -183,12 +165,13 @@ static UIImage *deleteButtonImg;
     self.resumeButton.titleLabel.font   = cellBodyFont;
         
     // TODO - need to change the contentSize/tableCellHeight?
+    [self invalidateIntrinsicContentSize];
 }
 
 //----------------------------------------------------------------------------------------------------------
-- (void)applyLayoutAttributes:(OCRReorderableLayoutAttributes *)layoutAttributes
+- (void)applyLayoutAttributes:(OCAEditableLayoutAttributes *)layoutAttributes
 {
-    DLog(@"isDeleteButtonHidden=%@", layoutAttributes.isDeleteButtonHidden ? @"YES" : @"NO");
+    DLog(/*@"isDeleteButtonHidden=%@", layoutAttributes.isDeleteButtonHidden ? @"YES" : @"NO"*/);
     
     if (layoutAttributes.isDeleteButtonHidden) {
         self.deleteButton.layer.opacity = 0.0;

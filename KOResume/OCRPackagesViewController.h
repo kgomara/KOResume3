@@ -7,15 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "OCRReorderableCollectionViewFlowLayout.h"
+#import "OCAEditableCollectionViewFlowLayout.h"
 #import "OCRPackagesCell.h"
 
 @class OCRDetailViewController;
 
 #import <CoreData/CoreData.h>
 
-@interface OCRPackagesViewController : UICollectionViewController <NSFetchedResultsControllerDelegate, OCRPackageCellDelegate,
-                                                                    OCRReorderableCollectionViewDataSource, OCRReorderableCollectionViewDelegateFlowLayout>
+@interface OCRPackagesViewController : UICollectionViewController <NSFetchedResultsControllerDelegate,
+                                                                    OCAEditableCollectionViewDataSource, OCAEditableCollectionViewDelegateFlowLayout>
 
 @property (nonatomic, strong) OCRDetailViewController       *detailViewController;
 

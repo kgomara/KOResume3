@@ -201,12 +201,32 @@
 
 @implementation NSIndexPath (StringForCollection)
 
+//----------------------------------------------------------------------------------------------------------
 -(NSString *)stringForCollection
 {
     return [NSString stringWithFormat:@"%d-%d",self.section,self.row];
 }
 
 @end
+
+@implementation UIStoryboard (KOExtensions)
+
+//----------------------------------------------------------------------------------------------------------
++ (UIStoryboard *)main_iPhoneStoryboard
+{
+    return [UIStoryboard storyboardWithName: @"Main_iPhone"
+                                     bundle: nil];
+}
+
+//----------------------------------------------------------------------------------------------------------
++ (UIStoryboard *)main_iPadStoryboard
+{
+    return [UIStoryboard storyboardWithName: @"Main_iPad"
+                                     bundle: nil];
+}
+
+@end
+
 
 @implementation UIFont (OCAExtensions)
 
@@ -249,7 +269,7 @@
 //----------------------------------------------------------------------------------------------------------
 - (NSString *)OCATextStyle
 {
-    return [self objectForKey:@"NSCTFontUIUsageAttribute"];
+    return [self objectForKey: @"NSCTFontUIUsageAttribute"];
 }
 
 //----------------------------------------------------------------------------------------------------------
