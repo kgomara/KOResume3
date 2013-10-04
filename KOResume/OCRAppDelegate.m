@@ -40,16 +40,17 @@
         UINavigationController *navigationController        = [splitViewController.viewControllers lastObject];
         splitViewController.delegate                        = (id)navigationController.topViewController;
         
-        // ...and setup OCRPackagesViewController as Master
+        // ...and set the managedObjectContext property on OCRPackagesViewController
         UINavigationController *masterNavigationController  = splitViewController.viewControllers[0];
         OCRPackagesViewController *controller               = (OCRPackagesViewController *)masterNavigationController.topViewController;
         controller.managedObjectContext                     = self.managedObjectContext;
     } else {
-        // ...setup navigationController paradigm for iPhone
+        // Set the managedObjectContext property on OCRPackagesViewController for iPhone
         UINavigationController *navigationController    = (UINavigationController *)self.window.rootViewController;
         OCRPackagesViewController *controller           = (OCRPackagesViewController *)navigationController.topViewController;
         controller.managedObjectContext                 = self.managedObjectContext;
     }
+    
     return YES;
 }
 							
