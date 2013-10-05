@@ -96,13 +96,24 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		04F0CFBB17FF4F5800930FC9 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Main_iPhone.strings; sourceTree = "<group>"; };
+		04F0CFBC17FF4F5800930FC9 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Main_iPad.strings; sourceTree = "<group>"; };
+		04F0CFBD17FF4F5800930FC9 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		04F0CFBE17FF4F5800930FC9 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		04F0CFBF17FF4F8100930FC9 /* fr-CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr-CA"; path = "fr-CA.lproj/Main_iPhone.strings"; sourceTree = "<group>"; };
+		04F0CFC017FF4F8100930FC9 /* fr-CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr-CA"; path = "fr-CA.lproj/Main_iPad.strings"; sourceTree = "<group>"; };
+		04F0CFC117FF4F8100930FC9 /* fr-CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr-CA"; path = "fr-CA.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		04F0CFC217FF4F8100930FC9 /* fr-CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr-CA"; path = "fr-CA.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		04F0CFC317FF4F9800930FC9 /* fr-FR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr-FR"; path = "fr-FR.lproj/Main_iPhone.strings"; sourceTree = "<group>"; };
+		04F0CFC417FF4F9800930FC9 /* fr-FR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr-FR"; path = "fr-FR.lproj/Main_iPad.strings"; sourceTree = "<group>"; };
+		04F0CFC517FF4F9800930FC9 /* fr-FR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr-FR"; path = "fr-FR.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		04F0CFC617FF4F9800930FC9 /* fr-FR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr-FR"; path = "fr-FR.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		D63D82B9179311350065F0A9 /* koresume.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = koresume.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D63D82BC179311350065F0A9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D63D82BE179311350065F0A9 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		D63D82C0179311350065F0A9 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		D63D82C2179311350065F0A9 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		D63D82C6179311350065F0A9 /* KOResume-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "KOResume-Info.plist"; sourceTree = "<group>"; };
-		D63D82C8179311350065F0A9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		D63D82CA179311350065F0A9 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		D63D82CC179311350065F0A9 /* KOResume-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "KOResume-Prefix.pch"; sourceTree = "<group>"; };
 		D63D82CD179311350065F0A9 /* OCRAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCRAppDelegate.h; sourceTree = "<group>"; };
@@ -117,7 +128,6 @@
 		D63D82E5179311350065F0A9 /* KOResumeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KOResumeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D63D82E6179311350065F0A9 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		D63D82EF179311350065F0A9 /* KOResumeTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "KOResumeTests-Info.plist"; sourceTree = "<group>"; };
-		D63D82F1179311350065F0A9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		D63D82F3179311350065F0A9 /* KOResumeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KOResumeTests.m; sourceTree = "<group>"; };
 		D63D82FD179312F80065F0A9 /* KOResume.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = KOResume.entitlements; sourceTree = "<group>"; };
 		D667B7E917D2E88E00FBD6CD /* OCAEditableLayoutAttributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCAEditableLayoutAttributes.h; path = Classes/OCAEditableLayoutAttributes.h; sourceTree = "<group>"; };
@@ -408,6 +418,9 @@
 			knownRegions = (
 				en,
 				Base,
+				fr,
+				"fr-CA",
+				"fr-FR",
 			);
 			mainGroup = D63D82B0179311350065F0A9;
 			productRefGroup = D63D82BA179311350065F0A9 /* Products */;
@@ -535,7 +548,9 @@
 		D63D82C7179311350065F0A9 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				D63D82C8179311350065F0A9 /* en */,
+				04F0CFBD17FF4F5800930FC9 /* fr */,
+				04F0CFC117FF4F8100930FC9 /* fr-CA */,
+				04F0CFC517FF4F9800930FC9 /* fr-FR */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -544,6 +559,9 @@
 			isa = PBXVariantGroup;
 			children = (
 				D63D82D1179311350065F0A9 /* Base */,
+				04F0CFBB17FF4F5800930FC9 /* fr */,
+				04F0CFBF17FF4F8100930FC9 /* fr-CA */,
+				04F0CFC317FF4F9800930FC9 /* fr-FR */,
 			);
 			name = Main_iPhone.storyboard;
 			sourceTree = "<group>";
@@ -552,6 +570,9 @@
 			isa = PBXVariantGroup;
 			children = (
 				D63D82D4179311350065F0A9 /* Base */,
+				04F0CFBC17FF4F5800930FC9 /* fr */,
+				04F0CFC017FF4F8100930FC9 /* fr-CA */,
+				04F0CFC417FF4F9800930FC9 /* fr-FR */,
 			);
 			name = Main_iPad.storyboard;
 			sourceTree = "<group>";
@@ -559,7 +580,9 @@
 		D63D82F0179311350065F0A9 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				D63D82F1179311350065F0A9 /* en */,
+				04F0CFBE17FF4F5800930FC9 /* fr */,
+				04F0CFC217FF4F8100930FC9 /* fr-CA */,
+				04F0CFC617FF4F9800930FC9 /* fr-FR */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";

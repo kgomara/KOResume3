@@ -666,6 +666,15 @@ willEndDraggingItemAtIndexPath:(NSIndexPath *)indexPath
         Packages *aPackage = [self.fetchedResultsController objectAtIndexPath:[NSIndexPath indexPathForRow: [(UICollectionViewCell *)sender tag]
                                                                                                  inSection: 0]];
         /*
+         * 
+         */
+        OCRDetailViewController *cvrLtrController;
+        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+            cvrLtrController = [[[segue destinationViewController] viewControllers] objectAtIndex: 0];
+        } else {
+            cvrLtrController = [segue destinationViewController];
+        }
+        /*
          A common strategy for passing data between controller objects is to declare public properties in the receiving object
          and have the instantiator set those properties.
          Here we pass the Package represented by the cell the user tapped, as well as the ManagedObjectContext and FetchedResultsController
@@ -676,9 +685,9 @@ willEndDraggingItemAtIndexPath:(NSIndexPath *)indexPath
          
          My preference is to minimize globals, hence I pass all three references here.
          */
-        [[segue destinationViewController] setSelectedPackage:aPackage];
-        [[segue destinationViewController] setManagedObjectContext: self.managedObjectContext];
-        [[segue destinationViewController] setFetchedResultsController: self.fetchedResultsController];
+        [cvrLtrController setSelectedPackage:aPackage];
+        [cvrLtrController setManagedObjectContext: self.managedObjectContext];
+        [cvrLtrController setFetchedResultsController: self.fetchedResultsController];
     }
 }
 

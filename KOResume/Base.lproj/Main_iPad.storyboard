@@ -126,7 +126,7 @@
                     <navigationItem key="navigationItem" id="aaX-4R-af7"/>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     <connections>
-                        <segue destination="vVr-UZ-WMh" kind="replace" identifier="OCRCvrLtrSegue" splitViewControllerTargetIndex="1" id="62B-sw-z3J"/>
+                        <segue destination="vC3-pB-5Vb" kind="replace" identifier="OCRCvrLtrSegue" splitViewControllerTargetIndex="1" id="BZJ-5j-Pqx"/>
                     </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="d0S-qK-VIh" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -155,6 +155,9 @@
                     <navigationBar key="navigationBar" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="DjV-YW-jjY">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
+                    <connections>
+                        <segue destination="vVr-UZ-WMh" kind="relationship" relationship="rootViewController" id="075-tp-dgy"/>
+                    </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SLD-UC-DBI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -216,4 +219,7 @@
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
+    <inferredMetricsTieBreakers>
+        <segue reference="BZJ-5j-Pqx"/>
+    </inferredMetricsTieBreakers>
 </document>

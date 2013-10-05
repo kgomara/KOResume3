@@ -173,6 +173,7 @@ static UIImage *deleteButtonImg;
 {
     DLog(/*@"isDeleteButtonHidden=%@", layoutAttributes.isDeleteButtonHidden ? @"YES" : @"NO"*/);
     
+    // TODO - see if we can use UIKitDynamics for the quivering behavior
     if (layoutAttributes.isDeleteButtonHidden) {
         self.deleteButton.layer.opacity = 0.0;
         [self stopQuivering];
