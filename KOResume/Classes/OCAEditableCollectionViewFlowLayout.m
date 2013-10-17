@@ -135,12 +135,12 @@ static NSString * const kOCACollectionViewKeyPath   = @"collectionView";
 @property (assign, nonatomic) BOOL          isEditModeOn;
 /**
  CADisplayLink is a timer object that allows us to synchronize drawing to the refresh rate of the display.
- *
- * see - https://developer.apple.com/library/ios/documentation/QuartzCore/Reference/CADisplayLink_ClassRef/Reference/Reference.html#//apple_ref/occ/instp/CADisplayLink/paused
- *
- * In our case, it is used to ensure a collectionView scrolling operation is called no more than once per screen update.
- * Movement of individual cells (in handlePanGesture) could be invoked many times between screen updates. Limiting
- * scrolling to the screen update cycle helps keep the app responsive to rapid dragging.
+ 
+ see - https://developer.apple.com/library/ios/documentation/QuartzCore/Reference/CADisplayLink_ClassRef/Reference/Reference.html#//apple_ref/occ/instp/CADisplayLink/paused
+ 
+ In our case, it is used to ensure a collectionView scrolling operation is called no more than once per screen update.
+ Movement of individual cells (in handlePanGesture) could be invoked many times between screen updates. Limiting
+ scrolling to the screen update cycle helps keep the app responsive to rapid dragging.
  */
 @property (strong, nonatomic) CADisplayLink *displayLink;
 
@@ -347,17 +347,19 @@ static NSString * const kOCACollectionViewKeyPath   = @"collectionView";
     
     // ...and finally, do the move by deleting the item from where it was and inserting it where it is now
     /*
-     * To understand the purpose of declaring the __weak reference to self, see:
-     * https://developer.apple.com/library/ios/documentation/cocoa/conceptual/ProgrammingWithObjectiveC/WorkingwithBlocks/WorkingwithBlocks.html#//apple_ref/doc/uid/TP40011210-CH8-SW16
+     To understand the purpose of declaring the __weak reference to self, see:
+     https://developer.apple.com/library/ios/documentation/cocoa/conceptual/ProgrammingWithObjectiveC/WorkingwithBlocks/WorkingwithBlocks.html#//apple_ref/doc/uid/TP40011210-CH8-SW16
      */
     __weak typeof(self) weakSelf = self;
     [self.collectionView performBatchUpdates: ^{
+        DLog();
         __strong typeof(self) strongSelf = weakSelf;
         if (strongSelf) {
             [strongSelf.collectionView deleteItemsAtIndexPaths: @[ previousIndexPath ]];
             [strongSelf.collectionView insertItemsAtIndexPaths: @[ newIndexPath ]];
         }
     } completion: ^(BOOL finished) {
+        DLog();
         // ...on completion, if the datasource implements the didMoveToIndexPath method,
         __strong typeof(self) strongSelf = weakSelf;
         if ([strongSelf.dataSource respondsToSelector: @selector(collectionView:itemAtIndexPath:didMoveToIndexPath:)]) {
@@ -528,7 +530,7 @@ static NSString * const kOCACollectionViewKeyPath   = @"collectionView";
             }
 
             /*
-             * Communicate with the delegate methods (if implemented) to inform of the user's (potential) move gesture
+             Communicate with the delegate methods (if implemented) to inform of the user's (potential) move gesture
              */
             NSIndexPath *currentIndexPath = [self.collectionView indexPathForItemAtPoint: [gestureRecognizer locationInView: self.collectionView]];
             DLog(@"currentIndexPath=%@", currentIndexPath.debugDescription);
@@ -555,7 +557,7 @@ static NSString * const kOCACollectionViewKeyPath   = @"collectionView";
             }
             
             /*
-             * Animate the selected cell 10% larger than normal
+             Animate the selected cell 10% larger than normal
              */
             // First, get the cell selected cell
             UICollectionViewCell *collectionViewCell = [self.collectionView cellForItemAtIndexPath: self.selectedItemIndexPath];
@@ -593,13 +595,14 @@ static NSString * const kOCACollectionViewKeyPath   = @"collectionView";
             // ...Now that all the setup is complete, do the animation
             __weak typeof(self) weakSelf = self;
             /*
-             * The purpose of declaring the __weak reference to self is to avoid a strong reference cycle warning, see:
-             * https://developer.apple.com/library/ios/documentation/cocoa/conceptual/ProgrammingWithObjectiveC/WorkingwithBlocks/WorkingwithBlocks.html#//apple_ref/doc/uid/TP40011210-CH8-SW16
+             The purpose of declaring the __weak reference to self is to avoid a strong reference cycle warning, see:
+             https://developer.apple.com/library/ios/documentation/cocoa/conceptual/ProgrammingWithObjectiveC/WorkingwithBlocks/WorkingwithBlocks.html#//apple_ref/doc/uid/TP40011210-CH8-SW16
              */
             [UIView animateWithDuration: 0.3
                                   delay: 0.0
                                 options: UIViewAnimationOptionBeginFromCurrentState
                              animations: ^{
+                                 DLog();
                                  __strong typeof(self) strongSelf = weakSelf;
                                  if (strongSelf) {
                                      // Set the make scale transform to 1.1 (or 110%) in both height and width
@@ -610,24 +613,25 @@ static NSString * const kOCACollectionViewKeyPath   = @"collectionView";
                                      unHighlightedImageView.alpha       = 0.0f;
                                  }
                              } completion: ^(BOOL finished) {
+                                 DLog();
                                  // When the animation completes,
                                  __strong typeof(self) strongSelf = weakSelf;
                                  if (strongSelf) {
                                      /*
-                                      * Check if the delegate has implemented collectionView:layout:didBeginDraggingItemAtIndexPath:
-                                      * Using an assertion allows the check to be performed (at runtime) during the development process.
-                                      *
-                                      * We are using 3 "guards" to ensure the required methods are implemented:
-                                      *     1.  In the OCAEditableCollectionViewDelegateFlowLayout protocol definiton, we declare the method
-                                      *         required. However the compiler only flags this as a warning.
-                                      *     2.  The assert statement will throw an Assertion failed exception identifying the missing method.
-                                      *         This should catch 99.999% of coding mistakes, but assertions are NOT compiled into Release builds.
-                                      *     3.  To cover the Release build, we throw our own "Required method not implemented" exception. There is
-                                      *         an argument to be made that throwing an exception is not only unnecessary (we could just fail on the
-                                      *         method call), but actually undesirable. Throwing an exception means the app WILL crash, and in this
-                                      *         case, the respondsToSelector test could just skip the method. That would result in the UI not being
-                                      *         updated correctly, but the user could work-around the error. I implemented an exception to illustrate
-                                      *         the technique - knowing that I've implemented the method and the exception will never be raised.
+                                      Check if the delegate has implemented collectionView:layout:didBeginDraggingItemAtIndexPath:
+                                      Using an assertion allows the check to be performed (at runtime) during the development process.
+                                      
+                                      We are using 3 "guards" to ensure the required methods are implemented:
+                                          1.  In the OCAEditableCollectionViewDelegateFlowLayout protocol definiton, we declare the method
+                                              required. However the compiler only flags this as a warning.
+                                          2.  The assert statement will throw an Assertion failed exception identifying the missing method.
+                                              This should catch 99.999% of coding mistakes, but assertions are NOT compiled into Release builds.
+                                          3.  To cover the Release build, we throw our own "Required method not implemented" exception. There is
+                                              an argument to be made that throwing an exception is not only unnecessary (we could just fail on the
+                                              method call), but actually undesirable. Throwing an exception means the app WILL crash, and in this
+                                              case, the respondsToSelector test could just skip the method. That would result in the UI not being
+                                              updated correctly, but the user could work-around the error. I implemented an exception to illustrate
+                                              the technique - knowing that I've implemented the method and the exception will never be raised.
                                       */
                                      assert([strongSelf.delegate respondsToSelector: @selector(collectionView:layout:didBeginDraggingItemAtIndexPath:)]);
                                      if ([strongSelf.delegate respondsToSelector: @selector(collectionView:layout:didBeginDraggingItemAtIndexPath:)]) {
@@ -700,20 +704,20 @@ static NSString * const kOCACollectionViewKeyPath   = @"collectionView";
                                          [strongSelf.collectionView reloadData];
                                          
                                          /*
-                                          * Check if the delegate has implemented collectionView:layout:didBeginDraggingItemAtIndexPath:
-                                          * Using an assertion allows the check to be performed (at runtime) during the development process.
-                                          *
-                                          * We are using 3 "guards" to ensure the required methods are implemented:
-                                          *     1.  In the OCAEditableCollectionViewDelegateFlowLayout protocol definiton, we declare the method
-                                          *         required. However the compiler only flags this as a warning.
-                                          *     2.  The assert statement will throw an Assertion failed exception identifying the missing method.
-                                          *         This should catch 99.999% of coding mistakes, but assertions are NOT compiled into Release builds.
-                                          *     3.  To cover the Release build, we throw our own "Required method not implemented" exception. There is
-                                          *         an argument to be made that throwing an exception is not only unnecessary (we could just fail on the
-                                          *         method call), but actually undesirable. Throwing an exception means the app WILL crash, and in this
-                                          *         case, the respondsToSelector test could just skip the method. That would result in the UI not being
-                                          *         updated correctly, but the user could work-around the error. I implemented an exception to illustrate
-                                          *         the technique - knowing that I've implemented the method and the exception will never be raised.
+                                          Check if the delegate has implemented collectionView:layout:didBeginDraggingItemAtIndexPath:
+                                          Using an assertion allows the check to be performed (at runtime) during the development process.
+                                          
+                                          We are using 3 "guards" to ensure the required methods are implemented:
+                                              1.  In the OCAEditableCollectionViewDelegateFlowLayout protocol definiton, we declare the method
+                                                  required. However the compiler only flags this as a warning.
+                                              2.  The assert statement will throw an Assertion failed exception identifying the missing method.
+                                                  This should catch 99.999% of coding mistakes, but assertions are NOT compiled into Release builds.
+                                              3.  To cover the Release build, we throw our own "Required method not implemented" exception. There is
+                                                  an argument to be made that throwing an exception is not only unnecessary (we could just fail on the
+                                                  method call), but actually undesirable. Throwing an exception means the app WILL crash, and in this
+                                                  case, the respondsToSelector test could just skip the method. That would result in the UI not being
+                                                  updated correctly, but the user could work-around the error. I implemented an exception to illustrate
+                                                  the technique - knowing that I've implemented the method and the exception will never be raised.
                                           */
                                          assert([strongSelf.delegate respondsToSelector: @selector(collectionView:layout:didEndDraggingItemAtIndexPath:)]);
                                          if ([strongSelf.delegate respondsToSelector: @selector(collectionView:layout:didEndDraggingItemAtIndexPath:)]) {
@@ -739,11 +743,11 @@ static NSString * const kOCACollectionViewKeyPath   = @"collectionView";
 }
 
 /**
- * Handles dragging a cell around the screen, modeling Springboard behavior.
- *
- * Note - animating the cell larger is handled in handleLongPressGesture's UIGestureRecognizerStateBegan switch
- *
- * @param gestureRecognizer the gestureRecognizer for which we are the action target
+ Handles dragging a cell around the screen, modeling Springboard behavior.
+ 
+ Note - animating the cell larger is handled in handleLongPressGesture's UIGestureRecognizerStateBegan switch
+ 
+ @param gestureRecognizer the gestureRecognizer for which we are the action target
  */
 //----------------------------------------------------------------------------------------------------------
 - (void)handlePanGesture: (UIPanGestureRecognizer *)gestureRecognizer
@@ -965,12 +969,12 @@ static NSString * const kOCACollectionViewKeyPath   = @"collectionView";
 }
 
 /**
- * Determine if the two gestureRecognizers allow simultaneous recognition
- *
- * see https://developer.apple.com/library/ios/documentation/uikit/reference/UIGestureRecognizerDelegate_Protocol/Reference/Reference.html#//apple_ref/occ/intfm/UIGestureRecognizerDelegate/gestureRecognizer:shouldRecognizeSimultaneouslyWithGestureRecognizer:
- * @param   gestureRecognizer sending the message
- * @param   otherGestureRecognizer  the candidate to receive simultaneous events
- * @return  YES if simultaneous recognition is OK, NO otherwise
+ Determine if the two gestureRecognizers allow simultaneous recognition
+ 
+ see https://developer.apple.com/library/ios/documentation/uikit/reference/UIGestureRecognizerDelegate_Protocol/Reference/Reference.html#//apple_ref/occ/intfm/UIGestureRecognizerDelegate/gestureRecognizer:shouldRecognizeSimultaneouslyWithGestureRecognizer:
+ @param   gestureRecognizer sending the message
+ @param   otherGestureRecognizer  the candidate to receive simultaneous events
+ @return  YES if simultaneous recognition is OK, NO otherwise
  */
 //----------------------------------------------------------------------------------------------------------
 - (BOOL)                            gestureRecognizer: (UIGestureRecognizer *)gestureRecognizer
@@ -996,12 +1000,12 @@ static NSString * const kOCACollectionViewKeyPath   = @"collectionView";
 #pragma mark - Notifications
 
 /**
- * Called when the observed object changes. (We registered for in our initialize method.)
- *
- * @param keyPath   the string we assigned to this notification
- * @param object    the object that changed (in our case, the collectionView)
- * @param change    an NSDictionary of changes
- * @param context   the context we provided (in our case, nil)
+ Called when the observed object changes. (We registered for in our initialize method.)
+ 
+ @param keyPath   the string we assigned to this notification
+ @param object    the object that changed (in our case, the collectionView)
+ @param change    an NSDictionary of changes
+ @param context   the context we provided (in our case, nil)
  */
 //----------------------------------------------------------------------------------------------------------
 - (void)observeValueForKeyPath: (NSString *)keyPath

@@ -106,7 +106,7 @@
     [alert show];
 }
 
-/*!
+/**
  @method        (void)showErrorWithMessage:(NSString *)theMessage
  @abstract      Display an alert message for the user indicating Error
  @discussion    OK is the only user option
@@ -118,7 +118,7 @@
                             alertType:NSLocalizedString(@"Error", nil)];
 }
 
-/*!
+/**
  @method        (void)showErrorWithMessage:(NSString *)theMessage
  @abstract      Display an alert message for the user indicating Error
  @discussion    OK is the only user option

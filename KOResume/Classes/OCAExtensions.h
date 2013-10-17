@@ -52,9 +52,9 @@
 
 
 /*
- * These categories are taken from the TextKitDemo code provided by Apple
- * and are covered by their license agreement, which follows:
- *
+ These categories are taken from the TextKitDemo code provided by Apple
+ and are covered by their license agreement, which follows:
+ 
  File: UIFont+TextKitDemo.h
  Abstract:
  Version: 1.0
@@ -193,6 +193,6 @@
 
 
 /*
- * End of TextKitDemo code from Apple
+ End of TextKitDemo code from Apple
  */
 

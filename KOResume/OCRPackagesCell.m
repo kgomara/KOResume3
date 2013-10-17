@@ -126,9 +126,9 @@ static UIImage *deleteButtonImg;
     [super setHighlighted: highlighted];
     
     /*
-     * In our cell prototype we created a view inset a few pixels and set its background to white.
-     * Our highlight visual effect is acheived by changing the background color of the cell, which is
-     * occluded by our inset view, leaving a border of the background color.
+     In our cell prototype we created a view inset a few pixels and set its background to white.
+     Our highlight visual effect is acheived by changing the background color of the cell, which is
+     occluded by our inset view, leaving a border of the background color.
      */
     if (highlighted) {
         [self setBackgroundColor:[UIColor redColor]];

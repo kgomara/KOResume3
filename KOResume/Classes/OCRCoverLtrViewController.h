@@ -7,18 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "Packages.h"
+#import "OCRDetailViewController.h"
 
-@interface OCRCoverLtrViewController : UIViewController <UITextViewDelegate>
-{
-    Packages                    *_selectedPackage;
-    NSManagedObjectContext      *__managedObjectConext;
-    NSFetchedResultsController  *__fetchedResultsController;
-}
-
-@property (nonatomic, strong) Packages                      *selectedPackage;
-@property (nonatomic, strong) NSManagedObjectContext        *managedObjectContext;
-@property (nonatomic, strong) NSFetchedResultsController    *fetchedResultsController;
+@interface OCRCoverLtrViewController : OCRDetailViewController <UITextViewDelegate, UISplitViewControllerDelegate, OCRDetailViewSubclass>
 
 @property (nonatomic, weak) IBOutlet UIScrollView           *scrollView;
 @property (nonatomic, weak) IBOutlet UITextView             *coverLtrFld;

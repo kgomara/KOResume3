@@ -9,12 +9,19 @@
 #import <UIKit/UIKit.h>
 #import "Packages.h"
 
-@interface OCRDetailViewController : UITableViewController <UISplitViewControllerDelegate, UITableViewDelegate>
+@protocol OCRDetailViewSubclass <NSObject>
 
-@property (nonatomic, retain) IBOutlet UITableView          *tblView;
-@property (nonatomic, retain) Packages                      *selectedPackage;
+- (void)configureView;
 
-@property (nonatomic, retain) NSManagedObjectContext        *managedObjectContext;
-@property (nonatomic, retain) NSFetchedResultsController    *fetchedResultsController;
+@end
+
+@interface OCRDetailViewController : UIViewController <UISplitViewControllerDelegate, UITableViewDelegate>
+
+@property (nonatomic, strong) Packages                      *selectedPackage;
+@property (nonatomic, strong) NSManagedObjectContext        *managedObjectContext;
+@property (nonatomic, strong) NSFetchedResultsController    *fetchedResultsController;
+@property (nonatomic, strong) NSString                      *backButtonTitle;
+
+- (void)reloadFetchedResults:(NSNotification*)note;
 
 @end

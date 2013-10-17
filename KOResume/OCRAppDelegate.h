@@ -9,8 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "OCRCoreDataController.h"
 
-#define kAppDelegate        (OCRAppDelegate *)[[UIApplication sharedApplication] delegate]
-
 @interface OCRAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;

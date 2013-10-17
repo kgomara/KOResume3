@@ -7,14 +7,9 @@
 //
 
 #import "OCRAppDelegate.h"
-
 #import "OCRPackagesViewController.h"
 
 @implementation OCRAppDelegate
-
-@synthesize managedObjectContext        = _managedObjectContext;
-
-@synthesize coreDataController          = _coreDataController;
 
 #pragma mark - Application lifecycle
 
@@ -40,13 +35,17 @@
         UINavigationController *navigationController        = [splitViewController.viewControllers lastObject];
         splitViewController.delegate                        = (id)navigationController.topViewController;
         
-        // ...and set the managedObjectContext property on OCRPackagesViewController
-        UINavigationController *masterNavigationController  = splitViewController.viewControllers[0];
-        OCRPackagesViewController *controller               = (OCRPackagesViewController *)masterNavigationController.topViewController;
-        controller.managedObjectContext                     = self.managedObjectContext;
+        // Set the managedObjectContext property on OCRPackagesViewController for iPad
+        // ...first, get the masterNavigationController
+        UINavigationController *masterNavigationController      = splitViewController.viewControllers[0];
+        // ...in the iPad Storyboard, we "embedded" OCRPackagesViewController in masterNavigationController, so it is topViewController
+        OCRPackagesViewController *_OCRPackagesViewController   = (OCRPackagesViewController *)masterNavigationController.topViewController;
+        _OCRPackagesViewController.managedObjectContext         = self.managedObjectContext;
     } else {
         // Set the managedObjectContext property on OCRPackagesViewController for iPhone
+        // ...first, get the rootViewController
         UINavigationController *navigationController    = (UINavigationController *)self.window.rootViewController;
+        // ...in the iPhone Storyboard, we "embedded" OCRPackagesViewController in rootViewController, so it is topViewController
         OCRPackagesViewController *controller           = (OCRPackagesViewController *)navigationController.topViewController;
         controller.managedObjectContext                 = self.managedObjectContext;
     }

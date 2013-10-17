@@ -7,6 +7,7 @@
 //
 
 #import "OCRCoverLtrViewController.h"
+#import "OCRAppDelegate.h"
 
 @interface OCRCoverLtrViewController ()
 {
@@ -17,21 +18,16 @@
     UIBarButtonItem     *cancelBtn;
 }
 
+@property (strong, nonatomic) UIPopoverController *masterPopoverController;
+
+- (void)configureView;
 - (void)updateDataFields;
 - (void)configureDefaultNavBar;
 - (void)resetView;
-- (BOOL)saveMoc:(NSManagedObjectContext *)moc;
 
 @end
 
 @implementation OCRCoverLtrViewController
-
-@synthesize selectedPackage             = _selectedPackage;
-@synthesize managedObjectContext        = __managedObjectContext;
-@synthesize fetchedResultsController    = __fetchedResultsController;
-
-@synthesize scrollView                  = _scrollView;
-@synthesize coverLtrFld                 = _coverLtrFld;
 
 #pragma mark - Life Cycle methods
 
@@ -42,17 +38,9 @@
     
     [super viewDidLoad];
 	
-    [self updateDataFields];
-    
-    // Register for keyboard notifications
-    [[NSNotificationCenter defaultCenter] addObserver: self
-                                             selector: @selector(keyboardWillShow:)
-                                                 name: UIKeyboardWillShowNotification
-                                               object: nil];
-    [[NSNotificationCenter defaultCenter] addObserver: self
-                                             selector: @selector(keyboardWillBeHidden:)
-                                                 name: UIKeyboardWillHideNotification
-                                               object: nil];
+	self.view.backgroundColor = [UIColor clearColor];
+    // Set the default button title
+    self.backButtonTitle        = NSLocalizedString(@"Packages", nil);
     
     // Set up btn items
     backBtn     = self.navigationItem.leftBarButtonItem;
@@ -66,38 +54,28 @@
                                                                 target: self
                                                                 action: @selector(cancelButtonTapped)];
     
-    [self configureDefaultNavBar];
-    
-    // Register for iCloud notifications
-    [[NSNotificationCenter defaultCenter] addObserver: self
-                                             selector: @selector(reloadFetchedResults:)
-                                                 name: OCRApplicationDidMergeChangesFrom_iCloudNotification
-                                               object: nil];
 }
 
+
 //----------------------------------------------------------------------------------------------------------
-- (void)viewDidUnload
+- (void)viewWillAppear:(BOOL)animated
 {
     DLog();
+    [super viewWillAppear: animated];
     
-    // Remove all observers
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [self configureDefaultNavBar];
+    [self configureView];
+    [self updateDataFields];
     
-    self.scrollView             = nil;
-    self.coverLtrFld            = nil;
-    
-    [super viewDidUnload];
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-- (void)didReceiveMemoryWarning
-{
-    // Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-    
-    // Release any cached data, images, etc. that aren't in use.
-    ALog();
+    // Register for keyboard notifications
+    [[NSNotificationCenter defaultCenter] addObserver: self
+                                             selector: @selector(keyboardWillShow:)
+                                                 name: UIKeyboardWillShowNotification
+                                               object: nil];
+    [[NSNotificationCenter defaultCenter] addObserver: self
+                                             selector: @selector(keyboardWillBeHidden:)
+                                                 name: UIKeyboardWillHideNotification
+                                               object: nil];
 }
 
 
@@ -106,8 +84,14 @@
 {
     DLog();
     
-    // Save any changes
-    [self saveMoc: self.managedObjectContext];
+    /*
+     removeObserver is handled in super class
+     */
+    
+    self.scrollView             = nil;
+    self.coverLtrFld            = nil;
+    
+    [super viewWillDisappear: animated];
 }
 
 
@@ -116,6 +100,15 @@
 {
     // Return YES for supported orientations.
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+- (void)configureView
+{
+    DLog();
+    
+    self.navigationItem.title = NSLocalizedString(@"Cover Letter", nil);
 }
 
 
@@ -129,7 +122,7 @@
         self.coverLtrFld.text	= self.selectedPackage.cover_ltr;
     } else {
         self.coverLtrFld.text	= @"";
-        [self editButtonTapped];
+//        [self editButtonTapped];
     }
 }
 
@@ -177,11 +170,7 @@
     
     [[self.managedObjectContext undoManager] endUndoGrouping];
     
-    if (![self saveMoc: [self.fetchedResultsController managedObjectContext]]) {
-        ALog(@"Failed to save data");
-        NSString* msg = NSLocalizedString(@"Failed to save data.", nil);
-        [OCAExtensions showErrorWithMessage: msg];
-    }
+    [kAppDelegate saveContext: [self.fetchedResultsController managedObjectContext]];
     
     // Cleanup the undoManager
     [[self.managedObjectContext undoManager] removeAllActionsWithTarget:self];
@@ -214,7 +203,6 @@
 }
 
 #pragma mark - Keyboard handlers
-
 
 //----------------------------------------------------------------------------------------------------------
 - (void)keyboardWillShow:(NSNotification*)aNotification
@@ -286,49 +274,8 @@
 {
     DLog();
     
-    NSError *error = nil;
-    
-    if (![[self fetchedResultsController] performFetch: &error]) {
-        ELog(error, @"Fetch failed!");
-        NSString* msg = NSLocalizedString(@"Failed to reload data.", nil);
-        [OCAExtensions showErrorWithMessage: msg];
-    }
-    
+    [super reloadFetchedResults: note];
     [self updateDataFields];
-    
-    //    if (note) {
-    //        // The notification is on an async thread, so block while the UI updates
-    //        [self.managedObjectContext performBlock:^{
-    //            [self updateDataFields];
-    //        }];
-    //    }
-}
-
-//----------------------------------------------------------------------------------------------------------
-- (BOOL)saveMoc:(NSManagedObjectContext *)moc
-{
-    DLog();
-    
-    BOOL result = YES;
-    NSError *error = nil;
-    
-    if (moc) {
-        if ([moc hasChanges]) {
-            if (![moc save: &error]) {
-                ELog(error, @"Failed to save");
-                result = NO;
-            } else {
-                DLog(@"Save successful");
-            }
-        } else {
-            DLog(@"No changes to save");
-        }
-    } else {
-        ALog(@"managedObjectContext is null");
-        result = NO;
-    }
-    
-    return result;
 }
 
 @end

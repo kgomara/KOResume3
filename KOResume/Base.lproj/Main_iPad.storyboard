@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4510" systemVersion="12F37" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="H1p-Uh-vWS">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4510" systemVersion="12F45" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="H1p-Uh-vWS">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3742"/>
     </dependencies>
@@ -146,7 +146,7 @@
                 </splitViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cZU-Oi-B1e" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-687" y="-630"/>
+            <point key="canvasLocation" x="-799" y="-62"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="r7l-gg-dq7">
@@ -161,7 +161,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SLD-UC-DBI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-360" y="440"/>
+            <point key="canvasLocation" x="448" y="418"/>
         </scene>
         <!--Cover Ltr View Controller-->
         <scene sceneID="hfl-R1-ALC">
@@ -175,11 +175,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="703" height="768"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Qk9-ss-Qp4">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qk9-ss-Qp4">
                                 <rect key="frame" x="0.0" y="0.0" width="703" height="768"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Lfy-sr-PAy">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Lfy-sr-PAy">
                                         <rect key="frame" x="0.0" y="0.0" width="703" height="768"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
@@ -194,12 +194,30 @@
                                             </textView>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" priority="750" constant="768" id="Ey6-wq-hdM"/>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" priority="750" constant="703" id="KxK-4K-P8m"/>
+                                        </constraints>
                                     </view>
                                 </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="Lfy-sr-PAy" secondAttribute="trailing" id="6Sc-UN-Dn3"/>
+                                    <constraint firstAttribute="bottom" secondItem="Lfy-sr-PAy" secondAttribute="bottom" id="FXn-O6-T4c"/>
+                                    <constraint firstItem="Lfy-sr-PAy" firstAttribute="centerX" secondItem="Qk9-ss-Qp4" secondAttribute="centerX" id="evA-QT-iQV"/>
+                                    <constraint firstItem="Lfy-sr-PAy" firstAttribute="top" secondItem="Qk9-ss-Qp4" secondAttribute="top" id="gXu-Av-Kvl"/>
+                                    <constraint firstItem="Lfy-sr-PAy" firstAttribute="leading" secondItem="Qk9-ss-Qp4" secondAttribute="leading" id="jco-yp-Mqz"/>
+                                    <constraint firstItem="Lfy-sr-PAy" firstAttribute="centerY" secondItem="Qk9-ss-Qp4" secondAttribute="centerY" id="xt2-A1-fko"/>
+                                </constraints>
                             </scrollView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <color key="tintColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="Qk9-ss-Qp4" secondAttribute="trailing" id="3xm-cU-645"/>
+                            <constraint firstItem="Qk9-ss-Qp4" firstAttribute="top" secondItem="nzg-EE-imo" secondAttribute="top" id="M1Q-Pm-IBk"/>
+                            <constraint firstAttribute="bottom" secondItem="Qk9-ss-Qp4" secondAttribute="bottom" id="Nqt-eY-wLx"/>
+                            <constraint firstItem="Qk9-ss-Qp4" firstAttribute="leading" secondItem="nzg-EE-imo" secondAttribute="leading" id="sTR-Gr-Ef6"/>
+                        </constraints>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
                     <navigationItem key="navigationItem" id="g10-EI-NNn"/>
@@ -210,7 +228,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="43f-MU-1zR" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="557" y="440"/>
+            <point key="canvasLocation" x="1297" y="418"/>
         </scene>
     </scenes>
     <color key="tintColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>

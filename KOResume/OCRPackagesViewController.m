@@ -48,9 +48,6 @@
 
 @implementation OCRPackagesViewController
 
-@synthesize managedObjectContext        = _managedObjectContext;
-@synthesize fetchedResultsController    = _fetchedResultsController;
-
 BOOL isEditModeActive;
 
 #pragma mark - View lifecycle
@@ -74,8 +71,8 @@ BOOL isEditModeActive;
     self.collectionView.pagingEnabled = YES;
     
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-        self.clearsSelectionOnViewWillAppear = NO;
-        self.preferredContentSize = CGSizeMake(320.0, 600.0);
+        self.clearsSelectionOnViewWillAppear    = NO;
+        self.preferredContentSize               = CGSizeMake(320.0, 600.0);
     }
     
     [super awakeFromNib];
@@ -100,6 +97,9 @@ BOOL isEditModeActive;
     // Set up the defaults in the Navigation Bar
     [self configureDefaultNavBar];
     
+    // Save a reference to the detail view
+    self.detailViewController = (OCRDetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
+
     [self.collectionView setTintColor: [UIColor redColor]];
     [(UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout setItemSize: CGSizeMake(150.0f, 150.0f)];
     
@@ -132,8 +132,6 @@ BOOL isEditModeActive;
 //    [self.navigationController pushViewController: infoViewController
 //                                         animated: YES];
     
-    // TODO patch up master/detail business
-    self.detailViewController = (OCRDetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
 }
 
 //----------------------------------------------------------------------------------------------------------
@@ -659,21 +657,35 @@ willEndDraggingItemAtIndexPath:(NSIndexPath *)indexPath
 - (void)prepareForSegue:(UIStoryboardSegue *)segue
                  sender:(id)sender
 {
+    DLog();
+    
+    /*
+     See the comment in - configureCell:atIndexPath: to understand how we are using sender.tag with fetchedResultsController
+     */
+    /*
+     The sender is one of the buttons in a UICollectionViewCell (not the cell itself). To construct the indexPath
+     we use the tag on the UIButton
+     */
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow: [(UIButton *)sender tag]
+                                                inSection: 0];
     if ([[segue identifier] isEqualToString: OCRCvrLtrSegue]) {
+        Packages *aPackage = [self.fetchedResultsController objectAtIndexPath: indexPath];
         /*
-         See the comment in - configureCell:atIndexPath: to understand how we are using sender.tag with fetchedResultsController
-         */
-        Packages *aPackage = [self.fetchedResultsController objectAtIndexPath:[NSIndexPath indexPathForRow: [(UICollectionViewCell *)sender tag]
-                                                                                                 inSection: 0]];
-        /*
-         * 
+         The segue behaves differently on the iPad and iPhone.
+         On iPad, the detail view is governed by its own navigation controller, and our "replace" segue
+         is replacing the navigation controller. We want to pass a few data object references to the cover letter controller (discussed
+         in more detail below) - so we must first get a reference to the cover letter controller.
          */
         OCRDetailViewController *cvrLtrController;
         if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-            cvrLtrController = [[[segue destinationViewController] viewControllers] objectAtIndex: 0];
+            // On the iPad, the cover letter controller is the first controller in the navigation controller's stack
+            // Note - the UINavigationController cast isn't strictly necessary, but helps make the code more self-documenting
+            cvrLtrController = [[(UINavigationController *)[segue destinationViewController] viewControllers] objectAtIndex: 0];
         } else {
+            // On the iPhone, the cover letter controller is the direct target of the segue
             cvrLtrController = [segue destinationViewController];
         }
+        self.detailViewController = cvrLtrController;
         /*
          A common strategy for passing data between controller objects is to declare public properties in the receiving object
          and have the instantiator set those properties.
@@ -681,11 +693,12 @@ willEndDraggingItemAtIndexPath:(NSIndexPath *)indexPath
          
          An alternative strategy for data that is global scope by nature would be to set those properties on the UIApplication
          delegate and reference them as [[[UIApplication sharedApplication] delegate] foo_bar]. In our case, that's perfectly OK for
-         ManagedObjectContext and FetchedResultsController, but probably not for the selected Package.
+         managedObjectContext and fetchedResultsController that are used throughout the app, but probably not ideal for the selected Package.
          
          My preference is to minimize globals, hence I pass all three references here.
          */
-        [cvrLtrController setSelectedPackage:aPackage];
+        [cvrLtrController setSelectedPackage: aPackage];
+        [cvrLtrController setBackButtonTitle: NSLocalizedString(@"Packages", nil)];
         [cvrLtrController setManagedObjectContext: self.managedObjectContext];
         [cvrLtrController setFetchedResultsController: self.fetchedResultsController];
     }
@@ -771,9 +784,9 @@ willEndDraggingItemAtIndexPath:(NSIndexPath *)indexPath
 
 // TODO need to throughly comment this section
 
-/*
- * The fetched results controller can "batch" updates to improve performance and preserve battery life.
- * See http://ashfurrow.com/blog/uicollectionview-example for a tutorial on how this processs works.
+/**
+ The fetched results controller can "batch" updates to improve performance and preserve battery life.
+ See http://ashfurrow.com/blog/uicollectionview-example for a tutorial on how this processs works.
  */
 
 //----------------------------------------------------------------------------------------------------------
