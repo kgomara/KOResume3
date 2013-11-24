@@ -61,12 +61,11 @@
 // Elog accepts an NSError object and logs the detailed information. This may seem redundant
 // for many system errors, but the macro will display the Class, method name, and line number.
 #define ELog(_error, _fmt, ...)                                                                                             \
-do                                                                                                                          \
-{                                                                                                                           \
+do {                                                                                                                        \
     NSLog(@"%s [Line %d] [Error %@] " _fmt, __PRETTY_FUNCTION__, __LINE__,  [_error localizedDescription], ##__VA_ARGS__);  \
     NSArray* detailedErrors = [[_error userInfo] objectForKey:NSDetailedErrorsKey];                                         \
-    if(detailedErrors != nil && [detailedErrors count] > 0) {                                                               \
-        for(NSError* detailedError in detailedErrors) {                                                                     \
+    if (detailedErrors != nil && [detailedErrors count] > 0) {                                                              \
+        for (NSError* detailedError in detailedErrors) {                                                                    \
             NSLog(@"  DetailedError: %@", [detailedError userInfo]);                                                        \
         }                                                                                                                   \
     }                                                                                                                       \

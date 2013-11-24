@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "Packages.h"
+#import "OCRDetailViewManager.h"
 
 @protocol OCRDetailViewSubclass <NSObject>
 
@@ -15,12 +16,13 @@
 
 @end
 
-@interface OCRDetailViewController : UIViewController <UISplitViewControllerDelegate, UITableViewDelegate>
+@interface OCRDetailViewController : UIViewController <UISplitViewControllerDelegate, SubstitutableDetailViewController, UITableViewDelegate>
 
 @property (nonatomic, strong) Packages                      *selectedPackage;
 @property (nonatomic, strong) NSManagedObjectContext        *managedObjectContext;
 @property (nonatomic, strong) NSFetchedResultsController    *fetchedResultsController;
 @property (nonatomic, strong) NSString                      *backButtonTitle;
+@property (nonatomic, strong) UIBarButtonItem               *navigationPaneBarButtonItem;
 
 - (void)reloadFetchedResults:(NSNotification*)note;
 

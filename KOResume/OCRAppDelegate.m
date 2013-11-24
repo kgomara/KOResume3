@@ -20,7 +20,7 @@
     _coreDataController = [[OCRCoreDataController alloc] init];
     
     // Set the overall tint color
-    self.window.tintColor = [UIColor redColor];
+    self.window.tintColor = [UIColor redColor];     // window is nil!!!!!
     
     _managedObjectContext = self.coreDataController.managedObjectContext;
     if (!_managedObjectContext) {
@@ -35,12 +35,16 @@
         UINavigationController *navigationController        = [splitViewController.viewControllers lastObject];
         splitViewController.delegate                        = (id)navigationController.topViewController;
         
-        // Set the managedObjectContext property on OCRPackagesViewController for iPad
-        // ...first, get the masterNavigationController
-        UINavigationController *masterNavigationController      = splitViewController.viewControllers[0];
-        // ...in the iPad Storyboard, we "embedded" OCRPackagesViewController in masterNavigationController, so it is topViewController
-        OCRPackagesViewController *_OCRPackagesViewController   = (OCRPackagesViewController *)masterNavigationController.topViewController;
-        _OCRPackagesViewController.managedObjectContext         = self.managedObjectContext;
+        self.detailViewManager                      = [[OCRDetailViewManager alloc] init];
+        self.detailViewManager.splitViewController  = splitViewController;
+        self.detailViewManager.detailViewController = splitViewController.viewControllers.lastObject;
+        // Set the managedObjectContext property
+        self.detailViewManager.managedObjectContext = self.managedObjectContext;
+        splitViewController.delegate                = self.detailViewManager;
+        
+        if ([splitViewController respondsToSelector:@selector(setPresentsWithGesture:)]) {
+            [splitViewController setPresentsWithGesture:YES];
+        }
     } else {
         // Set the managedObjectContext property on OCRPackagesViewController for iPhone
         // ...first, get the rootViewController

@@ -29,7 +29,7 @@ NSString *const OCRJobsDetailViewController                                 = @"
 NSString *const OCREducationViewController                                  = @"EducationViewController";
 //NSString *const OCRPackagesViewController                                   = @"PackagesViewController";
 NSString *const OCRAccomplishmentsViewController                            = @"AccomplishmentViewController";
-NSString *const OCACoverLtrID                                               = @"OCACoverLtrID";
+NSString *const OCRCoverLtrID                                               = @"OCRCoverLtrID";
 NSString *const OCRResumeViewController                                     = @"ResumeViewController";
 NSString *const OCRInfoViewController                                       = @"InfoViewController";
 

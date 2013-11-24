@@ -7,14 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "OCACollectionViewFlowLayoutCell.h"
 
-// TODO - refactor to extract OCACollectionViewCell behavior and inherit from that
-
-@interface OCRPackagesCell : UICollectionViewCell
+@interface OCRPackagesCell : OCACollectionViewFlowLayoutCell
 
 @property (nonatomic, strong)   IBOutlet UILabel    *title;
 @property (nonatomic, strong)   IBOutlet UIButton   *coverLtrButton;
 @property (nonatomic, strong)   IBOutlet UIButton   *resumeButton;
-@property (nonatomic, strong)   IBOutlet UIButton   *deleteButton;
 
 @end

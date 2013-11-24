@@ -681,6 +681,7 @@ willEndDraggingItemAtIndexPath:(NSIndexPath *)indexPath
             // On the iPad, the cover letter controller is the first controller in the navigation controller's stack
             // Note - the UINavigationController cast isn't strictly necessary, but helps make the code more self-documenting
             cvrLtrController = [[(UINavigationController *)[segue destinationViewController] viewControllers] objectAtIndex: 0];
+//            cvrLtrController = [segue destinationViewController];
         } else {
             // On the iPhone, the cover letter controller is the direct target of the segue
             cvrLtrController = [segue destinationViewController];
