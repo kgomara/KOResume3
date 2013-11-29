@@ -19,9 +19,10 @@
 @interface OCRDetailViewController : UIViewController <UISplitViewControllerDelegate, SubstitutableDetailViewController, UITableViewDelegate>
 
 @property (nonatomic, strong) Packages                      *selectedPackage;
-@property (nonatomic, strong) NSManagedObjectContext        *managedObjectContext;
 @property (nonatomic, strong) NSFetchedResultsController    *fetchedResultsController;
 @property (nonatomic, strong) NSString                      *backButtonTitle;
+
+@property (nonatomic, strong) IBOutlet UILabel              *titleLabel;
 @property (nonatomic, strong) UIBarButtonItem               *navigationPaneBarButtonItem;
 
 - (void)reloadFetchedResults:(NSNotification*)note;

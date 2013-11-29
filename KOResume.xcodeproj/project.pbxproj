@@ -66,6 +66,7 @@
 		D6B4864D17964882009E6A14 /* Resumes.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D571FE1793991400034AF3 /* Resumes.m */; };
 		D6BA20EE17B881E90068F4D9 /* OCRCoverLtrViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6BA20ED17B881E90068F4D9 /* OCRCoverLtrViewController.m */; };
 		D6BA20EF17B881E90068F4D9 /* OCRCoverLtrViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6BA20ED17B881E90068F4D9 /* OCRCoverLtrViewController.m */; };
+		D6C804C81842684300FD6A42 /* Main_iPad copy.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D6C804C61842684300FD6A42 /* Main_iPad copy.storyboard */; };
 		D6D571B11793366000034AF3 /* OCRCoreDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D571B0179335FF00034AF3 /* OCRCoreDataController.m */; };
 		D6D571B71793395F00034AF3 /* GlobalConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D571B31793395F00034AF3 /* GlobalConstants.m */; };
 		D6D571B81793395F00034AF3 /* GlobalConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D571B31793395F00034AF3 /* GlobalConstants.m */; };
@@ -145,6 +146,7 @@
 		D6B016B41793C16900B86B8D /* KOResume.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; name = KOResume.sqlite; path = Resources/KOResume.sqlite; sourceTree = "<group>"; };
 		D6BA20EC17B881E90068F4D9 /* OCRCoverLtrViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRCoverLtrViewController.h; path = Classes/OCRCoverLtrViewController.h; sourceTree = "<group>"; };
 		D6BA20ED17B881E90068F4D9 /* OCRCoverLtrViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRCoverLtrViewController.m; path = Classes/OCRCoverLtrViewController.m; sourceTree = "<group>"; };
+		D6C804C71842684300FD6A42 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = "Base.lproj/Main_iPad copy.storyboard"; sourceTree = "<group>"; };
 		D6D571AF179335FF00034AF3 /* OCRCoreDataController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCRCoreDataController.h; sourceTree = "<group>"; };
 		D6D571B0179335FF00034AF3 /* OCRCoreDataController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCRCoreDataController.m; sourceTree = "<group>"; };
 		D6D571B21793395F00034AF3 /* GlobalConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GlobalConstants.h; path = Classes/GlobalConstants.h; sourceTree = "<group>"; };
@@ -288,6 +290,7 @@
 		D6B016B31793C12B00B86B8D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				D6C804C61842684300FD6A42 /* Main_iPad copy.storyboard */,
 				D63D82FD179312F80065F0A9 /* KOResume.entitlements */,
 				D6B016B41793C16900B86B8D /* KOResume.sqlite */,
 				D63D82D0179311350065F0A9 /* Main_iPhone.storyboard */,
@@ -454,6 +457,7 @@
 				D63D82D5179311350065F0A9 /* Main_iPad.storyboard in Resources */,
 				D63D82E0179311350065F0A9 /* Images.xcassets in Resources */,
 				D63D82D2179311350065F0A9 /* Main_iPhone.storyboard in Resources */,
+				D6C804C81842684300FD6A42 /* Main_iPad copy.storyboard in Resources */,
 				D6B016B51793C16900B86B8D /* KOResume.sqlite in Resources */,
 				D63D82C9179311350065F0A9 /* InfoPlist.strings in Resources */,
 			);
@@ -601,6 +605,14 @@
 				04F0CFC617FF4F9800930FC9 /* fr-FR */,
 			);
 			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		D6C804C61842684300FD6A42 /* Main_iPad copy.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D6C804C71842684300FD6A42 /* Base */,
+			);
+			name = "Main_iPad copy.storyboard";
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

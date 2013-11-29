@@ -32,8 +32,6 @@
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         // Setup Master-Detail controller paradigm for iPad
         UISplitViewController *splitViewController          = (UISplitViewController *)self.window.rootViewController;
-        UINavigationController *navigationController        = [splitViewController.viewControllers lastObject];
-        splitViewController.delegate                        = (id)navigationController.topViewController;
         
         self.detailViewManager                      = [[OCRDetailViewManager alloc] init];
         self.detailViewManager.splitViewController  = splitViewController;

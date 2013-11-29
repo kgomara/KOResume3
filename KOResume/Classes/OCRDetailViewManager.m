@@ -37,14 +37,14 @@
 {
     // Clear any bar button item from the detail view controller that is about to
     // no longer be displayed.
-    self.detailViewController.navigationPaneBarButtonItem = nil;
+//    self.detailViewController.navigationPaneBarButtonItem = nil;
     
     _detailViewController = detailViewController;
     
     // Set the new detailViewController's navigationPaneBarButtonItem to the value of our
     // navigationPaneButtonItem.  If navigationPaneButtonItem is not nil, then the button
     // will be displayed.
-    _detailViewController.navigationPaneBarButtonItem = self.navigationPaneButtonItem;
+//    _detailViewController.navigationPaneBarButtonItem = self.navigationPaneButtonItem;
     
     // Update the split view controller's view controllers array.
     // This causes the new detail view controller to be displayed.
@@ -82,7 +82,7 @@
     self.navigationPopoverController    = popoverController;
     
     // Tell the detail view controller to show the navigation button.
-    self.detailViewController.navigationPaneBarButtonItem = barButtonItem;
+//    self.detailViewController.navigationPaneBarButtonItem = barButtonItem;
 }
 
 // -------------------------------------------------------------------------------
@@ -94,7 +94,7 @@
     self.navigationPopoverController    = nil;
     
     // Tell the detail view controller to remove the navigation button.
-    self.detailViewController.navigationPaneBarButtonItem = nil;
+//    self.detailViewController.navigationPaneBarButtonItem = nil;
 }
 
 

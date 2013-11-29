@@ -661,8 +661,7 @@ willEndDraggingItemAtIndexPath:(NSIndexPath *)indexPath
     
     /*
      See the comment in - configureCell:atIndexPath: to understand how we are using sender.tag with fetchedResultsController
-     */
-    /*
+
      The sender is one of the buttons in a UICollectionViewCell (not the cell itself). To construct the indexPath
      we use the tag on the UIButton
      */
@@ -692,15 +691,20 @@ willEndDraggingItemAtIndexPath:(NSIndexPath *)indexPath
          and have the instantiator set those properties.
          Here we pass the Package represented by the cell the user tapped, as well as the ManagedObjectContext and FetchedResultsController
          
-         An alternative strategy for data that is global scope by nature would be to set those properties on the UIApplication
-         delegate and reference them as [[[UIApplication sharedApplication] delegate] foo_bar]. In our case, that's perfectly OK for
-         managedObjectContext and fetchedResultsController that are used throughout the app, but probably not ideal for the selected Package.
+         An alternative strategy for data that is global scope by nature is to set those properties on the UIApplication
+         delegate and reference them as [[[UIApplication sharedApplication] delegate] foo_bar]. In our case, there is only one
+         managedObjectContext used throughout the app, so I reference it as a global variable:
          
-         My preference is to minimize globals, hence I pass all three references here.
+            @property (nonatomic, strong, readonly) NSManagedObjectContext  *managedObjectContext;
+         
+         I also created a macro (see GlobalMacros.h):
+         
+            #define kAppDelegate    (OCRAppDelegate *)[[UIApplication sharedApplication] delegate]      // Note it DOES NOT end with a ';'
+         
+         Thus, in other source files [kAppDelegate managedObjectContext] returns a reference to our managedObjectContext
          */
         [cvrLtrController setSelectedPackage: aPackage];
         [cvrLtrController setBackButtonTitle: NSLocalizedString(@"Packages", nil)];
-        [cvrLtrController setManagedObjectContext: self.managedObjectContext];
         [cvrLtrController setFetchedResultsController: self.fetchedResultsController];
     }
 }
@@ -719,7 +723,7 @@ willEndDraggingItemAtIndexPath:(NSIndexPath *)indexPath
     // Create the fetch request for the entity
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity  = [NSEntityDescription entityForName: OCRPackagesEntity
-                                               inManagedObjectContext: self.managedObjectContext];
+                                               inManagedObjectContext: [kAppDelegate managedObjectContext]];
     [fetchRequest setEntity:entity];
     
     // Set the batch size to a suitable number
@@ -736,7 +740,7 @@ willEndDraggingItemAtIndexPath:(NSIndexPath *)indexPath
      By setting sectionNameKeyPath to nil, we are stating we want everything in a single section
      */
     NSFetchedResultsController *fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest: fetchRequest
-                                                                                               managedObjectContext: self.managedObjectContext
+                                                                                               managedObjectContext: [kAppDelegate managedObjectContext]
                                                                                                  sectionNameKeyPath: nil
                                                                                                           cacheName: @"Root"];
     // Set the delegate as self

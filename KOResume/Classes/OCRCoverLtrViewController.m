@@ -155,7 +155,7 @@
     
     // Start an undo group...it will either be commited in saveButtonTapped or
     //    undone in cancelButtonTapped
-    [[self.managedObjectContext undoManager] beginUndoGrouping];
+    [[[kAppDelegate managedObjectContext] undoManager] beginUndoGrouping];
     [self.coverLtrFld becomeFirstResponder];
 }
 
@@ -166,14 +166,14 @@
     DLog();
     
     // Save the changes
-    self.selectedPackage.cover_ltr    = self.coverLtrFld.text;
+    self.selectedPackage.cover_ltr = self.coverLtrFld.text;
     
-    [[self.managedObjectContext undoManager] endUndoGrouping];
+    [[[kAppDelegate managedObjectContext] undoManager] endUndoGrouping];
     
     [kAppDelegate saveContext: [self.fetchedResultsController managedObjectContext]];
     
     // Cleanup the undoManager
-    [[self.managedObjectContext undoManager] removeAllActionsWithTarget:self];
+    [[[kAppDelegate managedObjectContext] undoManager] removeAllActionsWithTarget:self];
     // ...and reset the UI defaults
     [self configureDefaultNavBar];
     [self resetView];
@@ -186,15 +186,15 @@
     DLog();
     
     // Undo any changes the user has made
-    [[self.managedObjectContext undoManager] setActionName:OCRUndoActionName];
-    [[self.managedObjectContext undoManager] endUndoGrouping];
+    [[[kAppDelegate managedObjectContext] undoManager] setActionName:OCRUndoActionName];
+    [[[kAppDelegate managedObjectContext] undoManager] endUndoGrouping];
     
-    if ([[self.managedObjectContext undoManager] canUndo]) {
-        [[self.managedObjectContext undoManager] undoNestedGroup];
+    if ([[[kAppDelegate managedObjectContext] undoManager] canUndo]) {
+        [[[kAppDelegate managedObjectContext] undoManager] undoNestedGroup];
     }
     
     // Cleanup the undoManager
-    [[self.managedObjectContext undoManager] removeAllActionsWithTarget: self];
+    [[[kAppDelegate managedObjectContext] undoManager] removeAllActionsWithTarget: self];
     // ...and reset the UI defaults
     self.coverLtrFld.text    = self.selectedPackage.cover_ltr;
     [self updateDataFields];

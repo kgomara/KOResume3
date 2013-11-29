@@ -14,7 +14,7 @@
  */
 @protocol SubstitutableDetailViewController
 
-@property (nonatomic, retain) UIBarButtonItem *navigationPaneBarButtonItem;
+@property (nonatomic, strong) UIBarButtonItem *navigationPaneBarButtonItem;
 
 @end
 
@@ -23,7 +23,7 @@
 /**
  The split view this class will be managing.
  */
-@property (nonatomic, retain) IBOutlet UISplitViewController *splitViewController;
+@property (nonatomic, strong) IBOutlet UISplitViewController *splitViewController;
 
 /**
  The presently displayed detail view controller.  This is modified by the various
