@@ -1,5 +1,5 @@
 //
-//  OCRDetailViewController.h
+//  OCRBaseDetailViewController.h
 //  KOResume
 //
 //  Created by Kevin O'Mara on 7/14/13.
@@ -10,13 +10,13 @@
 #import "Packages.h"
 #import "OCRDetailViewManager.h"
 
-@protocol OCRDetailViewSubclass <NSObject>
+@protocol OCRDetailViewProtocol <NSObject>
 
 - (void)configureView;
 
 @end
 
-@interface OCRDetailViewController : UIViewController <UISplitViewControllerDelegate, SubstitutableDetailViewController, UITableViewDelegate>
+@interface OCRBaseDetailViewController : UIViewController <SubstitutableDetailViewController, UITableViewDelegate>
 
 @property (nonatomic, strong) Packages                      *selectedPackage;
 @property (nonatomic, strong) NSFetchedResultsController    *fetchedResultsController;

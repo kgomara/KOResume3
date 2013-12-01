@@ -33,18 +33,19 @@
  Custom implementation of the setter for the detailViewController property.
  */
 // -------------------------------------------------------------------------------
-- (void)setDetailViewController:(UIViewController<SubstitutableDetailViewController> *)detailViewController
+- (void)setDetailViewController:(UIViewController<SubstitutableDetailViewController> *)detailVC
 {
+    DLog();
     // Clear any bar button item from the detail view controller that is about to
     // no longer be displayed.
-//    self.detailViewController.navigationPaneBarButtonItem = nil;
+    self.detailViewController.navigationPaneBarButtonItem = nil;
     
-    _detailViewController = detailViewController;
+    _detailViewController = detailVC;
     
     // Set the new detailViewController's navigationPaneBarButtonItem to the value of our
     // navigationPaneButtonItem.  If navigationPaneButtonItem is not nil, then the button
     // will be displayed.
-//    _detailViewController.navigationPaneBarButtonItem = self.navigationPaneButtonItem;
+    _detailViewController.navigationPaneBarButtonItem = self.navigationPaneButtonItem;
     
     // Update the split view controller's view controllers array.
     // This causes the new detail view controller to be displayed.
@@ -74,6 +75,8 @@
           withBarButtonItem:(UIBarButtonItem *)barButtonItem
        forPopoverController:(UIPopoverController *)popoverController
 {
+    DLog();
+    
     // If the barButtonItem does not have a title (or image) adding it to a toolbar
     // will do nothing.
     barButtonItem.title                 = @"Navigation";
@@ -82,7 +85,7 @@
     self.navigationPopoverController    = popoverController;
     
     // Tell the detail view controller to show the navigation button.
-//    self.detailViewController.navigationPaneBarButtonItem = barButtonItem;
+    self.detailViewController.navigationPaneBarButtonItem = barButtonItem;
 }
 
 // -------------------------------------------------------------------------------
@@ -90,11 +93,13 @@
      willShowViewController:(UIViewController *)aViewController
   invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem
 {
+    DLog();
+    
     self.navigationPaneButtonItem       = nil;
     self.navigationPopoverController    = nil;
     
     // Tell the detail view controller to remove the navigation button.
-//    self.detailViewController.navigationPaneBarButtonItem = nil;
+    self.detailViewController.navigationPaneBarButtonItem = nil;
 }
 
 

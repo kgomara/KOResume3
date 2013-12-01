@@ -10,14 +10,14 @@
 #import "OCAEditableCollectionViewFlowLayout.h"
 #import "OCRPackagesCell.h"
 
-@class OCRDetailViewController;
+@class OCRBaseDetailViewController;
 
 #import <CoreData/CoreData.h>
 
 @interface OCRPackagesViewController : UICollectionViewController <NSFetchedResultsControllerDelegate,
                                                                     OCAEditableCollectionViewDataSource, OCAEditableCollectionViewDelegateFlowLayout>
 
-@property (nonatomic, strong) OCRDetailViewController       *detailViewController;
+@property (nonatomic, strong) OCRBaseDetailViewController       *detailViewController;
 
 @property (nonatomic, strong) NSFetchedResultsController    *fetchedResultsController;
 @property (nonatomic, strong) NSManagedObjectContext        *managedObjectContext;

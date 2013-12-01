@@ -1,33 +1,30 @@
 //
-//  OCRDetailViewController.m
+//  OCRBaseDetailViewController.m
 //  KOResume
 //
 //  Created by Kevin O'Mara on 7/14/13.
 //  Copyright (c) 2013 O'Mara Consulting Associates. All rights reserved.
 //
 
-#import "OCRDetailViewController.h"
+#import "OCRBaseDetailViewController.h"
 #import "OCRAppDelegate.h"
-//#import <CoreData/CoreData.h>
-//#import "CoverLtrViewController.h"
-//#import "ResumeViewController.h"
 #import "Resumes.h"
 
 #define kSummaryTableCell   0
 #define kResumeTableCell    1
 
-@interface OCRDetailViewController ()
+@interface OCRBaseDetailViewController ()
 
 @property (strong, nonatomic) UIPopoverController *masterPopoverController;
 
 @end
 
-@implementation OCRDetailViewController
+@implementation OCRBaseDetailViewController
 
 #pragma mark SubstitutableDetailViewController
 
 // -------------------------------------------------------------------------------
-//        setNavigationPaneBarButtonItem:
+//  setNavigationPaneBarButtonItem:
 //  Custom implementation for the navigationPaneBarButtonItem setter.
 //  In addition to updating the _navigationPaneBarButtonItem ivar, it
 //  reconfigures the toolbar to either show or hide the
@@ -36,18 +33,18 @@
 - (void)setNavigationPaneBarButtonItem:(UIBarButtonItem *)navigationPaneBarButtonItem
 {
     if (navigationPaneBarButtonItem != _navigationPaneBarButtonItem) {
-        self.titleLabel.text = self.title;
-        _navigationPaneBarButtonItem = navigationPaneBarButtonItem;
+        self.titleLabel.text            = self.title;
+        _navigationPaneBarButtonItem    = navigationPaneBarButtonItem;
     }
 }
 
 #pragma mark - Managing the detail item
 
 //----------------------------------------------------------------------------------------------------------
-- (void)setSelectedPackage:(Packages *)nuSelectedPackage
+- (void)setSelectedPackage:(Packages *)aSelectedPackage
 {
-    if (_selectedPackage != nuSelectedPackage) {
-        _selectedPackage = nuSelectedPackage;
+    if (_selectedPackage != aSelectedPackage) {
+        _selectedPackage = aSelectedPackage;
         
         // Update the view.
         [self configureView];
@@ -64,7 +61,9 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     DLog();
+    
     [super viewWillAppear: animated];
+    
     self.navigationItem.leftBarButtonItem.title = _backButtonTitle;
     
     // Set an observer for iCloud changes
@@ -107,35 +106,6 @@
      */
     [NSException raise: @"Required method not implemented"
                 format: @"configureView is required"];
-}
-
-//----------------------------------------------------------------------------------------------------------
-#pragma mark - Split view
-
-- (void)splitViewController:(UISplitViewController *)splitController
-     willHideViewController:(UIViewController *)viewController
-          withBarButtonItem:(UIBarButtonItem *)barButtonItem
-       forPopoverController:(UIPopoverController *)popoverController
-{
-    DLog();
-    
-    barButtonItem.title = _backButtonTitle;
-    [self.navigationItem setLeftBarButtonItem:barButtonItem
-                                     animated:YES];
-    self.masterPopoverController = popoverController;
-}
-
-//----------------------------------------------------------------------------------------------------------
-- (void)splitViewController:(UISplitViewController *)splitController
-     willShowViewController:(UIViewController *)viewController
-  invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem
-{
-    DLog();
-    // Called when the view is shown again in the split view, invalidating the button and popover controller.
-    barButtonItem.title = _backButtonTitle;
-    [self.navigationItem setLeftBarButtonItem:nil
-                                     animated:YES];
-    self.masterPopoverController = nil;
 }
 
 //----------------------------------------------------------------------------------------------------------

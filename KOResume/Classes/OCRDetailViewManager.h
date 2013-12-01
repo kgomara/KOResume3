@@ -31,6 +31,4 @@
  */
 @property (nonatomic, assign) IBOutlet UIViewController<SubstitutableDetailViewController> *detailViewController;
 
-@property (nonatomic, strong) NSManagedObjectContext        *managedObjectContext;
-
 @end

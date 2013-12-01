@@ -31,13 +31,13 @@
     
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         // Setup Master-Detail controller paradigm for iPad
-        UISplitViewController *splitViewController          = (UISplitViewController *)self.window.rootViewController;
+        UISplitViewController *splitViewController  = (UISplitViewController *)self.window.rootViewController;
         
         self.detailViewManager                      = [[OCRDetailViewManager alloc] init];
         self.detailViewManager.splitViewController  = splitViewController;
-        self.detailViewManager.detailViewController = splitViewController.viewControllers.lastObject;
-        // Set the managedObjectContext property
-        self.detailViewManager.managedObjectContext = self.managedObjectContext;
+        UINavigationController *detailNavigationController = splitViewController.viewControllers[1];
+        self.detailViewManager.detailViewController = (UIViewController<SubstitutableDetailViewController> *)detailNavigationController.topViewController;
+//        self.detailViewManager.detailViewController = splitViewController.viewControllers.lastObject;
         splitViewController.delegate                = self.detailViewManager;
         
         if ([splitViewController respondsToSelector:@selector(setPresentsWithGesture:)]) {

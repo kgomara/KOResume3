@@ -14,7 +14,7 @@
  */
 
 #import "OCRPackagesViewController.h"
-#import "OCRDetailViewController.h"
+#import "OCRBaseDetailViewController.h"
 #import "OCRAppDelegate.h"
 #import "OCRCoverLtrViewController.h"
 #import "Packages.h"
@@ -98,7 +98,7 @@ BOOL isEditModeActive;
     [self configureDefaultNavBar];
     
     // Save a reference to the detail view
-    self.detailViewController = (OCRDetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
+    self.detailViewController = (OCRBaseDetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
 
     [self.collectionView setTintColor: [UIColor redColor]];
     [(UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout setItemSize: CGSizeMake(150.0f, 150.0f)];
@@ -675,7 +675,7 @@ willEndDraggingItemAtIndexPath:(NSIndexPath *)indexPath
          is replacing the navigation controller. We want to pass a few data object references to the cover letter controller (discussed
          in more detail below) - so we must first get a reference to the cover letter controller.
          */
-        OCRDetailViewController *cvrLtrController;
+        OCRBaseDetailViewController *cvrLtrController;
         if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
             // On the iPad, the cover letter controller is the first controller in the navigation controller's stack
             // Note - the UINavigationController cast isn't strictly necessary, but helps make the code more self-documenting

@@ -46,13 +46,13 @@
     backBtn     = self.navigationItem.leftBarButtonItem;
     editBtn     = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemEdit
                                                                 target: self
-                                                                action: @selector(editButtonTapped)];
+                                                                action: @selector(didPressEditButton)];
     saveBtn     = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemSave
                                                                 target: self
-                                                                action: @selector(saveButtonTapped)];
+                                                                action: @selector(didPressSaveButton)];
     cancelBtn   = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel
                                                                 target: self
-                                                                action: @selector(cancelButtonTapped)];
+                                                                action: @selector(didPressCancelButton)];
     
 }
 
@@ -122,7 +122,7 @@
         self.coverLtrFld.text	= self.selectedPackage.cover_ltr;
     } else {
         self.coverLtrFld.text	= @"";
-//        [self editButtonTapped];
+//        [self didPressEditButton];
     }
 }
 
@@ -136,13 +136,14 @@
     self.navigationItem.rightBarButtonItem = editBtn;
     self.navigationItem.leftBarButtonItem  = backBtn;
     
+    // ...by default, the user cannot edit the text, make it un-editable until the user taps the edit button
     [self.coverLtrFld setEditable:NO];
 }
 
 #pragma mark - UI handlers
 
 //----------------------------------------------------------------------------------------------------------
-- (void)editButtonTapped
+- (void)didPressEditButton
 {
     DLog();
     
@@ -153,15 +154,15 @@
     // Enable the fields for editing
     [self.coverLtrFld setEditable: YES];
     
-    // Start an undo group...it will either be commited in saveButtonTapped or
-    //    undone in cancelButtonTapped
+    // Start an undo group...it will either be commited in didPressSaveButton or
+    //    undone in didPressCancelButton
     [[[kAppDelegate managedObjectContext] undoManager] beginUndoGrouping];
     [self.coverLtrFld becomeFirstResponder];
 }
 
 
 //----------------------------------------------------------------------------------------------------------
-- (void)saveButtonTapped
+- (void)didPressSaveButton
 {
     DLog();
     
@@ -181,7 +182,7 @@
 
 
 //----------------------------------------------------------------------------------------------------------
-- (void)cancelButtonTapped
+- (void)didPressCancelButton
 {
     DLog();
     
