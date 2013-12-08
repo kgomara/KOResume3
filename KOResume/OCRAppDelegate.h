@@ -8,13 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "OCRCoreDataController.h"
-#import "OCRDetailViewManager.h"
-
 
 @interface OCRAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow                          *window;
-@property (strong, nonatomic) OCRDetailViewManager              *detailViewManager;
 
 @property (nonatomic, strong, readonly) NSManagedObjectContext  *managedObjectContext;
 @property (nonatomic, strong, readonly) OCRCoreDataController   *coreDataController;

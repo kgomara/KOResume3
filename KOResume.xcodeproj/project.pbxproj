@@ -41,8 +41,6 @@
 		D63D82F4179311350065F0A9 /* KOResumeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D63D82F3179311350065F0A9 /* KOResumeTests.m */; };
 		D667B7EB17D2E88E00FBD6CD /* OCAEditableLayoutAttributes.m in Sources */ = {isa = PBXBuildFile; fileRef = D667B7EA17D2E88E00FBD6CD /* OCAEditableLayoutAttributes.m */; };
 		D667B7EC17D2E88E00FBD6CD /* OCAEditableLayoutAttributes.m in Sources */ = {isa = PBXBuildFile; fileRef = D667B7EA17D2E88E00FBD6CD /* OCAEditableLayoutAttributes.m */; };
-		D674E3AB18395910008816A2 /* OCRDetailViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D674E3AA18395910008816A2 /* OCRDetailViewManager.m */; };
-		D674E3AC18395911008816A2 /* OCRDetailViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D674E3AA18395910008816A2 /* OCRDetailViewManager.m */; };
 		D6A8EEC817CEE30F00A8C6DA /* OCAEditableCollectionViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = D6A8EEC717CEE30F00A8C6DA /* OCAEditableCollectionViewFlowLayout.m */; };
 		D6A8EEC917CEE30F00A8C6DA /* OCAEditableCollectionViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = D6A8EEC717CEE30F00A8C6DA /* OCAEditableCollectionViewFlowLayout.m */; };
 		D6AC3D3E179A3F21001D8D75 /* OCRPackagesCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D6AC3D3D179A3F21001D8D75 /* OCRPackagesCell.m */; };
@@ -137,8 +135,6 @@
 		D63D82FD179312F80065F0A9 /* KOResume.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = KOResume.entitlements; sourceTree = "<group>"; };
 		D667B7E917D2E88E00FBD6CD /* OCAEditableLayoutAttributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCAEditableLayoutAttributes.h; path = Classes/OCAEditableLayoutAttributes.h; sourceTree = "<group>"; };
 		D667B7EA17D2E88E00FBD6CD /* OCAEditableLayoutAttributes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCAEditableLayoutAttributes.m; path = Classes/OCAEditableLayoutAttributes.m; sourceTree = "<group>"; };
-		D674E3A918395910008816A2 /* OCRDetailViewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRDetailViewManager.h; path = Classes/OCRDetailViewManager.h; sourceTree = "<group>"; };
-		D674E3AA18395910008816A2 /* OCRDetailViewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRDetailViewManager.m; path = Classes/OCRDetailViewManager.m; sourceTree = "<group>"; };
 		D6A8EEC617CEE30F00A8C6DA /* OCAEditableCollectionViewFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCAEditableCollectionViewFlowLayout.h; path = Classes/OCAEditableCollectionViewFlowLayout.h; sourceTree = "<group>"; };
 		D6A8EEC717CEE30F00A8C6DA /* OCAEditableCollectionViewFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCAEditableCollectionViewFlowLayout.m; path = Classes/OCAEditableCollectionViewFlowLayout.m; sourceTree = "<group>"; };
 		D6AC3D3C179A3F21001D8D75 /* OCRPackagesCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCRPackagesCell.h; sourceTree = "<group>"; };
@@ -325,8 +321,6 @@
 				D6BA20ED17B881E90068F4D9 /* OCRCoverLtrViewController.m */,
 				D63D82DC179311350065F0A9 /* OCRBaseDetailViewController.h */,
 				D63D82DD179311350065F0A9 /* OCRBaseDetailViewController.m */,
-				D674E3A918395910008816A2 /* OCRDetailViewManager.h */,
-				D674E3AA18395910008816A2 /* OCRDetailViewManager.m */,
 				D6AC3D3C179A3F21001D8D75 /* OCRPackagesCell.h */,
 				D6AC3D3D179A3F21001D8D75 /* OCRPackagesCell.m */,
 				D63D82D9179311350065F0A9 /* OCRPackagesViewController.h */,
@@ -509,7 +503,6 @@
 				D6DA5A8B181F5FC000DBA36C /* OCACollectionViewFlowLayoutCell.m in Sources */,
 				D63D82CF179311350065F0A9 /* OCRAppDelegate.m in Sources */,
 				D6A8EEC817CEE30F00A8C6DA /* OCAEditableCollectionViewFlowLayout.m in Sources */,
-				D674E3AB18395910008816A2 /* OCRDetailViewManager.m in Sources */,
 				D6D571B91793395F00034AF3 /* OCAExtensions.m in Sources */,
 				D667B7EB17D2E88E00FBD6CD /* OCAEditableLayoutAttributes.m in Sources */,
 				D6D571B11793366000034AF3 /* OCRCoreDataController.m in Sources */,
@@ -528,7 +521,6 @@
 			files = (
 				D6B408121798E9F600C567FF /* OCRBaseDetailViewController.m in Sources */,
 				D6B408101798E9DF00C567FF /* OCRPackagesViewController.m in Sources */,
-				D674E3AC18395911008816A2 /* OCRDetailViewManager.m in Sources */,
 				D667B7EC17D2E88E00FBD6CD /* OCAEditableLayoutAttributes.m in Sources */,
 				D6B4864B1796487C009E6A14 /* Jobs.m in Sources */,
 				D6DA5A8C181F5FC000DBA36C /* OCACollectionViewFlowLayoutCell.m in Sources */,

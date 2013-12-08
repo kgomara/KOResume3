@@ -66,7 +66,7 @@
     DLog();
     
     static const CGFloat cellTitleTextScaleFactor = 1.0f;
-    static const CGFloat cellBodyTextScaleFactor = 1.0f;
+    static const CGFloat cellBodyTextScaleFactor  = 1.0f;
     
     NSString *cellTitleTextStyle    = [self.title OCATextStyle];
     UIFont *cellTitleFont           = [UIFont OCAPreferredFontWithTextStyle: cellTitleTextStyle

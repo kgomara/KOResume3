@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import "Packages.h"
-#import "OCRDetailViewManager.h"
 
 @protocol OCRDetailViewProtocol <NSObject>
 
@@ -16,14 +15,13 @@
 
 @end
 
-@interface OCRBaseDetailViewController : UIViewController <SubstitutableDetailViewController, UITableViewDelegate>
+@interface OCRBaseDetailViewController : UIViewController <UITableViewDelegate>
 
 @property (nonatomic, strong) Packages                      *selectedPackage;
 @property (nonatomic, strong) NSFetchedResultsController    *fetchedResultsController;
 @property (nonatomic, strong) NSString                      *backButtonTitle;
 
 @property (nonatomic, strong) IBOutlet UILabel              *titleLabel;
-@property (nonatomic, strong) UIBarButtonItem               *navigationPaneBarButtonItem;
 
 - (void)reloadFetchedResults:(NSNotification*)note;
 

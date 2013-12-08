@@ -31,18 +31,9 @@
     
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         // Setup Master-Detail controller paradigm for iPad
-        UISplitViewController *splitViewController  = (UISplitViewController *)self.window.rootViewController;
-        
-        self.detailViewManager                      = [[OCRDetailViewManager alloc] init];
-        self.detailViewManager.splitViewController  = splitViewController;
-        UINavigationController *detailNavigationController = splitViewController.viewControllers[1];
-        self.detailViewManager.detailViewController = (UIViewController<SubstitutableDetailViewController> *)detailNavigationController.topViewController;
-//        self.detailViewManager.detailViewController = splitViewController.viewControllers.lastObject;
-        splitViewController.delegate                = self.detailViewManager;
-        
-        if ([splitViewController respondsToSelector:@selector(setPresentsWithGesture:)]) {
-            [splitViewController setPresentsWithGesture:YES];
-        }
+        UISplitViewController *splitViewController      = (UISplitViewController *)self.window.rootViewController;
+        UINavigationController *navigationController    = [splitViewController.viewControllers lastObject];
+        splitViewController.delegate                    = (id)navigationController.topViewController;
     } else {
         // Set the managedObjectContext property on OCRPackagesViewController for iPhone
         // ...first, get the rootViewController

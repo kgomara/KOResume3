@@ -136,7 +136,6 @@
         <!--Navigation Controller-->
         <scene sceneID="r7l-gg-dq7">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="SLD-UC-DBI" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <navigationController id="vC3-pB-5Vb" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="DjV-YW-jjY">
                         <autoresizingMask key="autoresizingMask"/>
@@ -145,6 +144,7 @@
                         <segue destination="vVr-UZ-WMh" kind="relationship" relationship="rootViewController" id="bKe-xP-7Vx"/>
                     </connections>
                 </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="SLD-UC-DBI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="448" y="418"/>
         </scene>
@@ -218,7 +218,6 @@
         <!--Navigation Controller-->
         <scene sceneID="4YT-8D-x1E">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="beG-zt-a1l" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="daO-td-reD" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="KHx-q2-F9e"/>
@@ -231,6 +230,7 @@
                         <segue destination="bfy-I6-xOA" kind="relationship" relationship="rootViewController" id="PW3-AS-IVh"/>
                     </connections>
                 </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="beG-zt-a1l" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="957" y="-630"/>
         </scene>

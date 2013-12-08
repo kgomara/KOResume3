@@ -6,7 +6,8 @@
 //  Copyright (c) 2013 O'Mara Consulting Associates. All rights reserved.
 //
 
-/* Credits:
+/**
+ Credits:
  
  Akiehl Kahn's "Springboard-like layout with Collection Views" - http://mobile.tutsplus.com/tutorials/iphone/uicollectionview-layouts/
  
@@ -21,6 +22,7 @@
 #import "Resumes.h"
 #import <CoreData/CoreData.h>
 #import "OCAExtensions.h"
+#import "OCRPackagesCell.h"
 //#import "InfoViewController.h"
 
 #define k_tblHdrHeight      50.0f
@@ -62,8 +64,9 @@ BOOL isEditModeActive;
     // ...set some parameters to control its behavior
     layout.minimumInteritemSpacing  = 6;
     layout.minimumLineSpacing       = 6;
-    layout.scrollDirection          = UICollectionViewScrollDirectionHorizontal;
+    layout.scrollDirection          = UICollectionViewScrollDirectionVertical;
     layout.sectionInset             = UIEdgeInsetsMake(5, 5, 5, 5);
+    [layout setItemSize: CGSizeMake(kPackagesCellWidth, kPackagesCellHeight)];
     
     // Set our layout on the collectionView
     self.collectionView.collectionViewLayout = layout;
@@ -97,11 +100,8 @@ BOOL isEditModeActive;
     // Set up the defaults in the Navigation Bar
     [self configureDefaultNavBar];
     
-    // Save a reference to the detail view
-    self.detailViewController = (OCRBaseDetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
-
+    // Set tintColor on the collection view
     [self.collectionView setTintColor: [UIColor redColor]];
-    [(UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout setItemSize: CGSizeMake(150.0f, 150.0f)];
     
     // Observe the app delegate telling us when it's finished asynchronously adding the store coordinator
     [[NSNotificationCenter defaultCenter] addObserver: self
@@ -670,22 +670,32 @@ willEndDraggingItemAtIndexPath:(NSIndexPath *)indexPath
     if ([[segue identifier] isEqualToString: OCRCvrLtrSegue]) {
         Packages *aPackage = [self.fetchedResultsController objectAtIndexPath: indexPath];
         /*
-         The segue behaves differently on the iPad and iPhone.
-         On iPad, the detail view is governed by its own navigation controller, and our "replace" segue
-         is replacing the navigation controller. We want to pass a few data object references to the cover letter controller (discussed
+         We want to pass a few data object references to the cover letter controller (discussed
          in more detail below) - so we must first get a reference to the cover letter controller.
+         
+         The segue differs between iPad and iPhone.
+         On iPad, the detail view is governed by its own navigation controller, and the segue is replacing
+         the navigation controller.
+         OniPhone, the segue is a relationship segue.
          */
         OCRBaseDetailViewController *cvrLtrController;
         if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-            // On the iPad, the cover letter controller is the first controller in the navigation controller's stack
-            // Note - the UINavigationController cast isn't strictly necessary, but helps make the code more self-documenting
+            /*
+             On the iPad, we are getting a UIStoryboardReplaceSegue, so the destinationViewController is a UINavigationController.
+             We need to get the detail view controller, which is the first controller in the navigation controller's stack.
+
+             The UINavigationController cast isn't strictly necessary, but helps make the code more self-documenting
+             */
             cvrLtrController = [[(UINavigationController *)[segue destinationViewController] viewControllers] objectAtIndex: 0];
-//            cvrLtrController = [segue destinationViewController];
+            /*
+             Update the splitViewController's delegate
+             */
+            UINavigationController *destination = segue.destinationViewController;
+            self.splitViewController.delegate   = (id<UISplitViewControllerDelegate>)[destination topViewController];
         } else {
-            // On the iPhone, the cover letter controller is the direct target of the segue
+            // On the iPhone, the cover letter controller is the destination of the segue
             cvrLtrController = [segue destinationViewController];
         }
-        self.detailViewController = cvrLtrController;
         /*
          A common strategy for passing data between controller objects is to declare public properties in the receiving object
          and have the instantiator set those properties.

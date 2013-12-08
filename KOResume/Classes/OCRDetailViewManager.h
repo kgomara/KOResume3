@@ -14,7 +14,7 @@
  */
 @protocol SubstitutableDetailViewController
 
-@property (nonatomic, strong) UIBarButtonItem *navigationPaneBarButtonItem;
+@property (nonatomic, strong) UIBarButtonItem *\;
 
 @end
 

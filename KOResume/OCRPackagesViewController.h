@@ -15,9 +15,7 @@
 #import <CoreData/CoreData.h>
 
 @interface OCRPackagesViewController : UICollectionViewController <NSFetchedResultsControllerDelegate,
-                                                                    OCAEditableCollectionViewDataSource, OCAEditableCollectionViewDelegateFlowLayout>
-
-@property (nonatomic, strong) OCRBaseDetailViewController       *detailViewController;
+                                                                   OCAEditableCollectionViewDataSource, OCAEditableCollectionViewDelegateFlowLayout>
 
 @property (nonatomic, strong) NSFetchedResultsController    *fetchedResultsController;
 @property (nonatomic, strong) NSManagedObjectContext        *managedObjectContext;

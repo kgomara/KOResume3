@@ -15,28 +15,11 @@
 
 @interface OCRBaseDetailViewController ()
 
-@property (strong, nonatomic) UIPopoverController *masterPopoverController;
+@property (nonatomic, strong) UIPopoverController *masterPopoverController;
 
 @end
 
 @implementation OCRBaseDetailViewController
-
-#pragma mark SubstitutableDetailViewController
-
-// -------------------------------------------------------------------------------
-//  setNavigationPaneBarButtonItem:
-//  Custom implementation for the navigationPaneBarButtonItem setter.
-//  In addition to updating the _navigationPaneBarButtonItem ivar, it
-//  reconfigures the toolbar to either show or hide the
-//  navigationPaneBarButtonItem.
-// -------------------------------------------------------------------------------
-- (void)setNavigationPaneBarButtonItem:(UIBarButtonItem *)navigationPaneBarButtonItem
-{
-    if (navigationPaneBarButtonItem != _navigationPaneBarButtonItem) {
-        self.titleLabel.text            = self.title;
-        _navigationPaneBarButtonItem    = navigationPaneBarButtonItem;
-    }
-}
 
 #pragma mark - Managing the detail item
 

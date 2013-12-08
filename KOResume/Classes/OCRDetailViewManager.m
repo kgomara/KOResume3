@@ -85,7 +85,7 @@
     self.navigationPopoverController    = popoverController;
     
     // Tell the detail view controller to show the navigation button.
-    self.detailViewController.navigationPaneBarButtonItem = barButtonItem;
+//    _detailViewController.navigationPaneBarButtonItem = barButtonItem;
 }
 
 // -------------------------------------------------------------------------------

@@ -9,6 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "OCACollectionViewFlowLayoutCell.h"
 
+#define kPackagesCellHeight     150.0f
+#define kPackagesCellWidth      150.0f
+
 @interface OCRPackagesCell : OCACollectionViewFlowLayoutCell
 
 @property (nonatomic, strong)   IBOutlet UILabel    *title;
