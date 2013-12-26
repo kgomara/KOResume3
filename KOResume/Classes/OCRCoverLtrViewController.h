@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "OCRBaseDetailViewController.h"
 
-@interface OCRCoverLtrViewController : OCRBaseDetailViewController <UITextViewDelegate, UISplitViewControllerDelegate>
+@interface OCRCoverLtrViewController : OCRBaseDetailViewController <UITextViewDelegate, UISplitViewControllerDelegate, OCRDetailViewProtocol>
 
 @property (nonatomic, weak) IBOutlet UIScrollView           *scrollView;
 @property (nonatomic, weak) IBOutlet UITextView             *coverLtrFld;

@@ -26,9 +26,10 @@
 //----------------------------------------------------------------------------------------------------------
 - (void)setSelectedPackage:(Packages *)aSelectedPackage
 {
+    DLog();
+    
     if (_selectedPackage != aSelectedPackage) {
         _selectedPackage = aSelectedPackage;
-        
         // Update the view.
         [self configureView];
     }
@@ -62,12 +63,25 @@
 {
     DLog();
     
+    [self invalidateRootPopoverButtonItem:_backButtonCached];
+    
     [[NSNotificationCenter defaultCenter] removeObserver: self];
     
     // Save any changes
     [kAppDelegate saveContext: [kAppDelegate managedObjectContext]];
 
     [super viewWillDisappear: animated];
+}
+
+//----------------------------------------------------------------------------------------------------------
+- (void)viewDidAppear:(BOOL)animated
+{
+    DLog();
+    
+    [super viewDidAppear:animated];
+    
+    [self showRootPopoverButtonItem:_backButtonCached
+                     withController:_popoverControllerCached];
 }
 
 
@@ -89,6 +103,33 @@
      */
     [NSException raise: @"Required method not implemented"
                 format: @"configureView is required"];
+}
+
+#pragma mark - SubstitutableDetailViewController protocols method
+
+//----------------------------------------------------------------------------------------------------------
+- (void)showRootPopoverButtonItem:(UIBarButtonItem *)aBarButtonItem
+                   withController:(UIPopoverController *)aPopoverController;
+{
+    DLog();
+    
+    self.backButtonCached   = aBarButtonItem;
+    aBarButtonItem.title    = NSLocalizedString(@"Packages", @"Packages");
+    [self.navigationItem setLeftBarButtonItem:aBarButtonItem
+                                     animated:YES];
+    self.popoverControllerCached = aPopoverController;
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+- (void)invalidateRootPopoverButtonItem:(UIBarButtonItem *)barButtonItem
+{
+    DLog();
+    
+    [self.navigationItem setLeftBarButtonItem:nil
+                                     animated:YES];
+    self.backButtonCached           = nil;
+    self.popoverControllerCached    = nil;
 }
 
 //----------------------------------------------------------------------------------------------------------

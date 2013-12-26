@@ -37,8 +37,6 @@
     NSMutableArray *_objectChanges;
 }
 
-@property (nonatomic, strong) NSString  *packageName;
-
 - (void)promptForPackageName;
 - (void)addPackage;
 - (void)configureCell:(UICollectionViewCell *)cell
@@ -49,6 +47,8 @@
 @end
 
 @implementation OCRPackagesViewController
+
+@synthesize packagesPopoverController = _packagesPopoverController;
 
 BOOL isEditModeActive;
 
@@ -592,6 +592,50 @@ willEndDraggingItemAtIndexPath:(NSIndexPath *)indexPath
                   toIndexPath: toIndexPath];
 }
 
+#pragma mark - UISplitViewControllerDelegate methods
+
+//----------------------------------------------------------------------------------------------------------
+- (BOOL)splitViewController:(UISplitViewController *)svc
+   shouldHideViewController:(UIViewController *)vc
+              inOrientation:(UIInterfaceOrientation)orientation
+{
+    if (UIInterfaceOrientationIsPortrait(orientation))
+        return YES; // if you return NO, it will display side by side, not above.
+    return NO;
+}
+
+//----------------------------------------------------------------------------------------------------------
+- (void)splitViewController:(UISplitViewController*)aSplitViewController
+     willHideViewController:(UIViewController *)aViewController
+          withBarButtonItem:(UIBarButtonItem*)aBarButtonItem
+       forPopoverController:(UIPopoverController*)aPopoverController
+{
+    DLog();
+    
+    // Keep references to the popover controller and the popover button, and tell the detail view controller to show the button.
+    aBarButtonItem.title            = @"Packages";
+    self.packagesPopoverController  = aPopoverController;
+    self.rootPopoverButtonItem      = aBarButtonItem;
+    
+    OCRBaseDetailViewController <SubstitutableDetailViewController> *detailViewController = (OCRBaseDetailViewController<SubstitutableDetailViewController>*)[[aSplitViewController.viewControllers objectAtIndex:1] topViewController];
+    [detailViewController showRootPopoverButtonItem:_rootPopoverButtonItem
+                                     withController:aPopoverController];
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+- (void)splitViewController:(UISplitViewController*)aSplitViewController
+     willShowViewController:(UIViewController *)aViewController
+  invalidatingBarButtonItem:(UIBarButtonItem *)aBarButtonItem
+{
+    DLog();
+    
+    // Nil out references to the popover controller and the popover button, and tell the detail view controller to hide the button.
+    OCRBaseDetailViewController <SubstitutableDetailViewController> *detailViewController = (OCRBaseDetailViewController<SubstitutableDetailViewController>*)[[aSplitViewController.viewControllers objectAtIndex:1] topViewController];
+    [detailViewController invalidateRootPopoverButtonItem:_rootPopoverButtonItem];
+    self.packagesPopoverController  = nil;
+    self.rootPopoverButtonItem      = nil;
+}
 
 
 #pragma mark - Private methods
@@ -689,9 +733,16 @@ willEndDraggingItemAtIndexPath:(NSIndexPath *)indexPath
             cvrLtrController = [[(UINavigationController *)[segue destinationViewController] viewControllers] objectAtIndex: 0];
             /*
              Update the splitViewController's delegate
-             */
-            UINavigationController *destination = segue.destinationViewController;
-            self.splitViewController.delegate   = (id<UISplitViewControllerDelegate>)[destination topViewController];
+             */            
+            if (_rootPopoverButtonItem != nil) {
+                OCRBaseDetailViewController<SubstitutableDetailViewController>* detailViewController = (OCRBaseDetailViewController<SubstitutableDetailViewController>*)[[[segue destinationViewController] viewControllers] objectAtIndex:0];
+                [detailViewController showRootPopoverButtonItem:_rootPopoverButtonItem
+                                                 withController:_packagesPopoverController];
+            }
+            
+            if (self.packagesPopoverController) {
+                [self.packagesPopoverController dismissPopoverAnimated:YES];
+            }
         } else {
             // On the iPhone, the cover letter controller is the destination of the segue
             cvrLtrController = [segue destinationViewController];

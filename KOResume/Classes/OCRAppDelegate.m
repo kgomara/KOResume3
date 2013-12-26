@@ -32,7 +32,7 @@
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         // Setup Master-Detail controller paradigm for iPad
         UISplitViewController *splitViewController      = (UISplitViewController *)self.window.rootViewController;
-        UINavigationController *navigationController    = [splitViewController.viewControllers lastObject];
+        UINavigationController *navigationController    = [splitViewController.viewControllers firstObject];
         splitViewController.delegate                    = (id)navigationController.topViewController;
     } else {
         // Set the managedObjectContext property on OCRPackagesViewController for iPhone

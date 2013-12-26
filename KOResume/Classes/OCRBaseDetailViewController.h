@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "Packages.h"
+#import "OCRPackagesViewController.h"
 
 @protocol OCRDetailViewProtocol <NSObject>
 
@@ -15,10 +16,14 @@
 
 @end
 
-@interface OCRBaseDetailViewController : UIViewController <UITableViewDelegate>
+@interface OCRBaseDetailViewController : UIViewController <UITableViewDelegate, SubstitutableDetailViewController>
 
 @property (nonatomic, strong) Packages                      *selectedPackage;
 @property (nonatomic, strong) NSFetchedResultsController    *fetchedResultsController;
+
+@property (strong, nonatomic) UIBarButtonItem               *backButtonCached;
+@property (strong, nonatomic) UIPopoverController           *popoverControllerCached;
+
 @property (nonatomic, strong) NSString                      *backButtonTitle;
 
 @property (nonatomic, strong) IBOutlet UILabel              *titleLabel;
