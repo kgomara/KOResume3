@@ -18,7 +18,7 @@
 
 /**
  Logging macros. The are 3 versions - DLog, ALog, and ELog with the first letter signifying
- Debug only, Always log, and Error (specifically NSError) log.
+ Debug only, Always log, and Error (specifically NSError).
  
  All the log macros display class, method, and line. This can result in "wide" messages,
  but I find knowing the exact method and line number invaluable. If at all possible, get
@@ -30,14 +30,16 @@
  of leaving a detailed breadcrumb trail, but the disadvantage of filling the console with messages
  you may not be interested in at the moment. It works for me, but everybody has their own logging
  style.
+ 
  The key thing with DLog() is those messages are NOT compiled into your shipping product. That's
  important because NSLog writes to the console (on disk) which is an expensive operation from both
  a performance and power consumption perspective. You can use DLog() liberally and not worry about
  impacting your customer's experience.
  
- ALog() - These log messages will remain in your shipping product (the Release schemes
- have DEBUG undefined). I use these for error conditions not handled with an NSError object. For example,
- in switch statements that have a case for each expected input, my default is typically:
+ ALog() - These log messages will remain in your shipping product (the Release schemes have
+ DEBUG undefined). I use these for non-NSError error conditions that I hope never occur in a shipping
+ product - but if they do occur I want to know about it. For example, I use ALog in didReceiveMemoryWarning,
+ and in switch statements that have a case for each expected input, my default is typically:
       default: {
           ALog(@"Unexpected foo=%@", bar);
           break;
@@ -73,6 +75,19 @@ do {                                                                            
         NSLog(@"  %@", [_error userInfo]);                                                                                  \
     }                                                                                                                       \
 } while(0)
+
+/**
+ isEmpty is used to determine if an object is "empty". Depending on the context, you might have an NSString variable that 
+ can be “nil” when not set in one place OR an empty string in another. Sometimes either nil or empty strings are acceptable 
+ “NULL” values.
+ */
+static inline BOOL isEmpty(id anObject) {
+    return anObject == nil                                                                      ||
+        [anObject isKindOfClass:[NSNull class]]                                                 ||
+        ([anObject respondsToSelector:@selector(length)] && [(NSData *)anObject length] == 0)   ||
+        ([anObject respondsToSelector:@selector(count)]  && [(NSArray *)anObject count] == 0);
+}
+
 
 /**
  These macros are used if your artist provides hex colors - e.g., 0xffffff

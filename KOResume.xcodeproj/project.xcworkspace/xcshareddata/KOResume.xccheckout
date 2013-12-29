@@ -10,6 +10,8 @@
 	<string>KOResume</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
+		<key>76B3B2A6-45B1-45BB-9C1C-3572E5D6648B</key>
+		<string>https://github.com/kgomara/OCAEditableCollectionViewFlowLayout.git</string>
 		<key>EFDF479D-FFBE-4627-9C48-324C39FBA751</key>
 		<string>https://github.com/kgomara/KOResume3.git</string>
 	</dict>
@@ -17,6 +19,8 @@
 	<string>KOResume.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
+		<key>76B3B2A6-45B1-45BB-9C1C-3572E5D6648B</key>
+		<string>../../OCAEditableCollectionViewFlowLayout</string>
 		<key>EFDF479D-FFBE-4627-9C48-324C39FBA751</key>
 		<string>../..</string>
 	</dict>
@@ -35,6 +39,14 @@
 			<string>EFDF479D-FFBE-4627-9C48-324C39FBA751</string>
 			<key>IDESourceControlWCCName</key>
 			<string>KOResume3</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>76B3B2A6-45B1-45BB-9C1C-3572E5D6648B</string>
+			<key>IDESourceControlWCCName</key>
+			<string>OCAEditableCollectionViewFlowLayout</string>
 		</dict>
 	</array>
 </dict>
