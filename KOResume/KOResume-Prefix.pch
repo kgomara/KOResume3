@@ -14,8 +14,8 @@
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
     #import <CoreData/CoreData.h>
+    #import "OCRGlobalConstants.h"
+    #import "OCAGlobalMacros.h"
+    #import "OCAExtensions.h"
 #endif
 
-#import "GlobalConstants.h"
-#import "GlobalMacros.h"
-#import "OCAExtensions.h"

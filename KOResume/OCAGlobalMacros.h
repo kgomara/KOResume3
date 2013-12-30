@@ -1,5 +1,5 @@
 //
-//  GlobalMacros.h
+//  OCAGlobalMacros.h
 //  OCAUtilities
 //
 //  Created by Kevin O'Mara on 8/20/11.

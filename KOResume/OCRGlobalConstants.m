@@ -6,9 +6,9 @@
 //  Copyright (c) 2013 O'Mara Consulting Associates. All rights reserved.
 //
 
-#import "GlobalConstants.h"
+#import "OCRGlobalConstants.h"
 
-@implementation GlobalConstants
+@implementation OCRGlobalConstants
 
 // App constants
 NSString *const OCRDatabaseName                                             = @"KOResume";

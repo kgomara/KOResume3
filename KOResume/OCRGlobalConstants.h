@@ -1,5 +1,5 @@
 //
-//  GlobalConstants.h
+//  OCRGlobalConstants.h
 //  KOResume
 //
 //  Created by Kevin O'Mara on 6/11/13.
@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface GlobalConstants : NSObject
+@interface OCRGlobalConstants : NSObject
 
 // App constants
 FOUNDATION_EXPORT NSString *const OCRDatabaseName;

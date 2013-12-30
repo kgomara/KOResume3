@@ -65,8 +65,8 @@
 		D6C7AA6C1870C10500C72A52 /* OCAExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = D6C7AA691870C10500C72A52 /* OCAExtensions.m */; };
 		D6C804C81842684300FD6A42 /* Main_iPad copy.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D6C804C61842684300FD6A42 /* Main_iPad copy.storyboard */; };
 		D6D571B11793366000034AF3 /* OCRCoreDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D571B0179335FF00034AF3 /* OCRCoreDataController.m */; };
-		D6D571B71793395F00034AF3 /* GlobalConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D571B31793395F00034AF3 /* GlobalConstants.m */; };
-		D6D571B81793395F00034AF3 /* GlobalConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D571B31793395F00034AF3 /* GlobalConstants.m */; };
+		D6D571B71793395F00034AF3 /* OCRGlobalConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D571B31793395F00034AF3 /* OCRGlobalConstants.m */; };
+		D6D571B81793395F00034AF3 /* OCRGlobalConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D571B31793395F00034AF3 /* OCRGlobalConstants.m */; };
 		D6D571EC1793589A00034AF3 /* KOResume.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D6D571D41793589A00034AF3 /* KOResume.xcdatamodeld */; };
 		D6D571ED1793589A00034AF3 /* KOResume.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D6D571D41793589A00034AF3 /* KOResume.xcdatamodeld */; };
 		D6D572111793A78600034AF3 /* _Accomplishments.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D572081793A78600034AF3 /* _Accomplishments.m */; };
@@ -160,9 +160,9 @@
 		D6C804C71842684300FD6A42 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = "Base.lproj/Main_iPad copy.storyboard"; sourceTree = "<group>"; };
 		D6D571AF179335FF00034AF3 /* OCRCoreDataController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OCRCoreDataController.h; path = Classes/DataModel/OCRCoreDataController.h; sourceTree = "<group>"; };
 		D6D571B0179335FF00034AF3 /* OCRCoreDataController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = OCRCoreDataController.m; path = Classes/DataModel/OCRCoreDataController.m; sourceTree = "<group>"; };
-		D6D571B21793395F00034AF3 /* GlobalConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GlobalConstants.h; sourceTree = "<group>"; };
-		D6D571B31793395F00034AF3 /* GlobalConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GlobalConstants.m; sourceTree = "<group>"; };
-		D6D571B41793395F00034AF3 /* GlobalMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GlobalMacros.h; sourceTree = "<group>"; };
+		D6D571B21793395F00034AF3 /* OCRGlobalConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCRGlobalConstants.h; sourceTree = "<group>"; };
+		D6D571B31793395F00034AF3 /* OCRGlobalConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCRGlobalConstants.m; sourceTree = "<group>"; };
+		D6D571B41793395F00034AF3 /* OCAGlobalMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCAGlobalMacros.h; sourceTree = "<group>"; };
 		D6D571BC179339D700034AF3 /* README.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = README.rtf; sourceTree = "<group>"; };
 		D6D571D51793589A00034AF3 /* KOResume.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = KOResume.xcdatamodel; sourceTree = "<group>"; };
 		D6D571FD1793991400034AF3 /* Resumes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Resumes.h; path = Classes/DataModel/Resumes.h; sourceTree = "<group>"; };
@@ -267,9 +267,9 @@
 		D63D82C5179311350065F0A9 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				D6D571B21793395F00034AF3 /* GlobalConstants.h */,
-				D6D571B31793395F00034AF3 /* GlobalConstants.m */,
-				D6D571B41793395F00034AF3 /* GlobalMacros.h */,
+				D6D571B21793395F00034AF3 /* OCRGlobalConstants.h */,
+				D6D571B31793395F00034AF3 /* OCRGlobalConstants.m */,
+				D6D571B41793395F00034AF3 /* OCAGlobalMacros.h */,
 				D63D82C6179311350065F0A9 /* KOResume-Info.plist */,
 				D63D82C7179311350065F0A9 /* InfoPlist.strings */,
 				D63D82CA179311350065F0A9 /* main.m */,
@@ -529,7 +529,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D6D571B71793395F00034AF3 /* GlobalConstants.m in Sources */,
+				D6D571B71793395F00034AF3 /* OCRGlobalConstants.m in Sources */,
 				D63D82CB179311350065F0A9 /* main.m in Sources */,
 				D6B4864817964875009E6A14 /* Education.m in Sources */,
 				D6B4864A1796487B009E6A14 /* Jobs.m in Sources */,
@@ -559,7 +559,7 @@
 				D6B408121798E9F600C567FF /* OCRBaseDetailViewController.m in Sources */,
 				D6B408101798E9DF00C567FF /* OCRPackagesViewController.m in Sources */,
 				D6B4864B1796487C009E6A14 /* Jobs.m in Sources */,
-				D6D571B81793395F00034AF3 /* GlobalConstants.m in Sources */,
+				D6D571B81793395F00034AF3 /* OCRGlobalConstants.m in Sources */,
 				D6D572121793A78600034AF3 /* _Accomplishments.m in Sources */,
 				D6B408131798EA5100C567FF /* OCRCoreDataController.m in Sources */,
 				D6BA20EF17B881E90068F4D9 /* OCRCoverLtrViewController.m in Sources */,
