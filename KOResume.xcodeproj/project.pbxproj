@@ -39,6 +39,8 @@
 		D63D82EA179311350065F0A9 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D63D82C2179311350065F0A9 /* CoreData.framework */; };
 		D63D82F2179311350065F0A9 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D63D82F0179311350065F0A9 /* InfoPlist.strings */; };
 		D63D82F4179311350065F0A9 /* KOResumeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D63D82F3179311350065F0A9 /* KOResumeTests.m */; };
+		D6ABF9A8187A066100AECF28 /* libOCAEditableCollectionViewFlowLayout.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D6C7AA631870BEED00C72A52 /* libOCAEditableCollectionViewFlowLayout.a */; };
+		D6ABF9A9187A066900AECF28 /* libOCAUtilities.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D6BFCF4818748D8F0088D928 /* libOCAUtilities.a */; };
 		D6AC3D3E179A3F21001D8D75 /* OCRPackagesCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D6AC3D3D179A3F21001D8D75 /* OCRPackagesCell.m */; };
 		D6AC3D3F179A3F21001D8D75 /* OCRPackagesCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D6AC3D3D179A3F21001D8D75 /* OCRPackagesCell.m */; };
 		D6B016B51793C16900B86B8D /* KOResume.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = D6B016B41793C16900B86B8D /* KOResume.sqlite */; };
@@ -60,9 +62,6 @@
 		D6B4864D17964882009E6A14 /* Resumes.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D571FE1793991400034AF3 /* Resumes.m */; };
 		D6BA20EE17B881E90068F4D9 /* OCRCoverLtrViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6BA20ED17B881E90068F4D9 /* OCRCoverLtrViewController.m */; };
 		D6BA20EF17B881E90068F4D9 /* OCRCoverLtrViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6BA20ED17B881E90068F4D9 /* OCRCoverLtrViewController.m */; };
-		D6C7AA681870BFC900C72A52 /* libOCAEditableCollectionViewFlowLayout.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D6C7AA631870BEED00C72A52 /* libOCAEditableCollectionViewFlowLayout.a */; };
-		D6C7AA6B1870C10500C72A52 /* OCAExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = D6C7AA691870C10500C72A52 /* OCAExtensions.m */; };
-		D6C7AA6C1870C10500C72A52 /* OCAExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = D6C7AA691870C10500C72A52 /* OCAExtensions.m */; };
 		D6C804C81842684300FD6A42 /* Main_iPad copy.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D6C804C61842684300FD6A42 /* Main_iPad copy.storyboard */; };
 		D6D571B11793366000034AF3 /* OCRCoreDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D571B0179335FF00034AF3 /* OCRCoreDataController.m */; };
 		D6D571B71793395F00034AF3 /* OCRGlobalConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D571B31793395F00034AF3 /* OCRGlobalConstants.m */; };
@@ -90,6 +89,27 @@
 			proxyType = 1;
 			remoteGlobalIDString = D63D82B8179311350065F0A9;
 			remoteInfo = KOResume;
+		};
+		D6BFCF4718748D8F0088D928 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D6BFCF4118748D8F0088D928 /* OCAUtilities.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D6BF165F18726E9D00DFF918;
+			remoteInfo = OCAUtilities;
+		};
+		D6BFCF4918748D8F0088D928 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D6BFCF4118748D8F0088D928 /* OCAUtilities.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D6BF166F18726E9D00DFF918;
+			remoteInfo = OCAUtilitiesTests;
+		};
+		D6BFCF4D18748EEB0088D928 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D6BFCF4118748D8F0088D928 /* OCAUtilities.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D6BF165E18726E9D00DFF918;
+			remoteInfo = OCAUtilities;
 		};
 		D6C7AA621870BEED00C72A52 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -149,20 +169,19 @@
 		D63D82EF179311350065F0A9 /* KOResumeTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "KOResumeTests-Info.plist"; sourceTree = "<group>"; };
 		D63D82F3179311350065F0A9 /* KOResumeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KOResumeTests.m; sourceTree = "<group>"; };
 		D63D82FD179312F80065F0A9 /* KOResume.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = KOResume.entitlements; sourceTree = "<group>"; };
+		D6ABF9AA187A0DD700AECF28 /* OCRGlobalMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCRGlobalMacros.h; sourceTree = "<group>"; };
 		D6AC3D3C179A3F21001D8D75 /* OCRPackagesCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRPackagesCell.h; path = Classes/OCRPackagesCell.h; sourceTree = "<group>"; };
 		D6AC3D3D179A3F21001D8D75 /* OCRPackagesCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRPackagesCell.m; path = Classes/OCRPackagesCell.m; sourceTree = "<group>"; };
 		D6B016B41793C16900B86B8D /* KOResume.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; name = KOResume.sqlite; path = Resources/KOResume.sqlite; sourceTree = "<group>"; };
 		D6BA20EC17B881E90068F4D9 /* OCRCoverLtrViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRCoverLtrViewController.h; path = Classes/OCRCoverLtrViewController.h; sourceTree = "<group>"; };
 		D6BA20ED17B881E90068F4D9 /* OCRCoverLtrViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRCoverLtrViewController.m; path = Classes/OCRCoverLtrViewController.m; sourceTree = "<group>"; };
+		D6BFCF4118748D8F0088D928 /* OCAUtilities.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OCAUtilities.xcodeproj; path = OCAUtilities/OCAUtilities/OCAUtilities.xcodeproj; sourceTree = SOURCE_ROOT; };
 		D6C7AA5D1870BEED00C72A52 /* OCAEditableCollectionViewFlowLayout.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OCAEditableCollectionViewFlowLayout.xcodeproj; path = OCAEditableCollectionViewFlowLayout/OCAEditableCollectionViewFlowLayout.xcodeproj; sourceTree = SOURCE_ROOT; };
-		D6C7AA691870C10500C72A52 /* OCAExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCAExtensions.m; sourceTree = "<group>"; };
-		D6C7AA6A1870C10500C72A52 /* OCAExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCAExtensions.h; sourceTree = "<group>"; };
 		D6C804C71842684300FD6A42 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = "Base.lproj/Main_iPad copy.storyboard"; sourceTree = "<group>"; };
 		D6D571AF179335FF00034AF3 /* OCRCoreDataController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OCRCoreDataController.h; path = Classes/DataModel/OCRCoreDataController.h; sourceTree = "<group>"; };
 		D6D571B0179335FF00034AF3 /* OCRCoreDataController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = OCRCoreDataController.m; path = Classes/DataModel/OCRCoreDataController.m; sourceTree = "<group>"; };
 		D6D571B21793395F00034AF3 /* OCRGlobalConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCRGlobalConstants.h; sourceTree = "<group>"; };
 		D6D571B31793395F00034AF3 /* OCRGlobalConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCRGlobalConstants.m; sourceTree = "<group>"; };
-		D6D571B41793395F00034AF3 /* OCAGlobalMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCAGlobalMacros.h; sourceTree = "<group>"; };
 		D6D571BC179339D700034AF3 /* README.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = README.rtf; sourceTree = "<group>"; };
 		D6D571D51793589A00034AF3 /* KOResume.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = KOResume.xcdatamodel; sourceTree = "<group>"; };
 		D6D571FD1793991400034AF3 /* Resumes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Resumes.h; path = Classes/DataModel/Resumes.h; sourceTree = "<group>"; };
@@ -194,7 +213,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D6C7AA681870BFC900C72A52 /* libOCAEditableCollectionViewFlowLayout.a in Frameworks */,
+				D6ABF9A9187A066900AECF28 /* libOCAUtilities.a in Frameworks */,
+				D6ABF9A8187A066100AECF28 /* libOCAEditableCollectionViewFlowLayout.a in Frameworks */,
 				D63D82BF179311350065F0A9 /* CoreGraphics.framework in Frameworks */,
 				D63D82C3179311350065F0A9 /* CoreData.framework in Frameworks */,
 				D63D82C1179311350065F0A9 /* UIKit.framework in Frameworks */,
@@ -269,12 +289,10 @@
 			children = (
 				D6D571B21793395F00034AF3 /* OCRGlobalConstants.h */,
 				D6D571B31793395F00034AF3 /* OCRGlobalConstants.m */,
-				D6D571B41793395F00034AF3 /* OCAGlobalMacros.h */,
+				D6ABF9AA187A0DD700AECF28 /* OCRGlobalMacros.h */,
 				D63D82C6179311350065F0A9 /* KOResume-Info.plist */,
 				D63D82C7179311350065F0A9 /* InfoPlist.strings */,
 				D63D82CA179311350065F0A9 /* main.m */,
-				D6C7AA691870C10500C72A52 /* OCAExtensions.m */,
-				D6C7AA6A1870C10500C72A52 /* OCAExtensions.h */,
 				D63D82CC179311350065F0A9 /* KOResume-Prefix.pch */,
 			);
 			name = "Supporting Files";
@@ -310,9 +328,19 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
+		D6BFCF4218748D8F0088D928 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D6BFCF4818748D8F0088D928 /* libOCAUtilities.a */,
+				D6BFCF4A18748D8F0088D928 /* OCAUtilitiesTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		D6C7AA5C1870BEB500C72A52 /* SubProjects */ = {
 			isa = PBXGroup;
 			children = (
+				D6BFCF4118748D8F0088D928 /* OCAUtilities.xcodeproj */,
 				D6C7AA5D1870BEED00C72A52 /* OCAEditableCollectionViewFlowLayout.xcodeproj */,
 			);
 			name = SubProjects;
@@ -389,6 +417,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				D6BFCF4E18748EEB0088D928 /* PBXTargetDependency */,
 				D6C7AA671870BFA700C72A52 /* PBXTargetDependency */,
 			);
 			name = KOResume;
@@ -456,6 +485,10 @@
 					ProductGroup = D6C7AA5E1870BEED00C72A52 /* Products */;
 					ProjectRef = D6C7AA5D1870BEED00C72A52 /* OCAEditableCollectionViewFlowLayout.xcodeproj */;
 				},
+				{
+					ProductGroup = D6BFCF4218748D8F0088D928 /* Products */;
+					ProjectRef = D6BFCF4118748D8F0088D928 /* OCAUtilities.xcodeproj */;
+				},
 			);
 			projectRoot = "";
 			targets = (
@@ -467,6 +500,20 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		D6BFCF4818748D8F0088D928 /* libOCAUtilities.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libOCAUtilities.a;
+			remoteRef = D6BFCF4718748D8F0088D928 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D6BFCF4A18748D8F0088D928 /* OCAUtilitiesTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = OCAUtilitiesTests.xctest;
+			remoteRef = D6BFCF4918748D8F0088D928 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		D6C7AA631870BEED00C72A52 /* libOCAEditableCollectionViewFlowLayout.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -533,7 +580,6 @@
 				D63D82CB179311350065F0A9 /* main.m in Sources */,
 				D6B4864817964875009E6A14 /* Education.m in Sources */,
 				D6B4864A1796487B009E6A14 /* Jobs.m in Sources */,
-				D6C7AA6B1870C10500C72A52 /* OCAExtensions.m in Sources */,
 				D6D572131793A78600034AF3 /* _Education.m in Sources */,
 				D6B486461796486A009E6A14 /* Accomplishments.m in Sources */,
 				D6D572151793A78600034AF3 /* _Jobs.m in Sources */,
@@ -569,7 +615,6 @@
 				D6D5721A1793A78600034AF3 /* _Resumes.m in Sources */,
 				D6D572181793A78600034AF3 /* _Packages.m in Sources */,
 				D6D571ED1793589A00034AF3 /* KOResume.xcdatamodeld in Sources */,
-				D6C7AA6C1870C10500C72A52 /* OCAExtensions.m in Sources */,
 				D6D572141793A78600034AF3 /* _Education.m in Sources */,
 				D6B408111798E9ED00C567FF /* OCRAppDelegate.m in Sources */,
 				D6AC3D3F179A3F21001D8D75 /* OCRPackagesCell.m in Sources */,
@@ -587,6 +632,11 @@
 			isa = PBXTargetDependency;
 			target = D63D82B8179311350065F0A9 /* KOResume */;
 			targetProxy = D63D82EB179311350065F0A9 /* PBXContainerItemProxy */;
+		};
+		D6BFCF4E18748EEB0088D928 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = OCAUtilities;
+			targetProxy = D6BFCF4D18748EEB0088D928 /* PBXContainerItemProxy */;
 		};
 		D6C7AA671870BFA700C72A52 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -652,7 +702,7 @@
 		D63D82F5179311350065F0A9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -681,12 +731,22 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"“$(BUILT_PRODUCTS_DIR)”",
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(TARGET_BUILD_DIR)/usr/local/lib/include\"",
+					"\"$(OBJROOT)/UninstalledProducts/include\"",
+					"\"$(PROJECT_TEMP_DIR)/../UninstalledProducts/include\"",
+					"$(SOURCE_ROOT)/include",
+				);
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-ObjC";
-				PUBLIC_HEADERS_FOLDER_PATH = "\"$(OBJROOT)/UninstalledProducts/include\"";
+				PUBLIC_HEADERS_FOLDER_PATH = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "“$(BUILT_PRODUCTS_DIR)”";
 				WARNING_CFLAGS = "";
 			};
 			name = Debug;
@@ -694,7 +754,7 @@
 		D63D82F6179311350065F0A9 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -716,11 +776,21 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"“$(BUILT_PRODUCTS_DIR)”",
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(TARGET_BUILD_DIR)/usr/local/lib/include\"",
+					"\"$(OBJROOT)/UninstalledProducts/include\"",
+					"\"$(PROJECT_TEMP_DIR)/../UninstalledProducts/include\"",
+					"$(SOURCE_ROOT)/include",
+				);
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				OTHER_LDFLAGS = "-ObjC";
-				PUBLIC_HEADERS_FOLDER_PATH = "\"$(OBJROOT)/UninstalledProducts/include\"";
+				PUBLIC_HEADERS_FOLDER_PATH = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "“$(BUILT_PRODUCTS_DIR)”";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;

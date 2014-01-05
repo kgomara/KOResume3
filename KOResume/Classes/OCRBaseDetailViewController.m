@@ -142,7 +142,7 @@
     if (![[self fetchedResultsController] performFetch: &error]) {
         ELog(error, @"Fetch failed!");
         NSString* msg = NSLocalizedString(@"Failed to reload data.", nil);
-        [OCAExtensions showErrorWithMessage: msg];
+        [OCAUtilities showErrorWithMessage: msg];
     }
     /*
      Subclasses should override this method reload views as necessary. For example:

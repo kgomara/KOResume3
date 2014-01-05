@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "OCACollectionViewFlowLayoutCell.h"
+#import <OCACollectionViewFlowLayoutCell.h>
 
 #define kPackagesCellHeight     150.0f
 #define kPackagesCellWidth      150.0f

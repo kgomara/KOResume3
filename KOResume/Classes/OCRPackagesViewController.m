@@ -21,7 +21,6 @@
 #import "Packages.h"
 #import "Resumes.h"
 #import <CoreData/CoreData.h>
-#import "OCAExtensions.h"
 #import "OCRPackagesCell.h"
 //#import "InfoViewController.h"
 
@@ -235,7 +234,7 @@ BOOL isEditModeActive;
     if (![self saveMoc: self.managedObjectContext]) {
         ALog(@"Failed to save");
         NSString* msg = NSLocalizedString(@"Failed to save data.", nil);
-        [OCAExtensions showErrorWithMessage: msg];
+        [OCAUtilities showErrorWithMessage: msg];
     }
     
     [self reloadFetchedResults: nil];
@@ -818,7 +817,7 @@ willEndDraggingItemAtIndexPath:(NSIndexPath *)indexPath
           I'm providing my direct contact information in the hope I can help the user and avoid a bad review.
           */
 	    ELog(error, @"Unresolved error");
-	    [OCAExtensions showErrorWithMessage: NSLocalizedString(@"Could not read the database. Try quitting the app. If that fails, try deleting KOResume and restoring from iCould or iTunes backup. Please contact the developer by emailing kevin@omaraconsultingassoc.com", nil)];
+	    [OCAUtilities showErrorWithMessage: NSLocalizedString(@"Could not read the database. Try quitting the app. If that fails, try deleting KOResume and restoring from iCould or iTunes backup. Please contact the developer by emailing kevin@omaraconsultingassoc.com", nil)];
 	}
     
     return _fetchedResultsController;
@@ -840,7 +839,7 @@ willEndDraggingItemAtIndexPath:(NSIndexPath *)indexPath
     if (![[self fetchedResultsController] performFetch: &error]) {
         ELog(error, @"Fetch failed!");
         NSString* msg = NSLocalizedString( @"Failed to reload data after syncing with iCloud.", nil);
-        [OCAExtensions showErrorWithMessage: msg];
+        [OCAUtilities showErrorWithMessage: msg];
     }
     DLog(@"reloadingData");
 //    [self.collectionView reloadData];

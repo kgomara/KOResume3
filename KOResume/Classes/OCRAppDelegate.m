@@ -26,7 +26,7 @@
     if (!_managedObjectContext) {
         ALog(@"Could not get managedObjectContext");
         NSString *msg = NSLocalizedString(@"Failed to open database.", nil);
-        [OCAExtensions showErrorWithMessage: msg];
+        [OCAUtilities showErrorWithMessage: msg];
     }
     
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
@@ -133,7 +133,7 @@
             } else {
                 ELog(error, @"Failed to save data");
                 NSString* msg = NSLocalizedString( @"Failed to save data.", nil);
-                [OCAExtensions showErrorWithMessage: msg];
+                [OCAUtilities showErrorWithMessage: msg];
             }
         } else {
             DLog(@"No changes to save");

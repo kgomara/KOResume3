@@ -1,3 +1,6 @@
 [submodule "OCAEditableCollectionViewFlowLayout"]
 	path = OCAEditableCollectionViewFlowLayout
 	url = https://github.com/kgomara/OCAEditableCollectionViewFlowLayout.git
+[submodule "OCAUtilities"]
+	path = OCAUtilities
+	url = https://github.com/kgomara/OCAUtilities.git
