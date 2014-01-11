@@ -58,7 +58,7 @@ BOOL isEditModeActive;
 {
     DLog();
     
-    // Allocate our customer collectionView layout
+    // Allocate our custom collectionView layout
     OCAEditableCollectionViewFlowLayout *layout = [[OCAEditableCollectionViewFlowLayout alloc] init];
     // ...set some parameters to control its behavior
     layout.minimumInteritemSpacing  = 6;
