@@ -5,25 +5,25 @@
 
 NSString *const OCREducationEntity        = @"Education";
 
--(void)logAllFields
+//----------------------------------------------------------------------------------------------------------
+- (NSString *)debugDescription
 {
-    DLog();
-    
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateStyle: NSDateFormatterMediumStyle];
     [dateFormatter setTimeStyle: NSDateFormatterNoStyle];
     
-    NSLog(@"======================= Education =======================");
-    NSLog(@"   name              = %@", self.name);
-    NSLog(@"   created_date      = %@", [dateFormatter stringFromDate: self.created_date]);
-    NSLog(@"   sequence_number   = %@", [self.sequence_number stringValue]);
-    NSLog(@"   in resume         = %@", self.resume.name);
-    NSLog(@"   title             = %@", self.title);
-    NSLog(@"   earned_date       = %@", [dateFormatter stringFromDate: self.earned_date]);
-    NSLog(@"   city              = %@", self.city);
-    NSLog(@"   state             = %@", self.state);
-    NSLog(@"===================== end Education =====================");
+    NSString *result = [NSString stringWithFormat:@"%@\n", self];
     
+    result = [result stringByAppendingFormat: @"   name              = %@\n", self.name];
+    result = [result stringByAppendingFormat: @"   created_date      = %@\n", [dateFormatter stringFromDate: self.created_date]];
+    result = [result stringByAppendingFormat: @"   sequence_number   = %@\n", [self.sequence_number stringValue]];
+    result = [result stringByAppendingFormat: @"   in resume         = %@\n", self.resume.name];
+    result = [result stringByAppendingFormat: @"   title             = %@\n", self.title];
+    result = [result stringByAppendingFormat: @"   earned_date       = %@\n", [dateFormatter stringFromDate: self.earned_date]];
+    result = [result stringByAppendingFormat: @"   city              = %@\n", self.city];
+    result = [result stringByAppendingFormat: @"   state             = %@",   self.state];
+    
+    return result;
 }
 
 @end

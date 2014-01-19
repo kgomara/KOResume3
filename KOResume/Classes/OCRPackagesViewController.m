@@ -7,6 +7,10 @@
 //
 
 /**
+ The UIViewController manages Packages objects
+ 
+ It uses a UICollectionView to display the list of Packages, and dispatches OCRCoverLtrViewController or OCRResumeViewController.
+ 
  Credits:
  
  Akiehl Kahn's "Springboard-like layout with Collection Views" - http://mobile.tutsplus.com/tutorials/iphone/uicollectionview-layouts/
@@ -32,9 +36,24 @@
 @interface OCRPackagesViewController ()
 {
 @private
+    /**
+     
+     */
     NSMutableArray *_sectionChanges;
     NSMutableArray *_objectChanges;
 }
+
+/**
+ 
+ */
+@property (nonatomic, strong) NSString                      *packageName;
+@property (nonatomic, strong) UIPopoverController           *packagesPopoverController;
+@property (nonatomic, strong) UIBarButtonItem               *rootPopoverButtonItem;
+
+@property (nonatomic, strong) NSFetchedResultsController    *fetchedResultsController;
+@property (nonatomic, strong) NSManagedObjectContext        *managedObjectContext;
+
+
 
 - (void)promptForPackageName;
 - (void)addPackage;
@@ -163,7 +182,7 @@ BOOL isEditModeActive;
     self.fetchedResultsController.delegate = self;
     
     for (Packages *aPackage in [self.fetchedResultsController fetchedObjects]) {
-        [aPackage logAllFields];
+        DLog(@"%@", [aPackage debugDescription]);
     }
     [self reloadFetchedResults: nil];
 }
@@ -662,7 +681,7 @@ willEndDraggingItemAtIndexPath:(NSIndexPath *)indexPath
             DLog(@"indexPath=%@, tag=%d", indexPath, packagesCell.tag);
             aPackage = [packages objectAtIndex: packagesCell.tag];
             [aPackage setSequence_number: [NSNumber numberWithInt: i++]];       // TODO - sequence number does not seem to stick
-            [aPackage logAllFields];
+            DLog(@"%@", [aPackage debugDescription]);
         }
     }
 }

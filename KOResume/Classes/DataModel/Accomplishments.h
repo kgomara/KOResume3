@@ -4,7 +4,5 @@
 
 FOUNDATION_EXPORT NSString *const OCRAccomplishmentsEntity;
 
-// TODO - consider make this a Description
-- (void)logAllFields;
 
 @end

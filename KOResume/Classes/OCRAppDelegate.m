@@ -3,7 +3,7 @@
 //  KOResume
 //
 //  Created by Kevin O'Mara on 7/14/13.
-//  Copyright (c) 2013 O'Mara Consulting Associates. All rights reserved.
+//  Copyright (c) 2013-2014 O'Mara Consulting Associates. All rights reserved.
 //
 
 #import "OCRAppDelegate.h"
@@ -119,6 +119,7 @@
 }
 
 
+//----------------------------------------------------------------------------------------------------------
 /**
  Save any changes made to the NSManagedObjectContext
  

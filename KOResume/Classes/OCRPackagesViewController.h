@@ -9,30 +9,35 @@
 #import <UIKit/UIKit.h>
 #import "OCAEditableCollectionViewFlowLayout.h"
 #import "OCRPackagesCell.h"
+#import <CoreData/CoreData.h>
 
-//@class OCRBaseDetailViewController;
-
+/**
+ SubstitutableDetailViewController is a protocol that detail view controllers must adopt. It defines methods to hide or show
+ the bar button item controlling the popover.
+ */
 @protocol SubstitutableDetailViewController <NSObject>
 
+@required
+
+/**
+ The master view controller will call this method on the detail view when the bar button item should be shown.
+ 
+ @param aBarButtonItem      the UIBarButtonItem to show
+ @param aPopoverController  the UIPopoverController of the master view controller
+ */
 - (void)showRootPopoverButtonItem:(UIBarButtonItem *)aBarButtonItem
                    withController:(UIPopoverController *)aPopoverController;
+
+/**
+ The master view controller will call this method on the detail view when the bar button item should be hidden
+ 
+ @param aBarButtonItem      the UIBarButtonItem to hide
+ */
 - (void)invalidateRootPopoverButtonItem:(UIBarButtonItem *)aBarButtonItem;
 
 @end
 
-#import <CoreData/CoreData.h>
-
 @interface OCRPackagesViewController : UICollectionViewController <NSFetchedResultsControllerDelegate, UISplitViewControllerDelegate,
                                                                    OCAEditableCollectionViewDataSource, OCAEditableCollectionViewDelegateFlowLayout>
-
-//@property (nonatomic, strong) UISplitViewController         *splitViewController;
-
-@property (nonatomic, strong) NSString                      *packageName;
-@property (nonatomic, strong) UIPopoverController           *packagesPopoverController;
-@property (nonatomic, strong) UIBarButtonItem               *rootPopoverButtonItem;
-
-@property (nonatomic, strong) NSFetchedResultsController    *fetchedResultsController;
-@property (nonatomic, strong) NSManagedObjectContext        *managedObjectContext;
-
 
 @end

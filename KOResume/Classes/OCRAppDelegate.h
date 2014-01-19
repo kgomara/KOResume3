@@ -14,6 +14,9 @@
  */
 @interface OCRAppDelegate : UIResponder <UIApplicationDelegate>
 
+/**
+ The window for KOResume
+ */
 @property (strong, nonatomic) UIWindow                          *window;
 
 /**

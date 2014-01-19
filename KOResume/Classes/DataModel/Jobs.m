@@ -4,12 +4,11 @@
 
 @implementation Jobs
 
-NSString *const OCRJobsEntity         = @"Jobs";
+NSString *const OCRJobsEntity = @"Jobs";
 
--(void)logAllFields
+//----------------------------------------------------------------------------------------------------------
+- (NSString *)debugDescription
 {
-    DLog();
-    
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateStyle: NSDateFormatterMediumStyle];
     [dateFormatter setTimeStyle: NSDateFormatterNoStyle];
@@ -21,33 +20,27 @@ NSString *const OCRJobsEntity         = @"Jobs";
         first30 = self.summary;
     }
 
-    NSLog(@"======================= Jobs =======================");
-    NSLog(@"   name              = %@", self.name);
-    NSLog(@"   created_date      = %@", [dateFormatter stringFromDate: self.created_date]);
-    NSLog(@"   sequence_number   = %@", [self.sequence_number stringValue]);
-    NSLog(@"   in resume         = %@", self.resume.name);
-    NSLog(@"   url               = %@", self.uri);
-    NSLog(@"   city              = %@", self.city);
-    NSLog(@"   state             = %@", self.state);
-    NSLog(@"   title             = %@", self.title);
-    NSLog(@"   start_date        = %@", [dateFormatter stringFromDate: self.start_date]);
-    NSLog(@"   end_date          = %@", [dateFormatter stringFromDate: self.end_date]);
-    NSLog(@"   summary           = %@", first30);
-    NSLog(@"   has [%d] accomplishment entities:", self.accomplishment.count);
+    NSString *result = [NSString stringWithFormat:@"%@\n", self];
+    
+    result = [result stringByAppendingFormat: @"   name              = %@\n", self.name];
+    result = [result stringByAppendingFormat: @"   created_date      = %@\n", [dateFormatter stringFromDate: self.created_date]];
+    result = [result stringByAppendingFormat: @"   sequence_number   = %@\n", [self.sequence_number stringValue]];
+    result = [result stringByAppendingFormat: @"   in resume         = %@\n", self.resume.name];
+    result = [result stringByAppendingFormat: @"   uri               = %@\n", self.uri];
+    result = [result stringByAppendingFormat: @"   city              = %@\n", self.city];
+    result = [result stringByAppendingFormat: @"   state             = %@\n", self.state];
+    result = [result stringByAppendingFormat: @"   title             = %@\n", self.title];
+    result = [result stringByAppendingFormat: @"   start_date        = %@\n", [dateFormatter stringFromDate: self.start_date]];
+    result = [result stringByAppendingFormat: @"   end_date          = %@\n", [dateFormatter stringFromDate: self.end_date]];
+    result = [result stringByAppendingFormat: @"   summary           = %@\n", first30];
+    result = [result stringByAppendingFormat: @"   has [%d] accomplishment entities:", self.accomplishment.count];
     if (self.accomplishment.count > 0) {
-        [self logAccomplishmentNames];
+        for (Accomplishments *acc in self.accomplishment) {
+            result = [result stringByAppendingFormat: @"\n      accomplishment.name   = %@", acc.name];
+        }
     }
-    NSLog(@"===================== end Jobs =====================");
-    
-}
 
--(void)logAccomplishmentNames
-{
-    // Omitting my customary "DLog();" here as it messes up the formatting
-    
-    for (Accomplishments *acc in self.accomplishment) {
-        NSLog(@"      education.name    = %@", acc.name);
-    }
+    return result;
 }
 
 @end

@@ -6,12 +6,11 @@
 
 @implementation Resumes
 
-NSString *const OCRResumesEntity      = @"Resumes";
+NSString *const OCRResumesEntity = @"Resumes";
 
--(void)logAllFields
+//----------------------------------------------------------------------------------------------------------
+- (NSString *)debugDescription
 {
-    DLog();
-    
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateStyle: NSDateFormatterMediumStyle];
     [dateFormatter setTimeStyle: NSDateFormatterNoStyle];
@@ -23,50 +22,35 @@ NSString *const OCRResumesEntity      = @"Resumes";
         first30 = self.summary;
     }
     
-    NSLog(@"======================= Resumes =======================");
-    NSLog(@"   name              = %@", self.name);
-    NSLog(@"   created_date      = %@", [dateFormatter stringFromDate: self.created_date]);
-    NSLog(@"   sequence_number   = %@", [self.sequence_number stringValue]);
-    NSLog(@"   in package        = %@", self.package.name);
-    NSLog(@"   name              = %@", self.name);
-    NSLog(@"   street1           = %@", self.street1);
-    NSLog(@"   street2           = %@", self.street2);
-    NSLog(@"   city              = %@", self.city);
-    NSLog(@"   state             = %@", self.state);
-    NSLog(@"   postal_code       = %@", self.postal_code);
-    NSLog(@"   home_phone        = %@", self.home_phone);
-    NSLog(@"   mobile_phone      = %@", self.mobile_phone);
-    NSLog(@"   email             = %@", self.email);
-    NSLog(@"   summary           = %@", first30);
-    NSLog(@"   has [%d] education entities:", self.education.count);
+    NSString *result = [NSString stringWithFormat:@"%@\n", self];
+    
+    result = [result stringByAppendingFormat: @"   name              = %@\n", self.name];
+    result = [result stringByAppendingFormat: @"   created_date      = %@\n", [dateFormatter stringFromDate: self.created_date]];
+    result = [result stringByAppendingFormat: @"   sequence_number   = %@\n", [self.sequence_number stringValue]];
+    result = [result stringByAppendingFormat: @"   in package        = %@\n", self.package.name];
+    result = [result stringByAppendingFormat: @"   street1           = %@\n", self.street1];
+    result = [result stringByAppendingFormat: @"   street2           = %@\n", self.street2];
+    result = [result stringByAppendingFormat: @"   city              = %@\n", self.city];
+    result = [result stringByAppendingFormat: @"   state             = %@\n", self.state];
+    result = [result stringByAppendingFormat: @"   postal_code       = %@\n", self.postal_code];
+    result = [result stringByAppendingFormat: @"   home_phone        = %@\n", self.home_phone];
+    result = [result stringByAppendingFormat: @"   mobile_phone      = %@\n", self.mobile_phone];
+    result = [result stringByAppendingFormat: @"   email             = %@\n", self.email];
+    result = [result stringByAppendingFormat: @"   summary           = %@\n", first30];
+    result = [result stringByAppendingFormat: @"   has [%d] education entities:", self.education.count];
     if (self.education.count > 0) {
-        [self logEducationNames];
+        for (Education *edu in self.education) {
+            result = [result stringByAppendingFormat: @"\n      education.name        = %@", edu.name];
+        }
     }
-    NSLog(@"   has [%d] job entities:", self.job.count);
+    result = [result stringByAppendingFormat: @"\n   has [%d] job entities:", self.job.count];
     if (self.job.count > 0) {
-        [self logJobNames];
+        for (Jobs *job in self.job) {
+            result = [result stringByAppendingFormat: @"\n      job.name                  = %@", job.name];
+        }
     }
-    NSLog(@"===================== end Resumes =====================");
     
-}
-
--(void)logEducationNames
-{
-    // Omitting my customary "DLog();" here as it messes up the formatting
-    
-    for (Education *edu in self.education) {
-        NSLog(@"      education.name    = %@", edu.name);
-    }
-}
-
-
--(void)logJobNames
-{
-    // Omitting my customary "DLog();" here as it messes up the formatting
-    
-    for (Jobs *job in self.job) {
-        NSLog(@"      job.name          = %@", job.name);
-    }
+    return result;
 }
 
 @end

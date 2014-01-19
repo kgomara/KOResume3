@@ -4,7 +4,4 @@
 
 FOUNDATION_EXPORT NSString *const OCRJobsEntity;
 
-// TODO - consider make this a Description
-- (void)logAllFields;
-
 @end
