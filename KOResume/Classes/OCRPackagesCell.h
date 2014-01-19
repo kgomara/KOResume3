@@ -7,10 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <OCACollectionViewFlowLayoutCell.h>
+#import <OCAEditableCollectionViewFlowLayout/OCACollectionViewFlowLayoutCell.h>
 
-#define kPackagesCellHeight     150.0f
-#define kPackagesCellWidth      150.0f
+extern CGFloat const kPackagesCellHeight;
+extern CGFloat const kPackagesCellWidth;
 
 @interface OCRPackagesCell : OCACollectionViewFlowLayoutCell
 

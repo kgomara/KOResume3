@@ -11,6 +11,9 @@
 
 @implementation OCRPackagesCell
 
+CGFloat const kPackagesCellHeight   = 150.0f;
+CGFloat const kPackagesCellWidth    = 150.0f;
+
 //----------------------------------------------------------------------------------------------------------
 - (void)awakeFromNib
 {

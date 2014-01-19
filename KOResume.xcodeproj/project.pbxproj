@@ -775,7 +775,7 @@
 				PUBLIC_HEADERS_FOLDER_PATH = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				USER_HEADER_SEARCH_PATHS = "“$(BUILT_PRODUCTS_DIR)”";
+				USER_HEADER_SEARCH_PATHS = "“$(BUILT_PRODUCTS_DIR)”/** $(PROJECT_TEMP_DIR)/../UninstalledProducts/Include/**";
 				WARNING_CFLAGS = "";
 			};
 			name = Debug;
@@ -819,7 +819,7 @@
 				PUBLIC_HEADERS_FOLDER_PATH = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				USER_HEADER_SEARCH_PATHS = "“$(BUILT_PRODUCTS_DIR)”";
+				USER_HEADER_SEARCH_PATHS = "“$(BUILT_PRODUCTS_DIR)”/** $(PROJECT_TEMP_DIR)/../UninstalledProducts/Include/**";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;

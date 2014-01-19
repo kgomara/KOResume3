@@ -14,6 +14,34 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "D6BF165E18726E9D00DFF918"
+               BuildableName = "libOCAUtilities.a"
+               BlueprintName = "OCAUtilities"
+               ReferencedContainer = "container:OCAUtilities/OCAUtilities/OCAUtilities.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "D6C7AA16186F5DC500C72A52"
+               BuildableName = "libOCAEditableCollectionViewFlowLayout.a"
+               BlueprintName = "OCAEditableCollectionViewFlowLayout"
+               ReferencedContainer = "container:OCAEditableCollectionViewFlowLayout/OCAEditableCollectionViewFlowLayout.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "D63D82B8179311350065F0A9"
                BuildableName = "koresume.app"
                BlueprintName = "KOResume"

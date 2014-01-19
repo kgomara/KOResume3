@@ -51,7 +51,6 @@
 @property (nonatomic, strong) UIBarButtonItem               *rootPopoverButtonItem;
 
 @property (nonatomic, strong) NSFetchedResultsController    *fetchedResultsController;
-@property (nonatomic, strong) NSManagedObjectContext        *managedObjectContext;
 
 
 

@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "OCAEditableCollectionViewFlowLayout.h"
+#import <OCAEditableCollectionViewFLowLayout/OCAEditableCollectionViewFlowLayout.h>
+//#import "OCAEditableCollectionViewFlowLayout.h"
 #import "OCRPackagesCell.h"
 #import <CoreData/CoreData.h>
 
@@ -39,5 +40,10 @@
 
 @interface OCRPackagesViewController : UICollectionViewController <NSFetchedResultsControllerDelegate, UISplitViewControllerDelegate,
                                                                    OCAEditableCollectionViewDataSource, OCAEditableCollectionViewDelegateFlowLayout>
+
+/**
+ The managed object context used throughout KOResume
+ */
+@property (nonatomic, strong) NSManagedObjectContext        *managedObjectContext;
 
 @end
