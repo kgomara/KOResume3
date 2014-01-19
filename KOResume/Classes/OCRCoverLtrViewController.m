@@ -12,18 +12,26 @@
 @interface OCRCoverLtrViewController ()
 {
 @private
+    /**
+     reference to the back button to facilitate swapping buttons between display and edit modes
+     */
     UIBarButtonItem     *backBtn;
+    
+    /**
+     reference to the edit button to facilitate swapping buttons between display and edit modes
+     */
     UIBarButtonItem     *editBtn;
+    
+    /**
+     reference to the save button to facilitate swapping buttons between display and edit modes
+     */
     UIBarButtonItem     *saveBtn;
+    
+    /**
+     reference to the cancel button to facilitate swapping buttons between display and edit modes
+     */
     UIBarButtonItem     *cancelBtn;
 }
-
-@property (strong, nonatomic) UIPopoverController *masterPopoverController;
-
-- (void)configureView;
-- (void)updateDataFields;
-- (void)configureDefaultNavBar;
-- (void)resetView;
 
 @end
 
@@ -104,6 +112,9 @@
 
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Configure the view items
+ */
 - (void)configureView
 {
     DLog();
@@ -113,6 +124,9 @@
 
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Update the data fields of the view - the cover letter
+ */
 - (void)updateDataFields
 {
     DLog();
@@ -128,6 +142,9 @@
 
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Configure the default items for the navigation bar
+ */
 - (void)configureDefaultNavBar
 {
     DLog();
@@ -143,6 +160,14 @@
 #pragma mark - UI handlers
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Invoked when the user taps the Edit button
+ 
+ * Setup the navigation bar for editing
+ * Enable editable fields
+ * Start an undo group on the NSManagedObjectContext
+ 
+ */
 - (void)didPressEditButton
 {
     DLog();
@@ -162,6 +187,14 @@
 
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Invoked when the user taps the Save button
+ 
+ * Save the changes to the NSManagedObjectContext
+ * Cleanup the undo group on the NSManagedObjectContext
+ * Reset the navigation bar to its default state
+ 
+ */
 - (void)didPressSaveButton
 {
     DLog();
@@ -182,6 +215,15 @@
 
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Invoked when the user taps the Cancel button
+ 
+ * End the undo group on the NSManagedObjectContext
+ * If the undoManager has changes it canUndo, undo them
+ * Cleanup the undoManager
+ * Reset the UI to its default state
+ 
+ */
 - (void)didPressCancelButton
 {
     DLog();
@@ -206,6 +248,13 @@
 #pragma mark - Keyboard handlers
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Invoked when the keyboard is about to show
+ 
+ Scroll the content to ensure the active field is visible
+ 
+ @param aNotification   the NSNotification containing information about the keyboard
+ */
 - (void)keyboardWillShow:(NSNotification*)aNotification
 {
     DLog();
@@ -232,13 +281,20 @@
 
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Invoked when the keyboard is about to be hidden
+ 
+ Reset the contentInsets to "zero"
+ 
+ @param aNotification   the NSNotification containing information about the keyboard
+ */
 - (void)keyboardWillBeHidden:(NSNotification*)aNotification
 {
     DLog();
     
     UIEdgeInsets contentInsets = UIEdgeInsetsZero;
     
-    self.coverLtrFld.contentInset = contentInsets;
+    self.coverLtrFld.contentInset          = contentInsets;
     self.coverLtrFld.scrollIndicatorInsets = contentInsets;
 }
 
@@ -261,6 +317,9 @@
 
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Reset the view to it default state
+ */
 - (void)resetView
 {
     DLog();
@@ -271,11 +330,18 @@
 
 
 //----------------------------------------------------------------------------------------------------------
-- (void)reloadFetchedResults:(NSNotification*)note
+/**
+ Reloads the fetched results
+ 
+ Invoke by notification that the underlying data objects may have changed
+ 
+ @param aNote the NSNotification describing the changes (ignored)
+ */
+- (void)reloadFetchedResults:(NSNotification*)aNote                          // TODO - base class also registers for this notification
 {
     DLog();
     
-    [super reloadFetchedResults: note];
+    [super reloadFetchedResults: aNote];                                     // TODO - base class does performBlock...is it async?
     [self updateDataFields];
 }
 

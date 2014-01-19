@@ -15,19 +15,12 @@
     
 }
 
-@property (nonatomic, strong, readonly) NSManagedObjectModel            *managedObjectModel;
+//@property (nonatomic, strong, readonly) NSManagedObjectModel            *managedObjectModel;
+
+/**
+ The NSPersistentStoreCoordinator for the KOResume database
+ */
 @property (nonatomic, strong, readonly) NSPersistentStoreCoordinator    *persistentStoreCoordinator;
-
-- (NSURL *)applicationDocumentsDirectory;
-
-- (NSDictionary *)createStoreOptions;
-
-//- (BOOL)seedStoreFromURL: (NSURL *)seedURL
-//                   toURL: (NSURL *)storeURL
-//                 options: (NSDictionary *)options;
-
-- (BOOL)addStore: (NSURL *)storeURL
-         options: (NSDictionary *)options;
 
 @end
 
@@ -40,14 +33,6 @@
 
 #pragma mark - Core Data Stack
 
-/**
- Returns the managed object context for the application.
- If the context doesn't already exist, it is created and bound to the persistent store coordinator for the app.
- See:
- http://goddess-gate.com/dc2/index.php/post/452 and 
- http://www.raywenderlich.com/12170/core-data-tutorial-how-to-preloadimport-existing-data-updated
- for excellent tutorials on this setting up core data/iCloud
- */
 //----------------------------------------------------------------------------------------------------------
 - (NSManagedObjectContext *)managedObjectContext
 {
@@ -83,16 +68,16 @@
 }
 
 
+//----------------------------------------------------------------------------------------------------------
 /**
  Returns the managed object model for the application.
  If the model doesn't already exist, it is created from the app's model.
  
  I use Mogenerator to generate the concrete classes for the data model (KOResume.xcdatamodel). You can download Mogenerator from
- http://rentzsch.github.io/mogenerator/
+ [GitHub](http://rentzsch.github.io/mogenerator/)
 
  The key thing with Mogenerator is you DO NOT WANT TO use Xcode's built in model generator. I've create a build target
  */
-//----------------------------------------------------------------------------------------------------------
 - (NSManagedObjectModel *)managedObjectModel
 {
     DLog();
@@ -110,6 +95,9 @@
 
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Singleton object reference to the NSPersistentStoreCoordinator
+ */
 - (NSPersistentStoreCoordinator *)persistentStoreCoordinator
 {
     DLog();
@@ -160,7 +148,7 @@
             if (options) {
                 // ...load the store to the persistentStoreCoordinator
                 if ([self addStore: storeURL
-                           options: options])
+                           withOptions: options])
                 {
                     dispatch_async( dispatch_get_main_queue(), ^{
                         DLog(@"Existing store added successfully!");
@@ -184,6 +172,11 @@
 }
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Helper method to configure the options for the NSPersistentStoreCoordinator object
+ 
+ @return NSDictionry of the appropriate options
+ */
 - (NSDictionary *)createStoreOptions
 {
     DLog();
@@ -261,8 +254,15 @@
 //}
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Add a persistent store to the NSPersistentStoreCoordinator
+ 
+ @param storeURL    the NSURL of the store to add
+ @param options     NSDictionary containing the options for the store
+ @return BOOL       YES if the add is successful, NO otherwise
+ */
 - (BOOL)addStore: (NSURL *)storeURL
-         options: (NSDictionary *)options
+     withOptions: (NSDictionary *)options
 {
     DLog();
     
@@ -289,24 +289,38 @@
 
 
 //----------------------------------------------------------------------------------------------------------
-- (void)merge_iCloudChanges:(NSNotification *)note
+/**
+ Invoked when iCloud has changes to merge (currently, iCloud is disabled)
+ 
+ * Invokes mergeChangesFromContextDidSaveNotification on the NSManagedObjectContext
+ * Creates a NSNotification to inform interested parties that updates were merged
+ 
+ @param aNote       the NSNotification object containing information about the changes
+ @param moc         the NSManagedObjectContext effected
+ */
+- (void)merge_iCloudChanges:(NSNotification *)aNote
                  forContext:(NSManagedObjectContext *)moc
 {
     DLog();
     
-    [moc mergeChangesFromContextDidSaveNotification: note];
+    [moc mergeChangesFromContextDidSaveNotification: aNote];
     DLog(@"completed merging changes from iCloud, posting notification");
     
     // Create a notification for change observers, passing along the userInfo from iCloud
     NSNotification *refreshNotification = [NSNotification notificationWithName: OCRApplicationDidMergeChangesFrom_iCloudNotification
                                                                         object: self
-                                                                      userInfo: [note userInfo]];
+                                                                      userInfo: [aNote userInfo]];
     
     [[NSNotificationCenter defaultCenter] postNotification: refreshNotification];
 }
 
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Invoked by NSNotification when iCloud has changes
+ 
+ @param notification    the NSNotification object containing information about the changes
+ */
 - (void)mergeChangesFrom_iCloud:(NSNotification *)notification
 {
     DLog();
@@ -329,6 +343,8 @@
 
 /**
  Returns the URL to the application's documents directory
+ 
+ @return NSURL of the application's Documents Directory
  */
 - (NSURL *)applicationDocumentsDirectory
 {

@@ -869,7 +869,13 @@ willEndDraggingItemAtIndexPath:(NSIndexPath *)indexPath
 
 /**
  The fetched results controller can "batch" updates to improve performance and preserve battery life.
+ 
  See http://ashfurrow.com/blog/uicollectionview-example for a tutorial on how this processs works.
+ 
+ @param controller      the NSFetchResultsController
+ @param sectionInfo     the sectionInfo for the changed section
+ @param sectionIndex    the index of the changed section
+ @param type            the NSFetchedResultsChangeType of the change
  */
 
 //----------------------------------------------------------------------------------------------------------

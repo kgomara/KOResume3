@@ -10,11 +10,11 @@ The app uses Core Data and a version comment has been added.
 
 DO NOT use the built-in "Editor" tool to created the NSManagedObject subclasses - download and use mogenerator instead.
 
-modgenerator implements to generation-gap design pattern to create an intermediate class file.  The entity is represented by a Class file prepended with an underscore, but you reference the normal entity name in the code.  For example, if you have an entity Foo in the model, mogenerator will create
+mogenerator implements a generation-gap design pattern to create an intermediate class file.  The entity is represented by a Class file prepended with an underscore, but you reference the normal entity name in the code.  For example, if you have an entity Foo in the model, mogenerator will create
 
         _Foo.h, _Foo.m as well as Foo.h and Foo.m, which subclass _Foo.  
         
-Subsequent invocations of mogenerator WILL NOT overwrite the Foo.h or Foo.m files.
+Subsequent invocations of mogenerator WILL NOT overwrite the Foo.h or Foo.m files, so you are safe to add custom code without fear of losing your customizations as would happen if you use the built-in Editor.
 
 At the terminal invoke mogenerator navigate to KOResume/KOResume-iPhone:
 

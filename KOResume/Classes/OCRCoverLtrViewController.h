@@ -9,9 +9,19 @@
 #import <UIKit/UIKit.h>
 #import "OCRBaseDetailViewController.h"
 
+/**
+ The view controller that manages cover letter objects
+ */
 @interface OCRCoverLtrViewController : OCRBaseDetailViewController <UITextViewDelegate, UISplitViewControllerDelegate, OCRDetailViewProtocol>
 
+/**
+ IBOutlet to the scrollView
+ */
 @property (nonatomic, weak) IBOutlet UIScrollView           *scrollView;
+
+/**
+ IBOutlet to the cover letter text
+ */
 @property (nonatomic, weak) IBOutlet UITextView             *coverLtrFld;
 
 

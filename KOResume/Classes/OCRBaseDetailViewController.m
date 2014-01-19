@@ -13,9 +13,10 @@
 #define kSummaryTableCell   0
 #define kResumeTableCell    1
 
+/*
+ The class is the base class which all details views subclass
+ */
 @interface OCRBaseDetailViewController ()
-
-@property (nonatomic, strong) UIPopoverController *masterPopoverController;
 
 @end
 
@@ -24,6 +25,14 @@
 #pragma mark - Managing the detail item
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Set the selectedPackage property
+ 
+ If the new Packages property is different than the detail view is currently displaying, it will invoke the
+ configureView method of the subclass
+ 
+ @param aSelectedPackage    the Packages to set
+ */
 - (void)setSelectedPackage:(Packages *)aSelectedPackage
 {
     DLog();
@@ -96,6 +105,9 @@
 
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ This is a required method for subclasses to implement.
+ */
 - (void)configureView
 {
     /*
@@ -108,13 +120,19 @@
 #pragma mark - SubstitutableDetailViewController protocols method
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Sets the bar button item that will invoke the master view 
+ 
+ @param aBarButtonItem  the bar button item to install
+ @param aPopoverController  the popoverController of the master view
+ */
 - (void)showRootPopoverButtonItem:(UIBarButtonItem *)aBarButtonItem
                    withController:(UIPopoverController *)aPopoverController;
 {
     DLog();
     
     self.backButtonCached   = aBarButtonItem;
-    aBarButtonItem.title    = NSLocalizedString(@"Packages", @"Packages");
+    aBarButtonItem.title    = NSLocalizedString(@"Packages", @"Packages");      // TODO - seems like this doesn't belong in the base class
     [self.navigationItem setLeftBarButtonItem:aBarButtonItem
                                      animated:YES];
     self.popoverControllerCached = aPopoverController;
@@ -122,7 +140,12 @@
 
 
 //----------------------------------------------------------------------------------------------------------
-- (void)invalidateRootPopoverButtonItem:(UIBarButtonItem *)barButtonItem
+/**
+ Hides the bar button item
+ 
+ @param aBarButtonItem the bar button item to hide
+ */
+- (void)invalidateRootPopoverButtonItem:(UIBarButtonItem *)aBarButtonItem
 {
     DLog();
     
@@ -133,7 +156,14 @@
 }
 
 //----------------------------------------------------------------------------------------------------------
-- (void)reloadFetchedResults:(NSNotification*)note
+/**
+ Reloads the fetched results
+ 
+ Invoke by notification that the underlying data objects may have changed
+ 
+ @param aNote the NSNotification describing the changes (ignored)
+ */
+- (void)reloadFetchedResults:(NSNotification*)aNote
 {
     DLog();
     

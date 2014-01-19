@@ -14,6 +14,13 @@
 #pragma mark - Application lifecycle
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Invoked by the framework when the launch process is almost done and the app is almost ready to run.
+ 
+ @param application The UIApplication singleton app object.
+ @param launchOptions   An NSDictionary indicating the reason the app was launched (if any).
+ @return BOOL           Always returns YES
+ */
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Initialize CoreDataController
@@ -47,6 +54,11 @@
 }
 							
 //----------------------------------------------------------------------------------------------------------
+/**
+ Invoked by the framework when the app is about to become inactive
+ 
+ @param application The UIApplication singleton app object.
+ */
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     /*
@@ -61,6 +73,11 @@
 }
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Invoked by the framework when the application is put into the background.
+ 
+ @param application The UIApplication singleton app object.
+ */
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
     /*
@@ -75,6 +92,11 @@
 }
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Invoked by the framework when the app is about to enter foreground
+ 
+ @param application The UIApplication singleton app object.
+ */
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     /*
@@ -85,6 +107,11 @@
 }
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Invoked by the framework when the application has become active
+ 
+ @param application The UIApplication singleton app object.
+ */
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     /*
@@ -95,6 +122,11 @@
 }
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Invoked by the framework when the application is about to terminate
+ 
+ @param application The UIApplication singleton app object.
+ */
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     /*
@@ -109,6 +141,11 @@
 #pragma mark - Memory management
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Invoked by the framework when the app receives a memory warning from the system.
+
+ @param application The UIApplication singleton app object.
+ */
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application
 {
     /*

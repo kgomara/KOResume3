@@ -52,6 +52,20 @@
 	
 	<option value="instance_methods">Instance Methods</option>
 	
+	<option value="//api/name/application:didFinishLaunchingWithOptions:">&nbsp;&nbsp;&nbsp;&nbsp;- application:didFinishLaunchingWithOptions:</option>
+	
+	<option value="//api/name/applicationDidBecomeActive:">&nbsp;&nbsp;&nbsp;&nbsp;- applicationDidBecomeActive:</option>
+	
+	<option value="//api/name/applicationDidEnterBackground:">&nbsp;&nbsp;&nbsp;&nbsp;- applicationDidEnterBackground:</option>
+	
+	<option value="//api/name/applicationDidReceiveMemoryWarning:">&nbsp;&nbsp;&nbsp;&nbsp;- applicationDidReceiveMemoryWarning:</option>
+	
+	<option value="//api/name/applicationWillEnterForeground:">&nbsp;&nbsp;&nbsp;&nbsp;- applicationWillEnterForeground:</option>
+	
+	<option value="//api/name/applicationWillResignActive:">&nbsp;&nbsp;&nbsp;&nbsp;- applicationWillResignActive:</option>
+	
+	<option value="//api/name/applicationWillTerminate:">&nbsp;&nbsp;&nbsp;&nbsp;- applicationWillTerminate:</option>
+	
 	<option value="//api/name/saveContext:">&nbsp;&nbsp;&nbsp;&nbsp;- saveContext:</option>
 	
 	
@@ -91,6 +105,20 @@
 
 
 <li role="treeitem" class="children"><span class="disclosure"></span><span class="sectionName"><a href="#instance_methods">Instance Methods</a></span><ul>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/application:didFinishLaunchingWithOptions:">application:didFinishLaunchingWithOptions:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/applicationDidBecomeActive:">applicationDidBecomeActive:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/applicationDidEnterBackground:">applicationDidEnterBackground:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/applicationDidReceiveMemoryWarning:">applicationDidReceiveMemoryWarning:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/applicationWillEnterForeground:">applicationWillEnterForeground:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/applicationWillResignActive:">applicationWillResignActive:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/applicationWillTerminate:">applicationWillTerminate:</a></span></li>
 	
 	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/saveContext:">saveContext:</a></span></li>
 	
@@ -147,7 +175,7 @@
 						
 						
 						
-						
+						<h3 class="subsubtitle task-title">Other Methods</h3>
 
 						<ul class="task-list">
 							<li>
@@ -171,6 +199,56 @@
 </li><li>
 	<span class="tooltip">
 		<code><a href="#//api/name/saveContext:">&ndash;&nbsp;saveContext:</a></code>
+	</span>
+	
+	
+</li>
+						</ul>
+						
+						
+						
+						<h3 class="subsubtitle task-title">Other Methods</h3>
+
+						<ul class="task-list">
+							<li>
+	<span class="tooltip">
+		<code><a href="#//api/name/application:didFinishLaunchingWithOptions:">&ndash;&nbsp;application:didFinishLaunchingWithOptions:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/applicationWillResignActive:">&ndash;&nbsp;applicationWillResignActive:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/applicationDidEnterBackground:">&ndash;&nbsp;applicationDidEnterBackground:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/applicationWillEnterForeground:">&ndash;&nbsp;applicationWillEnterForeground:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/applicationDidBecomeActive:">&ndash;&nbsp;applicationDidBecomeActive:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/applicationWillTerminate:">&ndash;&nbsp;applicationWillTerminate:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/applicationDidReceiveMemoryWarning:">&ndash;&nbsp;applicationDidReceiveMemoryWarning:</a></code>
 	</span>
 	
 	
@@ -306,6 +384,338 @@
 						<h2 class="subtitle subtitle-methods">Instance Methods</h2>
 						
 						<div class="section-method">
+	<a name="//api/name/application:didFinishLaunchingWithOptions:" title="application:didFinishLaunchingWithOptions:"></a>
+	<h3 class="subsubtitle method-title">application:didFinishLaunchingWithOptions:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Invoked by the framework when the launch process is almost done and the app is almost ready to run.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (BOOL)application:(UIApplication *)<em>application</em> didFinishLaunchingWithOptions:(NSDictionary *)<em>launchOptions</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>application</em></dt>
+			<dd><p>The UIApplication singleton app object.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>launchOptions</em></dt>
+			<dd><p>An NSDictionary indicating the reason the app was launched (if any).</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	<div class="method-subsection return">
+		<h4 class="method-subtitle parameter-title">Return Value</h4>
+		<p>BOOL           Always returns YES</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">OCRAppDelegate.m</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/applicationDidBecomeActive:" title="applicationDidBecomeActive:"></a>
+	<h3 class="subsubtitle method-title">applicationDidBecomeActive:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Invoked by the framework when the application has become active</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)applicationDidBecomeActive:(UIApplication *)<em>application</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>application</em></dt>
+			<dd><p>The UIApplication singleton app object.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">OCRAppDelegate.m</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/applicationDidEnterBackground:" title="applicationDidEnterBackground:"></a>
+	<h3 class="subsubtitle method-title">applicationDidEnterBackground:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Invoked by the framework when the application is put into the background.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)applicationDidEnterBackground:(UIApplication *)<em>application</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>application</em></dt>
+			<dd><p>The UIApplication singleton app object.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">OCRAppDelegate.m</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/applicationDidReceiveMemoryWarning:" title="applicationDidReceiveMemoryWarning:"></a>
+	<h3 class="subsubtitle method-title">applicationDidReceiveMemoryWarning:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Invoked by the framework when the app receives a memory warning from the system.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)applicationDidReceiveMemoryWarning:(UIApplication *)<em>application</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>application</em></dt>
+			<dd><p>The UIApplication singleton app object.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">OCRAppDelegate.m</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/applicationWillEnterForeground:" title="applicationWillEnterForeground:"></a>
+	<h3 class="subsubtitle method-title">applicationWillEnterForeground:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Invoked by the framework when the app is about to enter foreground</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)applicationWillEnterForeground:(UIApplication *)<em>application</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>application</em></dt>
+			<dd><p>The UIApplication singleton app object.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">OCRAppDelegate.m</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/applicationWillResignActive:" title="applicationWillResignActive:"></a>
+	<h3 class="subsubtitle method-title">applicationWillResignActive:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Invoked by the framework when the app is about to become inactive</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)applicationWillResignActive:(UIApplication *)<em>application</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>application</em></dt>
+			<dd><p>The UIApplication singleton app object.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">OCRAppDelegate.m</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/applicationWillTerminate:" title="applicationWillTerminate:"></a>
+	<h3 class="subsubtitle method-title">applicationWillTerminate:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Invoked by the framework when the application is about to terminate</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)applicationWillTerminate:(UIApplication *)<em>application</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>application</em></dt>
+			<dd><p>The UIApplication singleton app object.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">OCRAppDelegate.m</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
 	<a name="//api/name/saveContext:" title="saveContext:"></a>
 	<h3 class="subsubtitle method-title">saveContext:</h3>
 	
@@ -366,7 +776,7 @@
 				<div id="footer">
 					<hr />
 					<div class="footer-copyright">
-						<p><span class="copyright">&copy; 2014 OMaraConsultingAssociates. All rights reserved. (Last updated: 2014-01-18)</span><br />
+						<p><span class="copyright">&copy; 2014 OMaraConsultingAssociates. All rights reserved. (Last updated: 2014-01-19)</span><br />
 						
 						<span class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2 (build 963)</a>.</span></p>
 						
