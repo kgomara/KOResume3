@@ -15,7 +15,7 @@
     
 }
 
-//@property (nonatomic, strong, readonly) NSManagedObjectModel            *managedObjectModel;
+@property (nonatomic, strong, readonly) NSManagedObjectModel            *managedObjectModel;
 
 /**
  The NSPersistentStoreCoordinator for the KOResume database
