@@ -6,6 +6,16 @@
 //  Copyright (c) 2013 O'Mara Consulting Associates. All rights reserved.
 //
 
+#import "OCRPackagesViewController.h"
+#import "OCRBaseDetailViewController.h"
+#import "OCRAppDelegate.h"
+#import "OCRCoverLtrViewController.h"
+#import "Packages.h"
+#import "Resumes.h"
+#import <CoreData/CoreData.h>
+#import "OCRPackagesCell.h"
+//#import "InfoViewController.h"
+
 /**
  The UIViewController manages Packages objects
  
@@ -18,20 +28,12 @@
  Stan Chang, Khin Boon's "LXReorderableCollectionViewFlowLayout" https://github.com/lxcid/LXReorderableCollectionViewFlowLayout
  */
 
-#import "OCRPackagesViewController.h"
-#import "OCRBaseDetailViewController.h"
-#import "OCRAppDelegate.h"
-#import "OCRCoverLtrViewController.h"
-#import "Packages.h"
-#import "Resumes.h"
-#import <CoreData/CoreData.h>
-#import "OCRPackagesCell.h"
-//#import "InfoViewController.h"
-
 #define k_tblHdrHeight      50.0f
 
 #define k_cover_ltrRow      0
 #define k_resumeRow         1
+
+// TODO - implement UITextkit resizing and -collectionView: layout: sizeForItemAtIndexPath:
 
 @interface OCRPackagesViewController ()
 {
@@ -421,18 +423,18 @@ BOOL isEditModeActive;
     [cell.coverLtrButton addTarget: self
                             action: @selector(coverLtrButtonTapped:)
                   forControlEvents: UIControlEventTouchUpInside];
+    // ...and delete button
+    [cell.deleteButton addTarget: self
+                          action: @selector(deleteButtonTapped:)
+                forControlEvents: UIControlEventTouchUpInside];
     
-    if (isEditModeActive) {
-        // Unhide it
-        [cell.deleteButton setHidden: NO];
-        // ...and add us as target for the cell's resume button
-        [cell.deleteButton addTarget: self
-                              action: @selector(deleteButtonTapped:)
-                    forControlEvents: UIControlEventTouchUpInside];
-        
-    } else {
-        [cell.deleteButton setHidden: YES];
-    }
+    
+//    if (isEditModeActive) {
+//        // Unhide it
+//        [cell.deleteButton setHidden: NO];
+//    } else {
+//        [cell.deleteButton setHidden: YES];
+//    }
 }
 
 
