@@ -160,6 +160,9 @@
 /**
  Save any changes made to the NSManagedObjectContext
  
+ This method adds the block to the backing queue to run on its own thread - i.e., asynchronously. The method
+ will return to its caller immediately.
+ 
  @param moc the managed object context to save
  */
 - (void)saveContext: (NSManagedObjectContext *)moc
@@ -181,6 +184,34 @@
             DLog(@"No changes to save");
         }
     }];
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Save any changes made to the NSManagedObjectContext
+ 
+ This method adds the block to the backing queue to run on its own thread, however does not return until the
+ block is finished executing.
+ 
+ @param moc the managed object context to save
+ */
+- (void)saveContextAndWait: (NSManagedObjectContext *)moc
+{
+    DLog();
+    
+    // Save changes to application's managed object context
+    __block NSError *error = nil;
+    [moc performBlockAndWait:^{
+        [moc save: &error];
+    }];
+    if (error) {
+        ELog(error, @"Failed to save data");
+        NSString* msg = NSLocalizedString( @"Failed to save data.", nil);
+        [OCAUtilities showErrorWithMessage: msg];
+    } else {
+        DLog(@"Save successful");
+    }
 }
 
 

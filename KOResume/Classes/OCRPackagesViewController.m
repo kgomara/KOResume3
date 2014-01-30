@@ -13,7 +13,6 @@
 #import "Packages.h"
 #import "Resumes.h"
 #import <CoreData/CoreData.h>
-#import "OCRPackagesCell.h"
 //#import "InfoViewController.h"
 
 /**
@@ -322,23 +321,6 @@ BOOL isEditModeActive;
     }
 }
 
-
-//----------------------------------------------------------------------------------------------------------
-- (IBAction)deleteButtonTapped: (id)sender
-{
-    // configureCell:atIndexPath sets the tag on the button
-    DLog(@"sender = %d", [(UIButton *)sender tag]);
-    
-    // We shouldn't get here if we're not editing, but...
-    if (isEditModeActive) {
-        // TODO implement an alertview for confirmation before actually deleting
-//    NSIndexPath *indexPath = [self.collectionView indexPathForCell: (OCRPackagesCell *)sender.superview];
-//    [self.collectionView deleteItemsAtIndexPaths: [NSArray arrayWithObject: indexPath]];
-    } else {
-        ALog(@"[ERROR] delete button tapped while editMode false");
-    }
-}
-
 #pragma mark - UICollectionView data source
 
 //----------------------------------------------------------------------------------------------------------
@@ -377,6 +359,8 @@ BOOL isEditModeActive;
     
     OCRPackagesCell *cell = (OCRPackagesCell *)[collectionView dequeueReusableCellWithReuseIdentifier: OCRPackagesCellID
                                                                                          forIndexPath: indexPath];
+    // Set OCACollectionViewFlowLayoutCell properties required for deletion
+    cell.deleteDelegate = (OCAEditableCollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
     
 	// Configure the cell.
     [self configureCell: cell
@@ -423,18 +407,6 @@ BOOL isEditModeActive;
     [cell.coverLtrButton addTarget: self
                             action: @selector(coverLtrButtonTapped:)
                   forControlEvents: UIControlEventTouchUpInside];
-    // ...and delete button
-    [cell.deleteButton addTarget: self
-                          action: @selector(deleteButtonTapped:)
-                forControlEvents: UIControlEventTouchUpInside];
-    
-    
-//    if (isEditModeActive) {
-//        // Unhide it
-//        [cell.deleteButton setHidden: NO];
-//    } else {
-//        [cell.deleteButton setHidden: YES];
-//    }
 }
 
 
@@ -444,8 +416,6 @@ BOOL isEditModeActive;
 {
     DLog();
     
-//    OCRPackagesCell *cell = (OCRPackagesCell *)[collectionView cellForItemAtIndexPath:indexPath];
-//    [cell setHighlighted: YES];
 }
 
 
@@ -455,8 +425,6 @@ BOOL isEditModeActive;
 {
     DLog();
     
-//    OCRPackagesCell *cell = (OCRPackagesCell *)[collectionView cellForItemAtIndexPath:indexPath];
-//    [cell setHighlighted: NO];
 }
 
 
@@ -553,6 +521,20 @@ BOOL isEditModeActive;
                afterDelay: 0.1f];
 }
 
+
+//----------------------------------------------------------------------------------------------------------
+- (void)        collectionView:(UICollectionView *)collectionView
+                        layout:(UICollectionViewLayout *)collectionViewLayout
+ didEndDraggingItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    DLog(@"did end drag");
+    
+    [self performSelector: @selector(invalidateLayout:)
+               withObject: collectionViewLayout
+               afterDelay: 0.1f];
+}
+
+
 //----------------------------------------------------------------------------------------------------------
 - (void)invalidateLayout: (UICollectionViewLayout *)collectionViewLayout
 {
@@ -570,16 +552,21 @@ willEndDraggingItemAtIndexPath:(NSIndexPath *)indexPath
 
 
 //----------------------------------------------------------------------------------------------------------
-- (void)        collectionView:(UICollectionView *)collectionView
-                        layout:(UICollectionViewLayout *)collectionViewLayout
- didEndDraggingItemAtIndexPath:(NSIndexPath *)indexPath
+- (BOOL)shouldEnableEditingForCollectionView:(UICollectionView *)collectionView
+                                      layout:(UICollectionViewLayout *)collectionViewLayout
 {
-    DLog(@"did end drag");
-
-    [self performSelector: @selector(invalidateLayout:)
-               withObject: collectionViewLayout
-               afterDelay: 0.1f];
+    return YES;
 }
+
+#pragma mark - OCAEditableCollectionViewDataSource methods
+
+//----------------------------------------------------------------------------------------------------------
+- (BOOL)collectionView:(UICollectionView *)collectionView
+canMoveItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    return YES;
+}
+
 
 //----------------------------------------------------------------------------------------------------------
 - (BOOL)collectionView: (UICollectionView *)collectionView
@@ -600,6 +587,7 @@ willEndDraggingItemAtIndexPath:(NSIndexPath *)indexPath
     DLog();
 }
 
+
 //----------------------------------------------------------------------------------------------------------
 - (void)collectionView: (UICollectionView *)collectionView
        itemAtIndexPath: (NSIndexPath *)fromIndexPath
@@ -609,6 +597,45 @@ willEndDraggingItemAtIndexPath:(NSIndexPath *)indexPath
     
     [self moveItemAtIndexPath: fromIndexPath
                   toIndexPath: toIndexPath];
+}
+
+//----------------------------------------------------------------------------------------------------------
+- (BOOL)    collectionView:(UICollectionView *)collectionView
+  canDeleteItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    DLog();
+    
+    return YES;
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+- (void)    collectionView:(UICollectionView *)collectionView
+ willDeleteItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    DLog();
+    
+    // Get the package that is that is about to be deleted from the collectionView
+    Packages *packageToDelete   = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    // ...and the managed object context
+    NSManagedObjectContext *moc = [self.fetchedResultsController managedObjectContext];
+    // ...and delete it from the data model
+    [moc deleteObject:packageToDelete];
+    
+    /*
+     Here we save the context and wait for the operation to complete. If we invoked the asynchronous saveContext
+     method it would return immediately and the collectionView throw an assertion error because the collectionView
+     would be out of sync with the data model.
+     */
+    [kAppDelegate saveContextAndWait:moc];
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+- (void)    collectionView:(UICollectionView *)collectionView
+  didDeleteItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    DLog();
 }
 
 #pragma mark - UISplitViewControllerDelegate methods

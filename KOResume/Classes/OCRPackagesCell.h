@@ -7,12 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <OCAEditableCollectionViewFlowLayout/OCACollectionViewFlowLayoutCell.h>
+#import <OCAEditableCollectionViewFlowLayout/OCAEditableCollectionViewFlowLayoutCell.h>
 
 extern CGFloat const kPackagesCellHeight;
 extern CGFloat const kPackagesCellWidth;
 
-@interface OCRPackagesCell : OCACollectionViewFlowLayoutCell
+@interface OCRPackagesCell : OCAEditableCollectionViewFlowLayoutCell
 
 @property (nonatomic, strong)   IBOutlet UILabel    *title;
 @property (nonatomic, strong)   IBOutlet UIButton   *coverLtrButton;

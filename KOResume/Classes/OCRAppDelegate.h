@@ -32,4 +32,6 @@
 
 - (void)saveContext:(NSManagedObjectContext *)moc;
 
+- (void)saveContextAndWait:(NSManagedObjectContext *)moc;
+
 @end
