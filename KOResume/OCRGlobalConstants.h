@@ -11,37 +11,38 @@
 @interface OCRGlobalConstants : NSObject
 
 // App constants
-FOUNDATION_EXPORT NSString *const OCRDatabaseName;
-FOUNDATION_EXPORT NSString *const OCRDatabaseType;
-FOUNDATION_EXPORT NSString *const OCRUbiquityID;
+FOUNDATION_EXPORT NSString *const kOCRDatabaseName;
+FOUNDATION_EXPORT NSString *const kOCRDatabaseType;
+FOUNDATION_EXPORT NSString *const kOCRUbiquityID;
 
 
 // Notifications
-FOUNDATION_EXPORT NSString *const OCRApplicationDidAddPersistentStoreCoordinatorNotification;
-FOUNDATION_EXPORT NSString *const OCRApplicationDidMergeChangesFrom_iCloudNotification;
+FOUNDATION_EXPORT NSString *const kOCRApplicationDidAddPersistentStoreCoordinatorNotification;
+FOUNDATION_EXPORT NSString *const kOCRApplicationDidMergeChangesFrom_iCloudNotification;
 
 // Database Attribute names
-FOUNDATION_EXPORT NSString *const OCRSequenceNumberAttributeName;
+FOUNDATION_EXPORT NSString *const kOCRSequenceNumberAttributeName;
 
 // View Controller XIBs
-FOUNDATION_EXPORT NSString *const OCRSummaryViewController;
-FOUNDATION_EXPORT NSString *const OCRJobsDetailViewController;
-FOUNDATION_EXPORT NSString *const OCREducationViewController;
-//FOUNDATION_EXPORT NSString *const OCRPackagesViewController;
-FOUNDATION_EXPORT NSString *const OCRAccomplishmentsViewController;
-FOUNDATION_EXPORT NSString *const OCRCoverLtrID;
-FOUNDATION_EXPORT NSString *const OCRResumeViewController;
-FOUNDATION_EXPORT NSString *const OCRInfoViewController;
+FOUNDATION_EXPORT NSString *const kOCRSummaryViewController;
+FOUNDATION_EXPORT NSString *const kOCRJobsDetailViewController;
+FOUNDATION_EXPORT NSString *const kOCREducationViewController;
+FOUNDATION_EXPORT NSString *const kOCRPackagesViewController;
+FOUNDATION_EXPORT NSString *const kOCRAccomplishmentsViewController;
+FOUNDATION_EXPORT NSString *const kOCRCoverLtrID;
+FOUNDATION_EXPORT NSString *const kOCRResumeViewController;
+FOUNDATION_EXPORT NSString *const kOCRInfoViewController;
 
 // Storyboard segues
-FOUNDATION_EXPORT NSString *const OCRCvrLtrSegue;
+FOUNDATION_EXPORT NSString *const kOCRCvrLtrSegue;
+FOUNDATION_EXPORT NSString *const kOCRResumeSegue;
 
 // Miscellaneous constants
-extern CGFloat const OCRAddButtonWidth;
-extern CGFloat const OCRAddButtonHeight;
+extern CGFloat const kOCRAddButtonWidth;
+extern CGFloat const kOCRAddButtonHeight;
 
-FOUNDATION_EXPORT NSString *const OCRUndoActionName;
-FOUNDATION_EXPORT NSString *const OCRCellID;
-FOUNDATION_EXPORT NSString *const OCRPackagesCellID;
+FOUNDATION_EXPORT NSString *const kOCRUndoActionName;
+FOUNDATION_EXPORT NSString *const kOCRCellID;
+FOUNDATION_EXPORT NSString *const kOCRPackagesCellID;
 
 @end

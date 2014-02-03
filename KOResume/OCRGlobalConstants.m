@@ -11,36 +11,37 @@
 @implementation OCRGlobalConstants
 
 // App constants
-NSString *const OCRDatabaseName                                             = @"KOResume";
-NSString *const OCRDatabaseType                                             = @"sqlite";
-NSString *const OCRUbiquityID                                               = @"<insert your key here>";
+NSString *const kOCRDatabaseName                                             = @"KOResume";
+NSString *const kOCRDatabaseType                                             = @"sqlite";
+NSString *const kOCRUbiquityID                                               = @"<insert your key here>";
 
 
 // Notifications
-NSString *const OCRApplicationDidAddPersistentStoreCoordinatorNotification  = @"RefetchAllDatabaseData";
-NSString *const OCRApplicationDidMergeChangesFrom_iCloudNotification        = @"RefreshAllViews";
+NSString *const kOCRApplicationDidAddPersistentStoreCoordinatorNotification  = @"RefetchAllDatabaseData";
+NSString *const kOCRApplicationDidMergeChangesFrom_iCloudNotification        = @"RefreshAllViews";
 
 // Database Attribute names
-NSString *const OCRSequenceNumberAttributeName                              = @"sequence_number";
+NSString *const kOCRSequenceNumberAttributeName                              = @"sequence_number";
 
 // View Controller XIBs
-NSString *const OCRSummaryViewController                                    = @"SummaryViewController";
-NSString *const OCRJobsDetailViewController                                 = @"JobsDetailViewController";
-NSString *const OCREducationViewController                                  = @"EducationViewController";
-//NSString *const OCRPackagesViewController                                   = @"PackagesViewController";
-NSString *const OCRAccomplishmentsViewController                            = @"AccomplishmentViewController";
-NSString *const OCRCoverLtrID                                               = @"OCRCoverLtrID";
-NSString *const OCRResumeViewController                                     = @"ResumeViewController";
-NSString *const OCRInfoViewController                                       = @"InfoViewController";
+NSString *const kOCRSummaryViewController                                    = @"SummaryViewController";
+NSString *const kOCRJobsDetailViewController                                 = @"JobsDetailViewController";
+NSString *const kOCREducationViewController                                  = @"EducationViewController";
+NSString *const kOCRPackagesViewController                                   = @"PackagesViewController";
+NSString *const kOCRAccomplishmentsViewController                            = @"AccomplishmentViewController";
+NSString *const kOCRCoverLtrID                                               = @"OCRCoverLtrID";
+NSString *const kOCRResumeViewController                                    = @"ResumeViewController";
+NSString *const kOCRInfoViewController                                       = @"InfoViewController";
 
 // Storyboard segues
-NSString *const OCRCvrLtrSegue                                              = @"OCRCvrLtrSegue";
+NSString *const kOCRCvrLtrSegue                                              = @"OCRCvrLtrSegue";
+NSString *const kOCRResumeSegue                                             = @"OCRResumeSegue";
 
 // Miscellaneous constants
-CGFloat const OCRAddButtonWidth                                             = 29.0f;
-CGFloat const OCRAddButtonHeight                                            = 29.0f;
-NSString *const OCRUndoActionName                                           = @"Packages_Editing";
-NSString *const OCRCellID                                                   = @"Cell";
-NSString *const OCRPackagesCellID                                           = @"OCRPackagesCell";
+CGFloat const kOCRAddButtonWidth                                             = 29.0f;
+CGFloat const kOCRAddButtonHeight                                            = 29.0f;
+NSString *const kOCRUndoActionName                                           = @"Packages_Editing";
+NSString *const kOCRCellID                                                   = @"Cell";
+NSString *const kOCRPackagesCellID                                           = @"OCRPackagesCell";
 
 @end

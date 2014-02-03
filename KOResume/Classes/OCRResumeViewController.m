@@ -1,16 +1,17 @@
 //
-//  OCRCoverLtrViewController.m
+//  OCRResumeViewController.m
 //  KOResume
 //
-//  Created by Kevin O'Mara on 8/11/13.
-//  Copyright (c) 2013 O'Mara Consulting Associates. All rights reserved.
+//  Created by Kevin O'Mara on 2/1/14.
+//  Copyright (c) 2014 O'Mara Consulting Associates. All rights reserved.
 //
 
-#import "OCRCoverLtrViewController.h"
+#import "OCRResumeViewController.h"
 #import "OCRAppDelegate.h"
-#import "Packages.h"
+#import "Resumes.h"
+#import "Jobs.h"
 
-@interface OCRCoverLtrViewController ()
+@interface OCRResumeViewController ()
 {
 @private
     /**
@@ -36,7 +37,7 @@
 
 @end
 
-@implementation OCRCoverLtrViewController
+@implementation OCRResumeViewController
 
 #pragma mark - Life Cycle methods
 
@@ -49,7 +50,7 @@
 	
 	self.view.backgroundColor = [UIColor clearColor];
     // Set the default button title
-    self.backButtonTitle        = NSLocalizedString(@"Packages", nil);
+    self.backButtonTitle        = NSLocalizedString(@"Resume", nil);
     
     // Set up btn items
     backBtn     = self.navigationItem.leftBarButtonItem;
@@ -98,7 +99,6 @@
      */
     
     self.scrollView             = nil;
-    self.coverLtrFld            = nil;
     
     [super viewWillDisappear: animated];
 }
@@ -120,7 +120,7 @@
 {
     DLog();
     
-    self.navigationItem.title = NSLocalizedString(@"Cover Letter", nil);
+    self.navigationItem.title = NSLocalizedString(@"Resume", nil);
 }
 
 
@@ -132,13 +132,13 @@
 {
     DLog();
     
-    // get the cover letter into the view
-    if ([(Packages *)self.selectedManagedObject cover_ltr]) {
-        self.coverLtrFld.text	= [(Packages *)self.selectedManagedObject cover_ltr];
-    } else {
-        self.coverLtrFld.text	= @"";
-//        [self didPressEditButton];
-    }
+    // For convenience, make a type-correct reference to the Resume we're working on
+    Resumes *selectedResume = (Resumes *)self.selectedManagedObject;
+    _resumeName.text        = selectedResume.name;
+    
+//    Jobs *currentJob        = selectedResume.job obj
+    _resumeCityState.text   = [NSString stringWithFormat:@"%@, %@", selectedResume.city, selectedResume.state];
+    
 }
 
 
@@ -155,7 +155,14 @@
     self.navigationItem.leftBarButtonItem  = backBtn;
     
     // ...by default, the user cannot edit the text, make it un-editable until the user taps the edit button
-    [self.coverLtrFld setEditable:NO];
+//    [self.coverLtrFld setEditable:NO];
+}
+
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
 }
 
 #pragma mark - UI handlers
@@ -178,12 +185,12 @@
     self.navigationItem.rightBarButtonItem = saveBtn;
     
     // Enable the fields for editing
-    [self.coverLtrFld setEditable: YES];
+//    [self.coverLtrFld setEditable: YES];
     
     // Start an undo group...it will either be commited in didPressSaveButton or
     //    undone in didPressCancelButton
     [[[kAppDelegate managedObjectContext] undoManager] beginUndoGrouping];
-    [self.coverLtrFld becomeFirstResponder];
+//    [self.coverLtrFld becomeFirstResponder];
 }
 
 
@@ -201,7 +208,7 @@
     DLog();
     
     // Save the changes
-    [(Packages *)self.selectedManagedObject setCover_ltr:self.coverLtrFld.text];
+//    self.selectedPackage.cover_ltr = self.coverLtrFld.text;
     
     [[[kAppDelegate managedObjectContext] undoManager] endUndoGrouping];
     
@@ -240,7 +247,7 @@
     // Cleanup the undoManager
     [[[kAppDelegate managedObjectContext] undoManager] removeAllActionsWithTarget: self];
     // ...and reset the UI defaults
-    self.coverLtrFld.text    = [(Packages *)self.selectedManagedObject cover_ltr];
+//    self.coverLtrFld.text    = self.selectedPackage.cover_ltr;
     [self updateDataFields];
     [self configureDefaultNavBar];
     [self resetView];
@@ -264,20 +271,20 @@
     NSDictionary *info = [aNotification userInfo];
     CGSize kbSize = [[info objectForKey: UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
     // ...and adjust the contentInset for its height
-    UIEdgeInsets contentInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height, 0.0);
+//    UIEdgeInsets contentInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height, 0.0);
     
-    self.coverLtrFld.contentInset           = contentInsets;
-    self.coverLtrFld.scrollIndicatorInsets  = contentInsets;
+//    self.coverLtrFld.contentInset           = contentInsets;
+//    self.coverLtrFld.scrollIndicatorInsets  = contentInsets;
     
     // If active text field is hidden by keyboard, scroll it so it's visible
     CGRect aRect = self.view.frame;
     aRect.size.height -= kbSize.height;
-    if (!CGRectContainsPoint(aRect, self.coverLtrFld.frame.origin)) {
-        // calculate the contentOffset for the scroller
-        CGPoint scrollPoint = CGPointMake(0.0, self.coverLtrFld.frame.origin.y - kbSize.height);
-        [self.coverLtrFld setContentOffset: scrollPoint
-                                  animated: YES];
-    }
+//    if (!CGRectContainsPoint(aRect, self.coverLtrFld.frame.origin)) {
+//        // calculate the contentOffset for the scroller
+//        CGPoint scrollPoint = CGPointMake(0.0, self.coverLtrFld.frame.origin.y - kbSize.height);
+//        [self.coverLtrFld setContentOffset: scrollPoint
+//                                  animated: YES];
+//    }
 }
 
 
@@ -293,10 +300,10 @@
 {
     DLog();
     
-    UIEdgeInsets contentInsets = UIEdgeInsetsZero;
+//    UIEdgeInsets contentInsets = UIEdgeInsetsZero;
     
-    self.coverLtrFld.contentInset          = contentInsets;
-    self.coverLtrFld.scrollIndicatorInsets = contentInsets;
+//    self.coverLtrFld.contentInset          = contentInsets;
+//    self.coverLtrFld.scrollIndicatorInsets = contentInsets;
 }
 
 #pragma mark - UITextView delegate methods

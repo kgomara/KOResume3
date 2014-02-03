@@ -29,7 +29,7 @@
 /**
  The package that the user selected in the master view controller
  */
-@property (nonatomic, strong) Packages                      *selectedPackage;
+@property (nonatomic, strong) NSManagedObject               *selectedManagedObject;
 
 /**
  The fetchedResultsController used to retrieve the selectedPackare

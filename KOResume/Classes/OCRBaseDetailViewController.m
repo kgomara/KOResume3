@@ -26,19 +26,19 @@
 
 //----------------------------------------------------------------------------------------------------------
 /**
- Set the selectedPackage property
+ Set the selectedManagedObject property
  
  If the new Packages property is different than the detail view is currently displaying, it will invoke the
  configureView method of the subclass
  
  @param aSelectedPackage    the Packages to set
  */
-- (void)setSelectedPackage:(Packages *)aSelectedPackage
+- (void)setSelectedManagedObject:(Packages *)aSelectedPackage
 {
     DLog();
     
-    if (_selectedPackage != aSelectedPackage) {
-        _selectedPackage = aSelectedPackage;
+    if (_selectedManagedObject != aSelectedPackage) {
+        _selectedManagedObject  = aSelectedPackage;
         // Update the view.
         [self configureView];
     }
@@ -62,7 +62,7 @@
     // Set an observer for iCloud changes
     [[NSNotificationCenter defaultCenter] addObserver: self
                                              selector: @selector(reloadFetchedResults:)
-                                                 name: OCRApplicationDidMergeChangesFrom_iCloudNotification
+                                                 name: kOCRApplicationDidMergeChangesFrom_iCloudNotification
                                                object: nil];
 }
 

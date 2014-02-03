@@ -86,7 +86,7 @@
         return __managedObjectModel;
     }
     
-    NSURL *modelURL = [[NSBundle mainBundle] URLForResource: OCRDatabaseName
+    NSURL *modelURL = [[NSBundle mainBundle] URLForResource: kOCRDatabaseName
                                               withExtension: @"momd"];
     __managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL: modelURL];
     
@@ -114,7 +114,7 @@
         // Set up the path to the location of the database
         // TODO need to get it inside iCloud if enabled
         NSString *docDir            = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-        NSString *dbFileName        = [NSString stringWithFormat: @"%@.%@", OCRDatabaseName, OCRDatabaseType];
+        NSString *dbFileName        = [NSString stringWithFormat: @"%@.%@", kOCRDatabaseName, kOCRDatabaseType];
         NSString *dbPath            = [docDir stringByAppendingPathComponent: dbFileName];
         // TODO - need to put this in iCloud (if enabled) with .nosync
         NSURL *storeURL             = [[self applicationDocumentsDirectory] URLByAppendingPathComponent: dbFileName];
@@ -128,8 +128,8 @@
             NSFileManager *fileManager = [NSFileManager defaultManager];
             if ( ![fileManager fileExistsAtPath: dbPath]) {
                 // database does not exist, need to copy the seed database in from the app bundle
-                NSURL *bundleSeedURL = [NSURL fileURLWithPath: [[NSBundle mainBundle] pathForResource: OCRDatabaseName
-                                                                                               ofType: OCRDatabaseType]];
+                NSURL *bundleSeedURL = [NSURL fileURLWithPath: [[NSBundle mainBundle] pathForResource: kOCRDatabaseName
+                                                                                               ofType: kOCRDatabaseType]];
                 NSError *error;
                 if ([fileManager copyItemAtURL: bundleSeedURL
                                          toURL: storeURL
@@ -152,7 +152,7 @@
                 {
                     dispatch_async( dispatch_get_main_queue(), ^{
                         DLog(@"Existing store added successfully!");
-                        [[NSNotificationCenter defaultCenter] postNotificationName: OCRApplicationDidAddPersistentStoreCoordinatorNotification
+                        [[NSNotificationCenter defaultCenter] postNotificationName: kOCRApplicationDidAddPersistentStoreCoordinatorNotification
                                                                             object: self
                                                                           userInfo: nil];
                         
@@ -188,14 +188,14 @@
      *  ...will try again in iOS7
      */
     
-//    NSURL *cloudURL                 = [[NSFileManager defaultManager] URLForUbiquityContainerIdentifier: OCRUbiquityID];
+//    NSURL *cloudURL                 = [[NSFileManager defaultManager] URLForUbiquityContainerIdentifier: kOCRUbiquityID];
 //    NSString *coreDataCloudContent  = [[cloudURL path] stringByAppendingPathComponent: @"data"];
     
 //    if ([coreDataCloudContent length] != 0) {
 //        // iCloud is available
 //        cloudURL = [NSURL fileURLWithPath: coreDataCloudContent];
 //        
-//        NSString *storeName = [NSString stringWithFormat: @"%@.%@", OCRDatabaseName, @"store"];
+//        NSString *storeName = [NSString stringWithFormat: @"%@.%@", kOCRDatabaseName, @"store"];
 //        options = [NSDictionary dictionaryWithObjectsAndKeys:
 //                   [NSNumber numberWithBool: YES], NSMigratePersistentStoresAutomaticallyOption,
 //                   [NSNumber numberWithBool: YES], NSInferMappingModelAutomaticallyOption,
@@ -307,7 +307,7 @@
     DLog(@"completed merging changes from iCloud, posting notification");
     
     // Create a notification for change observers, passing along the userInfo from iCloud
-    NSNotification *refreshNotification = [NSNotification notificationWithName: OCRApplicationDidMergeChangesFrom_iCloudNotification
+    NSNotification *refreshNotification = [NSNotification notificationWithName: kOCRApplicationDidMergeChangesFrom_iCloudNotification
                                                                         object: self
                                                                       userInfo: [aNote userInfo]];
     

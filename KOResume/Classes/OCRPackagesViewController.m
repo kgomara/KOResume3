@@ -124,7 +124,7 @@ BOOL isEditModeActive;
     // Observe the app delegate telling us when it's finished asynchronously adding the store coordinator
     [[NSNotificationCenter defaultCenter] addObserver: self
                                              selector: @selector(reloadFetchedResults:)
-                                                 name: OCRApplicationDidAddPersistentStoreCoordinatorNotification
+                                                 name: kOCRApplicationDidAddPersistentStoreCoordinatorNotification
                                                object: nil];
     
     // ...add an observer for Dynamic Text size changes
@@ -137,7 +137,7 @@ BOOL isEditModeActive;
     // ...add an observer for asynchronous iCloud merges - not used in this version
     [[NSNotificationCenter defaultCenter] addObserver: self
                                              selector: @selector(reloadFetchedResults:)
-                                                 name: OCRApplicationDidMergeChangesFrom_iCloudNotification
+                                                 name: kOCRApplicationDidMergeChangesFrom_iCloudNotification
                                                object: nil];
     
     // Push the InfoViewController onto the stack so the user knows we're waiting for the persistentStoreCoordinator
@@ -301,7 +301,7 @@ BOOL isEditModeActive;
     if (isEditModeActive) {
         // ignore the tap
     } else {
-        [self performSegueWithIdentifier: OCRCvrLtrSegue
+        [self performSegueWithIdentifier: kOCRCvrLtrSegue
                                   sender: sender];
     }
 }
@@ -317,7 +317,8 @@ BOOL isEditModeActive;
     if (isEditModeActive) {
         // ignore the tap
     } else {
-        // perform segue
+        [self performSegueWithIdentifier: kOCRResumeSegue
+                                  sender: sender];
     }
 }
 
@@ -357,7 +358,7 @@ BOOL isEditModeActive;
 {
     DLog();
     
-    OCRPackagesCell *cell = (OCRPackagesCell *)[collectionView dequeueReusableCellWithReuseIdentifier: OCRPackagesCellID
+    OCRPackagesCell *cell = (OCRPackagesCell *)[collectionView dequeueReusableCellWithReuseIdentifier: kOCRPackagesCellID
                                                                                          forIndexPath: indexPath];
     // Set OCACollectionViewFlowLayoutCell properties required for deletion
     cell.deleteDelegate = (OCAEditableCollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
@@ -757,7 +758,7 @@ canMoveItemAtIndexPath:(NSIndexPath *)indexPath
      */
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow: [(UIButton *)sender tag]
                                                 inSection: 0];
-    if ([[segue identifier] isEqualToString: OCRCvrLtrSegue]) {
+    if ([[segue identifier] isEqualToString: kOCRCvrLtrSegue]) {
         Packages *aPackage = [self.fetchedResultsController objectAtIndexPath: indexPath];
         /*
          We want to pass a few data object references to the cover letter controller (discussed
@@ -810,9 +811,36 @@ canMoveItemAtIndexPath:(NSIndexPath *)indexPath
          
          Thus, in other source files [kAppDelegate managedObjectContext] returns a reference to our managedObjectContext
          */
-        [cvrLtrController setSelectedPackage: aPackage];
+        [cvrLtrController setSelectedManagedObject: aPackage];
         [cvrLtrController setBackButtonTitle: NSLocalizedString(@"Packages", nil)];
         [cvrLtrController setFetchedResultsController: self.fetchedResultsController];
+    }
+    else if ([[segue identifier] isEqualToString: kOCRResumeSegue]) {
+        Packages *aPackage = [self.fetchedResultsController objectAtIndexPath: indexPath];
+        /*
+         This code follows the same pattern as kOCRCvrLtrSegue above.
+         */
+        OCRBaseDetailViewController *resumeController;
+        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+            // Get a reference to the resume controller
+            resumeController = [[(UINavigationController *)[segue destinationViewController] viewControllers] objectAtIndex: 0];
+            // Update the splitViewController's delegate
+            if (_rootPopoverButtonItem != nil) {
+                OCRBaseDetailViewController<SubstitutableDetailViewController>* detailViewController = (OCRBaseDetailViewController<SubstitutableDetailViewController>*)[[[segue destinationViewController] viewControllers] objectAtIndex:0];
+                [detailViewController showRootPopoverButtonItem:_rootPopoverButtonItem
+                                                 withController:_packagesPopoverController];
+            }
+            
+            if (self.packagesPopoverController) {
+                [self.packagesPopoverController dismissPopoverAnimated:YES];
+            }
+        } else {
+            // On the iPhone, the resume controller is the destination of the segue
+            resumeController = [segue destinationViewController];
+        }
+        [resumeController setSelectedManagedObject: aPackage.resume];
+        [resumeController setBackButtonTitle: NSLocalizedString(@"Packages", nil)];
+        [resumeController setFetchedResultsController: self.fetchedResultsController];
     }
 }
 
@@ -837,7 +865,7 @@ canMoveItemAtIndexPath:(NSIndexPath *)indexPath
     [fetchRequest setFetchBatchSize: 25];
     
     // Sort by package sequence_number
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey: OCRSequenceNumberAttributeName
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey: kOCRSequenceNumberAttributeName
                                                                    ascending: YES];
     NSArray *sortDescriptors = [[NSArray alloc] initWithObjects: sortDescriptor, nil];
     [fetchRequest setSortDescriptors:sortDescriptors];
