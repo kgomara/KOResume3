@@ -50,7 +50,6 @@
 		D63D82EA179311350065F0A9 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D63D82C2179311350065F0A9 /* CoreData.framework */; };
 		D63D82F2179311350065F0A9 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D63D82F0179311350065F0A9 /* InfoPlist.strings */; };
 		D63D82F4179311350065F0A9 /* KOResumeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D63D82F3179311350065F0A9 /* KOResumeTests.m */; };
-		D6988A361883A14B00DEC402 /* Readme.markdown in Resources */ = {isa = PBXBuildFile; fileRef = D6988A351883A14B00DEC402 /* Readme.markdown */; };
 		D6ABF9A8187A066100AECF28 /* libOCAEditableCollectionViewFlowLayout.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D6C7AA631870BEED00C72A52 /* libOCAEditableCollectionViewFlowLayout.a */; };
 		D6ABF9A9187A066900AECF28 /* libOCAUtilities.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D6BFCF4818748D8F0088D928 /* libOCAUtilities.a */; };
 		D6AC3D3E179A3F21001D8D75 /* OCRPackagesCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D6AC3D3D179A3F21001D8D75 /* OCRPackagesCell.m */; };
@@ -76,6 +75,7 @@
 		D6BA20EF17B881E90068F4D9 /* OCRCoverLtrViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6BA20ED17B881E90068F4D9 /* OCRCoverLtrViewController.m */; };
 		D6C61B39189DF1F6003E996B /* OCRResumeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6C61B38189DF1F6003E996B /* OCRResumeViewController.m */; };
 		D6C61B3A189DF1F6003E996B /* OCRResumeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6C61B38189DF1F6003E996B /* OCRResumeViewController.m */; };
+		D6C6F14E18AFD58B003A8C92 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = D6C6F14D18AFD58B003A8C92 /* README.md */; };
 		D6C804C81842684300FD6A42 /* Main_iPad copy.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D6C804C61842684300FD6A42 /* Main_iPad copy.storyboard */; };
 		D6D571B11793366000034AF3 /* OCRCoreDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D571B0179335FF00034AF3 /* OCRCoreDataController.m */; };
 		D6D571B71793395F00034AF3 /* OCRGlobalConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D571B31793395F00034AF3 /* OCRGlobalConstants.m */; };
@@ -183,7 +183,6 @@
 		D63D82EF179311350065F0A9 /* KOResumeTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "KOResumeTests-Info.plist"; sourceTree = "<group>"; };
 		D63D82F3179311350065F0A9 /* KOResumeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KOResumeTests.m; sourceTree = "<group>"; };
 		D63D82FD179312F80065F0A9 /* KOResume.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = KOResume.entitlements; sourceTree = "<group>"; };
-		D6988A351883A14B00DEC402 /* Readme.markdown */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Readme.markdown; sourceTree = "<group>"; };
 		D6ABF9AA187A0DD700AECF28 /* OCRGlobalMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCRGlobalMacros.h; sourceTree = "<group>"; };
 		D6AC3D3C179A3F21001D8D75 /* OCRPackagesCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRPackagesCell.h; path = Classes/OCRPackagesCell.h; sourceTree = "<group>"; };
 		D6AC3D3D179A3F21001D8D75 /* OCRPackagesCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRPackagesCell.m; path = Classes/OCRPackagesCell.m; sourceTree = "<group>"; };
@@ -193,13 +192,13 @@
 		D6BFCF4118748D8F0088D928 /* OCAUtilities.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OCAUtilities.xcodeproj; path = OCAUtilities/OCAUtilities/OCAUtilities.xcodeproj; sourceTree = SOURCE_ROOT; };
 		D6C61B37189DF1F6003E996B /* OCRResumeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRResumeViewController.h; path = Classes/OCRResumeViewController.h; sourceTree = "<group>"; };
 		D6C61B38189DF1F6003E996B /* OCRResumeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRResumeViewController.m; path = Classes/OCRResumeViewController.m; sourceTree = "<group>"; };
+		D6C6F14D18AFD58B003A8C92 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		D6C7AA5D1870BEED00C72A52 /* OCAEditableCollectionViewFlowLayout.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OCAEditableCollectionViewFlowLayout.xcodeproj; path = OCAEditableCollectionViewFlowLayout/OCAEditableCollectionViewFlowLayout.xcodeproj; sourceTree = SOURCE_ROOT; };
 		D6C804C71842684300FD6A42 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = "Base.lproj/Main_iPad copy.storyboard"; sourceTree = "<group>"; };
 		D6D571AF179335FF00034AF3 /* OCRCoreDataController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OCRCoreDataController.h; path = Classes/DataModel/OCRCoreDataController.h; sourceTree = "<group>"; };
 		D6D571B0179335FF00034AF3 /* OCRCoreDataController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = OCRCoreDataController.m; path = Classes/DataModel/OCRCoreDataController.m; sourceTree = "<group>"; };
 		D6D571B21793395F00034AF3 /* OCRGlobalConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCRGlobalConstants.h; sourceTree = "<group>"; };
 		D6D571B31793395F00034AF3 /* OCRGlobalConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCRGlobalConstants.m; sourceTree = "<group>"; };
-		D6D571BC179339D700034AF3 /* README.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = README.rtf; sourceTree = "<group>"; };
 		D6D571D51793589A00034AF3 /* KOResume.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = KOResume.xcdatamodel; sourceTree = "<group>"; };
 		D6D571FD1793991400034AF3 /* Resumes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Resumes.h; path = Classes/DataModel/Resumes.h; sourceTree = "<group>"; };
 		D6D571FE1793991400034AF3 /* Resumes.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = Resumes.m; path = Classes/DataModel/Resumes.m; sourceTree = "<group>"; };
@@ -258,8 +257,7 @@
 		D63D82B0179311350065F0A9 = {
 			isa = PBXGroup;
 			children = (
-				D6988A351883A14B00DEC402 /* Readme.markdown */,
-				D6D571BC179339D700034AF3 /* README.rtf */,
+				D6C6F14D18AFD58B003A8C92 /* README.md */,
 				D63D82C4179311350065F0A9 /* KOResume */,
 				D63D82ED179311350065F0A9 /* KOResumeTests */,
 				D63D82BB179311350065F0A9 /* Frameworks */,
@@ -557,11 +555,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				D63D82D5179311350065F0A9 /* Main_iPad.storyboard in Resources */,
-				D6988A361883A14B00DEC402 /* Readme.markdown in Resources */,
 				D63D82E0179311350065F0A9 /* Images.xcassets in Resources */,
 				D63D82D2179311350065F0A9 /* Main_iPhone.storyboard in Resources */,
 				D6C804C81842684300FD6A42 /* Main_iPad copy.storyboard in Resources */,
 				D6B016B51793C16900B86B8D /* KOResume.sqlite in Resources */,
+				D6C6F14E18AFD58B003A8C92 /* README.md in Resources */,
 				D63D82C9179311350065F0A9 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -589,7 +587,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#appledoc Xcode script\n# Start constants\ncompany=\"OMaraConsultingAssociates\";\ncompanyID=\"com.omaraconsultingassoc\";\ncompanyURL=\"http://omaraconsultingassoc.com\";\ntarget=\"iphoneos\";\n#target=\"macosx\";\noutputPath=\"/tmp/appledoc\";\n# End constants\n/usr/local/bin/appledoc \\\n--project-name \"${PROJECT_NAME}\" \\\n--project-company \"${company}\" \\\n--company-id \"${companyID}\" \\\n--docset-atom-filename \"${company}.atom\" \\\n--docset-feed-url \"${companyURL}/${company}/%DOCSETATOMFILENAME\" \\\n--docset-package-url \"${companyURL}/${company}/%DOCSETPACKAGEFILENAME\" \\\n--docset-fallback-url \"${companyURL}/${company}\" \\\n--output \"${outputPath}\" \\\n--publish-docset \\\n--docset-platform-family \"${target}\" \\\n--logformat xcode \\\n--keep-intermediate-files \\\n--no-repeat-first-par \\\n--no-warn-invalid-crossref \\\n--ignore \"OCAUtilities\" \\\n--ignore \"OCAEditableCollectionViewFlowLayout\" \\\n--exit-threshold 2 \\\n--index-desc \"${PROJECT_DIR}/Readme.markdown\" \\\n\"${PROJECT_DIR}\"\necho \"Build successful, copying to project folder \"\necho ${PROJECT_DIR}/Documentation\nrsync -rv ${outputPath}/html ${PROJECT_DIR}/Documentation\n";
+			shellScript = "#appledoc Xcode script\n# Start constants\ncompany=\"OMaraConsultingAssociates\";\ncompanyID=\"com.omaraconsultingassoc\";\ncompanyURL=\"http://omaraconsultingassoc.com\";\ntarget=\"iphoneos\";\n#target=\"macosx\";\noutputPath=\"/tmp/appledoc\";\n# End constants\n/usr/local/bin/appledoc \\\n--project-name \"${PROJECT_NAME}\" \\\n--project-company \"${company}\" \\\n--company-id \"${companyID}\" \\\n--docset-atom-filename \"${company}.atom\" \\\n--docset-feed-url \"${companyURL}/${company}/%DOCSETATOMFILENAME\" \\\n--docset-package-url \"${companyURL}/${company}/%DOCSETPACKAGEFILENAME\" \\\n--docset-fallback-url \"${companyURL}/${company}\" \\\n--output \"${outputPath}\" \\\n--publish-docset \\\n--docset-platform-family \"${target}\" \\\n--logformat xcode \\\n--keep-intermediate-files \\\n--no-repeat-first-par \\\n--no-warn-invalid-crossref \\\n--ignore \"OCAUtilities\" \\\n--ignore \"OCAEditableCollectionViewFlowLayout\" \\\n--exit-threshold 2 \\\n--index-desc \"${PROJECT_DIR}/README.md\" \\\n\"${PROJECT_DIR}\"\necho \"Build successful, copying to project folder \"\necho ${PROJECT_DIR}/Documentation\nrsync -rv ${outputPath}/html ${PROJECT_DIR}/Documentation\n";
 		};
 		D6D571FC17937CA300034AF3 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
