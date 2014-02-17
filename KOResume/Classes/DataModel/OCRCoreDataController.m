@@ -76,7 +76,11 @@
  I use Mogenerator to generate the concrete classes for the data model (KOResume.xcdatamodel). You can download Mogenerator from
  [GitHub](http://rentzsch.github.io/mogenerator/)
 
- The key thing with Mogenerator is you DO NOT WANT TO use Xcode's built in model generator. I've create a build target
+ The key thing with Mogenerator is you DO NOT WANT TO use Xcode's built in model generator. I've create a build target (Mogenerator) to generate the model.
+ If you prefer using terminal, navigate to the folder containing KOResume.xcodeproj and run the command:
+ 
+        mogenerator -m Classes/DataModel/KOResume.xcdatamodeld/KOResume.xcdatamodel  -O Classes
+ 
  */
 - (NSManagedObjectModel *)managedObjectModel
 {

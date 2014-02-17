@@ -8,7 +8,7 @@ IMPORTANT - do not use Xcode to generate the Core Data model - if you do you wil
 
 The app uses Core Data and a version comment has been added.
 
-DO NOT use the built-in "Editor" tool to created the NSManagedObject subclasses - download and use mogenerator instead.
+DO NOT use the built-in "Editor" tool to created the NSManagedObject subclasses - download and use mogenerator  from [GitHub](http://rentzsch.github.io/mogenerator/).
 
 mogenerator implements a generation-gap design pattern to create an intermediate class file.  The entity is represented by a Class file prepended with an underscore, but you reference the normal entity name in the code.  For example, if you have an entity Foo in the model, mogenerator will create
 
@@ -16,11 +16,11 @@ mogenerator implements a generation-gap design pattern to create an intermediate
         
 Subsequent invocations of mogenerator WILL NOT overwrite the Foo.h or Foo.m files, so you are safe to add custom code without fear of losing your customizations as would happen if you use the built-in Editor.
 
-At the terminal invoke mogenerator navigate to KOResume/KOResume-iPhone:
+At the terminal invoke mogenerator and navigate to KOResume/KOResume-iPhone:
 
-        mogenerator -m Classes/KOResume.xcdatamodeld/KOResume.xcdatamodel  -O Classes
+        mogenerator --template-var arc=true -m Classes/DataModel/KOResume.xcdatamodeld/KOResume.xcdatamodel  -O Classes/DataModel
 
 ##License
 
-KOResume is licensed under MIT license.
+KOResume is licensed under MIT [License](https://github.com/kgomara/KOResume3/blob/master/LICENSE).
 

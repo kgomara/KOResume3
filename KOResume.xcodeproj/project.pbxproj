@@ -76,11 +76,12 @@
 		D6C61B39189DF1F6003E996B /* OCRResumeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6C61B38189DF1F6003E996B /* OCRResumeViewController.m */; };
 		D6C61B3A189DF1F6003E996B /* OCRResumeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6C61B38189DF1F6003E996B /* OCRResumeViewController.m */; };
 		D6C6F14E18AFD58B003A8C92 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = D6C6F14D18AFD58B003A8C92 /* README.md */; };
+		D6C6F15918B27AD3003A8C92 /* KOResume.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D6C6F15718B27AD3003A8C92 /* KOResume.xcdatamodeld */; };
+		D6C6F15A18B27AD3003A8C92 /* KOResume.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D6C6F15718B27AD3003A8C92 /* KOResume.xcdatamodeld */; };
 		D6C804C81842684300FD6A42 /* Main_iPad copy.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D6C804C61842684300FD6A42 /* Main_iPad copy.storyboard */; };
 		D6D571B11793366000034AF3 /* OCRCoreDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D571B0179335FF00034AF3 /* OCRCoreDataController.m */; };
 		D6D571B71793395F00034AF3 /* OCRGlobalConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D571B31793395F00034AF3 /* OCRGlobalConstants.m */; };
 		D6D571B81793395F00034AF3 /* OCRGlobalConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D571B31793395F00034AF3 /* OCRGlobalConstants.m */; };
-		D6D571EC1793589A00034AF3 /* KOResume.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D6D571D41793589A00034AF3 /* KOResume.xcdatamodeld */; };
 		D6D571ED1793589A00034AF3 /* KOResume.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D6D571D41793589A00034AF3 /* KOResume.xcdatamodeld */; };
 		D6D572111793A78600034AF3 /* _Accomplishments.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D572081793A78600034AF3 /* _Accomplishments.m */; };
 		D6D572121793A78600034AF3 /* _Accomplishments.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D572081793A78600034AF3 /* _Accomplishments.m */; };
@@ -193,6 +194,7 @@
 		D6C61B37189DF1F6003E996B /* OCRResumeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRResumeViewController.h; path = Classes/OCRResumeViewController.h; sourceTree = "<group>"; };
 		D6C61B38189DF1F6003E996B /* OCRResumeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRResumeViewController.m; path = Classes/OCRResumeViewController.m; sourceTree = "<group>"; };
 		D6C6F14D18AFD58B003A8C92 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		D6C6F15818B27AD3003A8C92 /* KOResume.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = KOResume.xcdatamodel; sourceTree = "<group>"; };
 		D6C7AA5D1870BEED00C72A52 /* OCAEditableCollectionViewFlowLayout.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OCAEditableCollectionViewFlowLayout.xcodeproj; path = OCAEditableCollectionViewFlowLayout/OCAEditableCollectionViewFlowLayout.xcodeproj; sourceTree = SOURCE_ROOT; };
 		D6C804C71842684300FD6A42 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = "Base.lproj/Main_iPad copy.storyboard"; sourceTree = "<group>"; };
 		D6D571AF179335FF00034AF3 /* OCRCoreDataController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OCRCoreDataController.h; path = Classes/DataModel/OCRCoreDataController.h; sourceTree = "<group>"; };
@@ -413,6 +415,7 @@
 				D6D572021793991500034AF3 /* Education.m */,
 				D6D571FF1793991500034AF3 /* Jobs.h */,
 				D6D572001793991500034AF3 /* Jobs.m */,
+				D6C6F15718B27AD3003A8C92 /* KOResume.xcdatamodeld */,
 				D6D571AF179335FF00034AF3 /* OCRCoreDataController.h */,
 				D6D571B0179335FF00034AF3 /* OCRCoreDataController.m */,
 				D6D571FD1793991400034AF3 /* Resumes.h */,
@@ -600,7 +603,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd ~/Documents/OMaraConsultingAssoc/KOResume/KOResume\nmogenerator -m Classes/KOResume.xcdatamodeld/KOResume.xcdatamodel  -O Classes";
+			shellScript = "cd KOResume\nmogenerator --template-var arc=true -m Classes/DataModel/KOResume.xcdatamodeld/KOResume.xcdatamodel  -O Classes/DataModel";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -624,11 +627,11 @@
 				D6C61B39189DF1F6003E996B /* OCRResumeViewController.m in Sources */,
 				D6D571B11793366000034AF3 /* OCRCoreDataController.m in Sources */,
 				D63D82DE179311350065F0A9 /* OCRBaseDetailViewController.m in Sources */,
+				D6C6F15918B27AD3003A8C92 /* KOResume.xcdatamodeld in Sources */,
 				D6AC3D3E179A3F21001D8D75 /* OCRPackagesCell.m in Sources */,
 				D63D82DB179311350065F0A9 /* OCRPackagesViewController.m in Sources */,
 				D6D572191793A78600034AF3 /* _Resumes.m in Sources */,
 				D6B4864417964863009E6A14 /* Packages.m in Sources */,
-				D6D571EC1793589A00034AF3 /* KOResume.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -655,6 +658,7 @@
 				D6AC3D3F179A3F21001D8D75 /* OCRPackagesCell.m in Sources */,
 				D6B486471796486B009E6A14 /* Accomplishments.m in Sources */,
 				D6B4864917964876009E6A14 /* Education.m in Sources */,
+				D6C6F15A18B27AD3003A8C92 /* KOResume.xcdatamodeld in Sources */,
 				D6B4864D17964882009E6A14 /* Resumes.m in Sources */,
 				D63D82F4179311350065F0A9 /* KOResumeTests.m in Sources */,
 			);
@@ -989,6 +993,17 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
+		D6C6F15718B27AD3003A8C92 /* KOResume.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				D6C6F15818B27AD3003A8C92 /* KOResume.xcdatamodel */,
+			);
+			currentVersion = D6C6F15818B27AD3003A8C92 /* KOResume.xcdatamodel */;
+			name = KOResume.xcdatamodeld;
+			path = Classes/DataModel/KOResume.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
 		D6D571D41793589A00034AF3 /* KOResume.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (

@@ -4,6 +4,20 @@
 #import <CoreData/CoreData.h>
 
 
+extern const struct AccomplishmentsAttributes {
+	__unsafe_unretained NSString *created_date;
+	__unsafe_unretained NSString *name;
+	__unsafe_unretained NSString *sequence_number;
+	__unsafe_unretained NSString *summary;
+} AccomplishmentsAttributes;
+
+extern const struct AccomplishmentsRelationships {
+	__unsafe_unretained NSString *job;
+} AccomplishmentsRelationships;
+
+extern const struct AccomplishmentsFetchedProperties {
+} AccomplishmentsFetchedProperties;
+
 @class Jobs;
 
 
@@ -23,7 +37,9 @@
 
 
 
-@property (nonatomic, retain) NSDate *created_date;
+
+@property (nonatomic, strong) NSDate* created_date;
+
 
 
 //- (BOOL)validateCreated_date:(id*)value_ error:(NSError**)error_;
@@ -31,7 +47,9 @@
 
 
 
-@property (nonatomic, retain) NSString *name;
+
+@property (nonatomic, strong) NSString* name;
+
 
 
 //- (BOOL)validateName:(id*)value_ error:(NSError**)error_;
@@ -39,19 +57,23 @@
 
 
 
-@property (nonatomic, retain) NSNumber *sequence_number;
+
+@property (nonatomic, strong) NSNumber* sequence_number;
 
 
-@property short sequence_numberValue;
-- (short)sequence_numberValue;
-- (void)setSequence_numberValue:(short)value_;
+
+@property int16_t sequence_numberValue;
+- (int16_t)sequence_numberValue;
+- (void)setSequence_numberValue:(int16_t)value_;
 
 //- (BOOL)validateSequence_number:(id*)value_ error:(NSError**)error_;
 
 
 
 
-@property (nonatomic, retain) NSString *summary;
+
+@property (nonatomic, strong) NSString* summary;
+
 
 
 //- (BOOL)validateSummary:(id*)value_ error:(NSError**)error_;
@@ -60,9 +82,10 @@
 
 
 
-@property (nonatomic, retain) Jobs* job;
+@property (nonatomic, strong) Jobs *job;
 
 //- (BOOL)validateJob:(id*)value_ error:(NSError**)error_;
+
 
 
 
@@ -91,8 +114,8 @@
 - (NSNumber*)primitiveSequence_number;
 - (void)setPrimitiveSequence_number:(NSNumber*)value;
 
-- (short)primitiveSequence_numberValue;
-- (void)setPrimitiveSequence_numberValue:(short)value_;
+- (int16_t)primitiveSequence_numberValue;
+- (void)setPrimitiveSequence_numberValue:(int16_t)value_;
 
 
 

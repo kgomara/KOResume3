@@ -4,6 +4,23 @@
 #import <CoreData/CoreData.h>
 
 
+extern const struct EducationAttributes {
+	__unsafe_unretained NSString *city;
+	__unsafe_unretained NSString *created_date;
+	__unsafe_unretained NSString *earned_date;
+	__unsafe_unretained NSString *name;
+	__unsafe_unretained NSString *sequence_number;
+	__unsafe_unretained NSString *state;
+	__unsafe_unretained NSString *title;
+} EducationAttributes;
+
+extern const struct EducationRelationships {
+	__unsafe_unretained NSString *resume;
+} EducationRelationships;
+
+extern const struct EducationFetchedProperties {
+} EducationFetchedProperties;
+
 @class Resumes;
 
 
@@ -26,7 +43,9 @@
 
 
 
-@property (nonatomic, retain) NSString *city;
+
+@property (nonatomic, strong) NSString* city;
+
 
 
 //- (BOOL)validateCity:(id*)value_ error:(NSError**)error_;
@@ -34,7 +53,9 @@
 
 
 
-@property (nonatomic, retain) NSDate *created_date;
+
+@property (nonatomic, strong) NSDate* created_date;
+
 
 
 //- (BOOL)validateCreated_date:(id*)value_ error:(NSError**)error_;
@@ -42,7 +63,9 @@
 
 
 
-@property (nonatomic, retain) NSDate *earned_date;
+
+@property (nonatomic, strong) NSDate* earned_date;
+
 
 
 //- (BOOL)validateEarned_date:(id*)value_ error:(NSError**)error_;
@@ -50,7 +73,9 @@
 
 
 
-@property (nonatomic, retain) NSString *name;
+
+@property (nonatomic, strong) NSString* name;
+
 
 
 //- (BOOL)validateName:(id*)value_ error:(NSError**)error_;
@@ -58,19 +83,23 @@
 
 
 
-@property (nonatomic, retain) NSNumber *sequence_number;
+
+@property (nonatomic, strong) NSNumber* sequence_number;
 
 
-@property short sequence_numberValue;
-- (short)sequence_numberValue;
-- (void)setSequence_numberValue:(short)value_;
+
+@property int16_t sequence_numberValue;
+- (int16_t)sequence_numberValue;
+- (void)setSequence_numberValue:(int16_t)value_;
 
 //- (BOOL)validateSequence_number:(id*)value_ error:(NSError**)error_;
 
 
 
 
-@property (nonatomic, retain) NSString *state;
+
+@property (nonatomic, strong) NSString* state;
+
 
 
 //- (BOOL)validateState:(id*)value_ error:(NSError**)error_;
@@ -78,7 +107,9 @@
 
 
 
-@property (nonatomic, retain) NSString *title;
+
+@property (nonatomic, strong) NSString* title;
+
 
 
 //- (BOOL)validateTitle:(id*)value_ error:(NSError**)error_;
@@ -87,9 +118,10 @@
 
 
 
-@property (nonatomic, retain) Resumes* resume;
+@property (nonatomic, strong) Resumes *resume;
 
 //- (BOOL)validateResume:(id*)value_ error:(NSError**)error_;
+
 
 
 
@@ -130,8 +162,8 @@
 - (NSNumber*)primitiveSequence_number;
 - (void)setPrimitiveSequence_number:(NSNumber*)value;
 
-- (short)primitiveSequence_numberValue;
-- (void)setPrimitiveSequence_numberValue:(short)value_;
+- (int16_t)primitiveSequence_numberValue;
+- (void)setPrimitiveSequence_numberValue:(int16_t)value_;
 
 
 

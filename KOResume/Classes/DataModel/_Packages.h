@@ -4,6 +4,20 @@
 #import <CoreData/CoreData.h>
 
 
+extern const struct PackagesAttributes {
+	__unsafe_unretained NSString *cover_ltr;
+	__unsafe_unretained NSString *created_date;
+	__unsafe_unretained NSString *name;
+	__unsafe_unretained NSString *sequence_number;
+} PackagesAttributes;
+
+extern const struct PackagesRelationships {
+	__unsafe_unretained NSString *resume;
+} PackagesRelationships;
+
+extern const struct PackagesFetchedProperties {
+} PackagesFetchedProperties;
+
 @class Resumes;
 
 
@@ -23,7 +37,9 @@
 
 
 
-@property (nonatomic, retain) NSString *cover_ltr;
+
+@property (nonatomic, strong) NSString* cover_ltr;
+
 
 
 //- (BOOL)validateCover_ltr:(id*)value_ error:(NSError**)error_;
@@ -31,7 +47,9 @@
 
 
 
-@property (nonatomic, retain) NSDate *created_date;
+
+@property (nonatomic, strong) NSDate* created_date;
+
 
 
 //- (BOOL)validateCreated_date:(id*)value_ error:(NSError**)error_;
@@ -39,7 +57,9 @@
 
 
 
-@property (nonatomic, retain) NSString *name;
+
+@property (nonatomic, strong) NSString* name;
+
 
 
 //- (BOOL)validateName:(id*)value_ error:(NSError**)error_;
@@ -47,12 +67,14 @@
 
 
 
-@property (nonatomic, retain) NSNumber *sequence_number;
+
+@property (nonatomic, strong) NSNumber* sequence_number;
 
 
-@property short sequence_numberValue;
-- (short)sequence_numberValue;
-- (void)setSequence_numberValue:(short)value_;
+
+@property int16_t sequence_numberValue;
+- (int16_t)sequence_numberValue;
+- (void)setSequence_numberValue:(int16_t)value_;
 
 //- (BOOL)validateSequence_number:(id*)value_ error:(NSError**)error_;
 
@@ -60,9 +82,10 @@
 
 
 
-@property (nonatomic, retain) Resumes* resume;
+@property (nonatomic, strong) Resumes *resume;
 
 //- (BOOL)validateResume:(id*)value_ error:(NSError**)error_;
+
 
 
 
@@ -97,8 +120,8 @@
 - (NSNumber*)primitiveSequence_number;
 - (void)setPrimitiveSequence_number:(NSNumber*)value;
 
-- (short)primitiveSequence_numberValue;
-- (void)setPrimitiveSequence_numberValue:(short)value_;
+- (int16_t)primitiveSequence_numberValue;
+- (void)setPrimitiveSequence_numberValue:(int16_t)value_;
 
 
 

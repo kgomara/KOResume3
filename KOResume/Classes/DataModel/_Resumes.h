@@ -4,6 +4,30 @@
 #import <CoreData/CoreData.h>
 
 
+extern const struct ResumesAttributes {
+	__unsafe_unretained NSString *city;
+	__unsafe_unretained NSString *created_date;
+	__unsafe_unretained NSString *email;
+	__unsafe_unretained NSString *home_phone;
+	__unsafe_unretained NSString *mobile_phone;
+	__unsafe_unretained NSString *name;
+	__unsafe_unretained NSString *postal_code;
+	__unsafe_unretained NSString *sequence_number;
+	__unsafe_unretained NSString *state;
+	__unsafe_unretained NSString *street1;
+	__unsafe_unretained NSString *street2;
+	__unsafe_unretained NSString *summary;
+} ResumesAttributes;
+
+extern const struct ResumesRelationships {
+	__unsafe_unretained NSString *education;
+	__unsafe_unretained NSString *job;
+	__unsafe_unretained NSString *package;
+} ResumesRelationships;
+
+extern const struct ResumesFetchedProperties {
+} ResumesFetchedProperties;
+
 @class Education;
 @class Jobs;
 @class Packages;
@@ -33,7 +57,9 @@
 
 
 
-@property (nonatomic, retain) NSString *city;
+
+@property (nonatomic, strong) NSString* city;
+
 
 
 //- (BOOL)validateCity:(id*)value_ error:(NSError**)error_;
@@ -41,7 +67,9 @@
 
 
 
-@property (nonatomic, retain) NSDate *created_date;
+
+@property (nonatomic, strong) NSDate* created_date;
+
 
 
 //- (BOOL)validateCreated_date:(id*)value_ error:(NSError**)error_;
@@ -49,7 +77,9 @@
 
 
 
-@property (nonatomic, retain) NSString *email;
+
+@property (nonatomic, strong) NSString* email;
+
 
 
 //- (BOOL)validateEmail:(id*)value_ error:(NSError**)error_;
@@ -57,7 +87,9 @@
 
 
 
-@property (nonatomic, retain) NSString *home_phone;
+
+@property (nonatomic, strong) NSString* home_phone;
+
 
 
 //- (BOOL)validateHome_phone:(id*)value_ error:(NSError**)error_;
@@ -65,7 +97,9 @@
 
 
 
-@property (nonatomic, retain) NSString *mobile_phone;
+
+@property (nonatomic, strong) NSString* mobile_phone;
+
 
 
 //- (BOOL)validateMobile_phone:(id*)value_ error:(NSError**)error_;
@@ -73,7 +107,9 @@
 
 
 
-@property (nonatomic, retain) NSString *name;
+
+@property (nonatomic, strong) NSString* name;
+
 
 
 //- (BOOL)validateName:(id*)value_ error:(NSError**)error_;
@@ -81,7 +117,9 @@
 
 
 
-@property (nonatomic, retain) NSString *postal_code;
+
+@property (nonatomic, strong) NSString* postal_code;
+
 
 
 //- (BOOL)validatePostal_code:(id*)value_ error:(NSError**)error_;
@@ -89,19 +127,23 @@
 
 
 
-@property (nonatomic, retain) NSNumber *sequence_number;
+
+@property (nonatomic, strong) NSNumber* sequence_number;
 
 
-@property short sequence_numberValue;
-- (short)sequence_numberValue;
-- (void)setSequence_numberValue:(short)value_;
+
+@property int16_t sequence_numberValue;
+- (int16_t)sequence_numberValue;
+- (void)setSequence_numberValue:(int16_t)value_;
 
 //- (BOOL)validateSequence_number:(id*)value_ error:(NSError**)error_;
 
 
 
 
-@property (nonatomic, retain) NSString *state;
+
+@property (nonatomic, strong) NSString* state;
+
 
 
 //- (BOOL)validateState:(id*)value_ error:(NSError**)error_;
@@ -109,7 +151,9 @@
 
 
 
-@property (nonatomic, retain) NSString *street1;
+
+@property (nonatomic, strong) NSString* street1;
+
 
 
 //- (BOOL)validateStreet1:(id*)value_ error:(NSError**)error_;
@@ -117,7 +161,9 @@
 
 
 
-@property (nonatomic, retain) NSString *street2;
+
+@property (nonatomic, strong) NSString* street2;
+
 
 
 //- (BOOL)validateStreet2:(id*)value_ error:(NSError**)error_;
@@ -125,7 +171,9 @@
 
 
 
-@property (nonatomic, retain) NSString *summary;
+
+@property (nonatomic, strong) NSString* summary;
+
 
 
 //- (BOOL)validateSummary:(id*)value_ error:(NSError**)error_;
@@ -134,23 +182,24 @@
 
 
 
-@property (nonatomic, retain) NSSet* education;
+@property (nonatomic, strong) NSSet *education;
 
 - (NSMutableSet*)educationSet;
 
 
 
 
-@property (nonatomic, retain) NSSet* job;
+@property (nonatomic, strong) NSSet *job;
 
 - (NSMutableSet*)jobSet;
 
 
 
 
-@property (nonatomic, retain) Packages* package;
+@property (nonatomic, strong) Packages *package;
 
 //- (BOOL)validatePackage:(id*)value_ error:(NSError**)error_;
+
 
 
 
@@ -219,8 +268,8 @@
 - (NSNumber*)primitiveSequence_number;
 - (void)setPrimitiveSequence_number:(NSNumber*)value;
 
-- (short)primitiveSequence_numberValue;
-- (void)setPrimitiveSequence_numberValue:(short)value_;
+- (int16_t)primitiveSequence_numberValue;
+- (void)setPrimitiveSequence_numberValue:(int16_t)value_;
 
 
 
