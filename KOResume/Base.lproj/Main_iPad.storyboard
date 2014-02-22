@@ -183,11 +183,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="703" height="768"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LhZ-Ob-6I6">
-                                <rect key="frame" x="0.0" y="63" width="703" height="768"/>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LhZ-Ob-6I6">
+                                <rect key="frame" x="0.0" y="20" width="703" height="728"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="J18-CA-jZK">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="J18-CA-jZK">
                                         <rect key="frame" x="20" y="20" width="663" height="128"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
@@ -242,6 +242,7 @@
                                 </subviews>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="J18-CA-jZK" secondAttribute="trailing" constant="20" symbolic="YES" id="9aX-oL-grL"/>
+                                    <constraint firstItem="J18-CA-jZK" firstAttribute="centerX" secondItem="LhZ-Ob-6I6" secondAttribute="centerX" id="WF4-V4-L6e"/>
                                     <constraint firstAttribute="bottom" secondItem="J18-CA-jZK" secondAttribute="bottom" constant="598" id="ZeZ-Oi-98m"/>
                                     <constraint firstItem="J18-CA-jZK" firstAttribute="top" secondItem="LhZ-Ob-6I6" secondAttribute="top" constant="20" id="d8Z-Ma-XIF"/>
                                     <constraint firstItem="J18-CA-jZK" firstAttribute="leading" secondItem="LhZ-Ob-6I6" secondAttribute="leading" constant="20" symbolic="YES" id="hFW-Zz-voq"/>
@@ -251,17 +252,11 @@
                         <color key="backgroundColor" red="0.40000000000000002" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="LhZ-Ob-6I6" firstAttribute="leading" secondItem="mqy-ur-al6" secondAttribute="leading" id="8SA-yr-g2V"/>
-                            <constraint firstItem="LhZ-Ob-6I6" firstAttribute="top" relation="lessThanOrEqual" secondItem="mqy-ur-al6" secondAttribute="top" constant="63" id="KfP-EJ-a9w"/>
                             <constraint firstAttribute="trailing" secondItem="LhZ-Ob-6I6" secondAttribute="trailing" id="NcR-xS-t6t"/>
-                            <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="LhZ-Ob-6I6" secondAttribute="bottom" constant="-63" id="Np7-iz-lTp"/>
-                            <constraint firstAttribute="trailing" secondItem="LhZ-Ob-6I6" secondAttribute="trailing" id="gks-28-LWS"/>
-                            <constraint firstAttribute="trailing" secondItem="LhZ-Ob-6I6" secondAttribute="trailing" id="gzV-o0-L6u"/>
                             <constraint firstItem="LhZ-Ob-6I6" firstAttribute="leading" secondItem="mqy-ur-al6" secondAttribute="leading" id="lXV-Al-AnT"/>
-                            <constraint firstItem="LhZ-Ob-6I6" firstAttribute="top" relation="greaterThanOrEqual" secondItem="mqy-ur-al6" secondAttribute="top" constant="63" id="o4Z-Au-lKU"/>
-                            <constraint firstAttribute="bottom" secondItem="LhZ-Ob-6I6" secondAttribute="bottom" constant="-63" id="qJJ-EQ-zEh"/>
-                            <constraint firstItem="LhZ-Ob-6I6" firstAttribute="top" secondItem="mqy-ur-al6" secondAttribute="top" constant="63" id="qpn-yN-CEE"/>
-                            <constraint firstAttribute="bottom" relation="lessThanOrEqual" secondItem="LhZ-Ob-6I6" secondAttribute="bottom" constant="-63" id="rUC-K8-Q2z"/>
-                            <constraint firstItem="LhZ-Ob-6I6" firstAttribute="leading" secondItem="mqy-ur-al6" secondAttribute="leading" id="yIj-6e-itm"/>
+                            <constraint firstItem="LhZ-Ob-6I6" firstAttribute="top" relation="greaterThanOrEqual" secondItem="mqy-ur-al6" secondAttribute="top" constant="20" symbolic="YES" id="o4Z-Au-lKU"/>
+                            <constraint firstItem="LhZ-Ob-6I6" firstAttribute="top" secondItem="mqy-ur-al6" secondAttribute="top" constant="20" symbolic="YES" id="uk7-da-uqq"/>
+                            <constraint firstAttribute="bottom" secondItem="LhZ-Ob-6I6" secondAttribute="bottom" constant="20" symbolic="YES" id="vLo-s2-P0k"/>
                         </constraints>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
