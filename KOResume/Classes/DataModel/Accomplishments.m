@@ -3,7 +3,7 @@
 
 @implementation Accomplishments
 
-NSString *const OCRAccomplishmentsEntity = @"Accomplishments";
+NSString *const kOCRAccomplishmentsEntity = @"Accomplishments";
 
 //----------------------------------------------------------------------------------------------------------
 - (NSString *)debugDescription

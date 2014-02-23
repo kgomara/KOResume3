@@ -236,14 +236,14 @@ BOOL isEditModeActive;
 - (void)addPackage
 {
     DLog();
-    Packages *nuPackage = (Packages *)[NSEntityDescription insertNewObjectForEntityForName: OCRPackagesEntity
+    Packages *nuPackage = (Packages *)[NSEntityDescription insertNewObjectForEntityForName: kOCRPackagesEntity
                                                                     inManagedObjectContext: self.managedObjectContext];
     nuPackage.name                  = self.packageName;
     nuPackage.created_date          = [NSDate date];                    // TODO - need to resequence
     nuPackage.sequence_numberValue  = [[self.fetchedResultsController fetchedObjects] count];
     
     //  Add a Resume for the package
-    Resumes *nuResume  = (Resumes *)[NSEntityDescription insertNewObjectForEntityForName: OCRResumesEntity
+    Resumes *nuResume  = (Resumes *)[NSEntityDescription insertNewObjectForEntityForName: kOCRResumesEntity
                                                                   inManagedObjectContext: self.managedObjectContext];
     nuResume.name                 = NSLocalizedString(@"Resume", nil);
     nuResume.created_date         = [NSDate date];
@@ -857,7 +857,7 @@ canMoveItemAtIndexPath:(NSIndexPath *)indexPath
     
     // Create the fetch request for the entity
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    NSEntityDescription *entity  = [NSEntityDescription entityForName: OCRPackagesEntity
+    NSEntityDescription *entity  = [NSEntityDescription entityForName: kOCRPackagesEntity
                                                inManagedObjectContext: [kAppDelegate managedObjectContext]];
     [fetchRequest setEntity:entity];
     

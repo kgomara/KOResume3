@@ -2,7 +2,7 @@
 
 @interface Accomplishments : _Accomplishments {}
 
-FOUNDATION_EXPORT NSString *const OCRAccomplishmentsEntity;
+FOUNDATION_EXPORT NSString *const kOCRAccomplishmentsEntity;
 
 
 @end

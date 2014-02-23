@@ -2,6 +2,6 @@
 
 @interface Jobs : _Jobs {}
 
-FOUNDATION_EXPORT NSString *const OCRJobsEntity;
+FOUNDATION_EXPORT NSString *const kOCRJobsEntity;
 
 @end

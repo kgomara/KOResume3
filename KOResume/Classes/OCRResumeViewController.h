@@ -9,12 +9,10 @@
 #import <UIKit/UIKit.h>
 #import "OCRBaseDetailViewController.h"
 
-@interface OCRResumeViewController : OCRBaseDetailViewController <UITextViewDelegate, UISplitViewControllerDelegate, OCRDetailViewProtocol>
+@interface OCRResumeViewController : OCRBaseDetailViewController <UITextViewDelegate, UISplitViewControllerDelegate, OCRDetailViewProtocol,
+                                                                  NSFetchedResultsControllerDelegate, UITableViewDataSource, UITableViewDelegate>
 
-/**
- IBOutlet to the scrollView
- */
-@property (nonatomic, weak) IBOutlet UIScrollView           *scrollView;
+@property (weak, nonatomic) IBOutlet UIView *summarView;
 
 /**
  IBOutlet to the name of the resume
@@ -32,8 +30,48 @@
 @property (weak, nonatomic) IBOutlet UILabel                *currentJobName;
 
 /**
- IBOutlet to the city and statue of the current job
+ IBOutlet to street1 of the resume
  */
-@property (weak, nonatomic) IBOutlet UILabel                *resumeCityState;
+@property (weak, nonatomic) IBOutlet UITextField            *resumeStreet1;
+
+/**
+ IBOutlet to city of the resume
+ */
+@property (weak, nonatomic) IBOutlet UITextField            *resumeCity;
+
+/**
+ IBOutlet to the state of the resume
+ */
+@property (weak, nonatomic) IBOutlet UITextField            *resumeState;
+
+/**
+ IBOutlet to the postalCode of the resume
+ */
+@property (weak, nonatomic) IBOutlet UITextField            *resumePostalCode;
+
+/**
+ IBOutlet to the home_phone of the resume
+ */
+@property (weak, nonatomic) IBOutlet UITextField            *resumeHomePhone;
+
+/**
+ IBOutlet to the mobile_phone of the resume
+ */
+@property (weak, nonatomic) IBOutlet UITextField            *resumeMobilePhone;
+
+/**
+ IBOutlet to the email of the resume
+ */
+@property (weak, nonatomic) IBOutlet UITextField            *resumeEmail;
+
+/**
+ IBOutlet to the summary of the resume
+ */
+@property (weak, nonatomic) IBOutlet UITextView             *resumeSummary;
+
+/**
+ IBOutlet to the tableView
+ */
+@property (weak, nonatomic) IBOutlet UITableView            *tableView;
 
 @end

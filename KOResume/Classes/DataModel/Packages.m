@@ -2,7 +2,7 @@
 
 @implementation Packages
 
-NSString *const OCRPackagesEntity         = @"Packages";
+NSString *const kOCRPackagesEntity         = @"Packages";
 
 //----------------------------------------------------------------------------------------------------------
 - (NSString *)debugDescription

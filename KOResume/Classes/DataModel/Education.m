@@ -3,7 +3,7 @@
 
 @implementation Education
 
-NSString *const OCREducationEntity        = @"Education";
+NSString *const kOCREducationEntity        = @"Education";
 
 //----------------------------------------------------------------------------------------------------------
 - (NSString *)debugDescription

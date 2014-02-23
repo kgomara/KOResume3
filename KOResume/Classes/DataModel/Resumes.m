@@ -6,7 +6,7 @@
 
 @implementation Resumes
 
-NSString *const OCRResumesEntity = @"Resumes";
+NSString *const kOCRResumesEntity = @"Resumes";
 
 //----------------------------------------------------------------------------------------------------------
 - (NSString *)debugDescription

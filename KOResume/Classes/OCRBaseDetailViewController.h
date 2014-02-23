@@ -49,7 +49,7 @@
 /**
  A reference to the master view's popoverController
  */
-@property (nonatomic, strong) UIPopoverController *masterPopoverController;
+@property (nonatomic, strong) UIPopoverController           *masterPopoverController;
 
 /**
  A property used by the master view to set the back button title

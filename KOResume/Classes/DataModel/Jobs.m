@@ -4,7 +4,7 @@
 
 @implementation Jobs
 
-NSString *const OCRJobsEntity = @"Jobs";
+NSString *const kOCRJobsEntity = @"Jobs";
 
 //----------------------------------------------------------------------------------------------------------
 - (NSString *)debugDescription
