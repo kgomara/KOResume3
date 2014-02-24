@@ -84,7 +84,7 @@ BOOL isEditModeActive;
     layout.minimumLineSpacing       = 6;
     layout.scrollDirection          = UICollectionViewScrollDirectionVertical;
     layout.sectionInset             = UIEdgeInsetsMake(5, 5, 5, 5);
-    [layout setItemSize: CGSizeMake(kPackagesCellWidth, kPackagesCellHeight)];
+//    [layout setItemSize: CGSizeMake(kPackagesCellWidth, kPackagesCellHeight)];
     
     // Set our layout on the collectionView
     self.collectionView.collectionViewLayout = layout;
@@ -120,25 +120,6 @@ BOOL isEditModeActive;
     
     // Set tintColor on the collection view
     [self.collectionView setTintColor: [UIColor redColor]];
-    
-    // Observe the app delegate telling us when it's finished asynchronously adding the store coordinator
-    [[NSNotificationCenter defaultCenter] addObserver: self
-                                             selector: @selector(reloadFetchedResults:)
-                                                 name: kOCRApplicationDidAddPersistentStoreCoordinatorNotification
-                                               object: nil];
-    
-    // ...add an observer for Dynamic Text size changes
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(preferredContentSizeChanged:)
-                                                 name:UIContentSizeCategoryDidChangeNotification
-                                               object:nil];
-
-    
-    // ...add an observer for asynchronous iCloud merges - not used in this version
-    [[NSNotificationCenter defaultCenter] addObserver: self
-                                             selector: @selector(reloadFetchedResults:)
-                                                 name: kOCRApplicationDidMergeChangesFrom_iCloudNotification
-                                               object: nil];
     
     // Push the InfoViewController onto the stack so the user knows we're waiting for the persistentStoreCoordinator
     // to load the database. The user will be able to dismiss it once the coordinator posts an NSNotification
@@ -181,6 +162,25 @@ BOOL isEditModeActive;
     [self.navigationItem setHidesBackButton: NO];
     self.fetchedResultsController.delegate = self;
     
+    // Observe the app delegate telling us when it's finished asynchronously adding the store coordinator
+    [[NSNotificationCenter defaultCenter] addObserver: self
+                                             selector: @selector(reloadFetchedResults:)
+                                                 name: kOCRApplicationDidAddPersistentStoreCoordinatorNotification
+                                               object: nil];
+    
+    // ...add an observer for Dynamic Text size changes
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(userTextSizeDidChange:)
+                                                 name:UIContentSizeCategoryDidChangeNotification
+                                               object:nil];
+    
+    
+    // ...add an observer for asynchronous iCloud merges - not used in this version
+    [[NSNotificationCenter defaultCenter] addObserver: self
+                                             selector: @selector(reloadFetchedResults:)
+                                                 name: kOCRApplicationDidMergeChangesFrom_iCloudNotification
+                                               object: nil];
+    
     for (Packages *aPackage in [self.fetchedResultsController fetchedObjects]) {
         DLog(@"%@", [aPackage debugDescription]);
     }
@@ -195,6 +195,9 @@ BOOL isEditModeActive;
     DLog();
     
     [self saveMoc: self.managedObjectContext];
+    
+    // Remove ourself from observing notifications
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 
@@ -222,7 +225,7 @@ BOOL isEditModeActive;
 #pragma mark - UITextKit handlers
 
 //----------------------------------------------------------------------------------------------------------
-- (void)preferredContentSizeChanged:(NSNotification *)aNotification
+- (void)userTextSizeDidChange:(NSNotification *)aNotification
 {
     DLog();
     
@@ -237,26 +240,23 @@ BOOL isEditModeActive;
 {
     DLog();
     Packages *nuPackage = (Packages *)[NSEntityDescription insertNewObjectForEntityForName: kOCRPackagesEntity
-                                                                    inManagedObjectContext: self.managedObjectContext];
+                                                                    inManagedObjectContext: [kAppDelegate managedObjectContext]];
     nuPackage.name                  = self.packageName;
     nuPackage.created_date          = [NSDate date];                    // TODO - need to resequence
     nuPackage.sequence_numberValue  = [[self.fetchedResultsController fetchedObjects] count];
     
     //  Add a Resume for the package
     Resumes *nuResume  = (Resumes *)[NSEntityDescription insertNewObjectForEntityForName: kOCRResumesEntity
-                                                                  inManagedObjectContext: self.managedObjectContext];
+                                                                  inManagedObjectContext: [kAppDelegate managedObjectContext]];
     nuResume.name                 = NSLocalizedString(@"Resume", nil);
     nuResume.created_date         = [NSDate date];
     nuResume.sequence_numberValue = 1;
     nuPackage.resume              = nuResume;
     
-    if (![self saveMoc: self.managedObjectContext]) {
-        ALog(@"Failed to save");
-        NSString* msg = NSLocalizedString(@"Failed to save data.", nil);
-        [OCAUtilities showErrorWithMessage: msg];
-    }
-    
+    [kAppDelegate saveContextAndWait: [kAppDelegate managedObjectContext]];
+        
     [self reloadFetchedResults: nil];
+    [self.collectionView reloadData];
 }
 
 
@@ -350,6 +350,7 @@ BOOL isEditModeActive;
 
     return rows;
 }
+
 
 
 //----------------------------------------------------------------------------------------------------------
@@ -477,6 +478,37 @@ BOOL isEditModeActive;
 }
 
 #pragma mark - OCAEditableCollectionViewDelegateFlowLayout methods
+
+- (CGSize)collectionView:(UICollectionView *)collectionView
+                  layout:(UICollectionViewLayout*)collectionViewLayout
+  sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    CGSize result;
+
+    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController.sections objectAtIndex:indexPath.section];
+    Packages *aPackage  = (Packages *) [sectionInfo.objects objectAtIndex: indexPath.row];
+    NSString *stringToSize  = aPackage.name;
+	CGRect titleRect        = [stringToSize boundingRectWithSize:CGSizeMake(280.0f, 100.0f)
+                                                         options:NSStringDrawingUsesLineFragmentOrigin
+                                                      attributes:@{NSFontAttributeName: [UIFont preferredFontForTextStyle:[OCRPackagesCell titleFont]]}
+                                                         context:nil];
+    stringToSize            = NSLocalizedString(@"Cover Letter", nil);
+	CGRect coverLtrRect     = [stringToSize boundingRectWithSize:CGSizeMake(280.0f, 100.0f)
+                                                         options:NSStringDrawingUsesLineFragmentOrigin
+                                                      attributes:@{NSFontAttributeName: [UIFont preferredFontForTextStyle:[OCRPackagesCell detailFont]]}
+                                                         context:nil];
+    stringToSize            = NSLocalizedString(@"Resume", nil);
+	CGRect resumeRect       = [stringToSize boundingRectWithSize:CGSizeMake(280.0f, 100.0f)
+                                                         options:NSStringDrawingUsesLineFragmentOrigin
+                                                      attributes:@{NSFontAttributeName: [UIFont preferredFontForTextStyle:[OCRPackagesCell detailFont]]}
+                                                         context:nil];
+    result.height       = titleRect.size.height + coverLtrRect.size.height + resumeRect.size.height + 50.0f;
+    CGFloat cellWidth   = MAX(titleRect.size.width, coverLtrRect.size.width);
+    cellWidth           = MAX(resumeRect.size.width, cellWidth);
+    result.width        = MIN(cellWidth + 20.0f, 280.0f);
+    
+	return result;
+}
 
 //----------------------------------------------------------------------------------------------------------
 - (void) didBeginEditingForCollectionView: (UICollectionView *)collectionView

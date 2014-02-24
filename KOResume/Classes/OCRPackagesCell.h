@@ -14,8 +14,12 @@ extern CGFloat const kPackagesCellWidth;
 
 @interface OCRPackagesCell : OCAEditableCollectionViewFlowLayoutCell
 
-@property (nonatomic, strong)   IBOutlet UILabel    *title;
-@property (nonatomic, strong)   IBOutlet UIButton   *coverLtrButton;
-@property (nonatomic, strong)   IBOutlet UIButton   *resumeButton;
+@property (nonatomic, weak)     IBOutlet UILabel    *title;
+@property (nonatomic, weak)     IBOutlet UIButton   *coverLtrButton;
+@property (nonatomic, weak)     IBOutlet UIButton   *resumeButton;
+
++ (NSString *)titleFont;
+
++ (NSString *)detailFont;
 
 @end

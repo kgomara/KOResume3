@@ -8,11 +8,11 @@
 
 #import "OCRPackagesCell.h"
 
-
 @implementation OCRPackagesCell
 
 CGFloat const kPackagesCellHeight   = 150.0f;
 CGFloat const kPackagesCellWidth    = 150.0f;
+
 
 //----------------------------------------------------------------------------------------------------------
 - (void)awakeFromNib
@@ -26,7 +26,7 @@ CGFloat const kPackagesCellWidth    = 150.0f;
                                              selector: @selector(preferredContentSizeChanged:)
                                                  name: UIContentSizeCategoryDidChangeNotification
                                                object: nil];
-    
+
     [self calculateAndSetFonts];
 }
 
@@ -85,6 +85,16 @@ CGFloat const kPackagesCellWidth    = 150.0f;
         
     // TODO - need to change the contentSize/tableCellHeight?
     [self invalidateIntrinsicContentSize];
+}
+
++ (NSString *)titleFont
+{
+    return UIFontTextStyleHeadline;
+}
+
++ (NSString *)detailFont
+{
+    return UIFontTextStyleBody;
 }
 
 @end

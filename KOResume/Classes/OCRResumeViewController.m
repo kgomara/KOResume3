@@ -70,7 +70,7 @@
     DLog(@"job count %d", [__selectedResume.job count]);
     
     [super viewDidLoad];
-	
+    	
 	self.view.backgroundColor = [UIColor clearColor];
     // Set the default button title
     self.backButtonTitle        = NSLocalizedString(@"Resume", nil);
@@ -132,6 +132,13 @@
                                              selector: @selector(keyboardWillBeHidden:)
                                                  name: UIKeyboardWillHideNotification
                                                object: nil];
+    // ...add an observer for Dynamic Text size changes
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(userTextSizeDidChange:)
+                                                 name:UIContentSizeCategoryDidChangeNotification
+                                               object:nil];
+    
+    
 }
 
 
@@ -235,6 +242,47 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+#pragma mark - UITextKit handlers
+
+//----------------------------------------------------------------------------------------------------------
+- (void)userTextSizeDidChange:(NSNotification *)aNotification
+{
+    DLog();
+    
+    /*
+     Update fonts on all visible UI elements and recalculate a layout for the updated sizes of those elements. 
+     It's important to note that you must apply a new UIFont instance with preferredFontForTextStyle: to get 
+     an updated size. Simply calling invalidateIntrinsicContentSize or setNeedsLayout will not automatically 
+     apply the new content size because UIFont instances are immutable.
+     */
+    _resumeName.Font        = [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline];
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+        // These UI elements only exist on iPad
+        _currentJobTitle.font   = [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline];
+        _atLabel.font           = [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline];
+        _currentJobName.font    = [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline];
+    }
+    _resumeStreet1.font     = [UIFont preferredFontForTextStyle: UIFontTextStyleBody];
+    _resumeCity.font        = [UIFont preferredFontForTextStyle: UIFontTextStyleBody];
+    _resumeState.font       = [UIFont preferredFontForTextStyle: UIFontTextStyleBody];
+    _resumePostalCode.font  = [UIFont preferredFontForTextStyle: UIFontTextStyleBody];
+    _resumeHomePhone.font   = [UIFont preferredFontForTextStyle: UIFontTextStyleBody];
+    _hmLabel.font           = [UIFont preferredFontForTextStyle: UIFontTextStyleBody];
+    _resumeMobilePhone.font = [UIFont preferredFontForTextStyle: UIFontTextStyleBody];
+    _mbLabel.font           = [UIFont preferredFontForTextStyle: UIFontTextStyleBody];
+    _resumeEmail.font       = [UIFont preferredFontForTextStyle: UIFontTextStyleBody];
+    _resumeSummary.font     = [UIFont preferredFontForTextStyle: UIFontTextStyleBody];
+    
+    /*
+     Reloading the table will cause the datasource methods to be called. The table controller will call
+     tableView:cellForRowAtIndexPath: which applies the new fonts and tableView:heightForRowAtIndexPath: calculates 
+     row heights for the new text size and . Note this approach requires fonts to be set in cellForRowAtIndexPath: 
+     and not in an init method.
+     */
+    [self.tableView reloadData];
+}
+
 
 #pragma mark - UI handlers
 
@@ -533,12 +581,16 @@
     switch (indexPath.section) {
 		case k_JobsSection:
 			cell.textLabel.text         = [[__jobArray objectAtIndex: indexPath.row] name];
+            cell.textLabel.font         = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
             cell.detailTextLabel.text   = [[__jobArray objectAtIndex: indexPath.row] title];
+            cell.detailTextLabel.font   = [UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline];
 			cell.accessoryType          = UITableViewCellAccessoryDisclosureIndicator;
 			break;
 		case k_EducationSection:
 			cell.textLabel.text         = [[__educationArray objectAtIndex: indexPath.row] name];
+            cell.textLabel.font         = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
             cell.detailTextLabel.text   = [[__educationArray objectAtIndex: indexPath.row] title];
+            cell.detailTextLabel.font   = [UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline];
 			cell.accessoryType          = UITableViewCellAccessoryDisclosureIndicator;
 			break;
 		default:
@@ -588,6 +640,24 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
 	return 44;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    DLog();
+    NSString *stringToSize  = @"Sample String";
+	CGRect titleRect        = [stringToSize boundingRectWithSize:CGSizeMake( CGRectGetWidth(CGRectIntegral(tableView.bounds)), CGRectGetHeight(CGRectIntegral(tableView.bounds)))
+                                                         options:NSStringDrawingUsesLineFragmentOrigin
+                                                      attributes:@{NSFontAttributeName: [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline]}
+                                                         context:nil];
+	CGRect detailRect       = [stringToSize boundingRectWithSize:CGSizeMake( CGRectGetWidth(CGRectIntegral(tableView.bounds)), CGRectGetHeight(CGRectIntegral(tableView.bounds)))
+                                                         options:NSStringDrawingUsesLineFragmentOrigin
+                                                      attributes:@{NSFontAttributeName: [UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline]}
+                                                         context:nil];
+    
+	return MAX(44.0f, CGRectGetHeight(CGRectIntegral(titleRect)) + CGRectGetHeight(CGRectIntegral(detailRect)) + 20);
+    // 20 = 10pt vertical padding on each end
+
 }
 
 

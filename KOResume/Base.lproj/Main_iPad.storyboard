@@ -22,14 +22,14 @@
                         </collectionViewFlowLayout>
                         <cells>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="OCRPackagesCell" id="qPx-ho-Prv" customClass="OCRPackagesCell">
-                                <rect key="frame" x="0.0" y="64" width="150" height="150"/>
+                                <rect key="frame" x="0.0" y="64" width="150" height="130"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                    <rect key="frame" x="0.0" y="0.0" width="150" height="150"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="150" height="130"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="f2T-eA-Flr">
-                                            <rect key="frame" x="3" y="3" width="144" height="144"/>
+                                            <rect key="frame" x="3" y="3" width="144" height="124"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g8M-b2-9eP">
@@ -45,7 +45,7 @@
                                                     <size key="shadowOffset" width="1" height="1"/>
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0tw-FS-CS1">
-                                                    <rect key="frame" x="7" y="28" width="130" height="44"/>
+                                                    <rect key="frame" x="7" y="22" width="130" height="44"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="44" id="tYu-js-Nbn"/>
@@ -55,7 +55,7 @@
                                                     <state key="normal" title="Cover Letter"/>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GNm-8q-gya">
-                                                    <rect key="frame" x="7" y="76" width="130" height="44"/>
+                                                    <rect key="frame" x="7" y="70" width="130" height="44"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <color key="tintColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -75,18 +75,16 @@
                                             </subviews>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                             <constraints>
-                                                <constraint firstItem="GNm-8q-gya" firstAttribute="top" secondItem="0tw-FS-CS1" secondAttribute="bottom" constant="4" id="4lE-kq-kOU"/>
-                                                <constraint firstAttribute="bottom" secondItem="GNm-8q-gya" secondAttribute="bottom" constant="24" id="BzK-GD-ezH"/>
+                                                <constraint firstAttribute="bottom" secondItem="GNm-8q-gya" secondAttribute="bottom" constant="10" id="BzK-GD-ezH"/>
                                                 <constraint firstItem="0tw-FS-CS1" firstAttribute="leading" secondItem="f2T-eA-Flr" secondAttribute="leading" constant="7" id="EJ5-db-31c"/>
                                                 <constraint firstItem="0tw-FS-CS1" firstAttribute="centerX" secondItem="g8M-b2-9eP" secondAttribute="centerX" id="L0p-mB-dpP"/>
                                                 <constraint firstItem="g8M-b2-9eP" firstAttribute="leading" secondItem="f2T-eA-Flr" secondAttribute="leading" id="LX2-yu-5bM"/>
                                                 <constraint firstItem="GNm-8q-gya" firstAttribute="leading" secondItem="0tw-FS-CS1" secondAttribute="leading" id="NpT-8O-So4"/>
                                                 <constraint firstItem="0tw-FS-CS1" firstAttribute="leading" secondItem="GNm-8q-gya" secondAttribute="leading" id="TZE-RW-r0J"/>
                                                 <constraint firstAttribute="trailing" secondItem="g8M-b2-9eP" secondAttribute="trailing" id="Wjd-BJ-uGH"/>
-                                                <constraint firstItem="g8M-b2-9eP" firstAttribute="leading" secondItem="f2T-eA-Flr" secondAttribute="leading" id="ZOy-TF-gl7"/>
                                                 <constraint firstItem="g8M-b2-9eP" firstAttribute="top" secondItem="f2T-eA-Flr" secondAttribute="top" id="or6-mR-ohi"/>
-                                                <constraint firstAttribute="trailing" secondItem="g8M-b2-9eP" secondAttribute="trailing" id="tTV-uY-vbk"/>
-                                                <constraint firstItem="0tw-FS-CS1" firstAttribute="top" secondItem="g8M-b2-9eP" secondAttribute="bottom" constant="8" symbolic="YES" id="ti9-Lw-dnb"/>
+                                                <constraint firstItem="GNm-8q-gya" firstAttribute="top" secondItem="0tw-FS-CS1" secondAttribute="bottom" constant="4" id="piW-RM-rla"/>
+                                                <constraint firstItem="0tw-FS-CS1" firstAttribute="top" secondItem="g8M-b2-9eP" secondAttribute="bottom" constant="2" id="ti9-Lw-dnb"/>
                                                 <constraint firstItem="0tw-FS-CS1" firstAttribute="trailing" secondItem="GNm-8q-gya" secondAttribute="trailing" id="uHo-1l-ev7"/>
                                             </constraints>
                                         </view>
@@ -103,7 +101,7 @@
                                     <constraint firstAttribute="trailing" secondItem="f2T-eA-Flr" secondAttribute="trailing" constant="3" id="q7Q-wd-23o"/>
                                     <constraint firstItem="f2T-eA-Flr" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="qPx-ho-Prv" secondAttribute="leading" constant="3" id="u6H-gP-GVl"/>
                                 </constraints>
-                                <size key="customSize" width="150" height="150"/>
+                                <size key="customSize" width="150" height="130"/>
                                 <connections>
                                     <outlet property="coverLtrButton" destination="0tw-FS-CS1" id="88q-5T-m9I"/>
                                     <outlet property="resumeButton" destination="GNm-8q-gya" id="LbW-wr-R46"/>
@@ -313,12 +311,12 @@
                                     <constraint firstItem="roL-cc-yNN" firstAttribute="leading" secondItem="dZC-r7-xaL" secondAttribute="leading" id="xSN-vy-0jK"/>
                                 </constraints>
                             </view>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="uLa-FC-hD8" customClass="OCRResumeCell">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="uLa-FC-hD8">
                                 <rect key="frame" x="20" y="368" width="663" height="392"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" textLabel="hiM-LK-otc" detailTextLabel="ACZ-cO-4Zu" style="IBUITableViewCellStyleSubtitle" id="b1O-qS-3XO">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="OCRResumeCell" textLabel="hiM-LK-otc" detailTextLabel="ACZ-cO-4Zu" style="IBUITableViewCellStyleSubtitle" id="b1O-qS-3XO">
                                         <rect key="frame" x="0.0" y="55" width="663" height="44"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="b1O-qS-3XO" id="uBw-HG-0q1">
@@ -343,6 +341,10 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                 </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="0m0-sg-eyS" id="xih-H3-BC7"/>
+                                    <outlet property="delegate" destination="0m0-sg-eyS" id="lKp-aI-PCU"/>
+                                </connections>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" red="0.40000000000000002" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="calibratedRGB"/>
@@ -360,8 +362,11 @@
                     </view>
                     <navigationItem key="navigationItem" id="laW-N8-y53"/>
                     <connections>
+                        <outlet property="atLabel" destination="Jzn-sU-j13" id="K5h-kG-4jB"/>
                         <outlet property="currentJobName" destination="LuA-1p-Uhv" id="Ta2-bm-iaH"/>
                         <outlet property="currentJobTitle" destination="iok-d2-0Xm" id="JJb-QZ-BBw"/>
+                        <outlet property="hmLabel" destination="IJp-IY-aRT" id="Ve3-uA-KUl"/>
+                        <outlet property="mbLabel" destination="rV7-yM-Qs0" id="NED-nK-C0z"/>
                         <outlet property="resumeCity" destination="Xmk-1H-0O1" id="Zgj-m5-MmF"/>
                         <outlet property="resumeEmail" destination="eZE-Vp-X15" id="QOP-lf-a76"/>
                         <outlet property="resumeHomePhone" destination="AnB-oA-dIM" id="vEr-Bs-dN4"/>

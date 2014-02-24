@@ -25,6 +25,12 @@
 @property (weak, nonatomic) IBOutlet UILabel                *currentJobTitle;
 
 /**
+ IBOutlet to the "at" label.
+ Declared so the UIFont can be dynamically re-sized
+ */
+@property (weak, nonatomic) IBOutlet UILabel                *atLabel;
+
+/**
  IBOutlet to the name of the current job
  */
 @property (weak, nonatomic) IBOutlet UILabel                *currentJobName;
@@ -55,9 +61,21 @@
 @property (weak, nonatomic) IBOutlet UITextField            *resumeHomePhone;
 
 /**
+ IBOutlet to the "Hm" label.
+ Declared so the UIFont can be dynamically re-sized
+ */
+@property (weak, nonatomic) IBOutlet UILabel                *hmLabel;
+
+/**
  IBOutlet to the mobile_phone of the resume
  */
 @property (weak, nonatomic) IBOutlet UITextField            *resumeMobilePhone;
+
+/**
+ IBOutlet to the "Mb" label.
+ Declared so the UIFont can be dynamically re-sized
+ */
+@property (weak, nonatomic) IBOutlet UILabel                *mbLabel;
 
 /**
  IBOutlet to the email of the resume
@@ -72,6 +90,6 @@
 /**
  IBOutlet to the tableView
  */
-@property (weak, nonatomic) IBOutlet UITableView            *tableView;
+@property (strong, nonatomic) IBOutlet UITableView            *tableView;
 
 @end
