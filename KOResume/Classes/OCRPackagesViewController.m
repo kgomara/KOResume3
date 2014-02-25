@@ -202,9 +202,15 @@ BOOL isEditModeActive;
 
 
 //----------------------------------------------------------------------------------------------------------
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+- (BOOL)shouldAutorotate
 {
     return YES;
+}
+
+//----------------------------------------------------------------------------------------------------------
+- (NSUInteger)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskAll;
 }
 
 

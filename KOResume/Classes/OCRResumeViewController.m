@@ -157,6 +157,19 @@
 
 
 //----------------------------------------------------------------------------------------------------------
+- (BOOL)shouldAutorotate
+{
+    return YES;
+}
+
+//----------------------------------------------------------------------------------------------------------
+- (NSUInteger)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskAll;
+}
+
+
+//----------------------------------------------------------------------------------------------------------
 - (void)sortTables
 {
     DLog();
@@ -190,7 +203,12 @@
 {
     DLog();
     
-    _resumeName.text            = __selectedResume.name;
+    if ([__selectedResume.name length] > 0) {
+        _resumeName.text            = __selectedResume.name;
+    } else {
+        _resumeName.text            = @"";
+        _resumeName.placeholder     = NSLocalizedString(@"Enter resume name", nil);
+    }
     
     // We need to get the job the user has put at the top of the table, so sort the Jobs by sequence_number
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey: kOCRSequenceNumberAttributeName
@@ -205,8 +223,13 @@
         _currentJobTitle.text   = @"";
         _currentJobName.text    = @"";
     }
-    _resumeStreet1.text         = __selectedResume.street1;
-    _resumeCity.text            = [NSString stringWithFormat:@"%@,", __selectedResume.city];
+    if ([__selectedResume.street1 length] > 0) {
+        _resumeStreet1.text         = __selectedResume.street1;
+    } else {
+        _resumeStreet1.text         = @"";
+        _resumeStreet1.placeholder  = NSLocalizedString(@"Enter street1 address", nil);
+    }
+    _resumeCity.text            = __selectedResume.city;
     _resumeState.text           = __selectedResume.state;
     _resumePostalCode.text      = __selectedResume.postal_code;
     _resumeHomePhone.text       = __selectedResume.home_phone;
