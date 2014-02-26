@@ -122,6 +122,7 @@
     [self configureDefaultNavBar];
     [self configureView];
     [self updateDataFields];
+    [self setFieldsEditable:YES];
     
     // Register for keyboard notifications
     [[NSNotificationCenter defaultCenter] addObserver: self
@@ -137,8 +138,6 @@
                                              selector:@selector(userTextSizeDidChange:)
                                                  name:UIContentSizeCategoryDidChangeNotification
                                                object:nil];
-    
-    
 }
 
 
@@ -203,39 +202,87 @@
 {
     DLog();
     
-    if ([__selectedResume.name length] > 0) {
-        _resumeName.text            = __selectedResume.name;
-    } else {
-        _resumeName.text            = @"";
-        _resumeName.placeholder     = NSLocalizedString(@"Enter resume name", nil);
+    [self setTextField:_resumeName
+               forData:__selectedResume.name
+         orPlaceHolder:NSLocalizedString(@"Enter resume name", nil)];
+
+    
+    // Check to see if we are iPad - only the iPad has current job information
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+        // We need to get the job the user has put at the top of the table, so sort the Jobs by sequence_number
+        NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey: kOCRSequenceNumberAttributeName
+                                                                       ascending: YES];
+        NSArray *sortDescriptors    = [[NSArray alloc] initWithObjects: sortDescriptor, nil];
+        NSArray *jobsArray          = [__selectedResume.job sortedArrayUsingDescriptors:sortDescriptors];
+        if ([jobsArray count] > 0) {
+            Jobs *currentJob = [jobsArray objectAtIndex:0];
+            _currentJobTitle.text   = currentJob.title;
+            _currentJobName.text    = currentJob.name;
+            _atLabel.hidden         = NO;
+        } else {
+            _currentJobTitle.text   = @"";
+            _currentJobName.text    = @"";
+            _atLabel.hidden         = YES;
+        }
     }
     
-    // We need to get the job the user has put at the top of the table, so sort the Jobs by sequence_number
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey: kOCRSequenceNumberAttributeName
-                                                                   ascending: YES];
-    NSArray *sortDescriptors    = [[NSArray alloc] initWithObjects: sortDescriptor, nil];
-    NSArray *jobsArray          = [__selectedResume.job sortedArrayUsingDescriptors:sortDescriptors];
-    if ([jobsArray count] > 0) {
-        Jobs *currentJob = [jobsArray objectAtIndex:0];
-        _currentJobTitle.text   = currentJob.title;
-        _currentJobName.text    = currentJob.name;
+    [self setTextField:_resumeStreet1
+               forData:__selectedResume.street1
+         orPlaceHolder:NSLocalizedString(@"Enter street1 address", nil)];
+    
+    [self setTextField:_resumeCity
+               forData:__selectedResume.city
+         orPlaceHolder:NSLocalizedString(@"Enter city", nil)];
+    
+    [self setTextField:_resumeState
+               forData:__selectedResume.state
+         orPlaceHolder:NSLocalizedString(@"Enter State", nil)];
+    
+    [self setTextField:_resumePostalCode
+               forData:__selectedResume.postal_code
+         orPlaceHolder:NSLocalizedString(@"Enter zip code", nil)];
+
+    [self setTextField:_resumeHomePhone
+               forData:__selectedResume.home_phone
+         orPlaceHolder:NSLocalizedString(@"Enter home phone", nil)];
+    
+    [self setTextField:_resumeMobilePhone
+               forData:__selectedResume.mobile_phone
+         orPlaceHolder:NSLocalizedString(@"Enter mobile phone", nil)];
+    
+    [self setTextField:_resumeEmail
+               forData:__selectedResume.email
+         orPlaceHolder:NSLocalizedString(@"Enter email address", nil)];
+
+    // resumeSummary is a UITextView
+    _resumeSummary.text = __selectedResume.summary;
+}
+
+//----------------------------------------------------------------------------------------------------------
+- (void)setTextField:(UITextField *)textField
+             forData:(NSString *)aString
+       orPlaceHolder:(NSString *)placeholder
+{
+    if ([aString length] > 0) {
+        textField.text          =  aString;
     } else {
-        _currentJobTitle.text   = @"";
-        _currentJobName.text    = @"";
+        textField.text          = @"";
+        textField.placeholder   = placeholder;
     }
-    if ([__selectedResume.street1 length] > 0) {
-        _resumeStreet1.text         = __selectedResume.street1;
-    } else {
-        _resumeStreet1.text         = @"";
-        _resumeStreet1.placeholder  = NSLocalizedString(@"Enter street1 address", nil);
-    }
-    _resumeCity.text            = __selectedResume.city;
-    _resumeState.text           = __selectedResume.state;
-    _resumePostalCode.text      = __selectedResume.postal_code;
-    _resumeHomePhone.text       = __selectedResume.home_phone;
-    _resumeMobilePhone.text     = __selectedResume.mobile_phone;
-    _resumeEmail.text           = __selectedResume.email;
-    _resumeSummary.text         = __selectedResume.summary;
+}
+
+//----------------------------------------------------------------------------------------------------------
+- (void)setFieldsEditable:(BOOL)editable
+{
+    [_resumeName setEnabled:editable];
+    [_resumeStreet1 setEnabled:editable];
+    [_resumeCity setEnabled:editable];
+    [_resumeState setEnabled:editable];
+    [_resumePostalCode setEnabled:editable];
+    [_resumeHomePhone setEnabled:editable];
+    [_resumeMobilePhone setEnabled:editable];
+    [_resumeEmail setEnabled:editable];
+    [_resumeSummary setEditable:editable];
 }
 
 
@@ -325,15 +372,7 @@
     // Enable table editing
     [self.tableView setEditing: YES];
     // ...and enable resume fields
-    [_resumeName setEnabled: YES];
-    [_resumeStreet1 setEnabled: YES];
-    [_resumeCity setEnabled: YES];
-    [_resumeState setEnabled: YES];
-    [_resumePostalCode setEnabled: YES];
-    [_resumeHomePhone setEnabled: YES];
-    [_resumeMobilePhone setEnabled: YES];
-    [_resumeEmail setEnabled: YES];
-    [_resumeSummary setEditable: YES];
+    [self setFieldsEditable: YES];
     
     // Set up the navigation item and save button
     self.navigationItem.leftBarButtonItem  = cancelBtn;
@@ -361,6 +400,8 @@
 - (void)didPressSaveButton
 {
     DLog();
+    
+    [self setFieldsEditable:NO];
     
     // Reset the sequence_number of the Job and Education items in case they were re-ordered during the edit
     [self resequenceTables];
@@ -402,6 +443,8 @@
 - (void)didPressCancelButton
 {
     DLog();
+    
+    [self setFieldsEditable:NO];
     
     // Undo any changes the user has made
     [[[kAppDelegate managedObjectContext] undoManager] setActionName:kOCRUndoActionName];
