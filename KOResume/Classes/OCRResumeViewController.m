@@ -122,7 +122,7 @@
     [self configureDefaultNavBar];
     [self configureView];
     [self updateDataFields];
-    [self setFieldsEditable:YES];
+    [self setFieldsEditable:NO];
     
     // Register for keyboard notifications
     [[NSNotificationCenter defaultCenter] addObserver: self
@@ -256,6 +256,7 @@
 
     // resumeSummary is a UITextView
     _resumeSummary.text = __selectedResume.summary;
+    [_resumeSummary scrollRangeToVisible:NSMakeRange(0, 0)];
 }
 
 //----------------------------------------------------------------------------------------------------------
@@ -283,6 +284,18 @@
     [_resumeMobilePhone setEnabled:editable];
     [_resumeEmail setEnabled:editable];
     [_resumeSummary setEditable:editable];
+    
+    UIColor *backgroundColor = editable? [UIColor whiteColor] : [UIColor clearColor];
+    
+    [_resumeName setBackgroundColor: backgroundColor];
+    [_resumeStreet1 setBackgroundColor: backgroundColor];
+    [_resumeCity setBackgroundColor: backgroundColor];
+    [_resumeState setBackgroundColor: backgroundColor];
+    [_resumePostalCode setBackgroundColor: backgroundColor];
+    [_resumeHomePhone setBackgroundColor: backgroundColor];
+    [_resumeMobilePhone setBackgroundColor: backgroundColor];
+    [_resumeEmail setBackgroundColor: backgroundColor];
+    [_resumeSummary setBackgroundColor: backgroundColor];
 }
 
 
@@ -295,8 +308,13 @@
     DLog();
     
     // Set the buttons.
-    self.navigationItem.rightBarButtonItem = editBtn;
-    self.navigationItem.leftBarButtonItem  = backBtn;
+    // Set up the navigation items and save/cancel buttons
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects: editBtn, nil];
+    } else {
+        self.navigationItem.leftBarButtonItem  = backBtn;
+        self.navigationItem.rightBarButtonItem = editBtn;
+    }
     
     // Set table editing off
     [self.tableView setEditing: NO];
@@ -374,9 +392,13 @@
     // ...and enable resume fields
     [self setFieldsEditable: YES];
     
-    // Set up the navigation item and save button
-    self.navigationItem.leftBarButtonItem  = cancelBtn;
-    self.navigationItem.rightBarButtonItem = saveBtn;
+    // Set up the navigation items and save/cancel buttons
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects: saveBtn, cancelBtn, nil];
+    } else {
+        self.navigationItem.leftBarButtonItem  = cancelBtn;
+        self.navigationItem.rightBarButtonItem = saveBtn;
+    }
     
     // ...and show the add buttons
     [addJobBtn          setHidden: NO];
