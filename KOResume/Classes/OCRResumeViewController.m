@@ -7,6 +7,7 @@
 //
 
 #import "OCRResumeViewController.h"
+#import "OCRTableViewHeaderCell.h"
 #import "OCRAppDelegate.h"
 #import "Resumes.h"
 #import "Jobs.h"
@@ -64,13 +65,13 @@
 //----------------------------------------------------------------------------------------------------------
 - (void)viewDidLoad
 {
+    [super viewDidLoad];
+
     // For convenience, make a type-correct reference to the Resume we're working on
     self._selectedResume = (Resumes *)self.selectedManagedObject;
     
     DLog(@"job count %d", [__selectedResume.job count]);
     
-    [super viewDidLoad];
-    	
 	self.view.backgroundColor = [UIColor clearColor];
     // Set the default button title
     self.backButtonTitle        = NSLocalizedString(@"Resume", nil);
@@ -90,7 +91,7 @@
     addJobBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [addJobBtn setBackgroundImage: [UIImage imageNamed:@"addButton.png"]
                          forState: UIControlStateNormal];
-    [addJobBtn setFrame:CGRectMake(280, 0, kOCRAddButtonWidth, kOCRAddButtonHeight)];
+    [addJobBtn setFrame:CGRectMake(0, 0, kOCRAddButtonWidth, kOCRAddButtonHeight)];
     [addJobBtn addTarget: self
                   action: @selector(promptForJobName)
         forControlEvents: UIControlEventTouchUpInside];
@@ -98,7 +99,7 @@
     addEducationBtn = [UIButton buttonWithType: UIButtonTypeCustom];
     [addEducationBtn setBackgroundImage: [UIImage imageNamed:@"addButton.png"]
                                forState: UIControlStateNormal];
-    [addEducationBtn setFrame: CGRectMake(280, 0, kOCRAddButtonWidth, kOCRAddButtonHeight)];
+    [addEducationBtn setFrame: CGRectMake(0, 0, kOCRAddButtonWidth, kOCRAddButtonHeight)];
     [addEducationBtn addTarget: self
                         action: @selector(promptForEducationName)
               forControlEvents: UIControlEventTouchUpInside];
@@ -697,25 +698,22 @@
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
     DLog();
-	UILabel *sectionLabel = [[UILabel alloc] initWithFrame: CGRectMake(0, 0, 260.0f, kOCRAddButtonHeight)];
-	[sectionLabel setFont: [UIFont preferredFontForTextStyle:UIFontTextStyleBody]];
-	[sectionLabel setTextColor: [UIColor blackColor]];
-	[sectionLabel setBackgroundColor: [UIColor clearColor]];
+    OCRTableViewHeaderCell *headerView = [tableView dequeueReusableCellWithIdentifier:kOCRHeaderCell];
+    
+	[headerView.sectionLabel setFont: [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline]];
+	[headerView.sectionLabel setTextColor: [UIColor blackColor]];
+	[headerView.sectionLabel setBackgroundColor: [UIColor clearColor]];
     
 	switch (section) {
 		case k_JobsSection: {
-			sectionLabel.text   = NSLocalizedString(@"Professional History", nil);
-            UIView *sectionView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 280.0f, kOCRAddButtonHeight)];
-            [sectionView addSubview: sectionLabel];
-            [sectionView addSubview: addJobBtn];
-			return sectionView;
+			headerView.sectionLabel.text    = NSLocalizedString(@"Professional History", nil);
+            headerView.addButton            = addJobBtn;
+			return headerView;
 		}
 		case k_EducationSection: {
-			sectionLabel.text = NSLocalizedString(@"Education & Certifications", nil);
-            UIView *sectionView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 280.0f, kOCRAddButtonHeight)];
-            [sectionView addSubview: sectionLabel];
-            [sectionView addSubview: addEducationBtn];
-			return sectionView;
+			headerView.sectionLabel.text    = NSLocalizedString(@"Education & Certifications", nil);
+            headerView.addButton            = addEducationBtn;
+			return headerView;
 		}
 		default:
 			ALog(@"Unexpected section = %d", section);
@@ -727,9 +725,10 @@
 //----------------------------------------------------------------------------------------------------------
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-	return 44;
+	return kOCRHeaderCellHeight;
 }
 
+//----------------------------------------------------------------------------------------------------------
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     DLog();

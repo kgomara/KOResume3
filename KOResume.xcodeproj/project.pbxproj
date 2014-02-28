@@ -56,6 +56,8 @@
 		D6AC3D3F179A3F21001D8D75 /* OCRPackagesCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D6AC3D3D179A3F21001D8D75 /* OCRPackagesCell.m */; };
 		D6B016B51793C16900B86B8D /* KOResume.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = D6B016B41793C16900B86B8D /* KOResume.sqlite */; };
 		D6B016B61793C16900B86B8D /* KOResume.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = D6B016B41793C16900B86B8D /* KOResume.sqlite */; };
+		D6B256BD18C00554006A0343 /* OCRTableViewHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D6B256BC18C00554006A0343 /* OCRTableViewHeaderCell.m */; };
+		D6B256BE18C00554006A0343 /* OCRTableViewHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D6B256BC18C00554006A0343 /* OCRTableViewHeaderCell.m */; };
 		D6B408101798E9DF00C567FF /* OCRPackagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D63D82DA179311350065F0A9 /* OCRPackagesViewController.m */; };
 		D6B408111798E9ED00C567FF /* OCRAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D63D82CE179311350065F0A9 /* OCRAppDelegate.m */; };
 		D6B408121798E9F600C567FF /* OCRBaseDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D63D82DD179311350065F0A9 /* OCRBaseDetailViewController.m */; };
@@ -188,6 +190,8 @@
 		D6AC3D3C179A3F21001D8D75 /* OCRPackagesCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRPackagesCell.h; path = Classes/OCRPackagesCell.h; sourceTree = "<group>"; };
 		D6AC3D3D179A3F21001D8D75 /* OCRPackagesCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRPackagesCell.m; path = Classes/OCRPackagesCell.m; sourceTree = "<group>"; };
 		D6B016B41793C16900B86B8D /* KOResume.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; name = KOResume.sqlite; path = Resources/KOResume.sqlite; sourceTree = "<group>"; };
+		D6B256BB18C00554006A0343 /* OCRTableViewHeaderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRTableViewHeaderCell.h; path = Classes/OCRTableViewHeaderCell.h; sourceTree = "<group>"; };
+		D6B256BC18C00554006A0343 /* OCRTableViewHeaderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRTableViewHeaderCell.m; path = Classes/OCRTableViewHeaderCell.m; sourceTree = "<group>"; };
 		D6BA20EC17B881E90068F4D9 /* OCRCoverLtrViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRCoverLtrViewController.h; path = Classes/OCRCoverLtrViewController.h; sourceTree = "<group>"; };
 		D6BA20ED17B881E90068F4D9 /* OCRCoverLtrViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRCoverLtrViewController.m; path = Classes/OCRCoverLtrViewController.m; sourceTree = "<group>"; };
 		D6BFCF4118748D8F0088D928 /* OCAUtilities.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OCAUtilities.xcodeproj; path = OCAUtilities/OCAUtilities/OCAUtilities.xcodeproj; sourceTree = SOURCE_ROOT; };
@@ -389,6 +393,8 @@
 				D63D82DA179311350065F0A9 /* OCRPackagesViewController.m */,
 				D6C61B37189DF1F6003E996B /* OCRResumeViewController.h */,
 				D6C61B38189DF1F6003E996B /* OCRResumeViewController.m */,
+				D6B256BB18C00554006A0343 /* OCRTableViewHeaderCell.h */,
+				D6B256BC18C00554006A0343 /* OCRTableViewHeaderCell.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -626,6 +632,7 @@
 				D63D82CF179311350065F0A9 /* OCRAppDelegate.m in Sources */,
 				D6C61B39189DF1F6003E996B /* OCRResumeViewController.m in Sources */,
 				D6D571B11793366000034AF3 /* OCRCoreDataController.m in Sources */,
+				D6B256BD18C00554006A0343 /* OCRTableViewHeaderCell.m in Sources */,
 				D63D82DE179311350065F0A9 /* OCRBaseDetailViewController.m in Sources */,
 				D6C6F15918B27AD3003A8C92 /* KOResume.xcdatamodeld in Sources */,
 				D6AC3D3E179A3F21001D8D75 /* OCRPackagesCell.m in Sources */,
@@ -656,6 +663,7 @@
 				D6D572141793A78600034AF3 /* _Education.m in Sources */,
 				D6B408111798E9ED00C567FF /* OCRAppDelegate.m in Sources */,
 				D6AC3D3F179A3F21001D8D75 /* OCRPackagesCell.m in Sources */,
+				D6B256BE18C00554006A0343 /* OCRTableViewHeaderCell.m in Sources */,
 				D6B486471796486B009E6A14 /* Accomplishments.m in Sources */,
 				D6B4864917964876009E6A14 /* Education.m in Sources */,
 				D6C6F15A18B27AD3003A8C92 /* KOResume.xcdatamodeld in Sources */,
