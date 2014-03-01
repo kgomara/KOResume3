@@ -92,4 +92,13 @@
  */
 @property (strong, nonatomic) IBOutlet UITableView            *tableView;
 
+/**
+ Handles taps of the addButton (+ image) on the section header views
+ 
+ The tableView:viewForHeaderInSection: method sets the tag field to the
+ section number in order to differentiate between adding jobs vs. education.
+ @param sender the UIButton that was tapped.
+ */
+- (IBAction)didPressAddButton:(id)sender;
+
 @end

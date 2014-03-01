@@ -56,9 +56,12 @@
 @property (nonatomic, strong)   NSString            *_jobName;
 @property (nonatomic, strong)   Resumes             *_selectedResume;
 
+@property (nonatomic, assign, getter=isEditing) BOOL editing;
+
 @end
 
 @implementation OCRResumeViewController
+
 
 #pragma mark - Life Cycle methods
 
@@ -73,6 +76,7 @@
     DLog(@"job count %d", [__selectedResume.job count]);
     
 	self.view.backgroundColor = [UIColor clearColor];
+    
     // Set the default button title
     self.backButtonTitle        = NSLocalizedString(@"Resume", nil);
     
@@ -88,24 +92,11 @@
                                                                 target: self
                                                                 action: @selector(didPressCancelButton)];
     
-    addJobBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [addJobBtn setBackgroundImage: [UIImage imageNamed:@"addButton.png"]
-                         forState: UIControlStateNormal];
-    [addJobBtn setFrame:CGRectMake(0, 0, kOCRAddButtonWidth, kOCRAddButtonHeight)];
-    [addJobBtn addTarget: self
-                  action: @selector(promptForJobName)
-        forControlEvents: UIControlEventTouchUpInside];
-    
-    addEducationBtn = [UIButton buttonWithType: UIButtonTypeCustom];
-    [addEducationBtn setBackgroundImage: [UIImage imageNamed:@"addButton.png"]
-                               forState: UIControlStateNormal];
-    [addEducationBtn setFrame: CGRectMake(0, 0, kOCRAddButtonWidth, kOCRAddButtonHeight)];
-    [addEducationBtn addTarget: self
-                        action: @selector(promptForEducationName)
-              forControlEvents: UIControlEventTouchUpInside];
-    
     // ...and the NavBar
     [self configureDefaultNavBar];
+    
+    // Set editing off
+    self.editing = NO;
     
     [self sortTables];
 }
@@ -388,7 +379,14 @@
 {
     DLog();
     
-    // Enable table editing
+    // Turn editing on
+    self.editing = YES;
+
+    // ...show the add buttons
+    [addJobBtn          setHidden: NO];
+    [addEducationBtn    setHidden: NO];
+    
+    // ...enable table editing
     [self.tableView setEditing: YES];
     // ...and enable resume fields
     [self setFieldsEditable: YES];
@@ -400,10 +398,6 @@
         self.navigationItem.leftBarButtonItem  = cancelBtn;
         self.navigationItem.rightBarButtonItem = saveBtn;
     }
-    
-    // ...and show the add buttons
-    [addJobBtn          setHidden: NO];
-    [addEducationBtn    setHidden: NO];
     
     // Start an undo group...it will either be commited in didPressSaveButton or
     //    undone in didPressCancelButton
@@ -423,8 +417,6 @@
 - (void)didPressSaveButton
 {
     DLog();
-    
-    [self setFieldsEditable:NO];
     
     // Reset the sequence_number of the Job and Education items in case they were re-ordered during the edit
     [self resequenceTables];
@@ -446,10 +438,8 @@
     
     // Cleanup the undoManager
     [[[kAppDelegate managedObjectContext] undoManager] removeAllActionsWithTarget:self];
-    // ...and reset the UI defaults
-    [self configureDefaultNavBar];
-    [self resetView];
-    [self.tableView reloadData];
+    // ...and turn off editing in the UI
+    [self setUIForEditing: NO];
 }
 
 
@@ -467,8 +457,6 @@
 {
     DLog();
     
-    [self setFieldsEditable:NO];
-    
     // Undo any changes the user has made
     [[[kAppDelegate managedObjectContext] undoManager] setActionName:kOCRUndoActionName];
     [[[kAppDelegate managedObjectContext] undoManager] endUndoGrouping];
@@ -480,12 +468,49 @@
     
     // Cleanup the undoManager
     [[[kAppDelegate managedObjectContext] undoManager] removeAllActionsWithTarget: self];
-    // ...and reset the UI defaults
-//    self.coverLtrFld.text    = self.selectedPackage.cover_ltr;
+    
+    // ...and turn off editing in the UI
     [self updateDataFields];
+    [self setUIForEditing: NO];
+}
+
+//----------------------------------------------------------------------------------------------------------
+- (void)setUIForEditing:(BOOL)isEditingMode
+{
+    DLog();
+    
+    // Update editing
+    self.editing = isEditingMode;
+    
+    // ...the add buttons (hidden will be the boolean opposite of isEditingMode
+    [addJobBtn          setHidden: !isEditingMode];
+    [addEducationBtn    setHidden: !isEditingMode];
+    
+    // ...enable/disable table editing
+    [self.tableView setEditing: isEditingMode];
+    // ...and enable/disable resume fields
+    [self setFieldsEditable: isEditingMode];
+    
+    // ...and reset the UI defaults
     [self configureDefaultNavBar];
     [self resetView];
     [self.tableView reloadData];
+}
+
+//----------------------------------------------------------------------------------------------------------
+- (IBAction)didPressAddButton:(id)sender
+{
+    DLog();
+    
+    int buttonTag = [(UIButton *)sender tag];
+    
+    if (buttonTag == k_JobsSection) {
+        [self promptForJobName];
+    } else if (buttonTag == k_EducationSection) {
+        [self promptForEducationName];
+    } else {
+        ALog(@"unexpected tag=%d", buttonTag);
+    }
 }
 
 //----------------------------------------------------------------------------------------------------------
@@ -704,15 +729,23 @@
 	[headerView.sectionLabel setTextColor: [UIColor blackColor]];
 	[headerView.sectionLabel setBackgroundColor: [UIColor clearColor]];
     
+    [headerView.addButton setTag:section];
+    
+    if (self.isEditing) {
+        [headerView.addButton setHidden: NO];
+    } else {
+        [headerView.addButton setHidden: YES];
+    }
+    
 	switch (section) {
 		case k_JobsSection: {
 			headerView.sectionLabel.text    = NSLocalizedString(@"Professional History", nil);
-            headerView.addButton            = addJobBtn;
+            addJobBtn                       = headerView.addButton;
 			return headerView;
 		}
 		case k_EducationSection: {
 			headerView.sectionLabel.text    = NSLocalizedString(@"Education & Certifications", nil);
-            headerView.addButton            = addEducationBtn;
+            addEducationBtn                 = headerView.addButton;
 			return headerView;
 		}
 		default:
