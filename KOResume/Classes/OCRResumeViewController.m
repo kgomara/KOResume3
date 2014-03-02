@@ -68,12 +68,12 @@
 //----------------------------------------------------------------------------------------------------------
 - (void)viewDidLoad
 {
+    DLog();
+    
     [super viewDidLoad];
 
     // For convenience, make a type-correct reference to the Resume we're working on
     self._selectedResume = (Resumes *)self.selectedManagedObject;
-    
-    DLog(@"job count %d", [__selectedResume.job count]);
     
 	self.view.backgroundColor = [UIColor clearColor];
     
@@ -106,6 +106,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     DLog();
+    
     [super viewWillAppear: animated];
     
     self.fetchedResultsController.delegate = self;
@@ -141,8 +142,6 @@
     /*
      removeObserver is handled in super class
      */
-    
-    
     [super viewWillDisappear: animated];
 }
 
@@ -164,6 +163,7 @@
 - (void)sortTables
 {
     DLog();
+    
     // Sort jobs in the order they should appear in the table
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey: kOCRSequenceNumberAttributeName
                                                                    ascending: YES];
@@ -256,6 +256,8 @@
              forData:(NSString *)aString
        orPlaceHolder:(NSString *)placeholder
 {
+    DLog();
+    
     if ([aString length] > 0) {
         textField.text          =  aString;
     } else {
@@ -267,6 +269,8 @@
 //----------------------------------------------------------------------------------------------------------
 - (void)setFieldsEditable:(BOOL)editable
 {
+    DLog();
+    
     [_resumeName setEnabled:editable];
     [_resumeStreet1 setEnabled:editable];
     [_resumeCity setEnabled:editable];
@@ -493,7 +497,6 @@
     
     // ...and reset the UI defaults
     [self configureDefaultNavBar];
-    [self resetView];
     [self.tableView reloadData];
 }
 
@@ -517,6 +520,7 @@
 - (void)resequenceTables
 {
     DLog();
+    
     // The job array is in the order (including deletes) the user wants
     // ...loop through the array by index resetting the job's sequence_number attribute
     for (int i = 0; i < [__jobArray count]; i++) {
@@ -540,13 +544,12 @@
 - (void)addJob
 {
     DLog();
+    
     Jobs *job = (Jobs *)[NSEntityDescription insertNewObjectForEntityForName: kOCRJobsEntity
                                                       inManagedObjectContext: [kAppDelegate managedObjectContext]];
     job.name            = __jobName;
     job.created_date    = [NSDate date];
     job.resume          = __selectedResume;
-    
-    [kAppDelegate saveContextAndWait: [kAppDelegate managedObjectContext]];
     
     [__jobArray insertObject: job
                      atIndex: 0];
@@ -566,6 +569,7 @@
 - (void)promptForJobName
 {
     DLog();
+    
     UIAlertView *jobNameAlert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Enter Job Name", nil)
                                                            message: nil
                                                           delegate: self
@@ -582,13 +586,12 @@
 - (void)addEducation
 {
     DLog();
+    
     Education *education = (Education *)[NSEntityDescription insertNewObjectForEntityForName: kOCREducationEntity
                                                                       inManagedObjectContext: [kAppDelegate managedObjectContext]];
     education.name            = __jobName;
     education.created_date    = [NSDate date];
     education.resume          = __selectedResume;
-    
-    [kAppDelegate saveContextAndWait: [kAppDelegate managedObjectContext]];
     
     [__educationArray insertObject: education
                            atIndex: 0];
@@ -608,6 +611,7 @@
 - (void)promptForEducationName
 {
     DLog();
+    
     UIAlertView *educationNameAlert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Enter Institution Name", @"A University or Certificate issuing organization")
                                                                  message: nil
                                                                 delegate: self
@@ -624,6 +628,7 @@
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     DLog();
+    
     if (buttonIndex == 1) {
         // OK button was tapped
         self._jobName = [[alertView textFieldAtIndex: 0] text];
@@ -644,6 +649,8 @@
 //----------------------------------------------------------------------------------------------------------
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
+    DLog();
+    
     return 2;
 }
 
@@ -653,6 +660,7 @@
  numberOfRowsInSection:(NSInteger)section
 {
     DLog(@"section=%d", section);
+    
     NSInteger rowsInSection;
     
 	switch (section) {
@@ -677,6 +685,7 @@
          cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     DLog();
+    
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: @"OCRResumeCell"];
     
 	// Configure the cell.
@@ -692,6 +701,7 @@
                        atIndexPath:(NSIndexPath *) indexPath
 {
     DLog();
+    
     switch (indexPath.section) {
 		case k_JobsSection:
 			cell.textLabel.text         = [[__jobArray objectAtIndex: indexPath.row] name];
@@ -711,7 +721,7 @@
 			ALog(@"Unexpected section = %d", indexPath.section);
 			break;
 	}
-    
+
     return cell;
     
 }
@@ -723,7 +733,27 @@
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
     DLog();
+    
     OCRTableViewHeaderCell *headerView = [tableView dequeueReusableCellWithIdentifier:kOCRHeaderCell];
+    /*
+     There is a bug in UIKit (see https://devforums.apple.com/message/882042#882042) when using UITableViewCell 
+     as the view for section headers. This has been a common practice throughout the iOS programming community.
+     
+     I designed section header views in IB as prototype table view cells - specifically OCRTableViewHeaderCell, 
+     which subclasses UITableViewCell. This provides the benefit of using dequeueReusableCellWithIdentifier: 
+     to get a view for each section header.
+     
+     Unfortunately this resulted in "no index path for table cell being reused" errors in the log output when
+     inserting new rows. Consequently the content (UILabel and UIButton) disappeared. For whatever reason, 
+     UITableView gets confused if the section header views are UITableViewCells (or subclasses) instead of 
+     just regular UIViews.
+
+     What finally solved it was making the header view just a subclass of UIView instead of UITableViewCell. I
+     still use the prototype cell in IB to lay out the section header view, I simply create a "wrapperView" and
+     add the OCRTableViewHeaderCell as a subview.
+     */
+    UIView *wrapperView = [[UIView alloc] initWithFrame:[headerView frame]];
+    [wrapperView addSubview:headerView];
     
 	[headerView.sectionLabel setFont: [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline]];
 	[headerView.sectionLabel setTextColor: [UIColor blackColor]];
@@ -741,23 +771,26 @@
 		case k_JobsSection: {
 			headerView.sectionLabel.text    = NSLocalizedString(@"Professional History", nil);
             addJobBtn                       = headerView.addButton;
-			return headerView;
+            break;
 		}
 		case k_EducationSection: {
 			headerView.sectionLabel.text    = NSLocalizedString(@"Education & Certifications", nil);
             addEducationBtn                 = headerView.addButton;
-			return headerView;
+            break;
 		}
 		default:
 			ALog(@"Unexpected section = %d", section);
-			return nil;
 	}
+    
+    return wrapperView;
 }
 
 
 //----------------------------------------------------------------------------------------------------------
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
+    DLog();
+    
 	return kOCRHeaderCellHeight;
 }
 
@@ -765,6 +798,7 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     DLog();
+    
     NSString *stringToSize  = @"Sample String";
 	CGRect titleRect        = [stringToSize boundingRectWithSize:CGSizeMake( CGRectGetWidth(CGRectIntegral(tableView.bounds)), CGRectGetHeight(CGRectIntegral(tableView.bounds)))
                                                          options:NSStringDrawingUsesLineFragmentOrigin
@@ -787,6 +821,7 @@ commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
  forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     DLog();
+    
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         // Delete the managed object at the given index path.
         if (indexPath.section == k_JobsSection) {
@@ -813,6 +848,7 @@ moveRowAtIndexPath:(NSIndexPath *)fromIndexPath
        toIndexPath:(NSIndexPath *)toIndexPath
 {
     DLog();
+    
     if (fromIndexPath.section != toIndexPath.section) {
         // Cannot move between sections
         [OCAUtilities showErrorWithMessage: NSLocalizedString(@"Sorry, move not allowed.", nil)];
@@ -847,6 +883,7 @@ moveRowAtIndexPath:(NSIndexPath *)fromIndexPath
 //----------------------------------------------------------------------------------------------------------
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    
     DLog();
     switch (indexPath.section) {
 		case k_JobsSection: {
@@ -953,18 +990,7 @@ moveRowAtIndexPath:(NSIndexPath *)fromIndexPath
 //----------------------------------------------------------------------------------------------------------
 - (void)textViewDidEndEditing:(UITextView *)textView
 {
-    DLog();;
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Reset the view to it default state
- */
-- (void)resetView
-{
     DLog();
-    
 }
 
 
@@ -974,6 +1000,7 @@ moveRowAtIndexPath:(NSIndexPath *)fromIndexPath
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
 {
     DLog();
+    
     // The fetch controller is about to start sending change notifications, so prepare the table view for updates.
     [self.tableView beginUpdates];
 }
@@ -1022,6 +1049,7 @@ moveRowAtIndexPath:(NSIndexPath *)fromIndexPath
      forChangeType:(NSFetchedResultsChangeType)type
 {
     DLog();
+    
     switch(type) {
         case NSFetchedResultsChangeInsert:
             [_tableView insertSections: [NSIndexSet indexSetWithIndex: sectionIndex]
@@ -1040,6 +1068,7 @@ moveRowAtIndexPath:(NSIndexPath *)fromIndexPath
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
     DLog();
+    
     // The fetch controller has sent all current change notifications, so tell the table view to process all updates.
     [_tableView endUpdates];
 }

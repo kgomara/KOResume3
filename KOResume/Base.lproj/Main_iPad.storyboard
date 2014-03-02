@@ -331,7 +331,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Axf-Xl-ycX">
-                                                    <rect key="frame" x="614" y="7" width="29" height="29"/>
+                                                    <rect key="frame" x="82" y="7" width="29" height="29"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="29" id="Mkj-bF-Bzf"/>
@@ -348,10 +348,10 @@
                                             </subviews>
                                             <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                             <constraints>
+                                                <constraint firstItem="Axf-Xl-ycX" firstAttribute="leading" secondItem="bJT-bp-GHN" secondAttribute="trailing" constant="20" id="0dD-oe-oDe"/>
                                                 <constraint firstAttribute="centerY" secondItem="Axf-Xl-ycX" secondAttribute="centerY" id="7OZ-Qa-PbO"/>
                                                 <constraint firstAttribute="centerY" secondItem="bJT-bp-GHN" secondAttribute="centerY" id="XHh-Ls-7eD"/>
                                                 <constraint firstItem="bJT-bp-GHN" firstAttribute="leading" secondItem="jkn-0J-GWg" secondAttribute="leading" constant="20" symbolic="YES" id="jdA-kx-lk7"/>
-                                                <constraint firstAttribute="trailing" secondItem="Axf-Xl-ycX" secondAttribute="trailing" constant="20" symbolic="YES" id="rQI-FA-NDh"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
