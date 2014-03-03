@@ -36,36 +36,38 @@
 {
 @private
     /**
-     
+     Array to keep track of changes made to collectionView section.
      */
     NSMutableArray *_sectionChanges;
+    
+    /**
+     Array to keep track of changes made to collectionView objects.
+     */
     NSMutableArray *_objectChanges;
 }
 
 /**
- 
+ The popoverController of the for the splitView.
  */
-@property (nonatomic, strong) NSString                      *packageName;
 @property (nonatomic, strong) UIPopoverController           *packagesPopoverController;
+
+/**
+ The back button for the root popover.
+ */
 @property (nonatomic, strong) UIBarButtonItem               *rootPopoverButtonItem;
 
+/**
+ Reference to the fetchResultsController.
+ */
 @property (nonatomic, strong) NSFetchedResultsController    *fetchedResultsController;
-
-
-
-- (void)promptForPackageName;
-- (void)addPackage;
-- (void)configureCell:(UICollectionViewCell *)cell
-          atIndexPath:(NSIndexPath *)indexPath;
-- (void)configureDefaultNavBar;
-- (BOOL)saveMoc:(NSManagedObjectContext *)moc;
 
 @end
 
 @implementation OCRPackagesViewController
 
-@synthesize packagesPopoverController = _packagesPopoverController;
-
+/**
+ Flag to indicate the UI is in editing state.
+ */
 BOOL isEditModeActive;
 
 #pragma mark - View lifecycle
@@ -88,8 +90,11 @@ BOOL isEditModeActive;
     // ...and set the collectionView into paging mode
     self.collectionView.pagingEnabled = YES;
     
+    // If the device is an iPad...
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+        // Set the clearsSelectionOnViewWillAppear property to keep selected cells
         self.clearsSelectionOnViewWillAppear    = NO;
+        // ...and set the content size of our view
         self.preferredContentSize               = CGSizeMake(320.0, 600.0);
     }
     
@@ -131,16 +136,6 @@ BOOL isEditModeActive;
 }
 
 //----------------------------------------------------------------------------------------------------------
-- (void)viewDidUnload
-{
-    DLog();
-    [super viewDidUnload];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver: self];
-}
-
-
-//----------------------------------------------------------------------------------------------------------
 - (void)didReceiveMemoryWarning
 {
     // Releases the view if it doesn't have a superview.
@@ -178,9 +173,12 @@ BOOL isEditModeActive;
                                                  name: kOCRApplicationDidMergeChangesFrom_iCloudNotification
                                                object: nil];
     
+    // Loop through all the packages writing their debugDescription to the log
     for (Packages *aPackage in [self.fetchedResultsController fetchedObjects]) {
         DLog(@"%@", [aPackage debugDescription]);
     }
+    
+    // Reload the fetched results
     [self reloadFetchedResults: nil];
 }
 
@@ -201,17 +199,22 @@ BOOL isEditModeActive;
 //----------------------------------------------------------------------------------------------------------
 - (BOOL)shouldAutorotate
 {
+    // Always support rotation
     return YES;
 }
 
 //----------------------------------------------------------------------------------------------------------
 - (NSUInteger)supportedInterfaceOrientations
 {
+    // All interface orientations are supported
     return UIInterfaceOrientationMaskAll;
 }
 
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Configure the default items for the navigation bar.
+ */
 - (void)configureDefaultNavBar
 {
     DLog();
@@ -228,10 +231,16 @@ BOOL isEditModeActive;
 #pragma mark - UITextKit handlers
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Called when the user changes the size of dynamic text.
+ 
+ @param aNotification   the notification sent with the UIContentSizeCategoryDidChangeNotification notification
+ */
 - (void)userTextSizeDidChange:(NSNotification *)aNotification
 {
     DLog();
     
+    // Reload the collection view, which in turn causes the collectionView cells to update their fonts
     [self.collectionView reloadData];
 }
 
@@ -239,34 +248,56 @@ BOOL isEditModeActive;
 #pragma mark - UI handlers
 
 //----------------------------------------------------------------------------------------------------------
-- (void)addPackage
+/**
+ Add a new Package object.
+ 
+ @param aPackage    the name of the Package to add.
+ */
+- (void)addPackage:(NSString *)aPackage
 {
     DLog();
+    
+    // Insert a new Package into the managed object context
     Packages *nuPackage = (Packages *)[NSEntityDescription insertNewObjectForEntityForName: kOCRPackagesEntity
                                                                     inManagedObjectContext: [kAppDelegate managedObjectContext]];
-    nuPackage.name                  = self.packageName;
-    nuPackage.created_date          = [NSDate date];                    // TODO - need to resequence
+    // Set the name of the Package (provided by the user)
+    nuPackage.name                  = aPackage;
+    // ...the created_date to "now"
+    nuPackage.created_date          = [NSDate date];
+    // ...and set its sequence_number to be the last Package
     nuPackage.sequence_numberValue  = [[self.fetchedResultsController fetchedObjects] count];
     
-    //  Add a Resume for the package
+    // Add a Resume for the package
+    // First, insert a new Resume into the managed object context
     Resumes *nuResume  = (Resumes *)[NSEntityDescription insertNewObjectForEntityForName: kOCRResumesEntity
                                                                   inManagedObjectContext: [kAppDelegate managedObjectContext]];
-    nuResume.name                 = NSLocalizedString(@"Resume", nil);
-    nuResume.created_date         = [NSDate date];
-    nuResume.sequence_numberValue = 1;
-    nuPackage.resume              = nuResume;
+    // Set the default name of the resume
+    nuResume.name                   = NSLocalizedString(@"Resume", nil);
+    // ...the created_date to "now"
+    nuResume.created_date           = [NSDate date];
+    // ...and set its sequence_number to 1 (there can be only 1)
+    nuResume.sequence_numberValue   = 1;
+
+    // Set the relationship between the Package and Resume objects
+    nuPackage.resume                = nuResume;
     
+    // Save all the changes to the context, and wait for the operation to complete...
     [kAppDelegate saveContextAndWait: [kAppDelegate managedObjectContext]];
-        
+    // ...when the save completes, reload the data
     [self reloadFetchedResults: nil];
+    // ...and collectionView
     [self.collectionView reloadData];
 }
 
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Prompt the user to enter a name for the new Package object
+ */
 - (void)promptForPackageName
 {
     DLog();
+    
     UIAlertView *packageNameAlert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Enter Package Name", nil)
                                                                message: nil
                                                               delegate: self
@@ -279,15 +310,19 @@ BOOL isEditModeActive;
 
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Handle dismissal of the alert
+ */
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     DLog();
+    
+    // Check whether the user entered a Package name or cancelled
     if (buttonIndex == 1) {
-        // OK
-        self.packageName = [[alertView textFieldAtIndex: 0] text];
-        [self addPackage];
+        // OK - get the Package name from the alertView and pass it to addPackage
+        [self addPackage: [[alertView textFieldAtIndex: 0] text]];
     } else {
-        // User cancelled
+        // Cancel - reset the UI to "normal" state
         [self configureDefaultNavBar];
     }
 }
