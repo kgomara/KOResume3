@@ -2,8 +2,8 @@
 //  OCRAppDelegate.m
 //  KOResume
 //
-//  Created by Kevin O'Mara on 7/14/13.
-//  Copyright (c) 2013-2014 O'Mara Consulting Associates. All rights reserved.
+//  Created by Kevin O'Mara on 3/9/11.
+//  Copyright (c) 2011-2014 O'Mara Consulting Associates. All rights reserved.
 //
 
 #import "OCRAppDelegate.h"
@@ -19,7 +19,7 @@
  
  @param application The UIApplication singleton app object.
  @param launchOptions   An NSDictionary indicating the reason the app was launched (if any).
- @return BOOL           Always returns YES
+ @return BOOL           Always returns YES.
  */
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -29,6 +29,7 @@
     // Set the overall tint color
     self.window.tintColor = [UIColor redColor];     // window is nil!!!!!
     
+    // Initialize the coreDataController class.
     _managedObjectContext = self.coreDataController.managedObjectContext;
     if (!_managedObjectContext) {
         ALog(@"Could not get managedObjectContext");
@@ -55,7 +56,7 @@
 							
 //----------------------------------------------------------------------------------------------------------
 /**
- Invoked by the framework when the app is about to become inactive
+ Invoked by the framework when the app is about to become inactive.
  
  @param application The UIApplication singleton app object.
  */
@@ -93,7 +94,7 @@
 
 //----------------------------------------------------------------------------------------------------------
 /**
- Invoked by the framework when the app is about to enter foreground
+ Invoked by the framework when the app is about to enter foreground.
  
  @param application The UIApplication singleton app object.
  */
@@ -108,7 +109,7 @@
 
 //----------------------------------------------------------------------------------------------------------
 /**
- Invoked by the framework when the application has become active
+ Invoked by the framework when the application has become active.
  
  @param application The UIApplication singleton app object.
  */
@@ -123,7 +124,7 @@
 
 //----------------------------------------------------------------------------------------------------------
 /**
- Invoked by the framework when the application is about to terminate
+ Invoked by the framework when the application is about to terminate.
  
  @param application The UIApplication singleton app object.
  */
@@ -157,14 +158,6 @@
 
 
 //----------------------------------------------------------------------------------------------------------
-/**
- Save any changes made to the NSManagedObjectContext
- 
- This method adds the block to the backing queue to run on its own thread - i.e., asynchronously. The method
- will return to its caller immediately.
- 
- @param moc the managed object context to save
- */
 - (void)saveContext: (NSManagedObjectContext *)moc
 {
     DLog();
@@ -188,19 +181,11 @@
 
 
 //----------------------------------------------------------------------------------------------------------
-/**
- Save any changes made to the NSManagedObjectContext
- 
- This method adds the block to the backing queue to run on its own thread, however does not return until the
- block is finished executing.
- 
- @param moc the managed object context to save
- */
 - (void)saveContextAndWait: (NSManagedObjectContext *)moc
 {
     DLog();
     
-    // Save changes to application's managed object context
+    // Save changes to application's managed object context.
     __block NSError *error = nil;
     [moc performBlockAndWait:^{
         [moc save: &error];

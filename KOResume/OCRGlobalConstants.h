@@ -3,7 +3,7 @@
 //  KOResume
 //
 //  Created by Kevin O'Mara on 6/11/13.
-//  Copyright (c) 2013 O'Mara Consulting Associates. All rights reserved.
+//  Copyright (c) 2013-2014 O'Mara Consulting Associates. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>

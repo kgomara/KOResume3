@@ -2,8 +2,8 @@
 //  OCRResumeViewController.h
 //  KOResume
 //
-//  Created by Kevin O'Mara on 2/1/14.
-//  Copyright (c) 2014 O'Mara Consulting Associates. All rights reserved.
+//  Created by Kevin O'Mara on 3/9/11.
+//  Copyright (c) 2011-2014 O'Mara Consulting Associates. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

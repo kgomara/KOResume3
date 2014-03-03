@@ -11,12 +11,18 @@
 #import "OCRPackagesViewController.h"
 
 /**
- OCRDetailViewProtocol is a protocol that detail view controllers must adopt. It defines methods that the base class can invoke of subclasses.
+ OCRDetailViewProtocol is a protocol that detail view controllers must adopt. It defines methods that the base class can invoke on subclasses.
  */
 @protocol OCRDetailViewProtocol <NSObject>
 
 @required
 
+/**
+ The method is called on the subclass when the selectedManagedObject changes.
+ 
+ The subclass should update it's view to reflect the new data and perform other operations
+ appropriate for its context.
+ */
 - (void)configureView;
 
 @end
@@ -27,12 +33,12 @@
 @interface OCRBaseDetailViewController : UIViewController <UITableViewDelegate, SubstitutableDetailViewController>
 
 /**
- The package that the user selected in the master view controller
+ The package the user selected in the master view controller
  */
 @property (nonatomic, strong) NSManagedObject               *selectedManagedObject;
 
 /**
- The fetchedResultsController used to retrieve the selectedPackare
+ The fetchedResultsController used to retrieve the selectedPackage
  */
 @property (nonatomic, strong) NSFetchedResultsController    *fetchedResultsController;
 

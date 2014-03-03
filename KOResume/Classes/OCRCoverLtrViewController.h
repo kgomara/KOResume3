@@ -2,15 +2,15 @@
 //  OCRCoverLtrViewController.h
 //  KOResume
 //
-//  Created by Kevin O'Mara on 8/11/13.
-//  Copyright (c) 2013 O'Mara Consulting Associates. All rights reserved.
+//  Created by Kevin O'Mara on 3/15/11.
+//  Copyright (c) 2011-2014 O'Mara Consulting Associates. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 #import "OCRBaseDetailViewController.h"
 
 /**
- The view controller that manages cover letter objects
+ The view controller that manages cover letter objects.
  */
 @interface OCRCoverLtrViewController : OCRBaseDetailViewController <UITextViewDelegate, UISplitViewControllerDelegate, OCRDetailViewProtocol>
 

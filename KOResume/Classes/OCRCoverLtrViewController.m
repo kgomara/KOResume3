@@ -2,8 +2,8 @@
 //  OCRCoverLtrViewController.m
 //  KOResume
 //
-//  Created by Kevin O'Mara on 8/11/13.
-//  Copyright (c) 2013 O'Mara Consulting Associates. All rights reserved.
+//  Created by Kevin O'Mara on 3/15/11.
+//  Copyright (c) 2011-2014 O'Mara Consulting Associates. All rights reserved.
 //
 
 #import "OCRCoverLtrViewController.h"
@@ -51,7 +51,7 @@
     // Set the default button title
     self.backButtonTitle        = NSLocalizedString(@"Packages", nil);
     
-    // Set up btn items
+    // Set up button items
     backBtn     = self.navigationItem.leftBarButtonItem;
     editBtn     = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemEdit
                                                                 target: self
@@ -72,9 +72,10 @@
     DLog();
     [super viewWillAppear: animated];
     
+    // Set up the navigation bar items
     [self configureDefaultNavBar];
+    // ...and configure the view
     [self configureView];
-    [self updateDataFields];
     
     // Register for keyboard notifications
     [[NSNotificationCenter defaultCenter] addObserver: self
@@ -105,46 +106,25 @@
 
 
 //----------------------------------------------------------------------------------------------------------
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    // Return YES for supported orientations.
-    return YES;
-}
-
-
-//----------------------------------------------------------------------------------------------------------
 /**
- Configure the view items
+ Update the text fields of the view from the selected cover_ltr.
  */
-- (void)configureView
+- (void)loadViewFromSelectedObject
 {
     DLog();
     
-    self.navigationItem.title = NSLocalizedString(@"Cover Letter", nil);
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Update the data fields of the view - the cover letter
- */
-- (void)updateDataFields
-{
-    DLog();
-    
-    // get the cover letter into the view
+    // Load the cover letter into the view
     if ([(Packages *)self.selectedManagedObject cover_ltr]) {
         self.coverLtrFld.text	= [(Packages *)self.selectedManagedObject cover_ltr];
     } else {
         self.coverLtrFld.text	= @"";
-//        [self didPressEditButton];
     }
 }
 
 
 //----------------------------------------------------------------------------------------------------------
 /**
- Configure the default items for the navigation bar
+ Configure the default items for the navigation bar.
  */
 - (void)configureDefaultNavBar
 {
@@ -158,15 +138,40 @@
     [self.coverLtrFld setEditable:NO];
 }
 
+#pragma mark - OCRDetailViewProtocol delegates
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Configure the view items. 
+ 
+ This method is called when the selectedManagedObject changes.
+ */
+- (void)configureView
+{
+    DLog();
+    
+    /*
+     The navigation bar title is set here rather configureDefaultNavBar to be consistent with this delegate
+     method in other OCRBaseDetailViewController subclasses where the title may change if he selected object
+     changes.
+     */
+
+    // Set the title in the navigation bar.
+    self.navigationItem.title = NSLocalizedString(@"Cover Letter", nil);
+    // ...and load the data fields with updated data from the selected object.
+    [self loadViewFromSelectedObject];
+}
+
+
 #pragma mark - UI handlers
 
 //----------------------------------------------------------------------------------------------------------
 /**
- Invoked when the user taps the Edit button
+ Invoked when the user taps the Edit button.
  
- * Setup the navigation bar for editing
- * Enable editable fields
- * Start an undo group on the NSManagedObjectContext
+ * Setup the navigation bar for editing.
+ * Enable editable fields.
+ * Start an undo group on the NSManagedObjectContext.
  
  */
 - (void)didPressEditButton
@@ -183,28 +188,31 @@
     // Start an undo group...it will either be commited in didPressSaveButton or
     //    undone in didPressCancelButton
     [[[kAppDelegate managedObjectContext] undoManager] beginUndoGrouping];
+    // ...and bring the keyboard onscreen with the cursor in coverLtrFld
     [self.coverLtrFld becomeFirstResponder];
 }
 
 
 //----------------------------------------------------------------------------------------------------------
 /**
- Invoked when the user taps the Save button
+ Invoked when the user taps the Save button.
  
- * Save the changes to the NSManagedObjectContext
- * Cleanup the undo group on the NSManagedObjectContext
- * Reset the navigation bar to its default state
+ * Save the changes to the NSManagedObjectContext.
+ * Cleanup the undo group on the NSManagedObjectContext.
+ * Reset the navigation bar to its default state.
  
  */
 - (void)didPressSaveButton
 {
     DLog();
     
-    // Save the changes
+    // Save the changes from the textView into the selected cover letter
     [(Packages *)self.selectedManagedObject setCover_ltr:self.coverLtrFld.text];
     
+    // We've complete editing, "close" the undo group
     [[[kAppDelegate managedObjectContext] undoManager] endUndoGrouping];
     
+    // ...commit the changes
     [kAppDelegate saveContext: [self.fetchedResultsController managedObjectContext]];
     
     // Cleanup the undoManager
@@ -217,12 +225,12 @@
 
 //----------------------------------------------------------------------------------------------------------
 /**
- Invoked when the user taps the Cancel button
+ Invoked when the user taps the Cancel button.
  
- * End the undo group on the NSManagedObjectContext
- * If the undoManager has changes it canUndo, undo them
- * Cleanup the undoManager
- * Reset the UI to its default state
+ * End the undo group on the NSManagedObjectContext.
+ * If the undoManager has changes it canUndo, undo them.
+ * Cleanup the undoManager.
+ * Reset the UI to its default state.
  
  */
 - (void)didPressCancelButton
@@ -239,9 +247,9 @@
     
     // Cleanup the undoManager
     [[[kAppDelegate managedObjectContext] undoManager] removeAllActionsWithTarget: self];
+    // ...re-load the view with the data from the (unchanged) cover letter
+    [self loadViewFromSelectedObject];
     // ...and reset the UI defaults
-    self.coverLtrFld.text    = [(Packages *)self.selectedManagedObject cover_ltr];
-    [self updateDataFields];
     [self configureDefaultNavBar];
     [self resetView];
 }
@@ -250,11 +258,11 @@
 
 //----------------------------------------------------------------------------------------------------------
 /**
- Invoked when the keyboard is about to show
+ Invoked when the keyboard is about to show.
  
- Scroll the content to ensure the active field is visible
+ Scroll the content to ensure the active field is visible.
  
- @param aNotification   the NSNotification containing information about the keyboard
+ @param aNotification   the NSNotification containing information about the keyboard.
  */
 - (void)keyboardWillShow:(NSNotification*)aNotification
 {
@@ -283,11 +291,11 @@
 
 //----------------------------------------------------------------------------------------------------------
 /**
- Invoked when the keyboard is about to be hidden
+ Invoked when the keyboard is about to be hidden.
  
- Reset the contentInsets to "zero"
+ Reset the contentInsets to "zero".
  
- @param aNotification   the NSNotification containing information about the keyboard
+ @param aNotification   the NSNotification containing information about the keyboard.
  */
 - (void)keyboardWillBeHidden:(NSNotification*)aNotification
 {
@@ -319,7 +327,7 @@
 
 //----------------------------------------------------------------------------------------------------------
 /**
- Reset the view to it default state
+ Reset the view to it default state.
  */
 - (void)resetView
 {
@@ -332,18 +340,20 @@
 
 //----------------------------------------------------------------------------------------------------------
 /**
- Reloads the fetched results
+ Reloads the fetched results.
  
- Invoke by notification that the underlying data objects may have changed
+ Invoked by notification whhen the underlying data objects may have changed.
  
- @param aNote the NSNotification describing the changes (ignored)
+ @param aNote the NSNotification describing the changes.
  */
-- (void)reloadFetchedResults:(NSNotification*)aNote                          // TODO - base class also registers for this notification
+- (void)reloadFetchedResults:(NSNotification*)aNote
 {
     DLog();
     
-    [super reloadFetchedResults: aNote];                                     // TODO - base class does performBlock...is it async?
-    [self updateDataFields];
+    // Invoke super to fetch the object(s)
+    [super reloadFetchedResults: aNote];
+    // ...and update the view with the new data
+    [self loadViewFromSelectedObject];
 }
 
 @end

@@ -2,8 +2,8 @@
 //  OCRPackagesViewController.m
 //  KOResume
 //
-//  Created by Kevin O'Mara on 7/14/13.
-//  Copyright (c) 2013 O'Mara Consulting Associates. All rights reserved.
+//  Created by Kevin O'Mara on 6/5/11.
+//  Copyright (c) 2011-2014 O'Mara Consulting Associates. All rights reserved.
 //
 
 #import "OCRPackagesViewController.h"
@@ -16,7 +16,7 @@
 //#import "InfoViewController.h"
 
 /**
- The UIViewController manages Packages objects
+ Manage Packages objects.
  
  It uses a UICollectionView to display the list of Packages, and dispatches OCRCoverLtrViewController or OCRResumeViewController.
  
@@ -31,8 +31,6 @@
 
 #define k_cover_ltrRow      0
 #define k_resumeRow         1
-
-// TODO - implement UITextkit resizing and -collectionView: layout: sizeForItemAtIndexPath:
 
 @interface OCRPackagesViewController ()
 {
@@ -84,7 +82,6 @@ BOOL isEditModeActive;
     layout.minimumLineSpacing       = 6;
     layout.scrollDirection          = UICollectionViewScrollDirectionVertical;
     layout.sectionInset             = UIEdgeInsetsMake(5, 5, 5, 5);
-//    [layout setItemSize: CGSizeMake(kPackagesCellWidth, kPackagesCellHeight)];
     
     // Set our layout on the collectionView
     self.collectionView.collectionViewLayout = layout;

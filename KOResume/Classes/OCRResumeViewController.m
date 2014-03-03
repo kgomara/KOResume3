@@ -2,8 +2,8 @@
 //  OCRResumeViewController.m
 //  KOResume
 //
-//  Created by Kevin O'Mara on 2/1/14.
-//  Copyright (c) 2014 O'Mara Consulting Associates. All rights reserved.
+//  Created by Kevin O'Mara on 3/9/11.
+//  Copyright (c) 2011-2014 O'Mara Consulting Associates. All rights reserved.
 //
 
 #import "OCRResumeViewController.h"
@@ -80,7 +80,7 @@
     // Set the default button title
     self.backButtonTitle        = NSLocalizedString(@"Resume", nil);
     
-    // Set up btn items
+    // Set up button items
     backBtn     = self.navigationItem.leftBarButtonItem;
     editBtn     = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemEdit
                                                                 target: self
@@ -114,7 +114,6 @@
 
     [self configureDefaultNavBar];
     [self configureView];
-    [self updateDataFields];
     [self setFieldsEditable:NO];
     
     // Register for keyboard notifications
@@ -176,21 +175,9 @@
 
 //----------------------------------------------------------------------------------------------------------
 /**
- Configure the view items
- */
-- (void)configureView
-{
-    DLog();
-    
-    self.navigationItem.title = NSLocalizedString(@"Resume", nil);
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-/**
  Update the data fields of the view - the resume
  */
-- (void)updateDataFields
+- (void)loadViewFromSelectedObject
 {
     DLog();
     
@@ -327,6 +314,21 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark - OCRDetailViewProtocol delegates
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Configure the view items
+ */
+- (void)configureView
+{
+    DLog();
+    
+    self.navigationItem.title = NSLocalizedString(@"Resume", nil);
+    [self loadViewFromSelectedObject];
+}
+
+
 #pragma mark - UITextKit handlers
 
 //----------------------------------------------------------------------------------------------------------
@@ -444,6 +446,7 @@
     [[[kAppDelegate managedObjectContext] undoManager] removeAllActionsWithTarget:self];
     // ...and turn off editing in the UI
     [self setUIForEditing: NO];
+    [self resetView];
 }
 
 
@@ -474,8 +477,9 @@
     [[[kAppDelegate managedObjectContext] undoManager] removeAllActionsWithTarget: self];
     
     // ...and turn off editing in the UI
-    [self updateDataFields];
+    [self loadViewFromSelectedObject];
     [self setUIForEditing: NO];
+    [self resetView];
 }
 
 //----------------------------------------------------------------------------------------------------------
@@ -1076,9 +1080,22 @@ moveRowAtIndexPath:(NSIndexPath *)fromIndexPath
 
 //----------------------------------------------------------------------------------------------------------
 /**
+ Reset the view to it default state
+ */
+- (void)resetView
+{
+    DLog();
+    
+    [self.resumeSummary setContentOffset: CGPointZero
+                                animated: YES];
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+/**
  Reloads the fetched results
  
- Invoke by notification that the underlying data objects may have changed
+ Invoked by notification when the underlying data objects may have changed
  
  @param aNote the NSNotification describing the changes (ignored)
  */
@@ -1087,7 +1104,7 @@ moveRowAtIndexPath:(NSIndexPath *)fromIndexPath
     DLog();
     
     [super reloadFetchedResults: aNote];                                     // TODO - base class does performBlock...is it async?
-    [self updateDataFields];
+    [self loadViewFromSelectedObject];
 }
 
 @end

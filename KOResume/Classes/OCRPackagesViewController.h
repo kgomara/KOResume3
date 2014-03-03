@@ -2,8 +2,8 @@
 //  OCRPackagesViewController.h
 //  KOResume
 //
-//  Created by Kevin O'Mara on 7/14/13.
-//  Copyright (c) 2013 O'Mara Consulting Associates. All rights reserved.
+//  Created by Kevin O'Mara on 6/5/11.
+//  Copyright (c) 2013-2014 O'Mara Consulting Associates. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -23,16 +23,16 @@
 /**
  The master view controller will call this method on the detail view when the bar button item should be shown.
  
- @param aBarButtonItem      the UIBarButtonItem to show
- @param aPopoverController  the UIPopoverController of the master view controller
+ @param aBarButtonItem      the UIBarButtonItem to show.
+ @param aPopoverController  the UIPopoverController of the master view controller.
  */
 - (void)showRootPopoverButtonItem:(UIBarButtonItem *)aBarButtonItem
                    withController:(UIPopoverController *)aPopoverController;
 
 /**
- The master view controller will call this method on the detail view when the bar button item should be hidden
+ The master view controller will call this method on the detail view when the bar button item should be hidden.
  
- @param aBarButtonItem      the UIBarButtonItem to hide
+ @param aBarButtonItem      the UIBarButtonItem to hide.
  */
 - (void)invalidateRootPopoverButtonItem:(UIBarButtonItem *)aBarButtonItem;
 
@@ -42,7 +42,7 @@
                                                                    OCAEditableCollectionViewDataSource, OCAEditableCollectionViewDelegateFlowLayout>
 
 /**
- The managed object context used throughout KOResume
+ The managed object context used throughout KOResume.
  */
 @property (nonatomic, strong) NSManagedObjectContext        *managedObjectContext;
 

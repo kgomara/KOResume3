@@ -3,15 +3,12 @@
 //  KOResume2
 //
 //  Created by Kevin O'Mara on 7/19/13.
-//  Copyright (c) 2013 O'Mara Consulting Associates. All rights reserved.
+//  Copyright (c) 2013-2014 O'Mara Consulting Associates. All rights reserved.
 //
 
 #import "OCRPackagesCell.h"
 
 @implementation OCRPackagesCell
-
-CGFloat const kPackagesCellHeight   = 150.0f;
-CGFloat const kPackagesCellWidth    = 150.0f;
 
 
 //----------------------------------------------------------------------------------------------------------
@@ -21,12 +18,13 @@ CGFloat const kPackagesCellWidth    = 150.0f;
     
     [super awakeFromNib];
     
-    
+    // Register for notifications that the user changed text size preference for dynamic type
     [[NSNotificationCenter defaultCenter] addObserver: self
                                              selector: @selector(preferredContentSizeChanged:)
                                                  name: UIContentSizeCategoryDidChangeNotification
                                                object: nil];
 
+    // ...and retrieve the current settings to set the actual font size of the UI elements in the cell
     [self calculateAndSetFonts];
 }
 
@@ -36,7 +34,17 @@ CGFloat const kPackagesCellWidth    = 150.0f;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+
 //----------------------------------------------------------------------------------------------------------
+/**
+ Called to change the cell's highlighted property.
+ 
+ In our cell prototype we created a view inset of a few pixels and set its background to white.
+ Our highlight visual effect is acheived by changing the background color of the cell, which is
+ occluded by our inset view, leaving a border of the background color.
+ 
+ @param highlighted YES to show the cell in its highlighted state, NO to show it "normal"
+ */
 - (void)setHighlighted: (BOOL)highlighted
 {
     DLog(@"highlighted=%@", highlighted ? @"YES" : @"NO");
@@ -44,11 +52,8 @@ CGFloat const kPackagesCellWidth    = 150.0f;
     // Set the highlighted property on the cell
     [super setHighlighted: highlighted];
     
-    /*
-     In our cell prototype we created a view inset a few pixels and set its background to white.
-     Our highlight visual effect is acheived by changing the background color of the cell, which is
-     occluded by our inset view, leaving a border of the background color.
-     */
+
+    // Update the UI to manifest the highlight effect
     if (highlighted) {
         [self setBackgroundColor:[UIColor redColor]];
     } else {
@@ -58,12 +63,23 @@ CGFloat const kPackagesCellWidth    = 150.0f;
 
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Update the UI when the user changes their preference of text size.
+ 
+ @param aNotification the notifcation object.
+ */
 - (void)preferredContentSizeChanged: (NSNotification *)aNotification
 {
+    DLog();
+    
+    // The user changed their preference for dynamic type size. Update the font size of the UI elements in the cell
     [self calculateAndSetFonts];
 }
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Set the Dynamic Text style currently in effect on the cell's UI elements.
+ */
 - (void) calculateAndSetFonts
 {
     DLog();
@@ -87,12 +103,24 @@ CGFloat const kPackagesCellWidth    = 150.0f;
     [self invalidateIntrinsicContentSize];
 }
 
+//----------------------------------------------------------------------------------------------------------
+/**
+ Getter method for the titleFont.
+ 
+ @return the UIFontTextStyle of the title.
+ */
 + (NSString *)titleFont
 {
     return UIFontTextStyleHeadline;
 }
 
+//----------------------------------------------------------------------------------------------------------
 + (NSString *)detailFont
+/**
+ Getter method for the detailFont.
+ 
+ @return the UIFontTextStyle of the title.
+ */
 {
     return UIFontTextStyleBody;
 }
