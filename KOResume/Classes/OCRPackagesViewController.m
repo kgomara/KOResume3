@@ -111,10 +111,10 @@ BOOL isEditModeActive;
     NSString *title = NSLocalizedString(@"Packages", nil);
 #ifdef DEBUG
     // Include the version in the title for debug builds
-    NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey: @"CFBundleVersion"];
-    self.navigationItem.title = [NSString stringWithFormat:@"%@-%@", title, version];
+    NSString *version           = [[[NSBundle mainBundle] infoDictionary] objectForKey: @"CFBundleVersion"];
+    self.navigationItem.title   = [NSString stringWithFormat: @"%@-%@", title, version];
 #else
-    self.navigationItem.title = title;
+    self.navigationItem.title   = title;
 #endif
     
     // Set up the defaults in the Navigation Bar
@@ -147,9 +147,11 @@ BOOL isEditModeActive;
 
 
 //----------------------------------------------------------------------------------------------------------
-- (void)viewWillAppear:(BOOL)animated
+- (void)viewWillAppear: (BOOL)animated
 {
     DLog();
+    
+    [super viewWillAppear: animated];
     
     [self.navigationItem setHidesBackButton: NO];
     self.fetchedResultsController.delegate = self;
@@ -161,10 +163,10 @@ BOOL isEditModeActive;
                                                object: nil];
     
     // ...add an observer for Dynamic Text size changes
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(userTextSizeDidChange:)
-                                                 name:UIContentSizeCategoryDidChangeNotification
-                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver: self
+                                             selector: @selector(userTextSizeDidChange:)
+                                                 name: UIContentSizeCategoryDidChangeNotification
+                                               object: nil];
     
     
     // ...add an observer for asynchronous iCloud merges - not used in this version
@@ -184,15 +186,17 @@ BOOL isEditModeActive;
 
 
 //----------------------------------------------------------------------------------------------------------
-- (void)viewWillDisappear:(BOOL)animated
+- (void)viewWillDisappear: (BOOL)animated
 {
     // Save any changes
     DLog();
     
-    [self saveMoc: self.managedObjectContext];
+    [super viewWillDisappear: animated];
+    
+    [kAppDelegate saveContext: _managedObjectContext];
     
     // Remove ourself from observing notifications
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [[NSNotificationCenter defaultCenter] removeObserver: self];
 }
 
 
@@ -234,9 +238,9 @@ BOOL isEditModeActive;
 /**
  Called when the user changes the size of dynamic text.
  
- @param aNotification   the notification sent with the UIContentSizeCategoryDidChangeNotification notification
+ @param aNotification   The notification sent with the UIContentSizeCategoryDidChangeNotification notification
  */
-- (void)userTextSizeDidChange:(NSNotification *)aNotification
+- (void)userTextSizeDidChange: (NSNotification *)aNotification
 {
     DLog();
     
@@ -251,9 +255,9 @@ BOOL isEditModeActive;
 /**
  Add a new Package object.
  
- @param aPackage    the name of the Package to add.
+ @param aPackage    The name of the Package to add.
  */
-- (void)addPackage:(NSString *)aPackage
+- (void)addPackage: (NSString *)aPackage
 {
     DLog();
     
@@ -312,8 +316,11 @@ BOOL isEditModeActive;
 //----------------------------------------------------------------------------------------------------------
 /**
  Handle dismissal of the alert
+ 
+ @param buttonIndex     The index of the button the user pressed.
  */
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+- (void)    alertView:(UIAlertView *)alertView
+ clickedButtonAtIndex: (NSInteger)buttonIndex
 {
     DLog();
     
@@ -330,7 +337,12 @@ BOOL isEditModeActive;
 #pragma mark - OCRPackagesCellDelegate methods
 
 //----------------------------------------------------------------------------------------------------------
-- (IBAction)coverLtrButtonTapped: (id)sender
+/**
+ Handle the cover letter button.
+ 
+ @param sender  The UIButton pressed.
+ */
+- (IBAction)didPressCoverLtrButton: (id)sender
 {
     // configureCell:atIndexPath sets the tag on the button
     DLog(@"sender = %d", [(UIButton *)sender tag]);
@@ -339,6 +351,7 @@ BOOL isEditModeActive;
     if (isEditModeActive) {
         // ignore the tap
     } else {
+        // Perform the segue using the identifier in the Storyboard
         [self performSegueWithIdentifier: kOCRCvrLtrSegue
                                   sender: sender];
     }
@@ -346,7 +359,12 @@ BOOL isEditModeActive;
 
 
 //----------------------------------------------------------------------------------------------------------
-- (IBAction)resumeButtonTapped: (id)sender
+/**
+ Handle the resume button.
+ 
+ @param sender  The UIButton pressed.
+ */
+- (IBAction)didPressResumeButton: (id)sender
 {
     // configureCell:atIndexPath sets the tag on the button
     DLog(@"sender = %d", [(UIButton *)sender tag]);
@@ -355,6 +373,7 @@ BOOL isEditModeActive;
     if (isEditModeActive) {
         // ignore the tap
     } else {
+        // Perform the segue using the identifier in the Storyboard
         [self performSegueWithIdentifier: kOCRResumeSegue
                                   sender: sender];
     }
@@ -363,7 +382,13 @@ BOOL isEditModeActive;
 #pragma mark - UICollectionView data source
 
 //----------------------------------------------------------------------------------------------------------
-- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
+/**
+ Return the number of sections in the collection view.
+ 
+ @param collectionView  The collection view object.
+ @return                The number of sections
+ */
+- (NSInteger)numberOfSectionsInCollectionView: (UICollectionView *)collectionView
 {
     /*
      We are hardcoding to 1 here because we want a single section containing all the packages.
@@ -373,6 +398,13 @@ BOOL isEditModeActive;
 
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Return the number of items in a section of the collection view.
+ 
+ @param collectionView  The collection view object
+ @param section         The section for which the number of items is needed.
+ @return                The number of items in the section
+ */
 - (NSInteger)collectionView: (UICollectionView *)collectionView
      numberOfItemsInSection: (NSInteger)section
 {
@@ -392,6 +424,13 @@ BOOL isEditModeActive;
 
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Return a collection view cell configured for the indexPath.
+ 
+ @param collectionView  The collection view object.
+ @param indexPath       The indexPath for the cell needed.
+ @return                A configured cell.
+ */
 - (UICollectionViewCell *)collectionView: (UICollectionView *)collectionView
                   cellForItemAtIndexPath: (NSIndexPath *)indexPath
 {
@@ -410,16 +449,23 @@ BOOL isEditModeActive;
 }
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Helper method to configure a cell when asked by the collection view.
+ 
+ @param cell            The cell to configure.
+ @param indexPath       The indexPath for the cell needed.
+ @return                A configured cell.
+ */
 - (void)configureCell: (OCRPackagesCell *)cell
           atIndexPath: (NSIndexPath *)indexPath
 {
     DLog(@"%@", indexPath.debugDescription);
     
-    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController.sections objectAtIndex:indexPath.section];
-    Packages *aPackage  = (Packages *) [sectionInfo.objects objectAtIndex: indexPath.row];
+    id <NSFetchedResultsSectionInfo> sectionInfo    = [self.fetchedResultsController.sections objectAtIndex: indexPath.section];
+    Packages *aPackage                              = (Packages *) [sectionInfo.objects objectAtIndex: indexPath.row];
     /*
-     Set the tag for the cell and its buttons to the index of the Packages object.
-     The tag property is often used to carry identifying information for later use, in our case, we'll use it in the
+     Set the tag for the cell and its buttons to the row of the Packages object.
+     The tag property is often used to carry identifying information for later use. In our case, we'll use it in the
      button handling routines to know which cover_ltr or resume to segue to.
      */
     cell.tag                = indexPath.row;
@@ -428,7 +474,7 @@ BOOL isEditModeActive;
 
     cell.title.text = aPackage.name;
     
-    // Set the title
+    // Set the title of the resume button
     [cell.resumeButton setTitle: aPackage.resume.name
                        forState: UIControlStateNormal];
     // ...give it a different color when selected
@@ -436,7 +482,7 @@ BOOL isEditModeActive;
                             forState: UIControlStateSelected];
     // ...and add us as target for the cell's resume button
     [cell.resumeButton addTarget: self
-                          action: @selector(resumeButtonTapped:)
+                          action: @selector(didPressResumeButton:)
                 forControlEvents: UIControlEventTouchUpInside];
     
     // Cover letters don't have a specific name attribute, so just
@@ -445,60 +491,29 @@ BOOL isEditModeActive;
                               forState: UIControlStateSelected];
     // ...and add us as target for the cell's resume button
     [cell.coverLtrButton addTarget: self
-                            action: @selector(coverLtrButtonTapped:)
+                            action: @selector(didPressCoverLtrButton:)
                   forControlEvents: UIControlEventTouchUpInside];
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-- (void)        collectionView: (UICollectionView *)collectionView
-   didHighlightItemAtIndexPath: (NSIndexPath *)indexPath
-{
-    DLog();
-    
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-- (void)        collectionView: (UICollectionView *)collectionView
- didUnhighlightItemAtIndexPath: (NSIndexPath *)indexPath
-{
-    DLog();
-    
 }
 
 
 #pragma mark - UICollectionView delegates
 
 //----------------------------------------------------------------------------------------------------------
-- (BOOL)            collectionView:(UICollectionView *)collectionView
-  shouldShowMenuForItemAtIndexPath:(NSIndexPath *)indexPath
+/**
+ Asks the delegate if the specified item should be selected.
+ 
+ The collection view calls this method when the user tries to select an item in the collection view. It does 
+ not call this method when you programmatically set the selection.
+ 
+ If you do not implement this method, the default return value is YES.
+ 
+ @param collectionView  The collection view object that is asking whether the selection should change.
+ @param indexPath       The index path of the cell to be selected.
+ @return                YES if the item should be selected or NO if it should not.
+ */
+- (BOOL)        collectionView: (UICollectionView *)collectionView
+   shouldSelectItemAtIndexPath: (NSIndexPath *)indexPath
 {
-    DLog();
-    
-    return NO;
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-- (BOOL)collectionView:(UICollectionView *)collectionView
-      canPerformAction:(SEL)action
-    forItemAtIndexPath:(NSIndexPath *)indexPath
-            withSender:(id)sender
-{
-    DLog(@"action=%@", NSStringFromSelector(action));
-    
-    return NO;
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-- (BOOL)        collectionView:(UICollectionView *)collectionView
-   shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    /*
-     We want the buttons in the collectionView cells to perform all the actions, so we return NO.
-     */
     DLog();
     
     if (isEditModeActive) {
@@ -508,70 +523,115 @@ BOOL isEditModeActive;
     }
 }
 
-//----------------------------------------------------------------------------------------------------------
-- (void)   collectionView: (UICollectionView *)collectionView
- didSelectItemAtIndexPath: (NSIndexPath *)indexPath
-{
-    DLog();
-}
-
 #pragma mark - OCAEditableCollectionViewDelegateFlowLayout methods
 
-- (CGSize)collectionView:(UICollectionView *)collectionView
-                  layout:(UICollectionViewLayout*)collectionViewLayout
-  sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+//----------------------------------------------------------------------------------------------------------
+/**
+ Asks the delegate for the size of the specified item’s cell.
+ 
+ If you do not implement this method, the flow layout uses the values in its itemSize property to set the size 
+ of items instead. Your implementation of this method can return a fixed set of sizes or dynamically adjust 
+ the sizes based on the cell’s content.
+ 
+ The flow layout does not crop a cell’s bounds to make it fit into the grid. Therefore, the values you return 
+ must allow for the item to be displayed fully in the collection view. For example, in a vertically scrolling 
+ grid, the width of a single item must not exceed the width of the collection view view (minus any section 
+ insets) itself. However, in the scrolling direction, items can be larger than the collection view because the 
+ remaining content can always be scrolled into view.
+ 
+ @param collectionView          The collection view object displaying the flow layout.
+ @param collectionViewLayout    The layout object requesting the information.
+ @param indexPath               The index path of the item.
+ @return                        The width and height of the specified item. Both values must be greater than 0.
+ */
+- (CGSize)collectionView: (UICollectionView *)collectionView
+                  layout: (UICollectionViewLayout*)collectionViewLayout
+  sizeForItemAtIndexPath: (NSIndexPath *)indexPath
 {
     CGSize result;
 
-    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController.sections objectAtIndex:indexPath.section];
-    Packages *aPackage  = (Packages *) [sectionInfo.objects objectAtIndex: indexPath.row];
+    // Get the Package represented by the cell at indexPath
+    id <NSFetchedResultsSectionInfo> sectionInfo    = [self.fetchedResultsController.sections objectAtIndex: indexPath.section];
+    Packages *aPackage                              = (Packages *) [sectionInfo.objects objectAtIndex: indexPath.row];
+    
+    // First, determine the size of the name string, given the user dynamic text size preference
     NSString *stringToSize  = aPackage.name;
-	CGRect titleRect        = [stringToSize boundingRectWithSize:CGSizeMake(280.0f, 100.0f)
-                                                         options:NSStringDrawingUsesLineFragmentOrigin
-                                                      attributes:@{NSFontAttributeName: [UIFont preferredFontForTextStyle:[OCRPackagesCell titleFont]]}
-                                                         context:nil];
+    // ...get the bounding rect
+	CGRect titleRect        = [stringToSize boundingRectWithSize: CGSizeMake(280.0f, 100.0f)
+                                                         options: NSStringDrawingUsesLineFragmentOrigin
+                                                      attributes: @{NSFontAttributeName: [UIFont preferredFontForTextStyle: [OCRPackagesCell titleFont]]}
+                                                         context: nil];
+    // Similarly, determine the size of "Cover Letter"
     stringToSize            = NSLocalizedString(@"Cover Letter", nil);
-	CGRect coverLtrRect     = [stringToSize boundingRectWithSize:CGSizeMake(280.0f, 100.0f)
-                                                         options:NSStringDrawingUsesLineFragmentOrigin
-                                                      attributes:@{NSFontAttributeName: [UIFont preferredFontForTextStyle:[OCRPackagesCell detailFont]]}
-                                                         context:nil];
-    stringToSize            = NSLocalizedString(@"Resume", nil);
-	CGRect resumeRect       = [stringToSize boundingRectWithSize:CGSizeMake(280.0f, 100.0f)
-                                                         options:NSStringDrawingUsesLineFragmentOrigin
-                                                      attributes:@{NSFontAttributeName: [UIFont preferredFontForTextStyle:[OCRPackagesCell detailFont]]}
-                                                         context:nil];
-    result.height       = titleRect.size.height + coverLtrRect.size.height + resumeRect.size.height + 50.0f;
+	CGRect coverLtrRect     = [stringToSize boundingRectWithSize: CGSizeMake(280.0f, 100.0f)
+                                                         options: NSStringDrawingUsesLineFragmentOrigin
+                                                      attributes: @{NSFontAttributeName: [UIFont preferredFontForTextStyle: [OCRPackagesCell detailFont]]}
+                                                         context: nil];
+    // ...and the name of the resume
+    stringToSize            = aPackage.resume.name;
+	CGRect resumeRect       = [stringToSize boundingRectWithSize: CGSizeMake(280.0f, 100.0f)
+                                                         options: NSStringDrawingUsesLineFragmentOrigin
+                                                      attributes: @{NSFontAttributeName: [UIFont preferredFontForTextStyle: [OCRPackagesCell detailFont]]}
+                                                         context: nil];
+    
+    // Set the height as the size of the three strings plus padding
+    result.height       = titleRect.size.height + coverLtrRect.size.height + resumeRect.size.height + 36.0f;
+    // ...and the width as the largest of the three strings (plus padding), but capped at the collection
+    //    view's contentSize.width (minus padding)
     CGFloat cellWidth   = MAX(titleRect.size.width, coverLtrRect.size.width);
     cellWidth           = MAX(resumeRect.size.width, cellWidth);
-    result.width        = MIN(cellWidth + 20.0f, 280.0f);
+    result.width        = MIN(cellWidth + 20.0f, collectionView.contentSize.width - 20.0f);
     
 	return result;
 }
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Inform the delegate editing of the collection view layout has begun.
+ 
+ @param collectionView          The collection view object displaying the flow layout.
+ @param collectionViewLayout    The layout object where editing has begun.
+ */
 - (void) didBeginEditingForCollectionView: (UICollectionView *)collectionView
                                    layout: (UICollectionViewLayout*)collectionViewLayout
 {
     DLog();
     
+    // Set the flag indicating we are in edit mode
     isEditModeActive = YES;
 }
 
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Inform the delegate editing of the collection view layout has ended.
+ 
+ @param collectionView          The collection view object displaying the flow layout.
+ @param collectionViewLayout    The layout object where editing has ended.
+ */
 - (void) didEndEditingForCollectionView: (UICollectionView *)collectionView
                                  layout: (UICollectionViewLayout*)collectionViewLayout
 {
     DLog();
     
+    // Unset the flag indicating we are in edit mode
     isEditModeActive = NO;
 
+    // Resequence the Packages in case the order was changed in the UI
     [self resequencePackages];
-    [self saveMoc: _managedObjectContext];
+    // Save the context
+    [kAppDelegate saveContext: _managedObjectContext];
 }
 
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Inform the delegate dragging will begin.
+ 
+ @param collectionView          The collection view object displaying the flow layout.
+ @param collectionViewLayout    The layout object where editing has ended.
+ @param indexPath               The indexPath
+ */
 - (void)            collectionView: (UICollectionView *)collectionView
                             layout: (UICollectionViewLayout *)collectionViewLayout
   willBeginDraggingItemAtIndexPath: (NSIndexPath *)indexPath
@@ -587,22 +647,22 @@ BOOL isEditModeActive;
 {
     DLog(@"did begin drag");
     
-    [self performSelector: @selector(invalidateLayout:)
-               withObject: collectionViewLayout
-               afterDelay: 0.1f];
+//    [self performSelector: @selector(invalidateLayout:)     // TODO - do we really want to do this?????
+//               withObject: collectionViewLayout
+//               afterDelay: 0.1f];
 }
 
 
 //----------------------------------------------------------------------------------------------------------
-- (void)        collectionView:(UICollectionView *)collectionView
-                        layout:(UICollectionViewLayout *)collectionViewLayout
- didEndDraggingItemAtIndexPath:(NSIndexPath *)indexPath
+- (void)        collectionView: (UICollectionView *)collectionView
+                        layout: (UICollectionViewLayout *)collectionViewLayout
+ didEndDraggingItemAtIndexPath: (NSIndexPath *)indexPath
 {
     DLog(@"did end drag");
     
-    [self performSelector: @selector(invalidateLayout:)
-               withObject: collectionViewLayout
-               afterDelay: 0.1f];
+//    [self performSelector: @selector(invalidateLayout:)
+//               withObject: collectionViewLayout
+//               afterDelay: 0.1f];
 }
 
 
@@ -614,17 +674,17 @@ BOOL isEditModeActive;
 
 
 //----------------------------------------------------------------------------------------------------------
-- (void)        collectionView:(UICollectionView *)collectionView
-                        layout:(UICollectionViewLayout *)collectionViewLayout
-willEndDraggingItemAtIndexPath:(NSIndexPath *)indexPath
+- (void)        collectionView: (UICollectionView *)collectionView
+                        layout: (UICollectionViewLayout *)collectionViewLayout
+willEndDraggingItemAtIndexPath: (NSIndexPath *)indexPath
 {
     DLog(@"will end drag");
 }
 
 
 //----------------------------------------------------------------------------------------------------------
-- (BOOL)shouldEnableEditingForCollectionView:(UICollectionView *)collectionView
-                                      layout:(UICollectionViewLayout *)collectionViewLayout
+- (BOOL)shouldEnableEditingForCollectionView: (UICollectionView *)collectionView
+                                      layout: (UICollectionViewLayout *)collectionViewLayout
 {
     return YES;
 }
@@ -632,8 +692,8 @@ willEndDraggingItemAtIndexPath:(NSIndexPath *)indexPath
 #pragma mark - OCAEditableCollectionViewDataSource methods
 
 //----------------------------------------------------------------------------------------------------------
-- (BOOL)collectionView:(UICollectionView *)collectionView
-canMoveItemAtIndexPath:(NSIndexPath *)indexPath
+- (BOOL)collectionView: (UICollectionView *)collectionView
+canMoveItemAtIndexPath: (NSIndexPath *)indexPath
 {
     return YES;
 }
@@ -671,8 +731,8 @@ canMoveItemAtIndexPath:(NSIndexPath *)indexPath
 }
 
 //----------------------------------------------------------------------------------------------------------
-- (BOOL)    collectionView:(UICollectionView *)collectionView
-  canDeleteItemAtIndexPath:(NSIndexPath *)indexPath
+- (BOOL)    collectionView: (UICollectionView *)collectionView
+  canDeleteItemAtIndexPath: (NSIndexPath *)indexPath
 {
     DLog();
     
@@ -681,30 +741,30 @@ canMoveItemAtIndexPath:(NSIndexPath *)indexPath
 
 
 //----------------------------------------------------------------------------------------------------------
-- (void)    collectionView:(UICollectionView *)collectionView
- willDeleteItemAtIndexPath:(NSIndexPath *)indexPath
+- (void)    collectionView: (UICollectionView *)collectionView
+ willDeleteItemAtIndexPath: (NSIndexPath *)indexPath
 {
     DLog();
     
     // Get the package that is that is about to be deleted from the collectionView
-    Packages *packageToDelete   = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    Packages *packageToDelete   = [self.fetchedResultsController objectAtIndexPath: indexPath];
     // ...and the managed object context
     NSManagedObjectContext *moc = [self.fetchedResultsController managedObjectContext];
     // ...and delete it from the data model
-    [moc deleteObject:packageToDelete];
+    [moc deleteObject: packageToDelete];
     
     /*
      Here we save the context and wait for the operation to complete. If we invoked the asynchronous saveContext
      method it would return immediately and the collectionView throw an assertion error because the collectionView
      would be out of sync with the data model.
      */
-    [kAppDelegate saveContextAndWait:moc];
+    [kAppDelegate saveContextAndWait: moc];
 }
 
 
 //----------------------------------------------------------------------------------------------------------
-- (void)    collectionView:(UICollectionView *)collectionView
-  didDeleteItemAtIndexPath:(NSIndexPath *)indexPath
+- (void)    collectionView: (UICollectionView *)collectionView
+  didDeleteItemAtIndexPath: (NSIndexPath *)indexPath
 {
     DLog();
 }
@@ -712,20 +772,22 @@ canMoveItemAtIndexPath:(NSIndexPath *)indexPath
 #pragma mark - UISplitViewControllerDelegate methods
 
 //----------------------------------------------------------------------------------------------------------
-- (BOOL)splitViewController:(UISplitViewController *)svc
-   shouldHideViewController:(UIViewController *)vc
-              inOrientation:(UIInterfaceOrientation)orientation
+- (BOOL)splitViewController: (UISplitViewController *)svc
+   shouldHideViewController: (UIViewController *)vc
+              inOrientation: (UIInterfaceOrientation)orientation
 {
-    if (UIInterfaceOrientationIsPortrait(orientation))
+    if (UIInterfaceOrientationIsPortrait(orientation)) {
         return YES; // if you return NO, it will display side by side, not above.
+    }
+    
     return NO;
 }
 
 //----------------------------------------------------------------------------------------------------------
-- (void)splitViewController:(UISplitViewController*)aSplitViewController
-     willHideViewController:(UIViewController *)aViewController
-          withBarButtonItem:(UIBarButtonItem*)aBarButtonItem
-       forPopoverController:(UIPopoverController*)aPopoverController
+- (void)splitViewController: (UISplitViewController*)aSplitViewController
+     willHideViewController: (UIViewController *)aViewController
+          withBarButtonItem: (UIBarButtonItem*)aBarButtonItem
+       forPopoverController: (UIPopoverController*)aPopoverController
 {
     DLog();
     
@@ -734,22 +796,22 @@ canMoveItemAtIndexPath:(NSIndexPath *)indexPath
     self.packagesPopoverController  = aPopoverController;
     self.rootPopoverButtonItem      = aBarButtonItem;
     
-    OCRBaseDetailViewController <SubstitutableDetailViewController> *detailViewController = (OCRBaseDetailViewController<SubstitutableDetailViewController>*)[[aSplitViewController.viewControllers objectAtIndex:1] topViewController];
-    [detailViewController showRootPopoverButtonItem:_rootPopoverButtonItem
-                                     withController:aPopoverController];
+    OCRBaseDetailViewController <SubstitutableDetailViewController> *detailViewController = (OCRBaseDetailViewController<SubstitutableDetailViewController>*)[[aSplitViewController.viewControllers objectAtIndex: 1] topViewController];
+    [detailViewController showRootPopoverButtonItem: _rootPopoverButtonItem
+                                     withController: aPopoverController];
 }
 
 
 //----------------------------------------------------------------------------------------------------------
-- (void)splitViewController:(UISplitViewController*)aSplitViewController
-     willShowViewController:(UIViewController *)aViewController
-  invalidatingBarButtonItem:(UIBarButtonItem *)aBarButtonItem
+- (void)splitViewController: (UISplitViewController*)aSplitViewController
+     willShowViewController: (UIViewController *)aViewController
+  invalidatingBarButtonItem: (UIBarButtonItem *)aBarButtonItem
 {
     DLog();
     
     // Nil out references to the popover controller and the popover button, and tell the detail view controller to hide the button.
-    OCRBaseDetailViewController <SubstitutableDetailViewController> *detailViewController = (OCRBaseDetailViewController<SubstitutableDetailViewController>*)[[aSplitViewController.viewControllers objectAtIndex:1] topViewController];
-    [detailViewController invalidateRootPopoverButtonItem:_rootPopoverButtonItem];
+    OCRBaseDetailViewController <SubstitutableDetailViewController> *detailViewController = (OCRBaseDetailViewController<SubstitutableDetailViewController>*)[[aSplitViewController.viewControllers objectAtIndex: 1] topViewController];
+    [detailViewController invalidateRootPopoverButtonItem: _rootPopoverButtonItem];
     self.packagesPopoverController  = nil;
     self.rootPopoverButtonItem      = nil;
 }
@@ -787,8 +849,8 @@ canMoveItemAtIndexPath:(NSIndexPath *)indexPath
 
 
 //----------------------------------------------------------------------------------------------------------
-- (void)moveItemAtIndexPath:(NSIndexPath *)indexPath
-                toIndexPath:(NSIndexPath *)newIndexPath
+- (void)moveItemAtIndexPath: (NSIndexPath *)indexPath
+                toIndexPath: (NSIndexPath *)newIndexPath
 {
     DLog();
     
@@ -815,8 +877,8 @@ canMoveItemAtIndexPath:(NSIndexPath *)indexPath
 #pragma mark - Seque handling
 
 //----------------------------------------------------------------------------------------------------------
-- (void)prepareForSegue:(UIStoryboardSegue *)segue
-                 sender:(id)sender
+- (void)prepareForSegue: (UIStoryboardSegue *)segue
+                 sender: (id)sender
 {
     DLog();
     
@@ -852,13 +914,13 @@ canMoveItemAtIndexPath:(NSIndexPath *)indexPath
              Update the splitViewController's delegate
              */            
             if (_rootPopoverButtonItem != nil) {
-                OCRBaseDetailViewController<SubstitutableDetailViewController>* detailViewController = (OCRBaseDetailViewController<SubstitutableDetailViewController>*)[[[segue destinationViewController] viewControllers] objectAtIndex:0];
+                OCRBaseDetailViewController<SubstitutableDetailViewController>* detailViewController = (OCRBaseDetailViewController<SubstitutableDetailViewController>*)[[[segue destinationViewController] viewControllers] objectAtIndex: 0];
                 [detailViewController showRootPopoverButtonItem:_rootPopoverButtonItem
                                                  withController:_packagesPopoverController];
             }
             
             if (self.packagesPopoverController) {
-                [self.packagesPopoverController dismissPopoverAnimated:YES];
+                [self.packagesPopoverController dismissPopoverAnimated: YES];
             }
         } else {
             // On the iPhone, the cover letter controller is the destination of the segue
@@ -896,13 +958,13 @@ canMoveItemAtIndexPath:(NSIndexPath *)indexPath
             resumeController = [[(UINavigationController *)[segue destinationViewController] viewControllers] objectAtIndex: 0];
             // Update the splitViewController's delegate
             if (_rootPopoverButtonItem != nil) {
-                OCRBaseDetailViewController<SubstitutableDetailViewController>* detailViewController = (OCRBaseDetailViewController<SubstitutableDetailViewController>*)[[[segue destinationViewController] viewControllers] objectAtIndex:0];
-                [detailViewController showRootPopoverButtonItem:_rootPopoverButtonItem
-                                                 withController:_packagesPopoverController];
+                OCRBaseDetailViewController<SubstitutableDetailViewController>* detailViewController = (OCRBaseDetailViewController<SubstitutableDetailViewController>*)[[[segue destinationViewController] viewControllers] objectAtIndex: 0];
+                [detailViewController showRootPopoverButtonItem: _rootPopoverButtonItem
+                                                 withController: _packagesPopoverController];
             }
             
             if (self.packagesPopoverController) {
-                [self.packagesPopoverController dismissPopoverAnimated:YES];
+                [self.packagesPopoverController dismissPopoverAnimated: YES];
             }
         } else {
             // On the iPhone, the resume controller is the destination of the segue
@@ -938,7 +1000,7 @@ canMoveItemAtIndexPath:(NSIndexPath *)indexPath
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey: kOCRSequenceNumberAttributeName
                                                                    ascending: YES];
     NSArray *sortDescriptors = [[NSArray alloc] initWithObjects: sortDescriptor, nil];
-    [fetchRequest setSortDescriptors:sortDescriptors];
+    [fetchRequest setSortDescriptors: sortDescriptors];
     
     // Alloc and initialize the controller
     /*
@@ -962,7 +1024,7 @@ canMoveItemAtIndexPath:(NSIndexPath *)indexPath
           I'm providing my direct contact information in the hope I can help the user and avoid a bad review.
           */
 	    ELog(error, @"Unresolved error");
-	    [OCAUtilities showErrorWithMessage: NSLocalizedString(@"Could not read the database. Try quitting the app. If that fails, try deleting KOResume and restoring from iCould or iTunes backup. Please contact the developer by emailing kevin@omaraconsultingassoc.com", nil)];
+	    [OCAUtilities showErrorWithMessage: NSLocalizedString(@"Could not read the database. Try quitting the app. If that fails, try deleting KOResume and restoring from iCloud or iTunes backup. Please contact the developer by emailing kevin@omaraconsultingassoc.com", nil)];
 	}
     
     return _fetchedResultsController;
@@ -971,7 +1033,7 @@ canMoveItemAtIndexPath:(NSIndexPath *)indexPath
 
 
 //----------------------------------------------------------------------------------------------------------
-- (void)reloadFetchedResults:(NSNotification*)note
+- (void)reloadFetchedResults: (NSNotification*)note
 {
     DLog();
     
@@ -1006,10 +1068,10 @@ canMoveItemAtIndexPath:(NSIndexPath *)indexPath
  */
 
 //----------------------------------------------------------------------------------------------------------
-- (void)controller:(NSFetchedResultsController *)controller
-  didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo
-           atIndex:(NSUInteger)sectionIndex
-     forChangeType:(NSFetchedResultsChangeType)type
+- (void)controller: (NSFetchedResultsController *)controller
+  didChangeSection: (id <NSFetchedResultsSectionInfo>)sectionInfo
+           atIndex: (NSUInteger)sectionIndex
+     forChangeType: (NSFetchedResultsChangeType)type
 {
     DLog();
     
@@ -1019,22 +1081,23 @@ canMoveItemAtIndexPath:(NSIndexPath *)indexPath
         case NSFetchedResultsChangeInsert:
             change[@(type)] = @[@(sectionIndex)];
             break;
+            
         case NSFetchedResultsChangeDelete:
             change[@(type)] = @[@(sectionIndex)];
             break;
     }
     
-    [_sectionChanges addObject:change];
+    [_sectionChanges addObject: change];
 }
 
 
 
 //----------------------------------------------------------------------------------------------------------
-- (void)controller:(NSFetchedResultsController *)controller
-   didChangeObject:(id)anObject
-       atIndexPath:(NSIndexPath *)indexPath
-     forChangeType:(NSFetchedResultsChangeType)type
-      newIndexPath:(NSIndexPath *)newIndexPath
+- (void)controller: (NSFetchedResultsController *)controller
+   didChangeObject: (id)anObject
+       atIndexPath: (NSIndexPath *)indexPath
+     forChangeType: (NSFetchedResultsChangeType)type
+      newIndexPath: (NSIndexPath *)newIndexPath
 {
     DLog();
     
@@ -1043,12 +1106,15 @@ canMoveItemAtIndexPath:(NSIndexPath *)indexPath
         case NSFetchedResultsChangeInsert:
             change[@(type)] = newIndexPath;
             break;
+            
         case NSFetchedResultsChangeDelete:
             change[@(type)] = indexPath;
             break;
+            
         case NSFetchedResultsChangeUpdate:
             change[@(type)] = indexPath;
             break;
+            
         case NSFetchedResultsChangeMove:
             change[@(type)] = @[indexPath, newIndexPath];
             break;
@@ -1059,7 +1125,7 @@ canMoveItemAtIndexPath:(NSIndexPath *)indexPath
 
 
 //----------------------------------------------------------------------------------------------------------
-- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
+- (void)controllerDidChangeContent: (NSFetchedResultsController *)controller
 {
     DLog();
     
@@ -1068,16 +1134,18 @@ canMoveItemAtIndexPath:(NSIndexPath *)indexPath
         [self.collectionView performBatchUpdates: ^{
             
             for (NSDictionary *change in _sectionChanges) {
-                [change enumerateKeysAndObjectsUsingBlock:^(NSNumber *key, id obj, BOOL *stop) {
+                [change enumerateKeysAndObjectsUsingBlock: ^(NSNumber *key, id obj, BOOL *stop) {
                     
                     NSFetchedResultsChangeType type = [key unsignedIntegerValue];
                     switch (type) {
                         case NSFetchedResultsChangeInsert:
                             [self.collectionView insertSections: [NSIndexSet indexSetWithIndex: [obj unsignedIntegerValue]]];
                             break;
+                            
                         case NSFetchedResultsChangeDelete:
                             [self.collectionView deleteSections: [NSIndexSet indexSetWithIndex: [obj unsignedIntegerValue]]];
                             break;
+                            
                         case NSFetchedResultsChangeUpdate:
                             [self.collectionView reloadSections: [NSIndexSet indexSetWithIndex: [obj unsignedIntegerValue]]];
                             break;
@@ -1098,12 +1166,15 @@ canMoveItemAtIndexPath:(NSIndexPath *)indexPath
                         case NSFetchedResultsChangeInsert:
                             [self.collectionView insertItemsAtIndexPaths: @[obj]];
                             break;
+                            
                         case NSFetchedResultsChangeDelete:
                             [self.collectionView deleteItemsAtIndexPaths: @[obj]];
                             break;
+                            
                         case NSFetchedResultsChangeUpdate:
                             [self.collectionView reloadItemsAtIndexPaths: @[obj]];
                             break;
+                            
                         case NSFetchedResultsChangeMove:
                             [self.collectionView moveItemAtIndexPath: obj[0]
                                                          toIndexPath: obj[1]];
@@ -1116,33 +1187,6 @@ canMoveItemAtIndexPath:(NSIndexPath *)indexPath
     
     [_sectionChanges removeAllObjects];
     [_objectChanges removeAllObjects];
-}
-
-//----------------------------------------------------------------------------------------------------------
-- (BOOL)saveMoc:(NSManagedObjectContext *)moc
-{
-    DLog();
-    
-    BOOL result = YES;
-    NSError *error = nil;
-    
-    if (moc) {
-        if ([moc hasChanges]) {
-            if (![moc save: &error]) {
-                ELog(error, @"Failed to save");
-                result = NO;
-            } else {
-                DLog(@"Save successful");
-            }
-        } else {
-            DLog(@"No changes to save");
-        }
-    } else {
-        ALog(@"managedObjectContext is null");
-        result = NO;
-    }
-    
-    return result;
 }
 
 

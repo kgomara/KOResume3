@@ -45,7 +45,7 @@
                                                     <size key="shadowOffset" width="1" height="1"/>
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0tw-FS-CS1">
-                                                    <rect key="frame" x="7" y="22" width="130" height="44"/>
+                                                    <rect key="frame" x="7" y="28" width="130" height="44"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="44" id="tYu-js-Nbn"/>
@@ -53,9 +53,12 @@
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <color key="tintColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <state key="normal" title="Cover Letter"/>
+                                                    <connections>
+                                                        <action selector="didPressCoverLtrButton:" destination="bfy-I6-xOA" eventType="touchUpInside" id="XuA-Pa-5Cl"/>
+                                                    </connections>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GNm-8q-gya">
-                                                    <rect key="frame" x="7" y="70" width="130" height="44"/>
+                                                    <rect key="frame" x="7" y="80" width="130" height="24"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <color key="tintColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -69,13 +72,14 @@
                                                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
                                                     <connections>
+                                                        <action selector="didPressResumeButton:" destination="bfy-I6-xOA" eventType="touchUpInside" id="2vx-6r-zyz"/>
                                                         <segue destination="Kh6-yO-vqi" kind="replace" identifier="OCRResumeSegue" splitViewControllerTargetIndex="1" id="zUF-By-h5H"/>
                                                     </connections>
                                                 </button>
                                             </subviews>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                             <constraints>
-                                                <constraint firstAttribute="bottom" secondItem="GNm-8q-gya" secondAttribute="bottom" constant="10" id="BzK-GD-ezH"/>
+                                                <constraint firstAttribute="bottom" secondItem="GNm-8q-gya" secondAttribute="bottom" constant="20" symbolic="YES" id="BzK-GD-ezH"/>
                                                 <constraint firstItem="0tw-FS-CS1" firstAttribute="leading" secondItem="f2T-eA-Flr" secondAttribute="leading" constant="7" id="EJ5-db-31c"/>
                                                 <constraint firstItem="0tw-FS-CS1" firstAttribute="centerX" secondItem="g8M-b2-9eP" secondAttribute="centerX" id="L0p-mB-dpP"/>
                                                 <constraint firstItem="g8M-b2-9eP" firstAttribute="leading" secondItem="f2T-eA-Flr" secondAttribute="leading" id="LX2-yu-5bM"/>
@@ -83,8 +87,8 @@
                                                 <constraint firstItem="0tw-FS-CS1" firstAttribute="leading" secondItem="GNm-8q-gya" secondAttribute="leading" id="TZE-RW-r0J"/>
                                                 <constraint firstAttribute="trailing" secondItem="g8M-b2-9eP" secondAttribute="trailing" id="Wjd-BJ-uGH"/>
                                                 <constraint firstItem="g8M-b2-9eP" firstAttribute="top" secondItem="f2T-eA-Flr" secondAttribute="top" id="or6-mR-ohi"/>
-                                                <constraint firstItem="GNm-8q-gya" firstAttribute="top" secondItem="0tw-FS-CS1" secondAttribute="bottom" constant="4" id="piW-RM-rla"/>
-                                                <constraint firstItem="0tw-FS-CS1" firstAttribute="top" secondItem="g8M-b2-9eP" secondAttribute="bottom" constant="2" id="ti9-Lw-dnb"/>
+                                                <constraint firstItem="GNm-8q-gya" firstAttribute="top" secondItem="0tw-FS-CS1" secondAttribute="bottom" constant="8" symbolic="YES" id="piW-RM-rla"/>
+                                                <constraint firstItem="0tw-FS-CS1" firstAttribute="top" secondItem="g8M-b2-9eP" secondAttribute="bottom" constant="8" symbolic="YES" id="ti9-Lw-dnb"/>
                                                 <constraint firstItem="0tw-FS-CS1" firstAttribute="trailing" secondItem="GNm-8q-gya" secondAttribute="trailing" id="uHo-1l-ev7"/>
                                             </constraints>
                                         </view>
