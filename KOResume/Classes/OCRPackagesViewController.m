@@ -477,22 +477,6 @@ BOOL isEditModeActive;
     // Set the title of the resume button
     [cell.resumeButton setTitle: aPackage.resume.name
                        forState: UIControlStateNormal];
-    // ...give it a different color when selected
-    [cell.resumeButton setTitleColor: [UIColor greenColor]
-                            forState: UIControlStateSelected];
-    // ...and add us as target for the cell's resume button
-    [cell.resumeButton addTarget: self
-                          action: @selector(didPressResumeButton:)
-                forControlEvents: UIControlEventTouchUpInside];
-    
-    // Cover letters don't have a specific name attribute, so just
-    // ...give it a different color when selected
-    [cell.coverLtrButton setTitleColor: [UIColor greenColor]
-                              forState: UIControlStateSelected];
-    // ...and add us as target for the cell's resume button
-    [cell.coverLtrButton addTarget: self
-                            action: @selector(didPressCoverLtrButton:)
-                  forControlEvents: UIControlEventTouchUpInside];
 }
 
 
@@ -554,33 +538,47 @@ BOOL isEditModeActive;
     id <NSFetchedResultsSectionInfo> sectionInfo    = [self.fetchedResultsController.sections objectAtIndex: indexPath.section];
     Packages *aPackage                              = (Packages *) [sectionInfo.objects objectAtIndex: indexPath.row];
     
-    // First, determine the size of the name string, given the user dynamic text size preference
+    /*
+     To support Dynamic Text, we need to calculate the size required by the text at run time given the
+     user's preferred dynamic text size.
+     
+     We use boundingRectWithSize:options:attributes:context on each of the text strings of the cell's UI 
+     elements to determine the width required to show the content as completely as possible.
+     
+     Using this information we determine the largest width of the three (but not too large to fit in the
+     content area) and return a CGSize structure.
+     */
+    
+    // maxTextRect establishes bounds for the largest rect we can allow
+    CGSize maxTextRect = CGSizeMake(collectionView.contentSize.width - 10.0f, kOCRPackagesCellHeight / 3);
+    
+    // First, determine the size required by the the name string, given the user's dynamic text size preference
     NSString *stringToSize  = aPackage.name;
     // ...get the bounding rect
-	CGRect titleRect        = [stringToSize boundingRectWithSize: CGSizeMake(280.0f, 100.0f)
+	CGRect titleRect        = [stringToSize boundingRectWithSize: maxTextRect
                                                          options: NSStringDrawingUsesLineFragmentOrigin
                                                       attributes: @{NSFontAttributeName: [UIFont preferredFontForTextStyle: [OCRPackagesCell titleFont]]}
                                                          context: nil];
-    // Similarly, determine the size of "Cover Letter"
+    // Similarly, determine the size required by "Cover Letter"
     stringToSize            = NSLocalizedString(@"Cover Letter", nil);
-	CGRect coverLtrRect     = [stringToSize boundingRectWithSize: CGSizeMake(280.0f, 100.0f)
+	CGRect coverLtrRect     = [stringToSize boundingRectWithSize: maxTextRect
                                                          options: NSStringDrawingUsesLineFragmentOrigin
                                                       attributes: @{NSFontAttributeName: [UIFont preferredFontForTextStyle: [OCRPackagesCell detailFont]]}
                                                          context: nil];
     // ...and the name of the resume
     stringToSize            = aPackage.resume.name;
-	CGRect resumeRect       = [stringToSize boundingRectWithSize: CGSizeMake(280.0f, 100.0f)
+	CGRect resumeRect       = [stringToSize boundingRectWithSize: maxTextRect
                                                          options: NSStringDrawingUsesLineFragmentOrigin
                                                       attributes: @{NSFontAttributeName: [UIFont preferredFontForTextStyle: [OCRPackagesCell detailFont]]}
                                                          context: nil];
     
-    // Set the height as the size of the three strings plus padding
-    result.height       = titleRect.size.height + coverLtrRect.size.height + resumeRect.size.height + 36.0f;
+    // In our case we can keep the height constant because the 2 buttons already have sufficient vertical padding.
+    result.height       = kOCRPackagesCellHeight;
     // ...and the width as the largest of the three strings (plus padding), but capped at the collection
     //    view's contentSize.width (minus padding)
     CGFloat cellWidth   = MAX(titleRect.size.width, coverLtrRect.size.width);
     cellWidth           = MAX(resumeRect.size.width, cellWidth);
-    result.width        = MIN(cellWidth + 20.0f, collectionView.contentSize.width - 20.0f);
+    result.width        = MIN(cellWidth + kOCRPackagesCellWidthPadding, collectionView.contentSize.width - 10.0f);
     
 	return result;
 }
@@ -626,63 +624,12 @@ BOOL isEditModeActive;
 
 //----------------------------------------------------------------------------------------------------------
 /**
- Inform the delegate dragging will begin.
+ Ask the delegate if editing is allowed by this collectionview and layout.
  
  @param collectionView          The collection view object displaying the flow layout.
- @param collectionViewLayout    The layout object where editing has ended.
- @param indexPath               The indexPath
+ @param collectionViewLayout    The layout object where editing will occur.
+ @return                        YES if editing is allowed, NO otherwise.
  */
-- (void)            collectionView: (UICollectionView *)collectionView
-                            layout: (UICollectionViewLayout *)collectionViewLayout
-  willBeginDraggingItemAtIndexPath: (NSIndexPath *)indexPath
-{
-    DLog(@"will begin drag");
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-- (void)            collectionView: (UICollectionView *)collectionView
-                            layout: (UICollectionViewLayout *)collectionViewLayout
-   didBeginDraggingItemAtIndexPath: (NSIndexPath *)indexPath
-{
-    DLog(@"did begin drag");
-    
-//    [self performSelector: @selector(invalidateLayout:)     // TODO - do we really want to do this?????
-//               withObject: collectionViewLayout
-//               afterDelay: 0.1f];
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-- (void)        collectionView: (UICollectionView *)collectionView
-                        layout: (UICollectionViewLayout *)collectionViewLayout
- didEndDraggingItemAtIndexPath: (NSIndexPath *)indexPath
-{
-    DLog(@"did end drag");
-    
-//    [self performSelector: @selector(invalidateLayout:)
-//               withObject: collectionViewLayout
-//               afterDelay: 0.1f];
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-- (void)invalidateLayout: (UICollectionViewLayout *)collectionViewLayout
-{
-    [self.collectionViewLayout invalidateLayout];
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-- (void)        collectionView: (UICollectionView *)collectionView
-                        layout: (UICollectionViewLayout *)collectionViewLayout
-willEndDraggingItemAtIndexPath: (NSIndexPath *)indexPath
-{
-    DLog(@"will end drag");
-}
-
-
-//----------------------------------------------------------------------------------------------------------
 - (BOOL)shouldEnableEditingForCollectionView: (UICollectionView *)collectionView
                                       layout: (UICollectionViewLayout *)collectionViewLayout
 {
@@ -692,6 +639,13 @@ willEndDraggingItemAtIndexPath: (NSIndexPath *)indexPath
 #pragma mark - OCAEditableCollectionViewDataSource methods
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Ask the delegate if the cell at indexPath can be moved.
+
+ @param collectionView          The collection view object displaying the flow layout.
+ @param indexPath               The index path of the item.
+ @param                         YES if the cell can be moved, NO if not.
+*/
 - (BOOL)collectionView: (UICollectionView *)collectionView
 canMoveItemAtIndexPath: (NSIndexPath *)indexPath
 {
@@ -700,47 +654,69 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
 
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Ask the delegate if the cell at fromIndexPath can be moved to toIndexPath.
+ 
+ @param collectionView          The collection view object displaying the flow layout.
+ @param fromIndexPath           The index path the item will be move from.
+ @param toIndexPath             The destination index path of the item.
+ @return                        YES if the cell can be moved, NO if not.
+ */
 - (BOOL)collectionView: (UICollectionView *)collectionView
        itemAtIndexPath: (NSIndexPath *)fromIndexPath
     canMoveToIndexPath: (NSIndexPath *)toIndexPath
 {
     DLog();
     
+    // All moves are acceptable
     return YES;
 }
 
 
 //----------------------------------------------------------------------------------------------------------
-- (void)collectionView: (UICollectionView *)collectionView
-       itemAtIndexPath: (NSIndexPath *)fromIndexPath
-   willMoveToIndexPath: (NSIndexPath *)toIndexPath
-{
-    DLog();
-}
-
-
-//----------------------------------------------------------------------------------------------------------
+/**
+ Inform the delegate the cell at indexPath has moved.
+ 
+ @param collectionView          The collection view object displaying the flow layout.
+ @param fromIndexPath           The index path the item was moved from.
+ @param toIndexPath             The destination index path of the item.
+ */
 - (void)collectionView: (UICollectionView *)collectionView
        itemAtIndexPath: (NSIndexPath *)fromIndexPath
     didMoveToIndexPath: (NSIndexPath *)toIndexPath;
 {
     DLog();
     
+    // This UI has been updated, now update the underlying data structures.
     [self moveItemAtIndexPath: fromIndexPath
                   toIndexPath: toIndexPath];
 }
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Ask the delegate if the cell at indexPath can be deleted.
+ 
+ @param collectionView          The collection view object displaying the flow layout.
+ @param indexPath               The index path of the cell to delete.
+ @return                        YES if the cell can be deleted, NO if not.
+ */
 - (BOOL)    collectionView: (UICollectionView *)collectionView
   canDeleteItemAtIndexPath: (NSIndexPath *)indexPath
 {
     DLog();
     
+    // All cells can be deleted
     return YES;
 }
 
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Inform the delegate the cell at indexPath is about to be deleted.
+ 
+ @param collectionView          The collection view object displaying the flow layout.
+ @param indexPath               The index path of the cell about to be deleted.
+ */
 - (void)    collectionView: (UICollectionView *)collectionView
  willDeleteItemAtIndexPath: (NSIndexPath *)indexPath
 {
@@ -762,16 +738,21 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
 }
 
 
-//----------------------------------------------------------------------------------------------------------
-- (void)    collectionView: (UICollectionView *)collectionView
-  didDeleteItemAtIndexPath: (NSIndexPath *)indexPath
-{
-    DLog();
-}
-
 #pragma mark - UISplitViewControllerDelegate methods
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Asks the delegate whether the first view controller should be hidden for the specified orientation.
+ 
+ The split view controller calls this method only for the first child view controller in its array. The second 
+ view controller always remains visible regardless of the orientation.
+
+ @param svc         The split view controller that owns the first view controller.
+ @param vc          The first view controller in the array of view controllers.
+ @param orientation The orientation being considered.
+ @return            YES if the view controller should be hidden in the specified orientation or NO if it should 
+                    be visible.
+ */
 - (BOOL)splitViewController: (UISplitViewController *)svc
    shouldHideViewController: (UIViewController *)vc
               inOrientation: (UIInterfaceOrientation)orientation
@@ -784,33 +765,58 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
 }
 
 //----------------------------------------------------------------------------------------------------------
-- (void)splitViewController: (UISplitViewController*)aSplitViewController
+/**
+ Tells the delegate that the specified view controller is about to be hidden.
+ 
+ When the split view controller rotates from a landscape to portrait orientation, it normally hides one of its 
+ view controllers. When that happens, it calls this method to coordinate the addition of a button to the toolbar 
+ (or navigation bar) of the remaining custom view controller. If you want the soon-to-be hidden view controller 
+ to be displayed in a popover, you must implement this method and use it to add the specified button to your 
+ interface.
+
+ @param svc                 The split view controller that owns the specified view controller.
+ @param aViewController     The view controller being hidden.
+ @param barButtonItem       A button you can add to your toolbar.
+ @param aPopoverController  The popover controller that uses taps in barButtonItem to display the specified view controller.
+ */
+- (void)splitViewController: (UISplitViewController*)svc
      willHideViewController: (UIViewController *)aViewController
-          withBarButtonItem: (UIBarButtonItem*)aBarButtonItem
+          withBarButtonItem: (UIBarButtonItem*)barButtonItem
        forPopoverController: (UIPopoverController*)aPopoverController
 {
     DLog();
     
     // Keep references to the popover controller and the popover button, and tell the detail view controller to show the button.
-    aBarButtonItem.title            = @"Packages";
+    barButtonItem.title             = @"Packages";
     self.packagesPopoverController  = aPopoverController;
-    self.rootPopoverButtonItem      = aBarButtonItem;
+    self.rootPopoverButtonItem      = barButtonItem;
     
-    OCRBaseDetailViewController <SubstitutableDetailViewController> *detailViewController = (OCRBaseDetailViewController<SubstitutableDetailViewController>*)[[aSplitViewController.viewControllers objectAtIndex: 1] topViewController];
+    OCRBaseDetailViewController <SubstitutableDetailViewController> *detailViewController = (OCRBaseDetailViewController<SubstitutableDetailViewController>*)[[svc.viewControllers objectAtIndex: 1] topViewController];
     [detailViewController showRootPopoverButtonItem: _rootPopoverButtonItem
                                      withController: aPopoverController];
 }
 
 
 //----------------------------------------------------------------------------------------------------------
-- (void)splitViewController: (UISplitViewController*)aSplitViewController
+/**
+ Tells the delegate that the specified view controller is about to be shown again.
+ 
+ When the view controller rotates from a portrait to landscape orientation, it shows its hidden view controller 
+ once more. If you added the specified button to your toolbar to facilitate the display of the hidden view 
+ controller in a popover, you must implement this method and use it to remove that button.
+
+ @param svc                 The split view controller that owns the specified view controller.
+ @param aViewController     The view controller being hidden.
+ @param button              The button used to display the view controller while it was hidden.
+ */
+- (void)splitViewController: (UISplitViewController*)svc
      willShowViewController: (UIViewController *)aViewController
-  invalidatingBarButtonItem: (UIBarButtonItem *)aBarButtonItem
+  invalidatingBarButtonItem: (UIBarButtonItem *)button
 {
     DLog();
     
     // Nil out references to the popover controller and the popover button, and tell the detail view controller to hide the button.
-    OCRBaseDetailViewController <SubstitutableDetailViewController> *detailViewController = (OCRBaseDetailViewController<SubstitutableDetailViewController>*)[[aSplitViewController.viewControllers objectAtIndex: 1] topViewController];
+    OCRBaseDetailViewController <SubstitutableDetailViewController> *detailViewController = (OCRBaseDetailViewController<SubstitutableDetailViewController>*)[[svc.viewControllers objectAtIndex: 1] topViewController];
     [detailViewController invalidateRootPopoverButtonItem: _rootPopoverButtonItem];
     self.packagesPopoverController  = nil;
     self.rootPopoverButtonItem      = nil;
@@ -820,27 +826,35 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
 #pragma mark - Private methods
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Loop through the cells in the collection view and update their sequence_number.
+ 
+ When and add, move, or delete operation completes call this method to update the sequence_number in the
+ database.
+ */
 - (void)resequencePackages
 {
     DLog();
     
-    NSArray *packages = [self.fetchedResultsController fetchedObjects];
+    // Get the array of packages as they are after the add, move, or delete
+    NSArray *packages = [self.fetchedResultsController fetchedObjects];         // TODO - don't we want the UI's order?
     
+    // Get the number of sections in order to construct an indexPath
     NSInteger sectionCount = [self.collectionView numberOfSections];
-    NSIndexPath *indexPath;
-    OCRPackagesCell *packagesCell;
-    Packages *aPackage;
     
+    // Start our sequence numbers at 1
     int i = 1;
     for (NSInteger section = 0; section < sectionCount; section++) {
         NSInteger itemCount = [self.collectionView numberOfItemsInSection: section];
         for (NSInteger item = 0; item < itemCount; item++) {
-            indexPath       = [NSIndexPath indexPathForItem: item
-                                                  inSection: section];
-            packagesCell    = (OCRPackagesCell *)[self.collectionView cellForItemAtIndexPath: indexPath];
+            // Construct an NSIndexPath given the section and row
+            NSIndexPath *indexPath          = [NSIndexPath indexPathForItem: item
+                                                                  inSection: section];
+            // ...and get the cooresponding cell from the collection view
+            OCRPackagesCell *packagesCell   = (OCRPackagesCell *)[self.collectionView cellForItemAtIndexPath: indexPath];
 
             DLog(@"indexPath=%@, tag=%d", indexPath, packagesCell.tag);
-            aPackage = [packages objectAtIndex: packagesCell.tag];
+            Packages *aPackage = [packages objectAtIndex: packagesCell.tag];    // TODO - backwards - we want to iterate this array
             [aPackage setSequence_number: [NSNumber numberWithInt: i++]];       // TODO - sequence number does not seem to stick
             DLog(@"%@", [aPackage debugDescription]);
         }
@@ -849,6 +863,15 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
 
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Helper method called when a cell has moved to move the cooresponding package.
+ 
+ After the user re-orders the cells representing packages, call this method to re-order the packages in the
+ package array and resequence them.
+ 
+ @param indexPath       The starting NSIndexPath of the cell.
+ @param newIndexPath    The destination of the move.
+ */
 - (void)moveItemAtIndexPath: (NSIndexPath *)indexPath
                 toIndexPath: (NSIndexPath *)newIndexPath
 {
@@ -877,6 +900,22 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
 #pragma mark - Seque handling
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Notifies the view controller that a segue is about to be performed.
+ 
+ The default implementation of this method does nothing. Your view controller overrides this method when it 
+ needs to pass relevant data to the new view controller. The segue object describes the transition and includes 
+ references to both view controllers involved in the segue.
+ 
+ Because segues can be triggered from multiple sources, you can use the information in the segue and sender 
+ parameters to disambiguate between different logical paths in your app. For example, if the segue originated 
+ from a table view, the sender parameter would identify the table view cell that the user tapped. You could use 
+ that information to set the data on the destination view controller.
+
+ @param segue   The segue object containing information about the view controllers involved in the segue.
+ @param sender  The object that initiated the segue. You might use this parameter to perform different actions 
+                based on which control (or other object) initiated the segue.
+ */
 - (void)prepareForSegue: (UIStoryboardSegue *)segue
                  sender: (id)sender
 {
@@ -979,6 +1018,11 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
 #pragma mark - Fetched results controller
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Singleton method to retrieve the fetchedResultsController, instantiating it if necessary.
+ 
+ @return    An initialized NSFetchedResultsController.
+ */
 - (NSFetchedResultsController *)fetchedResultsController
 {
     DLog();
@@ -1006,15 +1050,12 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
     /*
      By setting sectionNameKeyPath to nil, we are stating we want everything in a single section
      */
-    NSFetchedResultsController *fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest: fetchRequest
-                                                                                               managedObjectContext: [kAppDelegate managedObjectContext]
-                                                                                                 sectionNameKeyPath: nil
-                                                                                                          cacheName: @"Root"];
-    // Set the delegate as self
-    fetchedResultsController.delegate = self;
-    
-    // Save the just created fetchedResultsController as a property of our class
-    self.fetchedResultsController = fetchedResultsController;
+    self.fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest: fetchRequest
+                                                                        managedObjectContext: [kAppDelegate managedObjectContext]
+                                                                          sectionNameKeyPath: nil
+                                                                                   cacheName: @"Root"];
+    // Set the delegate to self
+    _fetchedResultsController.delegate = self;
     
     // ...and start fetching results
 	NSError *error = nil;
@@ -1033,13 +1074,22 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
 
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Loads a fresh copy of fetched results.
+ 
+ This method is called when the underlying data in the persistent store (may have) changed.
+ 
+ @param note    The NSNotification object associated with the event that triggered the need to reload.
+ */
 - (void)reloadFetchedResults: (NSNotification*)note
 {
     DLog();
     
-    // because the app delegate now loads the NSPersistentStore into the NSPersistentStoreCoordinator asynchronously
-    // the NSManagedObjectContext is set up before any persistent stores are registered
-    // we need to fetch again after the persistent store is loaded
+    /*
+     Because the app delegate now loads the NSPersistentStore into the NSPersistentStoreCoordinator asynchronously
+     the NSManagedObjectContext is set up before any persistent stores are registered we need to fetch again
+     after the persistent store is loaded
+     */
     
     NSError *error = nil;
     
@@ -1048,14 +1098,13 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
         NSString* msg = NSLocalizedString( @"Failed to reload data after syncing with iCloud.", nil);
         [OCAUtilities showErrorWithMessage: msg];
     }
-    DLog(@"reloadingData");
-//    [self.collectionView reloadData];
 }
 
 #pragma mark - Fetched results controller delegate
 
 // TODO need to throughly comment this section
 
+//----------------------------------------------------------------------------------------------------------
 /**
  The fetched results controller can "batch" updates to improve performance and preserve battery life.
  
@@ -1066,8 +1115,6 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
  @param sectionIndex    the index of the changed section
  @param type            the NSFetchedResultsChangeType of the change
  */
-
-//----------------------------------------------------------------------------------------------------------
 - (void)controller: (NSFetchedResultsController *)controller
   didChangeSection: (id <NSFetchedResultsSectionInfo>)sectionInfo
            atIndex: (NSUInteger)sectionIndex
@@ -1093,6 +1140,28 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
 
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Notifies the receiver that a fetched object has been changed due to an add, remove, move, or update.
+ 
+ The fetched results controller reports changes to its section before changes to the fetch result objects.
+ 
+ Changes are reported with the following heuristics:
+ * On add and remove operations, only the added/removed object is reported.
+   It’s assumed that all objects that come after the affected object are also moved, but these moves are not reported.
+ * A move is reported when the changed attribute on the object is one of the sort descriptors used in the fetch request.
+   An update of the object is assumed in this case, but no separate update message is sent to the delegate.
+ * An update is reported when an object’s state changes, but the changed attributes aren’t part of the sort keys.
+ 
+ This method may be invoked many times during an update event (for example, if you are importing data on a background 
+ thread and adding them to the context in a batch). You should consider carefully whether you want to update the table 
+ view on receipt of each message.
+ 
+ @param controller      The fetched results controller that sent the message.
+ @param anObject        The object in controller’s fetched results that changed.
+ @param indexPath       The index path of the changed object (this value is nil for insertions).
+ @param type            The type of change. For valid values see “NSFetchedResultsChangeType”.
+ @param newIndexPath    The destination path for the object for insertions or moves (this value is nil for a deletion).
+ */
 - (void)controller: (NSFetchedResultsController *)controller
    didChangeObject: (id)anObject
        atIndexPath: (NSIndexPath *)indexPath
@@ -1125,6 +1194,9 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
 
 
 //----------------------------------------------------------------------------------------------------------
+/*
+ 
+ */
 - (void)controllerDidChangeContent: (NSFetchedResultsController *)controller
 {
     DLog();

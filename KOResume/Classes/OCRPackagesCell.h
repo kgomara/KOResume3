@@ -13,6 +13,9 @@
 #import <UIKit/UIKit.h>
 #import <OCAEditableCollectionViewFlowLayout/OCAEditableCollectionViewFlowLayoutCell.h>
 
+extern CGFloat const kOCRPackagesCellHeight;
+extern CGFloat const kOCRPackagesCellWidthPadding;
+
 @interface OCRPackagesCell : OCAEditableCollectionViewFlowLayoutCell
 
 /**
