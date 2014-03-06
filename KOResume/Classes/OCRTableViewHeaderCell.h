@@ -11,6 +11,9 @@
 FOUNDATION_EXPORT   NSString    *const  kOCRHeaderCell;
 extern              CGFloat     const   kOCRHeaderCellHeight;
 
+/**
+ Manage a table view header cell object
+ */
 @interface OCRTableViewHeaderCell : UITableViewCell
 
 /**

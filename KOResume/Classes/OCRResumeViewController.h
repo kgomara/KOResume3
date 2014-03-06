@@ -9,6 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "OCRBaseDetailViewController.h"
 
+/**
+ Manage a Resume object.
+ */
 @interface OCRResumeViewController : OCRBaseDetailViewController <UITextViewDelegate, UISplitViewControllerDelegate, OCRDetailViewProtocol,
                                                                   NSFetchedResultsControllerDelegate, UITableViewDataSource, UITableViewDelegate>
 

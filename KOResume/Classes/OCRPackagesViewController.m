@@ -317,6 +317,7 @@ BOOL isEditModeActive;
 /**
  Handle dismissal of the alert
  
+ @param alertView       The alertView just dismissed.
  @param buttonIndex     The index of the button the user pressed.
  */
 - (void)    alertView:(UIAlertView *)alertView
@@ -644,7 +645,7 @@ BOOL isEditModeActive;
 
  @param collectionView          The collection view object displaying the flow layout.
  @param indexPath               The index path of the item.
- @param                         YES if the cell can be moved, NO if not.
+ @return                        YES if the cell can be moved, NO if not.
 */
 - (BOOL)collectionView: (UICollectionView *)collectionView
 canMoveItemAtIndexPath: (NSIndexPath *)indexPath
@@ -1195,20 +1196,44 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
 
 //----------------------------------------------------------------------------------------------------------
 /*
+ Notifies the receiver that the fetched results controller has completed processing of one or more changes 
+ due to an add, remove, move, or update.
  
+ This method is invoked after all invocations of controller:didChangeObject:atIndexPath:forChangeType:newIndexPath: 
+ and controller:didChangeSection:atIndex:forChangeType: have been sent for a given change event (such as the 
+ controller receiving a NSManagedObjectContextDidSaveNotification notification).
+ 
+ @param controller      The fetched results controller that sent the message.
  */
 - (void)controllerDidChangeContent: (NSFetchedResultsController *)controller
 {
     DLog();
     
-    
+    /*
+     sectionChanges is an array of NSDictionary objects used to batch changes to sections in the fetch results.
+     
+     In the case of Packages, there is only 1 section so there will never be changes. Implemented for the
+     sake of completeness.
+     */
+    // Check to see if there are section changes
     if ([_sectionChanges count] > 0) {
+        // ...yes, we have changes to make
         [self.collectionView performBatchUpdates: ^{
-            
+            /*
+             performBatchUpdates animates multiple insert, delete, reload, and move operations as a group.
+             
+             You can use this method in cases where you want to make multiple changes to the collection view in 
+             one single animated operation, as opposed to in several separate animations. You might use this method 
+             to insert, delete, reload or move cells or use it to change the layout parameters associated with one 
+             or more cells. Use the blocked passed in the updates parameter to specify all of the operations you 
+             want to perform.
+             */
             for (NSDictionary *change in _sectionChanges) {
+                // For each change dictionary, iterate through the changes
                 [change enumerateKeysAndObjectsUsingBlock: ^(NSNumber *key, id obj, BOOL *stop) {
-                    
+                    // ...get the type
                     NSFetchedResultsChangeType type = [key unsignedIntegerValue];
+                    // ...and perform the insert, delete, or update operation on the collection view
                     switch (type) {
                         case NSFetchedResultsChangeInsert:
                             [self.collectionView insertSections: [NSIndexSet indexSetWithIndex: [obj unsignedIntegerValue]]];
@@ -1227,13 +1252,22 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
         } completion:nil];
     }
     
+    /*
+     objectChanges is an array of NSDictionary objects used to batch changes to objects in the collection view
+     */
+    // Check to see if there are object changes -- but sectionChanges, if any, have all been applied
     if ([_objectChanges count] > 0 && [_sectionChanges count] == 0) {
+        // ...yes, we have changes to make
         [self.collectionView performBatchUpdates: ^{
-            
+            /*
+             see the performBatchUpdates comment above
+             */
             for (NSDictionary *change in _objectChanges) {
+                // For each change dictionary, iterate through the changes
                 [change enumerateKeysAndObjectsUsingBlock: ^(NSNumber *key, id obj, BOOL *stop) {
-                    
+                    // ...get the type
                     NSFetchedResultsChangeType type = [key unsignedIntegerValue];
+                    // ...and perform the insert, delete, update, or move operation on the collection view
                     switch (type) {
                         case NSFetchedResultsChangeInsert:
                             [self.collectionView insertItemsAtIndexPaths: @[obj]];
@@ -1257,6 +1291,7 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
         } completion:nil];
     }
     
+    // We processed all the changes, empty the arrays
     [_sectionChanges removeAllObjects];
     [_objectChanges removeAllObjects];
 }
