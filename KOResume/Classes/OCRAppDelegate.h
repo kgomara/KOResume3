@@ -38,7 +38,7 @@
  
  @param moc the managed object context to save.
  */
-- (void)saveContext:(NSManagedObjectContext *)moc;
+- (void)saveContext: (NSManagedObjectContext *)moc;
 
 /**
  Save any changes made to the NSManagedObjectContext and return when the operation completes.
@@ -48,6 +48,6 @@
  
  @param moc the managed object context to save.
  */
-- (void)saveContextAndWait:(NSManagedObjectContext *)moc;
+- (void)saveContextAndWait: (NSManagedObjectContext *)moc;
 
 @end

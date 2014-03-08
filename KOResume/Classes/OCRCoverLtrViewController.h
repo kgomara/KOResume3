@@ -10,7 +10,7 @@
 #import "OCRBaseDetailViewController.h"
 
 /**
- The view controller that manages cover letter objects.
+ Manage cover letter objects.
  */
 @interface OCRCoverLtrViewController : OCRBaseDetailViewController <UITextViewDelegate, UISplitViewControllerDelegate, OCRDetailViewProtocol>
 

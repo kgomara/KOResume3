@@ -14,22 +14,22 @@
 {
 @private
     /**
-     reference to the back button to facilitate swapping buttons between display and edit modes
+     Reference to the back button to facilitate swapping buttons between display and edit modes
      */
     UIBarButtonItem     *backBtn;
     
     /**
-     reference to the edit button to facilitate swapping buttons between display and edit modes
+     Reference to the edit button to facilitate swapping buttons between display and edit modes
      */
     UIBarButtonItem     *editBtn;
     
     /**
-     reference to the save button to facilitate swapping buttons between display and edit modes
+     Reference to the save button to facilitate swapping buttons between display and edit modes
      */
     UIBarButtonItem     *saveBtn;
     
     /**
-     reference to the cancel button to facilitate swapping buttons between display and edit modes
+     Reference to the cancel button to facilitate swapping buttons between display and edit modes
      */
     UIBarButtonItem     *cancelBtn;
 }
@@ -41,13 +41,21 @@
 #pragma mark - Life Cycle methods
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Called after the controller’s view is loaded into memory.
+ 
+ This method is called after the view controller has loaded its view hierarchy into memory. This method is
+ called regardless of whether the view hierarchy was loaded from a nib file or created programmatically in
+ the loadView method. You usually override this method to perform additional initialization on views that
+ were loaded from nib files.
+ */
 - (void)viewDidLoad
 {
     DLog();
     
     [super viewDidLoad];
 	
-	self.view.backgroundColor = [UIColor clearColor];
+	self.view.backgroundColor   = [UIColor clearColor];
     // Set the default button title
     self.backButtonTitle        = NSLocalizedString(@"Packages", nil);
     
@@ -67,7 +75,24 @@
 
 
 //----------------------------------------------------------------------------------------------------------
-- (void)viewWillAppear:(BOOL)animated
+/**
+ Notifies the view controller that its view is about to be added to a view hierarchy.
+ 
+ This method is called before the receiver’s view is about to be added to a view hierarchy and before any
+ animations are configured for showing the view. You can override this method to perform custom tasks associated
+ with displaying the view. For example, you might use this method to change the orientation or style of the
+ status bar to coordinate with the orientation or style of the view being presented. If you override this method,
+ you must call super at some point in your implementation.
+ 
+ For more information about the how views are added to view hierarchies by a view controller, and the sequence of
+ messages that occur, see “Responding to Display-Related Notifications”.
+ 
+ Note
+ If a view controller is presented by a view controller inside of a popover, this method is not invoked on the presenting view controller after the presented controller is dismissed.
+ 
+ @param animated        If YES, the view is being added to the window using an animation.
+ */
+- (void)viewWillAppear: (BOOL)animated
 {
     DLog();
     [super viewWillAppear: animated];
@@ -90,7 +115,21 @@
 
 
 //----------------------------------------------------------------------------------------------------------
-- (void)viewWillDisappear:(BOOL)animated
+/**
+ Notifies the view controller that its view is about to be removed from a view hierarchy.
+ 
+ This method is called in response to a view being removed from a view hierarchy. This method is called before 
+ the view is actually removed and before any animations are configured.
+ 
+ Subclasses can override this method and use it to commit editing changes, resign the first responder status of 
+ the view, or perform other relevant tasks. For example, you might use this method to revert changes to the 
+ orientation or style of the status bar that were made in the viewDidDisappear: method when the view was first 
+ presented. If you override this method, you must call super at some point in your implementation.
+ 
+ 
+ @param animated        If YES, the disappearance of the view is being animated.
+ */
+- (void)viewWillDisappear: (BOOL)animated
 {
     DLog();
     
@@ -207,7 +246,7 @@
     DLog();
     
     // Save the changes from the textView into the selected cover letter
-    [(Packages *)self.selectedManagedObject setCover_ltr:self.coverLtrFld.text];
+    [(Packages *)self.selectedManagedObject setCover_ltr: self.coverLtrFld.text];
     
     // We've complete editing, "close" the undo group
     [[[kAppDelegate managedObjectContext] undoManager] endUndoGrouping];
@@ -264,7 +303,7 @@
  
  @param aNotification   the NSNotification containing information about the keyboard.
  */
-- (void)keyboardWillShow:(NSNotification*)aNotification
+- (void)keyboardWillShow: (NSNotification*)aNotification
 {
     DLog();
     
@@ -297,7 +336,7 @@
  
  @param aNotification   the NSNotification containing information about the keyboard.
  */
-- (void)keyboardWillBeHidden:(NSNotification*)aNotification
+- (void)keyboardWillBeHidden: (NSNotification*)aNotification
 {
     DLog();
     
@@ -310,7 +349,20 @@
 #pragma mark - UITextView delegate methods
 
 //----------------------------------------------------------------------------------------------------------
-- (BOOL)textViewShouldBeginEditing:(UITextView *)textView
+/**
+ Asks the delegate if editing should begin in the specified text view.
+ 
+ When the user performs an action that would normally initiate an editing session, the text view calls this
+ method first to see if editing should actually proceed. In most circumstances, you would simply return YES
+ from this method to allow editing to proceed.
+ 
+ Implementation of this method by the delegate is optional. If it is not present, editing proceeds as if this
+ method had returned YES.
+ 
+ @param textView        The text view for which editing is about to begin.
+ @returns               YES if an editing session should be initiated; otherwise, NO to disallow editing.
+ */
+- (BOOL)textViewShouldBeginEditing: (UITextView *)textView
 {
     DLog();
     
@@ -319,7 +371,16 @@
 
 
 //----------------------------------------------------------------------------------------------------------
-- (void)textViewDidEndEditing:(UITextView *)textView
+/**
+ Tells the delegate that editing of the specified text view has ended.
+ 
+ Implementation of this method is optional. A text view sends this message to its delegate after it closes out
+ any pending edits and resigns its first responder status. You can use this method to tear down any data structures
+ or change any state information that you set when editing began.
+ 
+ @param textView The text view in which editing ended.
+ */
+- (void)textViewDidEndEditing: (UITextView *)textView
 {
     DLog();;
 }
@@ -346,7 +407,7 @@
  
  @param aNote the NSNotification describing the changes.
  */
-- (void)reloadFetchedResults:(NSNotification*)aNote
+- (void)reloadFetchedResults: (NSNotification*)aNote
 {
     DLog();
     

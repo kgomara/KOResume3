@@ -21,7 +21,8 @@
  @param launchOptions   An NSDictionary indicating the reason the app was launched (if any).
  @return BOOL           Always returns YES.
  */
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+- (BOOL)            application: (UIApplication *)application
+  didFinishLaunchingWithOptions: (NSDictionary *)launchOptions
 {
     // Initialize CoreDataController
     _coreDataController = [[OCRCoreDataController alloc] init];
@@ -60,7 +61,7 @@
  
  @param application The UIApplication singleton app object.
  */
-- (void)applicationWillResignActive:(UIApplication *)application
+- (void)applicationWillResignActive: (UIApplication *)application
 {
     /*
      Sent when the application is about to move from active to inactive state. This can occur for certain types
@@ -79,7 +80,7 @@
  
  @param application The UIApplication singleton app object.
  */
-- (void)applicationDidEnterBackground:(UIApplication *)application
+- (void)applicationDidEnterBackground: (UIApplication *)application
 {
     /*
      Use this method to release shared resources, save user data, invalidate timers, and store enough
@@ -98,7 +99,7 @@
  
  @param application The UIApplication singleton app object.
  */
-- (void)applicationWillEnterForeground:(UIApplication *)application
+- (void)applicationWillEnterForeground: (UIApplication *)application
 {
     /*
      Called as part of  transition from the background to the inactive state: here you can undo many of the
@@ -113,7 +114,7 @@
  
  @param application The UIApplication singleton app object.
  */
-- (void)applicationDidBecomeActive:(UIApplication *)application
+- (void)applicationDidBecomeActive: (UIApplication *)application
 {
     /*
      Called when the application is about to terminate.
@@ -128,7 +129,7 @@
  
  @param application The UIApplication singleton app object.
  */
-- (void)applicationWillTerminate:(UIApplication *)application
+- (void)applicationWillTerminate: (UIApplication *)application
 {
     /*
      Called when the application is about to terminate.
@@ -147,7 +148,7 @@
 
  @param application The UIApplication singleton app object.
  */
-- (void)applicationDidReceiveMemoryWarning:(UIApplication *)application
+- (void)applicationDidReceiveMemoryWarning: (UIApplication *)application
 {
     /*
      Free up as much memory as possible by purging cached data objects that can be recreated (or reloaded

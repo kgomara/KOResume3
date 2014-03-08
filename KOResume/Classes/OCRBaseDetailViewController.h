@@ -77,6 +77,6 @@
  
  @param note the NSNotification describing the changes.
  */
-- (void)reloadFetchedResults:(NSNotification*)note;
+- (void)reloadFetchedResults: (NSNotification*)note;
 
 @end

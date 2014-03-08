@@ -73,6 +73,40 @@ BOOL isEditModeActive;
 #pragma mark - View lifecycle
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Prepares the receiver for service after it has been loaded from an Interface Builder archive, or nib file.
+ 
+ The nib-loading infrastructure sends an awakeFromNib message to each object recreated from a nib archive,
+ but only after all the objects in the archive have been loaded and initialized. When an object receives an
+ awakeFromNib message, it is guaranteed to have all its outlet and action connections already established.
+ You must call the super implementation of awakeFromNib to give parent classes the opportunity to perform any
+ additional initialization they require. Although the default implementation of this method does nothing,
+ many UIKit classes provide non-empty implementations. You may call the super implementation at any point
+ during your own awakeFromNib method.
+ 
+ Note - During Interface Builder’s test mode, this message is also sent to objects instantiated from loaded
+ Interface Builder plug-ins. Because plug-ins link against the framework containing the object definition code,
+ Interface Builder is able to call their awakeFromNib method when present. The same is not true for custom
+ objects that you create for your Xcode projects. Interface Builder knows only about the defined outlets and
+ actions of those objects; it does not have access to the actual code for them.
+ 
+ During the instantiation process, each object in the archive is unarchived and then initialized with the method
+ befitting its type. Objects that conform to the NSCoding protocol (including all subclasses of UIView and
+ UIViewController) are initialized using their initWithCoder: method. All objects that do not conform to the
+ NSCoding protocol are initialized using their init method. After all objects have been instantiated and
+ initialized, the nib-loading code reestablishes the outlet and action connections for all of those objects.
+ It then calls the awakeFromNib method of the objects. For more detailed information about the steps followed
+ during the nib-loading process, see “Nib Files” in Resource Programming Guide.
+ 
+ Important - Because the order in which objects are instantiated from an archive is not guaranteed, your
+ initialization methods should not send messages to other objects in the hierarchy. Messages to other objects
+ can be sent safely from within an awakeFromNib method.
+ 
+ Typically, you implement awakeFromNib for objects that require additional set up that cannot be done at
+ design time. For example, you might use this method to customize the default configuration of any controls
+ to match user preferences or the values in other controls. You might also use it to restore individual controls
+ to some previous state of your application.
+ */
 - (void)awakeFromNib
 {
     DLog();
@@ -102,6 +136,14 @@ BOOL isEditModeActive;
 }
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Called after the controller’s view is loaded into memory.
+ 
+ This method is called after the view controller has loaded its view hierarchy into memory. This method is
+ called regardless of whether the view hierarchy was loaded from a nib file or created programmatically in
+ the loadView method. You usually override this method to perform additional initialization on views that
+ were loaded from nib files.
+ */
 - (void)viewDidLoad
 {
     DLog();
@@ -137,17 +179,23 @@ BOOL isEditModeActive;
 }
 
 //----------------------------------------------------------------------------------------------------------
-- (void)didReceiveMemoryWarning
-{
-    // Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-    
-    // Relinquish ownership any cached data, images, etc that aren't in use.
-    ALog();
-}
-
-
-//----------------------------------------------------------------------------------------------------------
+/**
+ Notifies the view controller that its view is about to be added to a view hierarchy.
+ 
+ This method is called before the receiver’s view is about to be added to a view hierarchy and before any
+ animations are configured for showing the view. You can override this method to perform custom tasks associated
+ with displaying the view. For example, you might use this method to change the orientation or style of the
+ status bar to coordinate with the orientation or style of the view being presented. If you override this method,
+ you must call super at some point in your implementation.
+ 
+ For more information about the how views are added to view hierarchies by a view controller, and the sequence of
+ messages that occur, see “Responding to Display-Related Notifications”.
+ 
+ Note
+ If a view controller is presented by a view controller inside of a popover, this method is not invoked on the presenting view controller after the presented controller is dismissed.
+ 
+ @param animated        If YES, the view is being added to the window using an animation.
+ */
 - (void)viewWillAppear: (BOOL)animated
 {
     DLog();
@@ -187,6 +235,19 @@ BOOL isEditModeActive;
 
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Notifies the view controller that its view is about to be removed from a view hierarchy.
+ 
+ This method is called in response to a view being removed from a view hierarchy. This method is called before
+ the view is actually removed and before any animations are configured.
+ 
+ Subclasses can override this method and use it to commit editing changes, resign the first responder status of
+ the view, or perform other relevant tasks. For example, you might use this method to revert changes to the
+ orientation or style of the status bar that were made in the viewDidDisappear: method when the view was first
+ presented. If you override this method, you must call super at some point in your implementation.
+ 
+ @param animated        If YES, the disappearance of the view is being animated.
+ */
 - (void)viewWillDisappear: (BOOL)animated
 {
     // Save any changes
@@ -202,6 +263,32 @@ BOOL isEditModeActive;
 
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Sent to the view controller when the app receives a memory warning.
+ 
+ Your app never calls this method directly. Instead, this method is called when the system determines that the
+ amount of available memory is low.
+ 
+ You can override this method to release any additional memory used by your view controller. If you do, your
+ implementation of this method must call the super implementation at some point.
+ */
+- (void)didReceiveMemoryWarning
+{
+    ALog();
+    
+    // Releases the view if it doesn't have a superview.
+    [super didReceiveMemoryWarning];
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Returns whether the view controller’s contents should auto rotate.
+ 
+ In iOS 5 and earlier, the default return value was NO.
+ 
+ @returns           YES if the content should rotate, otherwise NO. Default value is YES.
+ */
 - (BOOL)shouldAutorotate
 {
     // Always support rotation
@@ -209,6 +296,25 @@ BOOL isEditModeActive;
 }
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Returns all of the interface orientations that the view controller supports.
+ 
+ When the user changes the device orientation, the system calls this method on the root view controller or the
+ topmost presented view controller that fills the window. If the view controller supports the new orientation,
+ the window and view controller are rotated to the new orientation. This method is only called if the view
+ controller’s shouldAutorotate method returns YES.
+ 
+ Override this method to report all of the orientations that the view controller supports. The default values
+ for a view controller’s supported interface orientations is set to UIInterfaceOrientationMaskAll for the iPad
+ idiom and UIInterfaceOrientationMaskAllButUpsideDown for the iPhone idiom.
+ 
+ The system intersects the view controller’s supported orientations with the app's supported orientations (as
+ determined by the Info.plist file or the app delegate's application:supportedInterfaceOrientationsForWindow:
+ method) to determine whether to rotate.
+ 
+ @returns           A bit mask specifying which orientations are supported. See UIInterfaceOrientationMask for
+ valid bit-mask values. The value returned by this method must not be 0.
+ */
 - (NSUInteger)supportedInterfaceOrientations
 {
     // All interface orientations are supported
