@@ -105,6 +105,7 @@ BOOL isEditModeActive;
 - (void)viewDidLoad
 {
     DLog();
+    
     [super viewDidLoad];
     
     // Set the App name as the Title in the Navigation bar
@@ -315,10 +316,12 @@ BOOL isEditModeActive;
 
 //----------------------------------------------------------------------------------------------------------
 /**
- Handle dismissal of the alert
+ Sent to the delegate when the user clicks a button on an alert view.
  
- @param alertView       The alertView just dismissed.
- @param buttonIndex     The index of the button the user pressed.
+ The receiver is automatically dismissed after this method is invoked.
+ 
+ @param alertView       The alert view containing the button.
+ @param buttonIndex     The index of the button that was clicked. The button indices start at 0.
  */
 - (void)    alertView:(UIAlertView *)alertView
  clickedButtonAtIndex: (NSInteger)buttonIndex
@@ -548,30 +551,36 @@ BOOL isEditModeActive;
      
      Using this information we determine the largest width of the three (but not too large to fit in the
      content area) and return a CGSize structure.
+     We use CGRectIntegral here to ensure the rect is actually large enough. Here's the "help" for CGRectIntegral:
+        Returns the smallest rectangle that results from converting the source rectangle values to integers.
+     
+        Returns a rectangle with the smallest integer values for its origin and size that contains the source rectangle.
+        That is, given a rectangle with fractional origin or size values, CGRectIntegral rounds the rectangle’s origin
+        downward and its size upward to the nearest whole integers, such that the result contains the original rectangle.
      */
     
-    // maxTextRect establishes bounds for the largest rect we can allow
-    CGSize maxTextRect = CGSizeMake(collectionView.contentSize.width - 10.0f, kOCRPackagesCellHeight / 3);
+    // maxTextSize establishes bounds for the largest rect we can allow
+    CGSize maxTextSize = CGSizeMake( collectionView.contentSize.width - 10.0f, kOCRPackagesCellHeight / 3);
     
     // First, determine the size required by the the name string, given the user's dynamic text size preference
     NSString *stringToSize  = aPackage.name;
     // ...get the bounding rect
-	CGRect titleRect        = [stringToSize boundingRectWithSize: maxTextRect
-                                                         options: NSStringDrawingUsesLineFragmentOrigin
-                                                      attributes: @{NSFontAttributeName: [UIFont preferredFontForTextStyle: [OCRPackagesCell titleFont]]}
-                                                         context: nil];
+	CGRect titleRect        = CGRectIntegral( [stringToSize boundingRectWithSize: maxTextSize
+                                                                         options: NSStringDrawingUsesLineFragmentOrigin
+                                                                      attributes: @{NSFontAttributeName: [UIFont preferredFontForTextStyle: [OCRPackagesCell titleFont]]}
+                                                                         context: nil]);
     // Similarly, determine the size required by "Cover Letter"
     stringToSize            = NSLocalizedString(@"Cover Letter", nil);
-	CGRect coverLtrRect     = [stringToSize boundingRectWithSize: maxTextRect
-                                                         options: NSStringDrawingUsesLineFragmentOrigin
-                                                      attributes: @{NSFontAttributeName: [UIFont preferredFontForTextStyle: [OCRPackagesCell detailFont]]}
-                                                         context: nil];
+	CGRect coverLtrRect     = CGRectIntegral( [stringToSize boundingRectWithSize: maxTextSize
+                                                                         options: NSStringDrawingUsesLineFragmentOrigin
+                                                                      attributes: @{NSFontAttributeName: [UIFont preferredFontForTextStyle: [OCRPackagesCell detailFont]]}
+                                                                         context: nil]);
     // ...and the name of the resume
     stringToSize            = aPackage.resume.name;
-	CGRect resumeRect       = [stringToSize boundingRectWithSize: maxTextRect
-                                                         options: NSStringDrawingUsesLineFragmentOrigin
-                                                      attributes: @{NSFontAttributeName: [UIFont preferredFontForTextStyle: [OCRPackagesCell detailFont]]}
-                                                         context: nil];
+	CGRect resumeRect       = CGRectIntegral( [stringToSize boundingRectWithSize: maxTextSize
+                                                                         options: NSStringDrawingUsesLineFragmentOrigin
+                                                                      attributes: @{NSFontAttributeName: [UIFont preferredFontForTextStyle: [OCRPackagesCell detailFont]]}
+                                                                         context: nil]);
     
     // In our case we can keep the height constant because the 2 buttons already have sufficient vertical padding.
     result.height       = kOCRPackagesCellHeight;
@@ -838,7 +847,8 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
     DLog();
     
     // Get the array of packages as they are after the add, move, or delete
-    NSArray *packages = [self.fetchedResultsController fetchedObjects];         // TODO - don't we want the UI's order?
+#warning TODO - don't we want the UI's order?
+    NSArray *packages = [self.fetchedResultsController fetchedObjects];
     
     // Get the number of sections in order to construct an indexPath
     NSInteger sectionCount = [self.collectionView numberOfSections];
@@ -855,7 +865,7 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
             OCRPackagesCell *packagesCell   = (OCRPackagesCell *)[self.collectionView cellForItemAtIndexPath: indexPath];
 
             DLog(@"indexPath=%@, tag=%d", indexPath, packagesCell.tag);
-            Packages *aPackage = [packages objectAtIndex: packagesCell.tag];    // TODO - backwards - we want to iterate this array
+            Packages *aPackage = [packages objectAtIndex: packagesCell.tag];    // TODO - backwards - we want to iterate this array?
             [aPackage setSequence_number: [NSNumber numberWithInt: i++]];       // TODO - sequence number does not seem to stick
             DLog(@"%@", [aPackage debugDescription]);
         }
@@ -1102,8 +1112,6 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
 }
 
 #pragma mark - Fetched results controller delegate
-
-// TODO need to throughly comment this section
 
 //----------------------------------------------------------------------------------------------------------
 /**

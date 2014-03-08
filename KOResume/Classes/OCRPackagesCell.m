@@ -101,7 +101,7 @@ CGFloat const kOCRPackagesCellWidthPadding  =  20.0f;
     self.coverLtrButton.titleLabel.font = cellBodyFont;
     self.resumeButton.titleLabel.font   = cellBodyFont;
         
-    // TODO - need to change the contentSize/tableCellHeight?
+#warning TODO - need to change the contentSize/tableCellHeight?
     [self invalidateIntrinsicContentSize];
 }
 

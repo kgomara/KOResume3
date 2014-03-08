@@ -173,13 +173,6 @@
 }
 
 //----------------------------------------------------------------------------------------------------------
-/**
- Reloads the fetched results.
- 
- Invoked by notification when the underlying data objects may have changed.
- 
- @param aNote the NSNotification describing the changes.
- */
 - (void)reloadFetchedResults:(NSNotification*)aNote
 {
     DLog();

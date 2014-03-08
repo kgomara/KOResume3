@@ -44,5 +44,6 @@ extern CGFloat const kOCRAddButtonHeight;
 FOUNDATION_EXPORT NSString *const kOCRUndoActionName;
 FOUNDATION_EXPORT NSString *const kOCRCellID;
 FOUNDATION_EXPORT NSString *const kOCRPackagesCellID;
+FOUNDATION_EXPORT NSString *const kOCRSubtitleTableCell;
 
 @end

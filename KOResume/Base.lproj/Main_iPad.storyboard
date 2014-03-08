@@ -365,7 +365,7 @@
                                             <outlet property="sectionLabel" destination="bJT-bp-GHN" id="yja-lK-TET"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="OCRResumeCell" textLabel="hiM-LK-otc" detailTextLabel="ACZ-cO-4Zu" style="IBUITableViewCellStyleSubtitle" id="b1O-qS-3XO">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="OCRSubtitleTableCell" textLabel="hiM-LK-otc" detailTextLabel="ACZ-cO-4Zu" style="IBUITableViewCellStyleSubtitle" id="b1O-qS-3XO">
                                         <rect key="frame" x="0.0" y="99" width="663" height="44"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="b1O-qS-3XO" id="uBw-HG-0q1">
@@ -425,7 +425,7 @@
                         <outlet property="resumeState" destination="two-Ic-W1y" id="iao-qq-gdf"/>
                         <outlet property="resumeStreet1" destination="dZC-r7-xaL" id="KlG-kC-is0"/>
                         <outlet property="resumeSummary" destination="CkK-dE-dge" id="rLk-Jn-CWj"/>
-                        <outlet property="summarView" destination="J18-CA-jZK" id="Hxj-oR-rGg"/>
+                        <outlet property="summaryView" destination="J18-CA-jZK" id="TuA-bW-SqR"/>
                         <outlet property="tableView" destination="uLa-FC-hD8" id="JAD-Ea-Jpe"/>
                     </connections>
                 </viewController>

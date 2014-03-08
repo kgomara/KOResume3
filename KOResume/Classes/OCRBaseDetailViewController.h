@@ -28,46 +28,55 @@
 @end
 
 /**
- This class defines common properties and methods for detail veiw controllers
+ This class defines common properties and methods for detail veiw controllers.
  */
 @interface OCRBaseDetailViewController : UIViewController <UITableViewDelegate, SubstitutableDetailViewController>
 
 /**
- The package the user selected in the master view controller
+ The managed object the user selected.
+ 
+ Subclasses should either cast or create a type appropriate reference to this object.
  */
 @property (nonatomic, strong) NSManagedObject               *selectedManagedObject;
 
 /**
- The fetchedResultsController used to retrieve the selectedPackage
+ The fetchedResultsController used to retrieve the selectedPackage.
  */
 @property (nonatomic, strong) NSFetchedResultsController    *fetchedResultsController;
 
 /**
- A property used by the master view to cache the back button
+ A property used by the master view to cache the back button.
  */
-@property (strong, nonatomic) UIBarButtonItem               *backButtonCached;
+@property (nonatomic, strong) UIBarButtonItem               *backButtonCached;
 
 /**
- A property used by the master view to cache the popover controller
+ A property used by the master view to cache the popover controller.
  */
-@property (strong, nonatomic) UIPopoverController           *popoverControllerCached;
+@property (nonatomic, strong) UIPopoverController           *popoverControllerCached;
 
 /**
- A reference to the master view's popoverController
+ A reference to the master view's popoverController.
  */
 @property (nonatomic, strong) UIPopoverController           *masterPopoverController;
 
 /**
- A property used by the master view to set the back button title
+ A property used by the master view to set the back button title.
  */
 
 @property (nonatomic, strong) NSString                      *backButtonTitle;
 
 /**
- IBOutlet to the titleLabel
+ IBOutlet to the titleLabel.
  */
 @property (nonatomic, strong) IBOutlet UILabel              *titleLabel;
 
+/**
+ Reloads the fetched results.
+ 
+ Invoked by notification when the underlying data objects may have changed.
+ 
+ @param note the NSNotification describing the changes.
+ */
 - (void)reloadFetchedResults:(NSNotification*)note;
 
 @end

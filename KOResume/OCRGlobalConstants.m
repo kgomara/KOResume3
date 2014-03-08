@@ -30,12 +30,12 @@ NSString *const kOCREducationViewController                                  = @
 NSString *const kOCRPackagesViewController                                   = @"PackagesViewController";
 NSString *const kOCRAccomplishmentsViewController                            = @"AccomplishmentViewController";
 NSString *const kOCRCoverLtrID                                               = @"OCRCoverLtrID";
-NSString *const kOCRResumeViewController                                    = @"ResumeViewController";
+NSString *const kOCRResumeViewController                                     = @"ResumeViewController";
 NSString *const kOCRInfoViewController                                       = @"InfoViewController";
 
 // Storyboard segues
 NSString *const kOCRCvrLtrSegue                                              = @"OCRCvrLtrSegue";
-NSString *const kOCRResumeSegue                                             = @"OCRResumeSegue";
+NSString *const kOCRResumeSegue                                              = @"OCRResumeSegue";
 
 // Miscellaneous constants
 CGFloat const kOCRAddButtonWidth                                             = 29.0f;
@@ -43,5 +43,6 @@ CGFloat const kOCRAddButtonHeight                                            = 2
 NSString *const kOCRUndoActionName                                           = @"Packages_Editing";
 NSString *const kOCRCellID                                                   = @"Cell";
 NSString *const kOCRPackagesCellID                                           = @"OCRPackagesCell";
+NSString *const kOCRSubtitleTableCell                                        = @"OCRSubtitleTableCell";
 
 @end
