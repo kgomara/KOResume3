@@ -58,7 +58,8 @@
  messages that occur, see “Responding to Display-Related Notifications”.
  
  Note
- If a view controller is presented by a view controller inside of a popover, this method is not invoked on the presenting view controller after the presented controller is dismissed.
+ If a view controller is presented by a view controller inside of a popover, this method is not invoked on the 
+ presenting view controller after the presented controller is dismissed.
  
  @param animated        If YES, the view is being added to the window using an animation.
  */

@@ -148,7 +148,8 @@
  messages that occur, see “Responding to Display-Related Notifications”.
  
  Note
- If a view controller is presented by a view controller inside of a popover, this method is not invoked on the presenting view controller after the presented controller is dismissed.
+ If a view controller is presented by a view controller inside of a popover, this method is not invoked on the 
+ presenting view controller after the presented controller is dismissed.
  
  @param animated        If YES, the view is being added to the window using an animation.
  */
@@ -514,7 +515,7 @@
     [kAppDelegate saveContextAndWait: [kAppDelegate managedObjectContext]];
     
     // Cleanup the undoManager
-    [[[kAppDelegate managedObjectContext] undoManager] removeAllActionsWithTarget:self];
+    [[[kAppDelegate managedObjectContext] undoManager] removeAllActionsWithTarget: self];
     // ...and turn off editing in the UI
     [self setUIForEditing: NO];
     [self resetView];
@@ -569,19 +570,21 @@
     // Update editing flag
     self.editing = isEditingMode;
     
-    // ...the add buttons (hidden will be the boolean opposite of isEditingMode
+    // ...the add buttons (hidden is the boolean opposite of isEditingMode)
     [addJobBtn          setHidden: !isEditingMode];
     [addEducationBtn    setHidden: !isEditingMode];
     
     // ...enable/disable table editing
-    [self.tableView setEditing: isEditingMode];
-    // ...and enable/disable resume fields
+    [self.tableView setEditing: isEditingMode
+                      animated: YES];
+    // ...reload the tableView to manifest the change in editing states
+    [self.tableView reloadData];
+    
+    // ...enable/disable resume fields
     [self setFieldsEditable: isEditingMode];
     
-#warning TODO - should we do this here?
-    // ...and reset the UI defaults
-//    [self configureDefaultNavBar];
-//    [self.tableView reloadData];
+    // ...and reset the nav bar defaults
+    [self configureDefaultNavBar];
 }
 
 
@@ -589,10 +592,11 @@
 /*
  API documentation is in .h file.
  
- This is a "public" method (as are the IBOutlet properties).  In Xcode 5 you can declare IB items in the .m
- file and personally I can make an argument for either location. Technically, they should be declared in the
- .h as they are used externally from the class - i.e., in the XIBs. But making them public makes them
- accessible to any compilation unit, and that isn't really want I want.
+ This is a "public" method (as are the IBOutlet properties).  In Xcode 5 you can declare IB items in either 
+ the .m or .h files. I can make an argument for either location. From a C language perspective, they should 
+ be declared in the .h as they are used externally from the class - i.e., in the XIBs. But IMO good object
+ architecture would hide this "implementation detail" from users of the class - declaring them in the .h file 
+ makes them accessible to any compilation unit, and that isn't really want I want.
  
  That said, the general consensus seems to favor putting them in the .h, so that's what we do here.
  */
@@ -600,16 +604,19 @@
 {
     DLog();
     
-    // Get the tag of the sender UIButton
-    int buttonTag = [(UIButton *)sender tag];
-    
-    // ...and use it to prompt for the appropriate entity name.
-    if (buttonTag == k_JobsSection) {
-        [self promptForJobName];
-    } else if (buttonTag == k_EducationSection) {
-        [self promptForEducationName];
-    } else {
-        ALog(@"unexpected tag=%d", buttonTag);
+    // Use the tag of the sender UIButton to prompt for the appropriate entity name.
+    switch ([(UIButton *)sender tag]) {
+        case k_JobsSection:
+            [self promptForJobName];
+            break;
+
+        case k_EducationSection:
+            [self promptForEducationName];
+            break;
+            
+        default:
+            ALog(@"unexpected tag=%@", @([(UIButton *)sender tag]));
+            break;
     }
 }
 
@@ -672,6 +679,7 @@
     /*
      Inserts rows in the receiver at the locations identified by an array of index paths, with an option to 
      animate the insertion.
+     
      UITableView calls the relevant delegate and data source methods immediately afterwards to get the cells 
      and other content for visible cells.
      */
@@ -778,7 +786,7 @@
     DLog();
     
     if (buttonIndex == 1) {
-        // OK button was tapped, get the user's input
+        // OK button was pressed, get the user's input
         self.nuEntityName = [[alertView textFieldAtIndex: 0] text];
         // Use the tag to determine which entity is being added
         if (alertView.tag == k_JobsSection) {
@@ -793,7 +801,7 @@
 }
 
 
-#pragma mark - Table view data source
+#pragma mark - Table view datasource methods
 
 //----------------------------------------------------------------------------------------------------------
 /**
@@ -813,40 +821,19 @@
 
 //----------------------------------------------------------------------------------------------------------
 /**
- Tells the data source to return the number of rows in a given section of a table view. 
+ Asks the data source to verify that the given row is editable.
  
  @param tableView       The table-view object requesting this information.
- @param section         An index number identifying a section in tableView.
- @returns               The number of rows in section.
+ @param indexPath       An index path locating a row in tableView.
+ @returns               YES to allow editing, NO otherwise,
  */
-- (NSInteger)tableView: (UITableView *)tableView
- numberOfRowsInSection: (NSInteger)section
+- (BOOL)    tableView: (UITableView *)tableView
+canEditRowAtIndexPath: (NSIndexPath *)indexPath
 {
-    DLog(@"section=%d", section);
+    DLog();
     
-    /*
-     From a style perspective, I prefer that methods "leave" at the end, so I tend to instantiate a variable
-     to return whatever the method returns, set its value where appropriate, and "fall thru" to the end of 
-     the method.
-     There is nothing wrong with sprinkling return statements throughout the method - e.g., return [_jobArray count];
-     it's just my preference.
-     */
-    NSInteger rowsInSection;
-    
-	switch (section) {
-		case k_JobsSection:
-			rowsInSection = [_jobArray count];
-			break;
-		case k_EducationSection:
-			rowsInSection = [_educationArray count];
-			break;
-		default:
-			ALog(@"Unexpected section = %d", section);
-			rowsInSection = 0;
-			break;
-	}
-    
-    return rowsInSection;
+    // If we are in edit mode allow swipe to delete
+    return self.editing;
 }
 
 
@@ -854,16 +841,16 @@
 /**
  Asks the data source for a cell to insert in a particular location of the table view.
  
- The returned UITableViewCell object is frequently one that the application reuses for performance reasons. 
- You should fetch a previously created cell object that is marked for reuse by sending a 
- dequeueReusableCellWithIdentifier: message to tableView. Various attributes of a table cell are set automatically 
- based on whether the cell is a separator and on information the data source provides, such as for accessory views 
+ The returned UITableViewCell object is frequently one that the application reuses for performance reasons.
+ You should fetch a previously created cell object that is marked for reuse by sending a
+ dequeueReusableCellWithIdentifier: message to tableView. Various attributes of a table cell are set automatically
+ based on whether the cell is a separator and on information the data source provides, such as for accessory views
  and editing controls.
  
  @param tableView       A table-view object requesting the cell.
  @param indexPath       An index path locating a row in tableView.
- @returns               An object inheriting from UITableViewCell that the table view can use for the specified row. 
-                        An assertion is raised if you return nil.
+ @returns               An object inheriting from UITableViewCell that the table view can use for the specified row.
+ An assertion is raised if you return nil.
  */
 - (UITableViewCell *)tableView: (UITableView *)tableView
          cellForRowAtIndexPath: (NSIndexPath *)indexPath
@@ -880,7 +867,6 @@
     return cell;
 }
 
-
 //----------------------------------------------------------------------------------------------------------
 /**
  Configure a cell for the resume.
@@ -892,11 +878,11 @@
           atIndexPath: (NSIndexPath *)indexPath
 {
     DLog();
-    
-    // For each section...
+
     switch (indexPath.section) {
 		case k_JobsSection:
-            // Set the title text content and dynamic text font
+            // We're in the Jobs section,
+            // ...set the title text content and dynamic text font
 			cell.textLabel.text         = [[_jobArray objectAtIndex: indexPath.row] name];
             cell.textLabel.font         = [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline];
             // ...the detail text content and dynamic text font
@@ -906,7 +892,8 @@
 			cell.accessoryType          = UITableViewCellAccessoryDisclosureIndicator;
 			break;
 		case k_EducationSection:
-            // Set the title text content and dynamic text font
+            // We're in the Eduction and Certifications section,
+            // ...set the title text content and dynamic text font
 			cell.textLabel.text         = [[_educationArray objectAtIndex: indexPath.row] name];
             cell.textLabel.font         = [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline];
             // ...the detail text content and dynamic text font
@@ -916,83 +903,203 @@
 			cell.accessoryType          = UITableViewCellAccessoryDisclosureIndicator;
 			break;
 		default:
-			ALog(@"Unexpected section = %d", indexPath.section);
+			ALog(@"Unexpected section = %ld", (long)indexPath.section);
 			break;
 	}
 }
 
-#pragma mark - Table view delegates
-
 //----------------------------------------------------------------------------------------------------------
 /**
- Asks the delegate for a view object to display in the header of the specified section of the table view.
+ Asks the data source to commit the insertion or deletion of a specified row in the receiver.
  
- The returned object can be a UILabel or UIImageView object, as well as a custom view. This method only works 
- correctly when tableView:heightForHeaderInSection: is also implemented.
+ When users tap the insertion (green plus) control or Delete button associated with a UITableViewCell object
+ in the table view, the table view sends this message to the data source, asking it to commit the change. (If
+ the user taps the deletion (red minus) control, the table view then displays the Delete button to get
+ confirmation.) The data source commits the insertion or deletion by invoking the UITableView methods
+ insertRowsAtIndexPaths:withRowAnimation: or deleteRowsAtIndexPaths:withRowAnimation:, as appropriate.
  
- @param tableView       The table-view object asking for the view object.
- @param section         An index number identifying a section of tableView .
- @returns               A view object to be displayed in the header of section .
+ To enable the swipe-to-delete feature of table views (wherein a user swipes horizontally across a row to
+ display a Delete button), you must implement this method.
+ 
+ You should not call setEditing:animated: within an implementation of this method. If for some reason you must,
+ invoke it after a delay by using the performSelector:withObject:afterDelay: method.
+ 
+ @param tableView       The table-view object requesting the insertion or deletion.
+ @param editingStyle    The cell editing style corresponding to a insertion or deletion requested for the row 
+                        specified by indexPath. Possible editing styles are UITableViewCellEditingStyleInsert 
+                        or UITableViewCellEditingStyleDelete.
+ @param indexPath       An index path locating the row in tableView.
  */
-- (UIView *)    tableView: (UITableView *)tableView
-   viewForHeaderInSection: (NSInteger)section
+- (void) tableView: (UITableView *)tableView
+commitEditingStyle: (UITableViewCellEditingStyle)editingStyle
+ forRowAtIndexPath: (NSIndexPath *)indexPath
 {
     DLog();
     
-    OCRTableViewHeaderCell *headerView = [tableView dequeueReusableCellWithIdentifier: kOCRHeaderCell];
-    /*
-     There is a bug in UIKit (see https://devforums.apple.com/message/882042#882042) when using UITableViewCell 
-     as the view for section headers. This has been a common practice throughout the iOS programming community.
-     
-     I designed section header views in IB as prototype table view cells - specifically OCRTableViewHeaderCell, 
-     which subclasses UITableViewCell. This provides the benefit of using dequeueReusableCellWithIdentifier: 
-     to get a view for each section header.
-     
-     Unfortunately this resulted in "no index path for table cell being reused" errors in the log output when
-     inserting new rows. Consequently the content (UILabel and UIButton) disappeared. For whatever reason, 
-     UITableView gets confused if the section header views are UITableViewCells (or subclasses) instead of 
-     just regular UIViews.
-
-     What finally solved it was making the header view just a subclass of UIView instead of UITableViewCell. I
-     still use the prototype cell in IB to lay out the section header view, I simply create a "wrapperView" and
-     add the OCRTableViewHeaderCell as a subview.
-     */
-    UIView *wrapperView = [[UIView alloc] initWithFrame: [headerView frame]];
-    [wrapperView addSubview:headerView];
-    
-    // Set the section dynamic text font, text color, and background color
-	[headerView.sectionLabel setFont:            [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline]];
-	[headerView.sectionLabel setTextColor:       [UIColor blackColor]];
-	[headerView.sectionLabel setBackgroundColor: [UIColor clearColor]];
-    
-    // Set the tag of the addButton to the section the header represents
-    [headerView.addButton setTag:section];
-    
-    // Hide or show the addButton depending on whether we are in editing mode
-    if (self.isEditing) {
-        [headerView.addButton setHidden: NO];
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        // Delete the managed object at the given index path.
+        if (indexPath.section == k_JobsSection) {
+            NSManagedObject *jobToDelete = [_jobArray objectAtIndex: indexPath.row];
+            [[kAppDelegate managedObjectContext] deleteObject: jobToDelete];
+            [_jobArray removeObjectAtIndex: indexPath.row];
+        } else {
+            NSManagedObject *jobToDelete = [_educationArray objectAtIndex: indexPath.row];
+            [[kAppDelegate managedObjectContext] deleteObject: jobToDelete];
+            [_educationArray removeObjectAtIndex: indexPath.row];
+        }
+        // ...delete the object from the tableView
+        [tableView deleteRowsAtIndexPaths: [NSArray arrayWithObject: indexPath]
+                         withRowAnimation: UITableViewRowAnimationFade];
+        // ...and reload the table
+        [tableView reloadData];
     } else {
-        [headerView.addButton setHidden: YES];
+        DLog(@"editingStyle=%@", [NSNumber numberWithInt: editingStyle]);
+    }
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Tells the data source to move a row at a specific location in the table view to another location.
+ 
+ The UITableView object sends this message to the data source when the user presses the reorder control in fromRow.
+ 
+ @param tableView       The table-view object requesting this action.
+ @param fromIndexPath   An index path locating the row to be moved in tableView.
+ @param toIndexPath     An index path locating the row in tableView that is the destination of the move.
+ */
+- (void) tableView: (UITableView *)tableView
+moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
+       toIndexPath: (NSIndexPath *)toIndexPath
+{
+    DLog();
+    
+    if (fromIndexPath.section != toIndexPath.section) {
+        // Cannot move between sections
+        [OCAUtilities showErrorWithMessage: NSLocalizedString(@"Sorry, move not allowed.", nil)];
+        [self.tableView reloadData];
+        return;
     }
     
-    // Finally, set the text content and save a reference to the respective add buttons so they can be
-    // shown or hidden whenever the user turns editing mode on or off
+    // Get the from and to Rows of the table
+    NSUInteger fromRow  = [fromIndexPath row];
+    NSUInteger toRow    = [toIndexPath row];
+    
+    if (toIndexPath.section == k_JobsSection) {
+        // Get the Job at the fromRow
+        Jobs *movedJob = [_jobArray objectAtIndex: fromRow];
+        // ...remove it from that "order"
+        [_jobArray removeObjectAtIndex: fromRow];
+        // ...and insert it where the user wants
+        [_jobArray insertObject: movedJob
+                        atIndex: toRow];
+    } else {
+        // Get the Education at the fromRow
+        Education *movedEducation = [_educationArray objectAtIndex: fromRow];
+        // ...remove it from that "order"
+        [_educationArray removeObjectAtIndex: fromRow];
+        // ...and insert it where the user wants
+        [_educationArray insertObject: movedEducation
+                              atIndex: toRow];
+    }
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Tells the data source to return the number of rows in a given section of a table view.
+ 
+ @param tableView       The table-view object requesting this information.
+ @param section         An index number identifying a section in tableView.
+ @returns               The number of rows in section.
+ */
+- (NSInteger)tableView: (UITableView *)tableView
+ numberOfRowsInSection: (NSInteger)section
+{
+    DLog(@"section=%ld", (long)section);
+    
+    /*
+     From a style perspective, I prefer that methods "leave" at the end, so I tend to instantiate a variable
+     to return whatever the method returns, set its value where appropriate, and "fall thru" to the end of
+     the method.
+     There is nothing wrong with sprinkling return statements throughout the method - e.g., return [_jobArray count];
+     it's just my preference.
+     */
+    NSInteger rowsInSection;
+    
 	switch (section) {
-		case k_JobsSection: {
-			headerView.sectionLabel.text    = NSLocalizedString(@"Professional History", nil);
-            addJobBtn                       = headerView.addButton;
-            break;
-		}
-		case k_EducationSection: {
-			headerView.sectionLabel.text    = NSLocalizedString(@"Education & Certifications", nil);
-            addEducationBtn                 = headerView.addButton;
-            break;
-		}
+		case k_JobsSection:
+			rowsInSection = [_jobArray count];
+			break;
+		case k_EducationSection:
+			rowsInSection = [_educationArray count];
+			break;
 		default:
-			ALog(@"Unexpected section = %d", section);
+			ALog(@"Unexpected section = %ld", (long)section);
+			rowsInSection = 0;
+			break;
 	}
     
-    return wrapperView;
+    return rowsInSection;
+}
+
+
+#pragma mark - Table view delegate methods
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Tells the delegate that the specified row is now selected.
+ 
+ The delegate handles selections in this method. One of the things it can do is exclusively assign the check-mark
+ image (UITableViewCellAccessoryCheckmark) to one row in a section (radio-list style). This method isn’t called
+ when the editing property of the table is set to YES (that is, the table view is in editing mode). See "Managing
+ Selections" in Table View Programming Guide for iOS for further information (and code examples) related to this method.
+ 
+ @param tableView       A table-view object informing the delegate about the new row selection.
+ @param indexPath       An index path locating the new selected row in tableView.
+ */
+- (void)        tableView: (UITableView *)tableView
+  didSelectRowAtIndexPath: (NSIndexPath *)indexPath
+{
+    
+    DLog();
+    switch (indexPath.section) {
+		case k_JobsSection: {
+            DLog(@"Job selected");
+            // Segue to the job
+            //			JobsDetailViewController *detailVC = [[JobsDetailViewController alloc] initWithNibName: KOJobsDetailViewController
+            //                                                                                            bundle: nil];
+            //			// Pass the selected object to the new view controller.
+            //			detailVC.title                      = NSLocalizedString(@"Jobs", nil);
+            //			detailVC.selectedJob                = [self.jobArray objectAtIndex: indexPath.row];
+            //            detailVC.managedObjectContext       = self.managedObjectContext;
+            //            detailVC.fetchedResultsController   = self.fetchedResultsController;
+            //
+            //			[self.navigationController pushViewController: detailVC
+            //                                                 animated: YES];
+			break;
+		}
+		case k_EducationSection: {
+            DLog(@"Education selected");
+            // Segue to the education
+            //			EducationViewController *educationVC = [[EducationViewController alloc] initWithNibName: KOEducationViewController
+            //                                                                                             bundle: nil];
+            //			// Pass the selected object to the new view controller.
+            //            educationVC.selectedEducation           = [self.educationArray objectAtIndex: indexPath.row];
+            //            educationVC.managedObjectContext        = self.managedObjectContext;
+            //            educationVC.fetchedResultsController    = self.fetchedResultsController;
+            //			educationVC.title                       = NSLocalizedString(@"Education", nil);
+            //
+            //			[self.navigationController pushViewController: educationVC
+            //                                                 animated: YES];
+			break;
+		}
+		default:
+			break;
+	}
+    // Clear the selection highlight
+	[tableView deselectRowAtIndexPath: indexPath
+							 animated: YES];
 }
 
 
@@ -1078,157 +1185,78 @@
 	return MAX(44.0f, CGRectGetHeight( CGRectIntegral( titleRect)) + CGRectGetHeight( CGRectIntegral( detailRect)) + 20);
 }
 
-#warning TODO - make sure this kind of editing works
 //----------------------------------------------------------------------------------------------------------
 /**
- Asks the data source to commit the insertion or deletion of a specified row in the receiver.
+ Asks the delegate for a view object to display in the header of the specified section of the table view.
  
- When users tap the insertion (green plus) control or Delete button associated with a UITableViewCell object 
- in the table view, the table view sends this message to the data source, asking it to commit the change. (If 
- the user taps the deletion (red minus) control, the table view then displays the Delete button to get 
- confirmation.) The data source commits the insertion or deletion by invoking the UITableView methods 
- insertRowsAtIndexPaths:withRowAnimation: or deleteRowsAtIndexPaths:withRowAnimation:, as appropriate.
+ The returned object can be a UILabel or UIImageView object, as well as a custom view. This method only works
+ correctly when tableView:heightForHeaderInSection: is also implemented.
  
- To enable the swipe-to-delete feature of table views (wherein a user swipes horizontally across a row to 
- display a Delete button), you must implement this method.
- 
- You should not call setEditing:animated: within an implementation of this method. If for some reason you must, 
- invoke it after a delay by using the performSelector:withObject:afterDelay: method.
- 
- @param tableView       The table-view object requesting the insertion or deletion.
- @param editingStyle    The cell editing style corresponding to a insertion or deletion requested for the row specified by indexPath. Possible editing styles are UITableViewCellEditingStyleInsert or UITableViewCellEditingStyleDelete.
- @param indexPath       An index path locating the row in tableView.
+ @param tableView       The table-view object asking for the view object.
+ @param section         An index number identifying a section of tableView .
+ @returns               A view object to be displayed in the header of section .
  */
-- (void) tableView: (UITableView *)tableView
-commitEditingStyle: (UITableViewCellEditingStyle)editingStyle
- forRowAtIndexPath: (NSIndexPath *)indexPath
+- (UIView *)    tableView: (UITableView *)tableView
+   viewForHeaderInSection: (NSInteger)section
 {
     DLog();
     
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the managed object at the given index path.
-        if (indexPath.section == k_JobsSection) {
-            NSManagedObject *jobToDelete = [_jobArray objectAtIndex: indexPath.row];
-            [[kAppDelegate managedObjectContext] deleteObject: jobToDelete];
-            [_jobArray removeObjectAtIndex: indexPath.row];
-        } else {
-            NSManagedObject *jobToDelete = [_educationArray objectAtIndex: indexPath.row];
-            [[kAppDelegate managedObjectContext] deleteObject: jobToDelete];
-            [_educationArray removeObjectAtIndex: indexPath.row];
-        }
-        // ...delete the object from the tableView
-        [tableView deleteRowsAtIndexPaths: [NSArray arrayWithObject: indexPath]
-                         withRowAnimation: UITableViewRowAnimationFade];
-        // ...and reload the table
-        [tableView reloadData];
+    OCRTableViewHeaderCell *headerView = [tableView dequeueReusableCellWithIdentifier: kOCRHeaderCell];
+    /*
+     There is a bug in UIKit (see https://devforums.apple.com/message/882042#882042) when using UITableViewCell
+     as the view for section headers. This has been a common practice throughout the iOS programming community.
+     
+     I designed section header views in IB as prototype table view cells - specifically OCRTableViewHeaderCell,
+     which subclasses UITableViewCell. This provides the benefit of using dequeueReusableCellWithIdentifier:
+     to get a view for each section header.
+     
+     Unfortunately this resulted in "no index path for table cell being reused" errors in the log output when
+     inserting new rows. Consequently the content (UILabel and UIButton) disappeared. For whatever reason,
+     UITableView gets confused if the section header views are UITableViewCells (or subclasses) instead of
+     just regular UIViews.
+     
+     What finally solved it was making the header view just a subclass of UIView instead of UITableViewCell. I
+     still use the prototype cell in IB to lay out the section header view, I simply create a "wrapperView" and
+     add the OCRTableViewHeaderCell as a subview.
+     */
+    UIView *wrapperView = [[UIView alloc] initWithFrame: [headerView frame]];
+    [wrapperView addSubview:headerView];
+    
+    // Set the section dynamic text font, text color, and background color
+	[headerView.sectionLabel setFont:            [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline]];
+	[headerView.sectionLabel setTextColor:       [UIColor blackColor]];
+	[headerView.sectionLabel setBackgroundColor: [UIColor clearColor]];
+    
+    // Set the tag of the addButton to the section the header represents
+    [headerView.addButton setTag:section];
+    
+    // Hide or show the addButton depending on whether we are in editing mode
+    if (self.isEditing) {
+        [headerView.addButton setHidden: NO];
     } else {
-        DLog(@"editingStyle=%d", editingStyle);
-    }
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Tells the data source to move a row at a specific location in the table view to another location.
- 
- The UITableView object sends this message to the data source when the user presses the reorder control in fromRow.
- 
- @param tableView       The table-view object requesting this action.
- @param fromIndexPath   An index path locating the row to be moved in tableView.
- @param toIndexPath     An index path locating the row in tableView that is the destination of the move.
- */
-- (void) tableView: (UITableView *)tableView
-moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
-       toIndexPath: (NSIndexPath *)toIndexPath
-{
-    DLog();
-    
-    if (fromIndexPath.section != toIndexPath.section) {
-        // Cannot move between sections
-        [OCAUtilities showErrorWithMessage: NSLocalizedString(@"Sorry, move not allowed.", nil)];
-        [self.tableView reloadData];
-        return;
+        [headerView.addButton setHidden: YES];
     }
     
-    // Get the from and to Rows of the table
-    NSUInteger fromRow  = [fromIndexPath row];
-    NSUInteger toRow    = [toIndexPath row];
-    
-    if (toIndexPath.section == k_JobsSection) {
-        // Get the Job at the fromRow
-        Jobs *movedJob = [_jobArray objectAtIndex: fromRow];
-        // ...remove it from that "order"
-        [_jobArray removeObjectAtIndex: fromRow];
-        // ...and insert it where the user wants
-        [_jobArray insertObject: movedJob
-                        atIndex: toRow];
-    } else {
-        // Get the Education at the fromRow
-        Education *movedEducation = [_educationArray objectAtIndex: fromRow];
-        // ...remove it from that "order"
-        [_educationArray removeObjectAtIndex: fromRow];
-        // ...and insert it where the user wants
-        [_educationArray insertObject: movedEducation
-                              atIndex: toRow];
-    }
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Tells the delegate that the specified row is now selected.
- 
- The delegate handles selections in this method. One of the things it can do is exclusively assign the check-mark 
- image (UITableViewCellAccessoryCheckmark) to one row in a section (radio-list style). This method isn’t called 
- when the editing property of the table is set to YES (that is, the table view is in editing mode). See "Managing 
- Selections" in Table View Programming Guide for iOS for further information (and code examples) related to this method.
- 
- @param tableView       A table-view object informing the delegate about the new row selection.
- @param indexPath       An index path locating the new selected row in tableView.
- */
-- (void)        tableView: (UITableView *)tableView
-  didSelectRowAtIndexPath: (NSIndexPath *)indexPath
-{
-    
-    DLog();
-    switch (indexPath.section) {
+    // Finally, set the text content and save a reference to the respective add buttons so they can be
+    // shown or hidden whenever the user turns editing mode on or off
+	switch (section) {
 		case k_JobsSection: {
-            DLog(@"Job selected");
-            // Segue to the job
-//			JobsDetailViewController *detailVC = [[JobsDetailViewController alloc] initWithNibName: KOJobsDetailViewController
-//                                                                                            bundle: nil];
-//			// Pass the selected object to the new view controller.
-//			detailVC.title                      = NSLocalizedString(@"Jobs", nil);
-//			detailVC.selectedJob                = [self.jobArray objectAtIndex: indexPath.row];
-//            detailVC.managedObjectContext       = self.managedObjectContext;
-//            detailVC.fetchedResultsController   = self.fetchedResultsController;
-//			
-//			[self.navigationController pushViewController: detailVC
-//                                                 animated: YES];
-			break;
+			headerView.sectionLabel.text    = NSLocalizedString(@"Professional History", nil);
+            addJobBtn                       = headerView.addButton;
+            break;
 		}
 		case k_EducationSection: {
-            DLog(@"Education selected");
-            // Segue to the education
-//			EducationViewController *educationVC = [[EducationViewController alloc] initWithNibName: KOEducationViewController
-//                                                                                             bundle: nil];
-//			// Pass the selected object to the new view controller.
-//            educationVC.selectedEducation           = [self.educationArray objectAtIndex: indexPath.row];
-//            educationVC.managedObjectContext        = self.managedObjectContext;
-//            educationVC.fetchedResultsController    = self.fetchedResultsController;
-//			educationVC.title                       = NSLocalizedString(@"Education", nil);
-//			
-//			[self.navigationController pushViewController: educationVC
-//                                                 animated: YES];
-			break;
+			headerView.sectionLabel.text    = NSLocalizedString(@"Education & Certifications", nil);
+            addEducationBtn                 = headerView.addButton;
+            break;
 		}
 		default:
-			break;
+			ALog(@"Unexpected section = %ld", (long)section);
 	}
-    // Clear the selection highlight
-	[tableView deselectRowAtIndexPath: indexPath
-							 animated: YES];
+    
+    return wrapperView;
 }
+
 
 #pragma mark - Keyboard handlers
 

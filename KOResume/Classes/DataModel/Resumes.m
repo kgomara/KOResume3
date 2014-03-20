@@ -37,13 +37,13 @@ NSString *const kOCRResumesEntity = @"Resumes";
     result = [result stringByAppendingFormat: @"   mobile_phone      = %@\n", self.mobile_phone];
     result = [result stringByAppendingFormat: @"   email             = %@\n", self.email];
     result = [result stringByAppendingFormat: @"   summary           = %@\n", first30];
-    result = [result stringByAppendingFormat: @"   has [%d] education entities:", self.education.count];
+    result = [result stringByAppendingFormat: @"   has [%@] education entities:", @(self.education.count)];
     if (self.education.count > 0) {
         for (Education *edu in self.education) {
             result = [result stringByAppendingFormat: @"\n      education.name        = %@", edu.name];
         }
     }
-    result = [result stringByAppendingFormat: @"\n   has [%d] job entities:", self.job.count];
+    result = [result stringByAppendingFormat: @"\n   has [%@] job entities:", @(self.job.count)];
     if (self.job.count > 0) {
         for (Jobs *job in self.job) {
             result = [result stringByAppendingFormat: @"\n      job.name                  = %@", job.name];

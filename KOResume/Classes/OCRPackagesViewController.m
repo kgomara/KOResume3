@@ -192,7 +192,8 @@ BOOL isEditModeActive;
  messages that occur, see “Responding to Display-Related Notifications”.
  
  Note
- If a view controller is presented by a view controller inside of a popover, this method is not invoked on the presenting view controller after the presented controller is dismissed.
+ If a view controller is presented by a view controller inside of a popover, this method is not invoked on the 
+ presenting view controller after the presented controller is dismissed.
  
  @param animated        If YES, the view is being added to the window using an animation.
  */
@@ -455,7 +456,7 @@ BOOL isEditModeActive;
 - (IBAction)didPressCoverLtrButton: (id)sender
 {
     // configureCell:atIndexPath sets the tag on the button
-    DLog(@"sender = %d", [(UIButton *)sender tag]);
+    DLog(@"sender = %@", @([(UIButton *)sender tag]));
     
     // Check to see if we're in editMode
     if (isEditModeActive) {
@@ -477,7 +478,7 @@ BOOL isEditModeActive;
 - (IBAction)didPressResumeButton: (id)sender
 {
     // configureCell:atIndexPath sets the tag on the button
-    DLog(@"sender = %d", [(UIButton *)sender tag]);
+    DLog(@"sender = %@", @([(UIButton *)sender tag]));
     
     // Check to see if we're in editMode
     if (isEditModeActive) {
@@ -518,7 +519,7 @@ BOOL isEditModeActive;
 - (NSInteger)collectionView: (UICollectionView *)collectionView
      numberOfItemsInSection: (NSInteger)section
 {
-    DLog(@"section=%d", [[self.fetchedResultsController sections] count]);
+    DLog(@"section=%@", @([[self.fetchedResultsController sections] count]));
     
     /*
      In our case, we only want a single section, so our fetchedResultsController is set up to retrieve everything
@@ -526,7 +527,7 @@ BOOL isEditModeActive;
      */
     id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController.sections objectAtIndex:0];
     NSUInteger rows = [sectionInfo numberOfObjects];
-    DLog(@"rows=%d", rows);
+    DLog(@"rows=%@", @(rows));
 
     return rows;
 }
@@ -893,7 +894,8 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
  @param svc                 The split view controller that owns the specified view controller.
  @param aViewController     The view controller being hidden.
  @param barButtonItem       A button you can add to your toolbar.
- @param aPopoverController  The popover controller that uses taps in barButtonItem to display the specified view controller.
+ @param aPopoverController  The popover controller that uses taps in barButtonItem to display the specified 
+                            view controller.
  */
 - (void)splitViewController: (UISplitViewController*)svc
      willHideViewController: (UIViewController *)aViewController
@@ -970,7 +972,6 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
             // ...and get the cooresponding cell from the collection view
             OCRPackagesCell *packagesCell   = (OCRPackagesCell *)[self.collectionView cellForItemAtIndexPath: indexPath];
 
-            DLog(@"indexPath=%@, tag=%d", indexPath, packagesCell.tag);
             Packages *aPackage = [packages objectAtIndex: packagesCell.tag];    // TODO - backwards - we want to iterate this array?
             [aPackage setSequence_number: [NSNumber numberWithInt: i++]];       // TODO - sequence number does not seem to stick
             DLog(@"%@", [aPackage debugDescription]);
@@ -1085,7 +1086,9 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
         /*
          A common strategy for passing data between controller objects is to declare public properties in the receiving object
          and have the instantiator set those properties.
-         Here we pass the Package represented by the cell the user tapped, as well as the ManagedObjectContext and FetchedResultsController
+         
+         Here we pass the Package represented by the cell the user tapped, as well as the ManagedObjectContext and 
+         FetchedResultsController.
          
          An alternative strategy for data that is global scope by nature is to set those properties on the UIApplication
          delegate and reference them as [[[UIApplication sharedApplication] delegate] foo_bar]. In our case, there is only one

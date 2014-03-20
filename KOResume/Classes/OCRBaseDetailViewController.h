@@ -11,7 +11,8 @@
 #import "OCRPackagesViewController.h"
 
 /**
- OCRDetailViewProtocol is a protocol that detail view controllers must adopt. It defines methods that the base class can invoke on subclasses.
+ OCRDetailViewProtocol is a protocol that detail view controllers must adopt. It defines methods that 
+ the base class can invoke on subclasses.
  */
 @protocol OCRDetailViewProtocol <NSObject>
 

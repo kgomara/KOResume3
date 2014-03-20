@@ -33,7 +33,7 @@ NSString *const kOCRJobsEntity = @"Jobs";
     result = [result stringByAppendingFormat: @"   start_date        = %@\n", [dateFormatter stringFromDate: self.start_date]];
     result = [result stringByAppendingFormat: @"   end_date          = %@\n", [dateFormatter stringFromDate: self.end_date]];
     result = [result stringByAppendingFormat: @"   summary           = %@\n", first30];
-    result = [result stringByAppendingFormat: @"   has [%d] accomplishment entities:", self.accomplishment.count];
+    result = [result stringByAppendingFormat: @"   has [%@] accomplishment entities:", @(self.accomplishment.count)];
     if (self.accomplishment.count > 0) {
         for (Accomplishments *acc in self.accomplishment) {
             result = [result stringByAppendingFormat: @"\n      accomplishment.name   = %@", acc.name];
