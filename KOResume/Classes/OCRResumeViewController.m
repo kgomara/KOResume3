@@ -181,7 +181,7 @@
                                                  name: UIContentSizeCategoryDidChangeNotification
                                                object: nil];
     /*
-     The base class calls removeObserver in viewWillDisappear
+     This class inherits viewWillDisappear from the base class, which calls removeObserver
      */
 }
 
@@ -212,19 +212,19 @@
 {
     DLog();
     
-    [self setTextField:_resumeName
-               forData:_selectedResume.name
-         orPlaceHolder:NSLocalizedString(@"Enter resume name", nil)];
+    [self setTextField: _resumeName
+               forData: _selectedResume.name
+         orPlaceHolder: NSLocalizedString(@"Enter resume name", nil)];
 
     
     // Check to see if we are iPad - only the iPad has current job information
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         // The jobsArray is always in sequence_number order
-        // If there is at least 1 Job...
+        // Check to see if there is at least 1 Job...
         if ([_jobArray count] > 0) {
-            // ...get the first one
+            // ...if so, get the first one,
             Jobs *currentJob        = [_jobArray objectAtIndex:0];
-            // ...populate the current job information in the summaryView
+            // ...use it to populate the current job information in the summaryView,
             _currentJobTitle.text   = currentJob.title;
             _currentJobName.text    = currentJob.name;
             // ...and make sure the "at" label is visible
@@ -401,7 +401,7 @@
 /**
  Handle the notification that the user changed the dynamic text size.
  
- This method is invoked by NSNotification when the user changes the text size. We apply a new UIFont instance
+ This method is invoked by notification when the user changes the text size. We apply a new UIFont instance
  to each label, text field, and text view that uses dynamic font styles.
  
  @param aNotification   The NSNotification associated with the event.
@@ -459,23 +459,8 @@
 {
     DLog();
     
-    // Turn editing on
-    self.editing = YES;
-
-    // ...show the add buttons
-    [addJobBtn          setHidden: NO];
-    [addEducationBtn    setHidden: NO];
-    
-    // ...and turn on editing in the UI
+    // Turn on editing in the UI
     [self setUIForEditing: YES];
-    
-    // Set up the navigation items and save/cancel buttons
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects: saveBtn, cancelBtn, nil];
-    } else {
-        self.navigationItem.leftBarButtonItem  = cancelBtn;
-        self.navigationItem.rightBarButtonItem = saveBtn;
-    }
     
     // Start an undo group...it will either be commited in didPressSaveButton or
     //    undone in didPressCancelButton
@@ -547,9 +532,11 @@
     
     // Cleanup the undoManager
     [[[kAppDelegate managedObjectContext] undoManager] removeAllActionsWithTarget: self];
-    
-    // ...and turn off editing in the UI
+
+    // Re-sort the tables as editing may have moved their order in the tableView
     [self loadViewFromSelectedObject];
+    [self sortTables];
+    // ...and turn off editing in the UI
     [self setUIForEditing: NO];
     [self resetView];
 }
@@ -577,14 +564,21 @@
     // ...enable/disable table editing
     [self.tableView setEditing: isEditingMode
                       animated: YES];
-    // ...reload the tableView to manifest the change in editing states
-    [self.tableView reloadData];
-    
     // ...enable/disable resume fields
     [self setFieldsEditable: isEditingMode];
     
-    // ...and reset the nav bar defaults
-    [self configureDefaultNavBar];
+    if (isEditingMode) {
+        // Set up the navigation items and save/cancel buttons
+        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+            self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects: saveBtn, cancelBtn, nil];
+        } else {
+            self.navigationItem.leftBarButtonItem  = cancelBtn;
+            self.navigationItem.rightBarButtonItem = saveBtn;
+        }
+    } else {
+        // Reset the nav bar defaults
+        [self configureDefaultNavBar];
+    }
 }
 
 
@@ -665,19 +659,21 @@
     job.name            = _nuEntityName;
     // ...the created timestamp to now
     job.created_date    = [NSDate date];
-    // ...and the resume link to this resume
+    // ...and the resume link to the resume we are managing
     job.resume          = _selectedResume;
     
     // Insert the newly created entity into the array in the first (zero-ith) position
     [_jobArray insertObject: job
                     atIndex: 0];
+    // ...and resequence the Jobs and Education objects
+    [self resequenceTables];
     
     // Construct an indexPath
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow: 0
                                                 inSection: k_JobsSection];
     
     /*
-     Inserts rows in the receiver at the locations identified by an array of index paths, with an option to 
+     Insert rows in the receiver at the locations identified by an array of index paths, with an option to
      animate the insertion.
      
      UITableView calls the relevant delegate and data source methods immediately afterwards to get the cells 
@@ -735,6 +731,8 @@
     // Insert the newly created entity into the array in the first (zero-ith) position
     [_educationArray insertObject: education
                           atIndex: 0];
+    // ...and resequence the Jobs and Education objects
+    [self resequenceTables];
     
     // Construct an indexPath
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow: 0
@@ -850,7 +848,7 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
  @param tableView       A table-view object requesting the cell.
  @param indexPath       An index path locating a row in tableView.
  @returns               An object inheriting from UITableViewCell that the table view can use for the specified row.
- An assertion is raised if you return nil.
+                        An assertion is raised if you return nil.
  */
 - (UITableViewCell *)tableView: (UITableView *)tableView
          cellForRowAtIndexPath: (NSIndexPath *)indexPath
@@ -863,7 +861,7 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
 	// ...and configure it
     [self configureCell: cell
             atIndexPath: indexPath];
-    
+
     return cell;
 }
 
@@ -1067,31 +1065,31 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
 		case k_JobsSection: {
             DLog(@"Job selected");
             // Segue to the job
-            //			JobsDetailViewController *detailVC = [[JobsDetailViewController alloc] initWithNibName: KOJobsDetailViewController
-            //                                                                                            bundle: nil];
-            //			// Pass the selected object to the new view controller.
-            //			detailVC.title                      = NSLocalizedString(@"Jobs", nil);
-            //			detailVC.selectedJob                = [self.jobArray objectAtIndex: indexPath.row];
-            //            detailVC.managedObjectContext       = self.managedObjectContext;
-            //            detailVC.fetchedResultsController   = self.fetchedResultsController;
-            //
-            //			[self.navigationController pushViewController: detailVC
-            //                                                 animated: YES];
+//			JobsDetailViewController *detailVC = [[JobsDetailViewController alloc] initWithNibName: KOJobsDetailViewController
+//                                                                                            bundle: nil];
+//			// Pass the selected object to the new view controller.
+//			detailVC.title                      = NSLocalizedString(@"Jobs", nil);
+//			detailVC.selectedJob                = [self.jobArray objectAtIndex: indexPath.row];
+//            detailVC.managedObjectContext       = self.managedObjectContext;
+//            detailVC.fetchedResultsController   = self.fetchedResultsController;
+//
+//			[self.navigationController pushViewController: detailVC
+//                                                 animated: YES];
 			break;
 		}
 		case k_EducationSection: {
             DLog(@"Education selected");
             // Segue to the education
-            //			EducationViewController *educationVC = [[EducationViewController alloc] initWithNibName: KOEducationViewController
-            //                                                                                             bundle: nil];
-            //			// Pass the selected object to the new view controller.
-            //            educationVC.selectedEducation           = [self.educationArray objectAtIndex: indexPath.row];
-            //            educationVC.managedObjectContext        = self.managedObjectContext;
-            //            educationVC.fetchedResultsController    = self.fetchedResultsController;
-            //			educationVC.title                       = NSLocalizedString(@"Education", nil);
-            //
-            //			[self.navigationController pushViewController: educationVC
-            //                                                 animated: YES];
+//			EducationViewController *educationVC = [[EducationViewController alloc] initWithNibName: KOEducationViewController
+//                                                                                             bundle: nil];
+//			// Pass the selected object to the new view controller.
+//            educationVC.selectedEducation           = [self.educationArray objectAtIndex: indexPath.row];
+//            educationVC.managedObjectContext        = self.managedObjectContext;
+//            educationVC.fetchedResultsController    = self.fetchedResultsController;
+//			educationVC.title                       = NSLocalizedString(@"Education", nil);
+//
+//			[self.navigationController pushViewController: educationVC
+//                                                 animated: YES];
 			break;
 		}
 		default:
