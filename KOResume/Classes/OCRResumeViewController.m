@@ -127,7 +127,7 @@
     
     // Set editing off
     self.editing = NO;
-    [self setUIForEditing: NO];
+    [self setUIWithEditing: NO];
     
     // Sort the job and education tables by sequence_number
     [self sortTables];
@@ -460,7 +460,7 @@
     DLog();
     
     // Turn on editing in the UI
-    [self setUIForEditing: YES];
+    [self setUIWithEditing: YES];
     
     // Start an undo group...it will either be commited in didPressSaveButton or
     //    undone in didPressCancelButton
@@ -502,7 +502,7 @@
     // Cleanup the undoManager
     [[[kAppDelegate managedObjectContext] undoManager] removeAllActionsWithTarget: self];
     // ...and turn off editing in the UI
-    [self setUIForEditing: NO];
+    [self setUIWithEditing: NO];
     [self resetView];
 }
 
@@ -536,8 +536,9 @@
     // Re-sort the tables as editing may have moved their order in the tableView
     [self loadViewFromSelectedObject];
     [self sortTables];
+    [self.tableView reloadData];
     // ...and turn off editing in the UI
-    [self setUIForEditing: NO];
+    [self setUIWithEditing: NO];
     [self resetView];
 }
 
@@ -550,7 +551,7 @@
  
  @param isEditingMode   YES if we are going into edit mode, NO otherwise.
  */
-- (void)setUIForEditing: (BOOL)isEditingMode
+- (void)setUIWithEditing: (BOOL)isEditingMode
 {
     DLog();
     
@@ -592,7 +593,7 @@
  architecture would hide this "implementation detail" from users of the class - declaring them in the .h file 
  makes them accessible to any compilation unit, and that isn't really want I want.
  
- That said, the general consensus seems to favor putting them in the .h, so that's what we do here.
+ That said, the general consensus seems to favor declaring them in the .h, so that's what we do here.
  */
 - (IBAction)didPressAddButton: (id)sender
 {
