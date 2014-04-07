@@ -36,6 +36,8 @@ FOUNDATION_EXPORT NSString *const kOCRInfoViewController;
 // Storyboard segues
 FOUNDATION_EXPORT NSString *const kOCRCvrLtrSegue;
 FOUNDATION_EXPORT NSString *const kOCRResumeSegue;
+FOUNDATION_EXPORT NSString *const kOCRJobsSegue;
+FOUNDATION_EXPORT NSString *const kOCREducationSegue;
 
 // Miscellaneous constants
 extern CGFloat const kOCRAddButtonWidth;
@@ -45,5 +47,7 @@ FOUNDATION_EXPORT NSString *const kOCRUndoActionName;
 FOUNDATION_EXPORT NSString *const kOCRCellID;
 FOUNDATION_EXPORT NSString *const kOCRPackagesCellID;
 FOUNDATION_EXPORT NSString *const kOCRSubtitleTableCell;
+FOUNDATION_EXPORT NSString *const kOCRJobsTableCell;
+FOUNDATION_EXPORT NSString *const kOCREducationTableCell;
 
 @end

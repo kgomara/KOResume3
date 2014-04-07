@@ -194,6 +194,26 @@
 
 
 //----------------------------------------------------------------------------------------------------------
+- (void)setTextField: (UITextField *)textField
+             forData: (NSString *)text
+       orPlaceHolder: (NSString *)placeholder
+{
+    DLog();
+    
+    // Check if the text candidate is null or "empty"
+    if ([text length] > 0) {
+        // There is something in the text candidate - use it
+        textField.text          =  text;
+    } else {
+        // Nothing in text, set the textField.text to an empty string
+        textField.text          = @"";
+        // ...and use the placeholder instead
+        textField.placeholder   = placeholder;
+    }
+}
+
+
+//----------------------------------------------------------------------------------------------------------
 /**
  Configure the view.
  

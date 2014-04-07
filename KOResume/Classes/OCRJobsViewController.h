@@ -1,0 +1,70 @@
+//
+//  OCRJobsViewController.h
+//  KOResume
+//
+//  Created by Kevin O'Mara on 4/6/14.
+//  Copyright (c) 2014 O'Mara Consulting Associates. All rights reserved.
+//
+
+#import "OCRBaseDetailViewController.h"
+
+@interface OCRJobsViewController : OCRBaseDetailViewController  <UITextViewDelegate, UISplitViewControllerDelegate, OCRDetailViewProtocol, UIScrollViewDelegate,
+NSFetchedResultsControllerDelegate, UITableViewDataSource, UITableViewDelegate>
+
+/**
+ IBOutlet to the tableHeaderView.
+ */
+@property (weak, nonatomic) IBOutlet UIView *tableHeaderView;
+
+/**
+ IBOutlet to the name of the Job.
+ */
+@property (weak, nonatomic) IBOutlet UITextField    *jobName;
+
+/**
+ IBOutlet to the title of the job.
+ */
+@property (weak, nonatomic) IBOutlet UITextField    *jobTitle;
+
+/**
+ IBOutlet to job's city.
+ */
+@property (weak, nonatomic) IBOutlet UITextField    *jobCity;
+
+/**
+ IBOutlet to the job's state.
+*/
+@property (weak, nonatomic) IBOutlet UITextField    *jobState;
+
+/**
+ IBOutlet to the job's start date.
+ */
+@property (weak, nonatomic) IBOutlet UITextField    *jobStartDate;
+
+/**
+ IBOutlet to the job's end date.
+ */
+@property (weak, nonatomic) IBOutlet UITextField    *jobEndDate;
+
+/**
+ IBOutlet to the job's summary.
+ */
+@property (weak, nonatomic) IBOutlet UITextView     *jobSummary;
+
+/**
+ IBOutlet to the tableView.
+ */
+@property (weak, nonatomic) IBOutlet UITableView    *tableView;
+
+/**
+ Handles taps of the addButton (+ image) on the section header views.
+ 
+ The tableView:viewForHeaderInSection: method sets the tag field to the
+ section number in order to differentiate between adding jobs vs. education.
+ 
+ @param sender the UIButton that was tapped.
+ */
+- (IBAction)didPressAddButton: (id)sender;
+
+
+@end

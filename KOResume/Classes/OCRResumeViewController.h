@@ -6,7 +6,6 @@
 //  Copyright (c) 2011-2014 O'Mara Consulting Associates. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
 #import "OCRBaseDetailViewController.h"
 
 /**
@@ -16,9 +15,9 @@
                                                                   NSFetchedResultsControllerDelegate, UITableViewDataSource, UITableViewDelegate>
 
 /**
- IBOutlet to the summaryView.
+ IBOutlet to the tableHeaderView.
  */
-@property (weak, nonatomic) IBOutlet UIView *summaryView;
+@property (weak, nonatomic) IBOutlet UIView                 *tableHeaderView;
 
 /**
  IBOutlet to the name of the resume.
@@ -99,7 +98,7 @@
 /**
  IBOutlet to the tableView.
  */
-@property (strong, nonatomic) IBOutlet UITableView            *tableView;
+@property (strong, nonatomic) IBOutlet UITableView          *tableView;
 
 /**
  Handles taps of the addButton (+ image) on the section header views.

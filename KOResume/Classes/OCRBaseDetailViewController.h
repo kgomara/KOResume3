@@ -71,6 +71,19 @@
  */
 @property (nonatomic, strong) IBOutlet UILabel              *titleLabel;
 
+//----------------------------------------------------------------------------------------------------------
+/**
+ Helper method to initialize a UITextField with text or placeholder.
+ 
+ @param textField       The text field to populate.
+ @param text            The text candidate.
+ @param placeholder     The placeholder to use if candidate text is empty.
+ */
+- (void)setTextField: (UITextField *)textField
+             forData: (NSString *)text
+       orPlaceHolder: (NSString *)placeholder;
+
+
 /**
  Reloads the fetched results.
  

@@ -81,6 +81,8 @@
 		D6C6F15918B27AD3003A8C92 /* KOResume.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D6C6F15718B27AD3003A8C92 /* KOResume.xcdatamodeld */; };
 		D6C6F15A18B27AD3003A8C92 /* KOResume.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D6C6F15718B27AD3003A8C92 /* KOResume.xcdatamodeld */; };
 		D6C804C81842684300FD6A42 /* Main_iPad copy.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D6C804C61842684300FD6A42 /* Main_iPad copy.storyboard */; };
+		D6C8D2DF18F1D3E200E76376 /* OCRJobsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6C8D2DE18F1D3E200E76376 /* OCRJobsViewController.m */; };
+		D6C8D2E018F1D3E200E76376 /* OCRJobsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6C8D2DE18F1D3E200E76376 /* OCRJobsViewController.m */; };
 		D6D571B11793366000034AF3 /* OCRCoreDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D571B0179335FF00034AF3 /* OCRCoreDataController.m */; };
 		D6D571B71793395F00034AF3 /* OCRGlobalConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D571B31793395F00034AF3 /* OCRGlobalConstants.m */; };
 		D6D571B81793395F00034AF3 /* OCRGlobalConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D571B31793395F00034AF3 /* OCRGlobalConstants.m */; };
@@ -200,6 +202,8 @@
 		D6C6F15818B27AD3003A8C92 /* KOResume.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = KOResume.xcdatamodel; sourceTree = "<group>"; };
 		D6C7AA5D1870BEED00C72A52 /* OCAEditableCollectionViewFlowLayout.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OCAEditableCollectionViewFlowLayout.xcodeproj; path = OCAEditableCollectionViewFlowLayout/OCAEditableCollectionViewFlowLayout.xcodeproj; sourceTree = SOURCE_ROOT; };
 		D6C804C71842684300FD6A42 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = "Base.lproj/Main_iPad copy.storyboard"; sourceTree = "<group>"; };
+		D6C8D2DD18F1D3E200E76376 /* OCRJobsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRJobsViewController.h; path = Classes/OCRJobsViewController.h; sourceTree = "<group>"; };
+		D6C8D2DE18F1D3E200E76376 /* OCRJobsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRJobsViewController.m; path = Classes/OCRJobsViewController.m; sourceTree = "<group>"; };
 		D6D571AF179335FF00034AF3 /* OCRCoreDataController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OCRCoreDataController.h; path = Classes/DataModel/OCRCoreDataController.h; sourceTree = "<group>"; };
 		D6D571B0179335FF00034AF3 /* OCRCoreDataController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = OCRCoreDataController.m; path = Classes/DataModel/OCRCoreDataController.m; sourceTree = "<group>"; };
 		D6D571B21793395F00034AF3 /* OCRGlobalConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCRGlobalConstants.h; sourceTree = "<group>"; };
@@ -385,6 +389,8 @@
 				D6BA20ED17B881E90068F4D9 /* OCRCoverLtrViewController.m */,
 				D63D82DC179311350065F0A9 /* OCRBaseDetailViewController.h */,
 				D63D82DD179311350065F0A9 /* OCRBaseDetailViewController.m */,
+				D6C8D2DD18F1D3E200E76376 /* OCRJobsViewController.h */,
+				D6C8D2DE18F1D3E200E76376 /* OCRJobsViewController.m */,
 				D6AC3D3C179A3F21001D8D75 /* OCRPackagesCell.h */,
 				D6AC3D3D179A3F21001D8D75 /* OCRPackagesCell.m */,
 				D63D82D9179311350065F0A9 /* OCRPackagesViewController.h */,
@@ -634,6 +640,7 @@
 				D6C6F15918B27AD3003A8C92 /* KOResume.xcdatamodeld in Sources */,
 				D6AC3D3E179A3F21001D8D75 /* OCRPackagesCell.m in Sources */,
 				D63D82DB179311350065F0A9 /* OCRPackagesViewController.m in Sources */,
+				D6C8D2DF18F1D3E200E76376 /* OCRJobsViewController.m in Sources */,
 				D6D572191793A78600034AF3 /* _Resumes.m in Sources */,
 				D6B4864417964863009E6A14 /* Packages.m in Sources */,
 			);
@@ -647,6 +654,7 @@
 				D6B408121798E9F600C567FF /* OCRBaseDetailViewController.m in Sources */,
 				D6B408101798E9DF00C567FF /* OCRPackagesViewController.m in Sources */,
 				D6B4864B1796487C009E6A14 /* Jobs.m in Sources */,
+				D6C8D2E018F1D3E200E76376 /* OCRJobsViewController.m in Sources */,
 				D6D571B81793395F00034AF3 /* OCRGlobalConstants.m in Sources */,
 				D6D572121793A78600034AF3 /* _Accomplishments.m in Sources */,
 				D6B408131798EA5100C567FF /* OCRCoreDataController.m in Sources */,
