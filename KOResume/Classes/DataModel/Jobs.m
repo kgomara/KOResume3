@@ -13,13 +13,6 @@ NSString *const kOCRJobsEntity = @"Jobs";
     [dateFormatter setDateStyle: NSDateFormatterMediumStyle];
     [dateFormatter setTimeStyle: NSDateFormatterNoStyle];
 
-    NSString *first30;
-    if ([self.summary length] > 30) {
-        first30 = [self.summary substringWithRange: NSMakeRange(0, 29)];
-    } else {
-        first30 = self.summary;
-    }
-
     NSString *result = [NSString stringWithFormat:@"%@\n", self];
     
     result = [result stringByAppendingFormat: @"   name              = %@\n", self.name];
@@ -32,7 +25,7 @@ NSString *const kOCRJobsEntity = @"Jobs";
     result = [result stringByAppendingFormat: @"   title             = %@\n", self.title];
     result = [result stringByAppendingFormat: @"   start_date        = %@\n", [dateFormatter stringFromDate: self.start_date]];
     result = [result stringByAppendingFormat: @"   end_date          = %@\n", [dateFormatter stringFromDate: self.end_date]];
-    result = [result stringByAppendingFormat: @"   summary           = %@\n", first30];
+    result = [result stringByAppendingFormat: @"   summary           = %@\n", [self.summary first30]];
     result = [result stringByAppendingFormat: @"   has [%@] accomplishment entities:", @(self.accomplishment.count)];
     if (self.accomplishment.count > 0) {
         for (Accomplishments *acc in self.accomplishment) {

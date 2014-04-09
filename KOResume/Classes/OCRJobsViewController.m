@@ -231,7 +231,7 @@
     if (_selectedJob.end_date) {
         self.jobEndDate.text = [dateFormatter stringFromDate: self.selectedJob.end_date];
     } else {
-        self.jobEndDate.text = NSLocalizedString(@"curent", nil);
+        self.jobEndDate.text = NSLocalizedString(@"Current", nil);
     }
     
     /*
@@ -714,10 +714,10 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
     
     // We're in the Jobs section,
     // ...set the title text content and dynamic text font
-    cell.textLabel.text         = [[_accomplishmentsArray objectAtIndex: indexPath.row] name];
+    cell.textLabel.text         = [(Accomplishments *)[_accomplishmentsArray objectAtIndex: indexPath.row] name];
     cell.textLabel.font         = [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline];
     // ...the detail text content and dynamic text font
-    cell.detailTextLabel.text   = [[_accomplishmentsArray objectAtIndex: indexPath.row] title];
+    cell.detailTextLabel.text   = [[(Accomplishments *)[_accomplishmentsArray objectAtIndex: indexPath.row] summary] first30];
     cell.detailTextLabel.font   = [UIFont preferredFontForTextStyle: UIFontTextStyleSubheadline];
     // ...and the accessory disclosure indicator
     cell.accessoryType          = UITableViewCellAccessoryDisclosureIndicator;

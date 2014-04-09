@@ -15,13 +15,6 @@ NSString *const kOCRResumesEntity = @"Resumes";
     [dateFormatter setDateStyle: NSDateFormatterMediumStyle];
     [dateFormatter setTimeStyle: NSDateFormatterNoStyle];
     
-    NSString *first30;
-    if ([self.summary length] > 30) {
-        first30 = [self.summary substringWithRange: NSMakeRange(0, 29)];
-    } else {
-        first30 = self.summary;
-    }
-    
     NSString *result = [NSString stringWithFormat:@"%@\n", self];
     
     result = [result stringByAppendingFormat: @"   name              = %@\n", self.name];
@@ -36,7 +29,7 @@ NSString *const kOCRResumesEntity = @"Resumes";
     result = [result stringByAppendingFormat: @"   home_phone        = %@\n", self.home_phone];
     result = [result stringByAppendingFormat: @"   mobile_phone      = %@\n", self.mobile_phone];
     result = [result stringByAppendingFormat: @"   email             = %@\n", self.email];
-    result = [result stringByAppendingFormat: @"   summary           = %@\n", first30];
+    result = [result stringByAppendingFormat: @"   summary           = %@\n", [self.summary first30]];
     result = [result stringByAppendingFormat: @"   has [%@] education entities:", @(self.education.count)];
     if (self.education.count > 0) {
         for (Education *edu in self.education) {

@@ -46,6 +46,7 @@ NSString *const kOCRUndoActionName                                          = @"
 NSString *const kOCRCellID                                                  = @"Cell";
 NSString *const kOCRPackagesCellID                                          = @"OCRPackagesCell";
 NSString *const kOCRSubtitleTableCell                                       = @"OCRSubtitleTableCell";
+NSString *const kOCRBasicTableCell                                          = @"OCRBasicTableCell";
 NSString *const kOCRJobsTableCell                                           = @"OCRJobsTableCell";
 NSString *const kOCREducationTableCell                                      = @"OCREducationTableCell";
 
