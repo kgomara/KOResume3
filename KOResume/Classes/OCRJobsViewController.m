@@ -11,6 +11,7 @@
 #import "OCRAppDelegate.h"
 #import "Jobs.h"
 #import "Accomplishments.h"
+#import "SVWebViewController.h"
 
 @interface OCRJobsViewController ()
 {
@@ -521,6 +522,33 @@
     [self promptForAccomplishmentName];
 }
 
+//
+/*
+ API documentation is in .h file. (See above comment).
+ */
+- (IBAction)didPressInfoButton:(id)sender
+{
+    DLog();
+    
+    if (self.isEditing) {
+        [self promptForJobURI];
+    } else {
+        // Open the job.uri in a UIWebView.
+        // First, check to see if we have something that looks like a URI
+        if (self.selectedJob.uri == NULL ||
+           [self.selectedJob.uri rangeOfString: @"://"].location == NSNotFound)
+        {
+            // Not a valid URI
+            return;
+        }
+        
+        // Open the Url in an application webView
+        SVWebViewController *webViewController = [[SVWebViewController alloc] initWithAddress: self.selectedJob.uri];
+        [self.navigationController pushViewController: webViewController
+                                             animated: YES];
+    }
+}
+
 
 //----------------------------------------------------------------------------------------------------------
 /**
@@ -607,6 +635,11 @@
     [alert show];
 }
 
+
+- (void)promptForJobURI
+{
+    DLog();
+}
 
 //----------------------------------------------------------------------------------------------------------
 /**

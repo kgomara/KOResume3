@@ -503,6 +503,9 @@
                                         <state key="normal">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="didPressInfoButton:" destination="L1s-BX-gCi" eventType="touchUpInside" id="t7E-Ll-rEF"/>
+                                        </connections>
                                     </button>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="to" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZjF-uu-GFZ">
                                         <rect key="frame" x="133" y="105" width="15" height="20"/>
@@ -631,6 +634,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="8L3-4t-aGS"/>
                     <connections>
+                        <outlet property="infoButton" destination="n78-sl-XDD" id="OXN-DI-iEJ"/>
                         <outlet property="jobCity" destination="NOC-K4-6gs" id="uBO-ug-l2t"/>
                         <outlet property="jobEndDate" destination="OmE-vc-sLk" id="OAa-fb-4Tm"/>
                         <outlet property="jobName" destination="hGn-j6-JBG" id="0GY-8O-sYj"/>

@@ -63,6 +63,14 @@
 		D6B408121798E9F600C567FF /* OCRBaseDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D63D82DD179311350065F0A9 /* OCRBaseDetailViewController.m */; };
 		D6B408131798EA5100C567FF /* OCRCoreDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D571B0179335FF00034AF3 /* OCRCoreDataController.m */; };
 		D6B408141798EA5B00C567FF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D63D82CA179311350065F0A9 /* main.m */; };
+		D6B4734F18F7B00F004E9D84 /* SVWebViewController.strings in Resources */ = {isa = PBXBuildFile; fileRef = D6B4734218F7B00F004E9D84 /* SVWebViewController.strings */; };
+		D6B4735018F7B00F004E9D84 /* SVWebViewController.strings in Resources */ = {isa = PBXBuildFile; fileRef = D6B4734218F7B00F004E9D84 /* SVWebViewController.strings */; };
+		D6B4735118F7B00F004E9D84 /* SVModalWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6B4734918F7B00F004E9D84 /* SVModalWebViewController.m */; };
+		D6B4735218F7B00F004E9D84 /* SVModalWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6B4734918F7B00F004E9D84 /* SVModalWebViewController.m */; };
+		D6B4735318F7B00F004E9D84 /* SVWebViewController.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D6B4734A18F7B00F004E9D84 /* SVWebViewController.bundle */; };
+		D6B4735418F7B00F004E9D84 /* SVWebViewController.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D6B4734A18F7B00F004E9D84 /* SVWebViewController.bundle */; };
+		D6B4735518F7B00F004E9D84 /* SVWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6B4734C18F7B00F004E9D84 /* SVWebViewController.m */; };
+		D6B4735618F7B00F004E9D84 /* SVWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6B4734C18F7B00F004E9D84 /* SVWebViewController.m */; };
 		D6B4864417964863009E6A14 /* Packages.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D572041793991500034AF3 /* Packages.m */; };
 		D6B4864517964864009E6A14 /* Packages.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D572041793991500034AF3 /* Packages.m */; };
 		D6B486461796486A009E6A14 /* Accomplishments.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D572061793991500034AF3 /* Accomplishments.m */; };
@@ -193,6 +201,18 @@
 		D6B016B41793C16900B86B8D /* KOResume.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; name = KOResume.sqlite; path = Resources/KOResume.sqlite; sourceTree = "<group>"; };
 		D6B256BB18C00554006A0343 /* OCRTableViewHeaderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRTableViewHeaderCell.h; path = Classes/OCRTableViewHeaderCell.h; sourceTree = "<group>"; };
 		D6B256BC18C00554006A0343 /* OCRTableViewHeaderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRTableViewHeaderCell.m; path = Classes/OCRTableViewHeaderCell.m; sourceTree = "<group>"; };
+		D6B4734318F7B00F004E9D84 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/SVWebViewController.strings; sourceTree = "<group>"; };
+		D6B4734418F7B00F004E9D84 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/SVWebViewController.strings; sourceTree = "<group>"; };
+		D6B4734518F7B00F004E9D84 /* es-ES */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-ES"; path = "es-ES.lproj/SVWebViewController.strings"; sourceTree = "<group>"; };
+		D6B4734618F7B00F004E9D84 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/SVWebViewController.strings; sourceTree = "<group>"; };
+		D6B4734718F7B00F004E9D84 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/SVWebViewController.strings; sourceTree = "<group>"; };
+		D6B4734818F7B00F004E9D84 /* SVModalWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVModalWebViewController.h; sourceTree = "<group>"; };
+		D6B4734918F7B00F004E9D84 /* SVModalWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVModalWebViewController.m; sourceTree = "<group>"; };
+		D6B4734A18F7B00F004E9D84 /* SVWebViewController.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = SVWebViewController.bundle; sourceTree = "<group>"; };
+		D6B4734B18F7B00F004E9D84 /* SVWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVWebViewController.h; sourceTree = "<group>"; };
+		D6B4734C18F7B00F004E9D84 /* SVWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVWebViewController.m; sourceTree = "<group>"; };
+		D6B4734D18F7B00F004E9D84 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/SVWebViewController.strings"; sourceTree = "<group>"; };
+		D6B4734E18F7B00F004E9D84 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/SVWebViewController.strings"; sourceTree = "<group>"; };
 		D6BA20EC17B881E90068F4D9 /* OCRCoverLtrViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRCoverLtrViewController.h; path = Classes/OCRCoverLtrViewController.h; sourceTree = "<group>"; };
 		D6BA20ED17B881E90068F4D9 /* OCRCoverLtrViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRCoverLtrViewController.m; path = Classes/OCRCoverLtrViewController.m; sourceTree = "<group>"; };
 		D6BFCF4118748D8F0088D928 /* OCAUtilities.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OCAUtilities.xcodeproj; path = OCAUtilities/OCAUtilities/OCAUtilities.xcodeproj; sourceTree = SOURCE_ROOT; };
@@ -352,6 +372,19 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
+		D6B4734118F7B00F004E9D84 /* SVWebViewController */ = {
+			isa = PBXGroup;
+			children = (
+				D6B4734218F7B00F004E9D84 /* SVWebViewController.strings */,
+				D6B4734818F7B00F004E9D84 /* SVModalWebViewController.h */,
+				D6B4734918F7B00F004E9D84 /* SVModalWebViewController.m */,
+				D6B4734A18F7B00F004E9D84 /* SVWebViewController.bundle */,
+				D6B4734B18F7B00F004E9D84 /* SVWebViewController.h */,
+				D6B4734C18F7B00F004E9D84 /* SVWebViewController.m */,
+			);
+			path = SVWebViewController;
+			sourceTree = "<group>";
+		};
 		D6BFCF4218748D8F0088D928 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -364,6 +397,7 @@
 		D6C7AA5C1870BEB500C72A52 /* SubProjects */ = {
 			isa = PBXGroup;
 			children = (
+				D6B4734118F7B00F004E9D84 /* SVWebViewController */,
 				D6BFCF4118748D8F0088D928 /* OCAUtilities.xcodeproj */,
 				D6C7AA5D1870BEED00C72A52 /* OCAEditableCollectionViewFlowLayout.xcodeproj */,
 			);
@@ -506,6 +540,11 @@
 				fr,
 				"fr-CA",
 				"fr-FR",
+				da,
+				"es-ES",
+				es,
+				"zh-Hans",
+				"zh-Hant",
 			);
 			mainGroup = D63D82B0179311350065F0A9;
 			productRefGroup = D63D82BA179311350065F0A9 /* Products */;
@@ -567,6 +606,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				D63D82D5179311350065F0A9 /* Main_iPad.storyboard in Resources */,
+				D6B4734F18F7B00F004E9D84 /* SVWebViewController.strings in Resources */,
+				D6B4735318F7B00F004E9D84 /* SVWebViewController.bundle in Resources */,
 				D63D82E0179311350065F0A9 /* Images.xcassets in Resources */,
 				D63D82D2179311350065F0A9 /* Main_iPhone.storyboard in Resources */,
 				D6C804C81842684300FD6A42 /* Main_iPad copy.storyboard in Resources */,
@@ -580,8 +621,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D6B4735418F7B00F004E9D84 /* SVWebViewController.bundle in Resources */,
 				D6B016B61793C16900B86B8D /* KOResume.sqlite in Resources */,
 				D63D82F2179311350065F0A9 /* InfoPlist.strings in Resources */,
+				D6B4735018F7B00F004E9D84 /* SVWebViewController.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -640,8 +683,10 @@
 				D6C6F15918B27AD3003A8C92 /* KOResume.xcdatamodeld in Sources */,
 				D6AC3D3E179A3F21001D8D75 /* OCRPackagesCell.m in Sources */,
 				D63D82DB179311350065F0A9 /* OCRPackagesViewController.m in Sources */,
+				D6B4735118F7B00F004E9D84 /* SVModalWebViewController.m in Sources */,
 				D6C8D2DF18F1D3E200E76376 /* OCRJobsViewController.m in Sources */,
 				D6D572191793A78600034AF3 /* _Resumes.m in Sources */,
+				D6B4735518F7B00F004E9D84 /* SVWebViewController.m in Sources */,
 				D6B4864417964863009E6A14 /* Packages.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -666,10 +711,12 @@
 				D6D572181793A78600034AF3 /* _Packages.m in Sources */,
 				D6D572141793A78600034AF3 /* _Education.m in Sources */,
 				D6B408111798E9ED00C567FF /* OCRAppDelegate.m in Sources */,
+				D6B4735218F7B00F004E9D84 /* SVModalWebViewController.m in Sources */,
 				D6AC3D3F179A3F21001D8D75 /* OCRPackagesCell.m in Sources */,
 				D6B256BE18C00554006A0343 /* OCRTableViewHeaderCell.m in Sources */,
 				D6B486471796486B009E6A14 /* Accomplishments.m in Sources */,
 				D6B4864917964876009E6A14 /* Education.m in Sources */,
+				D6B4735618F7B00F004E9D84 /* SVWebViewController.m in Sources */,
 				D6C6F15A18B27AD3003A8C92 /* KOResume.xcdatamodeld in Sources */,
 				D6B4864D17964882009E6A14 /* Resumes.m in Sources */,
 				D63D82F4179311350065F0A9 /* KOResumeTests.m in Sources */,
@@ -737,6 +784,20 @@
 				04F0CFC617FF4F9800930FC9 /* fr-FR */,
 			);
 			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		D6B4734218F7B00F004E9D84 /* SVWebViewController.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D6B4734318F7B00F004E9D84 /* da */,
+				D6B4734418F7B00F004E9D84 /* en */,
+				D6B4734518F7B00F004E9D84 /* es-ES */,
+				D6B4734618F7B00F004E9D84 /* es */,
+				D6B4734718F7B00F004E9D84 /* fr */,
+				D6B4734D18F7B00F004E9D84 /* zh-Hans */,
+				D6B4734E18F7B00F004E9D84 /* zh-Hant */,
+			);
+			name = SVWebViewController.strings;
 			sourceTree = "<group>";
 		};
 		D6C804C61842684300FD6A42 /* Main_iPad copy.storyboard */ = {

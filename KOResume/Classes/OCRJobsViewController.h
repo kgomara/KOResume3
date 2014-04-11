@@ -9,7 +9,7 @@
 #import "OCRBaseDetailViewController.h"
 
 @interface OCRJobsViewController : OCRBaseDetailViewController  <UITextViewDelegate, UISplitViewControllerDelegate, OCRDetailViewProtocol, UIScrollViewDelegate,
-NSFetchedResultsControllerDelegate, UITableViewDataSource, UITableViewDelegate>
+                                                                 NSFetchedResultsControllerDelegate, UITableViewDataSource, UITableViewDelegate>
 
 /**
  IBOutlet to the tableHeaderView.
@@ -57,14 +57,29 @@ NSFetchedResultsControllerDelegate, UITableViewDataSource, UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView    *tableView;
 
 /**
- Handles taps of the addButton (+ image) on the section header views.
+ IBOutlet to the infoButton.
+ */
+@property (weak, nonatomic) IBOutlet UIButton       *infoButton;
+
+/**
+ Handles presses of the addButton (+ image) on the section header views.
  
  The tableView:viewForHeaderInSection: method sets the tag field to the
  section number in order to differentiate between adding jobs vs. education.
  
- @param sender the UIButton that was tapped.
+ @param sender the UIButton that was pressed.
  */
 - (IBAction)didPressAddButton: (id)sender;
 
+/**
+ Handles presses of the infoButton.
+ 
+ The infoButton behavior depends on the editing state. In normal (browse) mode, tapping
+ it opens a browser window with the job.uri as the address. In editing mode tapping it
+ opens an actionSheet that allows the user to edit the job.uri.
+ 
+ @param sender the UIButton that was pressed.
+ */
+- (IBAction)didPressInfoButton:(id)sender;
 
 @end
