@@ -32,6 +32,7 @@ FOUNDATION_EXPORT NSString *const kOCRAccomplishmentsViewController;
 FOUNDATION_EXPORT NSString *const kOCRCoverLtrID;
 FOUNDATION_EXPORT NSString *const kOCRResumeViewController;
 FOUNDATION_EXPORT NSString *const kOCRInfoViewController;
+FOUNDATION_EXPORT NSString *const kOCRDateTableViewController;
 
 // Storyboard segues
 FOUNDATION_EXPORT NSString *const kOCRCvrLtrSegue;
@@ -50,5 +51,9 @@ FOUNDATION_EXPORT NSString *const kOCRSubtitleTableCell;
 FOUNDATION_EXPORT NSString *const kOCRBasicTableCell;
 FOUNDATION_EXPORT NSString *const kOCRJobsTableCell;
 FOUNDATION_EXPORT NSString *const kOCREducationTableCell;
+FOUNDATION_EXPORT NSString *const kOCRDateClearTableCell;
+FOUNDATION_EXPORT NSString *const kOCRDateHeaderTableCell;
+FOUNDATION_EXPORT NSString *const kOCRDatePickerTableCell;
+
 
 @end

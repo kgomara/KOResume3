@@ -12,6 +12,11 @@
 #import "Jobs.h"
 #import "Accomplishments.h"
 #import "SVWebViewController.h"
+#import "OCRDateTableViewController.h"
+
+#define kJobStartDateFieldTag           5
+#define kJobEndDateFieldTag             6
+
 
 @interface OCRJobsViewController ()
 {
@@ -32,6 +37,16 @@
     UIBarButtonItem     *saveBtn;
     
     /**
+     Reference to the done button to facilitate swapping buttons for the date picker.
+     */
+    UIBarButtonItem     *doneBtn;
+    
+    /**
+     Reference to the undo button to facilitate swapping buttons for the date picker.
+     */
+    UIBarButtonItem     *undoBtn;
+    
+    /**
      Reference to the cancel button to facilitate swapping buttons between display and edit modes.
      */
     UIBarButtonItem     *cancelBtn;
@@ -45,18 +60,27 @@
      Reference to the date formatter object.
      */
     NSDateFormatter     *dateFormatter;
+    
+    /**
+     Reference to the date picker.
+     */
+    UIDatePicker        *datePicker;
 
+    /**
+     Indicator of which date field is currently active.
+     */
+    int                 _activeDateFld;
 }
 
 /**
  Array used to keep the Job's accomplishment objects sorted by sequence_number.
  */
-@property (nonatomic, strong) NSMutableArray    *accomplishmentsArray;
+@property (nonatomic, strong)   NSMutableArray      *accomplishmentsArray;
 
 /**
  Variable used to store the new entity name entered when the user adds an accomplishment object.
  */
-@property (nonatomic, strong) NSString          *nuEntityName;
+@property (nonatomic, strong)   NSString            *nuEntityName;
 
 /**
  Convenience reference to the managed object instance we are managing.
@@ -64,7 +88,7 @@
  OCRBaseDetailViewController, of which this is a subclass, declares a selectedManagedObject. We make this
  type-correct reference merely for convenience.
  */
-@property (nonatomic, strong)   Jobs            *selectedJob;
+@property (nonatomic, strong)   Jobs                *selectedJob;
 
 /**
  A boolean flag to indicate whether the user is editing information or simply viewing.
@@ -111,12 +135,20 @@
     cancelBtn   = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel
                                                                 target: self
                                                                 action: @selector(didPressCancelButton)];
+    doneBtn     = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemDone
+                                                                target: self
+                                                                action: @selector(didPressDoneButton)];
+    undoBtn    = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemUndo
+                                                               target: self
+                                                               action: @selector(didPressUndoButton)];
     
     // Set a dateFormatter.
     dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateStyle: NSDateFormatterMediumStyle];
     [dateFormatter setTimeStyle: NSDateFormatterNoStyle];	//Not shown
-
+    
+    // ...datePicker
+    datePicker = [[UIDatePicker alloc] init];
     // ...and the NavBar
     [self configureDefaultNavBar];
     
@@ -222,7 +254,7 @@
     
     [self setTextField: _jobTitle
                forData: _selectedJob.title
-         orPlaceHolder: NSLocalizedString(@"Enter city", nil)];
+         orPlaceHolder: NSLocalizedString(@"Enter job title", nil)];
     
     [self setTextField: _jobState
                forData: _selectedJob.state
@@ -465,6 +497,45 @@
 
 
 //----------------------------------------------------------------------------------------------------------
+- (void)didPressDoneButton
+{
+    DLog();
+    
+    CGRect screenRect   = [[UIScreen mainScreen] applicationFrame];
+    CGRect endFrame     = datePicker.frame;
+    
+    endFrame.origin.y = screenRect.origin.y + screenRect.size.height;
+    
+    // Start the slide down animation
+    [UIView animateWithDuration: 0.3
+                     animations: ^{
+                         datePicker.frame = endFrame;
+                         [self.tableView setContentOffset: CGPointZero
+                                               animated: NO];
+                     }];
+    
+    // Reset the UI
+    self.navigationItem.rightBarButtonItem = saveBtn;
+    self.navigationItem.leftBarButtonItem  = cancelBtn;
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+- (void)didPressUndoButton
+{
+    DLog();
+    
+    if (_activeDateFld == kJobStartDateFieldTag) {
+        self.selectedJob.start_date = NULL;
+        self.jobStartDate.text      = @"";
+    } else {
+        self.selectedJob.end_date   = NULL;
+        self.jobEndDate.text        = @"";
+    }
+}
+
+
+//----------------------------------------------------------------------------------------------------------
 /**
  Set the UI for for editing enabled or disabled.
  
@@ -522,7 +593,7 @@
     [self promptForAccomplishmentName];
 }
 
-//
+//----------------------------------------------------------------------------------------------------------
 /*
  API documentation is in .h file. (See above comment).
  */
@@ -1133,7 +1204,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
 {
     DLog();
     
-    // Always allow editing
+    // Always return YES
     return YES;
 }
 
@@ -1153,6 +1224,118 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     DLog();
 }
 
+
+#pragma mark - UITextFieldDelegate methods
+
+//----------------------------------------------------------------------------------------------------------
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
+{
+    DLog();
+    
+    _activeDateFld = 0;
+    if (textField.tag == kJobStartDateFieldTag ||
+        textField.tag == kJobEndDateFieldTag) {
+        [textField resignFirstResponder];
+        if (!self.selectedJob.start_date) {
+            self.selectedJob.start_date = [NSDate date];
+        }
+        UIStoryboard *storyboard;
+        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+            storyboard = [UIStoryboard storyboardWithName:@"Main_iPad"
+                                                   bundle:nil];
+        } else {
+            storyboard = [UIStoryboard storyboardWithName:@"Main_iPhone"
+                                                      bundle:nil];
+        }
+        OCRDateTableViewController* viewController = [storyboard instantiateViewControllerWithIdentifier: kOCRDateTableViewController];
+        viewController.selectedJob = _selectedJob;
+        // Display the date view controller
+        [self.navigationController pushViewController: viewController
+                                             animated: YES];
+        return NO;
+    }
+    
+    return YES;
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    DLog();
+    
+	[self scrollToViewTextField:textField];
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+- (BOOL)textFieldShouldEndEditing:(UITextField *)textField
+{
+	// Validate fields - nothing to do in this version
+	
+	return YES;
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    DLog();
+    
+	int nextTag = [textField tag] + 1;
+	UIResponder *nextResponder = [textField.superview viewWithTag: nextTag];
+	
+	if (nextResponder) {
+        [nextResponder becomeFirstResponder];
+	} else {
+		[textField resignFirstResponder];       // Dismisses the keyboard
+        [self resetView];
+	}
+	
+	return NO;
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+- (void)animateDatePickerOn
+{
+    DLog();
+    
+    [datePicker setHidden: NO];
+    [self.view bringSubviewToFront: datePicker];
+    
+    // Size up the picker view to our screen and compute the start/end frame origin for our slide up animation
+    // ... compute the start frame
+    CGRect screenRect = [self.view bounds];
+    CGSize pickerSize = [datePicker sizeThatFits: CGSizeZero];
+    CGRect startRect = CGRectMake(0.0, screenRect.origin.y + screenRect.size.height, pickerSize.width, pickerSize.height);
+    datePicker.frame = startRect;
+    
+    // ... compute the end frame
+    CGRect pickerRect = CGRectMake(0.0, screenRect.origin.y + screenRect.size.height - pickerSize.height, pickerSize.width, pickerSize.height);
+    
+    // Start the slide up animation
+    [UIView animateWithDuration: 0.3
+                     animations: ^ {
+                         datePicker.frame = pickerRect;
+                         [self.tableView setContentOffset: CGPointMake(0.0f, 80.f)];
+                     }];
+    // add the "Done" button to the nav bar
+    self.navigationItem.rightBarButtonItem = doneBtn;
+    // ...and the undo button
+    self.navigationItem.leftBarButtonItem = undoBtn;
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+- (void)scrollToViewTextField:(UITextField *)textField
+{
+    DLog();
+    
+	float textFieldOriginY = textField.frame.origin.y;
+	[self.tableView setContentOffset: CGPointMake(0.0f, textFieldOriginY - 20.0f)
+                          animated: YES];
+}
 
 #pragma mark - Fetched Results Controller delegate methods
 

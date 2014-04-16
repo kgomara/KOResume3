@@ -17,4 +17,6 @@
 
 @property (nonatomic, readwrite) SVWebViewControllerAvailableActions availableActions;
 
+- (void)doneButtonClicked:(id)sender;
+
 @end

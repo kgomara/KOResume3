@@ -83,6 +83,14 @@
 		D6B4864D17964882009E6A14 /* Resumes.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D571FE1793991400034AF3 /* Resumes.m */; };
 		D6BA20EE17B881E90068F4D9 /* OCRCoverLtrViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6BA20ED17B881E90068F4D9 /* OCRCoverLtrViewController.m */; };
 		D6BA20EF17B881E90068F4D9 /* OCRCoverLtrViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6BA20ED17B881E90068F4D9 /* OCRCoverLtrViewController.m */; };
+		D6C619FF18FD021100D5BB5D /* OCRDateTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6C619FE18FD021100D5BB5D /* OCRDateTableViewController.m */; };
+		D6C61A0018FD021100D5BB5D /* OCRDateTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6C619FE18FD021100D5BB5D /* OCRDateTableViewController.m */; };
+		D6C61A0718FD070300D5BB5D /* OCRDateHeaderTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D6C61A0618FD070300D5BB5D /* OCRDateHeaderTableViewCell.m */; };
+		D6C61A0818FD070300D5BB5D /* OCRDateHeaderTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D6C61A0618FD070300D5BB5D /* OCRDateHeaderTableViewCell.m */; };
+		D6C61A0B18FD071900D5BB5D /* OCRDatePickerTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D6C61A0A18FD071900D5BB5D /* OCRDatePickerTableViewCell.m */; };
+		D6C61A0C18FD071900D5BB5D /* OCRDatePickerTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D6C61A0A18FD071900D5BB5D /* OCRDatePickerTableViewCell.m */; };
+		D6C61A0F18FD072F00D5BB5D /* OCRDateClearTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D6C61A0E18FD072F00D5BB5D /* OCRDateClearTableViewCell.m */; };
+		D6C61A1018FD072F00D5BB5D /* OCRDateClearTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D6C61A0E18FD072F00D5BB5D /* OCRDateClearTableViewCell.m */; };
 		D6C61B39189DF1F6003E996B /* OCRResumeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6C61B38189DF1F6003E996B /* OCRResumeViewController.m */; };
 		D6C61B3A189DF1F6003E996B /* OCRResumeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6C61B38189DF1F6003E996B /* OCRResumeViewController.m */; };
 		D6C6F14E18AFD58B003A8C92 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = D6C6F14D18AFD58B003A8C92 /* README.md */; };
@@ -216,6 +224,14 @@
 		D6BA20EC17B881E90068F4D9 /* OCRCoverLtrViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRCoverLtrViewController.h; path = Classes/OCRCoverLtrViewController.h; sourceTree = "<group>"; };
 		D6BA20ED17B881E90068F4D9 /* OCRCoverLtrViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRCoverLtrViewController.m; path = Classes/OCRCoverLtrViewController.m; sourceTree = "<group>"; };
 		D6BFCF4118748D8F0088D928 /* OCAUtilities.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OCAUtilities.xcodeproj; path = OCAUtilities/OCAUtilities/OCAUtilities.xcodeproj; sourceTree = SOURCE_ROOT; };
+		D6C619FD18FD021100D5BB5D /* OCRDateTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRDateTableViewController.h; path = Classes/OCRDateTableViewController.h; sourceTree = "<group>"; };
+		D6C619FE18FD021100D5BB5D /* OCRDateTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRDateTableViewController.m; path = Classes/OCRDateTableViewController.m; sourceTree = "<group>"; };
+		D6C61A0518FD070300D5BB5D /* OCRDateHeaderTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRDateHeaderTableViewCell.h; path = Classes/OCRDateHeaderTableViewCell.h; sourceTree = "<group>"; };
+		D6C61A0618FD070300D5BB5D /* OCRDateHeaderTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRDateHeaderTableViewCell.m; path = Classes/OCRDateHeaderTableViewCell.m; sourceTree = "<group>"; };
+		D6C61A0918FD071900D5BB5D /* OCRDatePickerTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRDatePickerTableViewCell.h; path = Classes/OCRDatePickerTableViewCell.h; sourceTree = "<group>"; };
+		D6C61A0A18FD071900D5BB5D /* OCRDatePickerTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRDatePickerTableViewCell.m; path = Classes/OCRDatePickerTableViewCell.m; sourceTree = "<group>"; };
+		D6C61A0D18FD072E00D5BB5D /* OCRDateClearTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRDateClearTableViewCell.h; path = Classes/OCRDateClearTableViewCell.h; sourceTree = "<group>"; };
+		D6C61A0E18FD072F00D5BB5D /* OCRDateClearTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRDateClearTableViewCell.m; path = Classes/OCRDateClearTableViewCell.m; sourceTree = "<group>"; };
 		D6C61B37189DF1F6003E996B /* OCRResumeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRResumeViewController.h; path = Classes/OCRResumeViewController.h; sourceTree = "<group>"; };
 		D6C61B38189DF1F6003E996B /* OCRResumeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRResumeViewController.m; path = Classes/OCRResumeViewController.m; sourceTree = "<group>"; };
 		D6C6F14D18AFD58B003A8C92 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
@@ -419,10 +435,18 @@
 				D6D571C11793585E00034AF3 /* DataModel */,
 				D63D82CD179311350065F0A9 /* OCRAppDelegate.h */,
 				D63D82CE179311350065F0A9 /* OCRAppDelegate.m */,
-				D6BA20EC17B881E90068F4D9 /* OCRCoverLtrViewController.h */,
-				D6BA20ED17B881E90068F4D9 /* OCRCoverLtrViewController.m */,
 				D63D82DC179311350065F0A9 /* OCRBaseDetailViewController.h */,
 				D63D82DD179311350065F0A9 /* OCRBaseDetailViewController.m */,
+				D6BA20EC17B881E90068F4D9 /* OCRCoverLtrViewController.h */,
+				D6BA20ED17B881E90068F4D9 /* OCRCoverLtrViewController.m */,
+				D6C61A0D18FD072E00D5BB5D /* OCRDateClearTableViewCell.h */,
+				D6C61A0E18FD072F00D5BB5D /* OCRDateClearTableViewCell.m */,
+				D6C61A0518FD070300D5BB5D /* OCRDateHeaderTableViewCell.h */,
+				D6C61A0618FD070300D5BB5D /* OCRDateHeaderTableViewCell.m */,
+				D6C61A0918FD071900D5BB5D /* OCRDatePickerTableViewCell.h */,
+				D6C61A0A18FD071900D5BB5D /* OCRDatePickerTableViewCell.m */,
+				D6C619FD18FD021100D5BB5D /* OCRDateTableViewController.h */,
+				D6C619FE18FD021100D5BB5D /* OCRDateTableViewController.m */,
 				D6C8D2DD18F1D3E200E76376 /* OCRJobsViewController.h */,
 				D6C8D2DE18F1D3E200E76376 /* OCRJobsViewController.m */,
 				D6AC3D3C179A3F21001D8D75 /* OCRPackagesCell.h */,
@@ -666,7 +690,9 @@
 			files = (
 				D6D571B71793395F00034AF3 /* OCRGlobalConstants.m in Sources */,
 				D63D82CB179311350065F0A9 /* main.m in Sources */,
+				D6C619FF18FD021100D5BB5D /* OCRDateTableViewController.m in Sources */,
 				D6B4864817964875009E6A14 /* Education.m in Sources */,
+				D6C61A0B18FD071900D5BB5D /* OCRDatePickerTableViewCell.m in Sources */,
 				D6B4864A1796487B009E6A14 /* Jobs.m in Sources */,
 				D6D572131793A78600034AF3 /* _Education.m in Sources */,
 				D6B486461796486A009E6A14 /* Accomplishments.m in Sources */,
@@ -674,7 +700,9 @@
 				D6D572171793A78600034AF3 /* _Packages.m in Sources */,
 				D6B4864C17964881009E6A14 /* Resumes.m in Sources */,
 				D6D572111793A78600034AF3 /* _Accomplishments.m in Sources */,
+				D6C61A0718FD070300D5BB5D /* OCRDateHeaderTableViewCell.m in Sources */,
 				D6BA20EE17B881E90068F4D9 /* OCRCoverLtrViewController.m in Sources */,
+				D6C61A0F18FD072F00D5BB5D /* OCRDateClearTableViewCell.m in Sources */,
 				D63D82CF179311350065F0A9 /* OCRAppDelegate.m in Sources */,
 				D6C61B39189DF1F6003E996B /* OCRResumeViewController.m in Sources */,
 				D6D571B11793366000034AF3 /* OCRCoreDataController.m in Sources */,
@@ -695,6 +723,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D6C61A0818FD070300D5BB5D /* OCRDateHeaderTableViewCell.m in Sources */,
 				D6C61B3A189DF1F6003E996B /* OCRResumeViewController.m in Sources */,
 				D6B408121798E9F600C567FF /* OCRBaseDetailViewController.m in Sources */,
 				D6B408101798E9DF00C567FF /* OCRPackagesViewController.m in Sources */,
@@ -703,7 +732,9 @@
 				D6D571B81793395F00034AF3 /* OCRGlobalConstants.m in Sources */,
 				D6D572121793A78600034AF3 /* _Accomplishments.m in Sources */,
 				D6B408131798EA5100C567FF /* OCRCoreDataController.m in Sources */,
+				D6C61A0018FD021100D5BB5D /* OCRDateTableViewController.m in Sources */,
 				D6BA20EF17B881E90068F4D9 /* OCRCoverLtrViewController.m in Sources */,
+				D6C61A1018FD072F00D5BB5D /* OCRDateClearTableViewCell.m in Sources */,
 				D6D572161793A78600034AF3 /* _Jobs.m in Sources */,
 				D6B408141798EA5B00C567FF /* main.m in Sources */,
 				D6B4864517964864009E6A14 /* Packages.m in Sources */,
@@ -715,6 +746,7 @@
 				D6AC3D3F179A3F21001D8D75 /* OCRPackagesCell.m in Sources */,
 				D6B256BE18C00554006A0343 /* OCRTableViewHeaderCell.m in Sources */,
 				D6B486471796486B009E6A14 /* Accomplishments.m in Sources */,
+				D6C61A0C18FD071900D5BB5D /* OCRDatePickerTableViewCell.m in Sources */,
 				D6B4864917964876009E6A14 /* Education.m in Sources */,
 				D6B4735618F7B00F004E9D84 /* SVWebViewController.m in Sources */,
 				D6C6F15A18B27AD3003A8C92 /* KOResume.xcdatamodeld in Sources */,

@@ -32,6 +32,7 @@ NSString *const kOCRAccomplishmentsViewController                           = @"
 NSString *const kOCRCoverLtrID                                              = @"OCRCoverLtrID";
 NSString *const kOCRResumeViewController                                    = @"ResumeViewController";
 NSString *const kOCRInfoViewController                                      = @"InfoViewController";
+NSString *const kOCRDateTableViewController                                 = @"OCRDateTableViewController";
 
 // Storyboard segues
 NSString *const kOCRCvrLtrSegue                                             = @"OCRCvrLtrSegue";
@@ -49,5 +50,8 @@ NSString *const kOCRSubtitleTableCell                                       = @"
 NSString *const kOCRBasicTableCell                                          = @"OCRBasicTableCell";
 NSString *const kOCRJobsTableCell                                           = @"OCRJobsTableCell";
 NSString *const kOCREducationTableCell                                      = @"OCREducationTableCell";
+NSString *const kOCRDateClearTableCell                                      = @"OCRDateClearTableCell";
+NSString *const kOCRDateHeaderTableCell                                     = @"OCRDateHeaderTableCell";
+NSString *const kOCRDatePickerTableCell                                     = @"OCRDatePickerTableCell";
 
 @end
