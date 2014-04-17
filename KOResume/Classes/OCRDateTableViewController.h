@@ -11,7 +11,9 @@
 
 @interface OCRDateTableViewController : UITableViewController
 
-@property (strong, nonatomic) Jobs      *selectedJob;
+@property (strong, nonatomic) Jobs              *selectedJob;
+
+@property (strong, nonatomic) UIViewController  *delegate;
 
 - (IBAction)dateChanged:(UIDatePicker *)sender;
 

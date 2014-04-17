@@ -216,7 +216,7 @@ CGFloat pickerCellRowHeight;
 //----------------------------------------------------------------------------------------------------------
 - (UITableViewCell *)createDateClearCell
 {
-    OCRDatePickerTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier: kOCRDatePickerTableCell];
+    OCRDatePickerTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier: kOCRDateClearTableCell];
     
     return cell;
 }

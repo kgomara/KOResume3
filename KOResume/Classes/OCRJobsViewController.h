@@ -9,7 +9,7 @@
 #import "OCRBaseDetailViewController.h"
 
 @interface OCRJobsViewController : OCRBaseDetailViewController  <UITextViewDelegate, UISplitViewControllerDelegate, OCRDetailViewProtocol, UIScrollViewDelegate,
-                                                                 NSFetchedResultsControllerDelegate, UITableViewDataSource, UITableViewDelegate>
+                                                                 NSFetchedResultsControllerDelegate, UITableViewDataSource, UITableViewDelegate, UIPopoverControllerDelegate>
 
 /**
  IBOutlet to the tableHeaderView.

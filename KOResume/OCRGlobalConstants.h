@@ -39,6 +39,7 @@ FOUNDATION_EXPORT NSString *const kOCRCvrLtrSegue;
 FOUNDATION_EXPORT NSString *const kOCRResumeSegue;
 FOUNDATION_EXPORT NSString *const kOCRJobsSegue;
 FOUNDATION_EXPORT NSString *const kOCREducationSegue;
+FOUNDATION_EXPORT NSString *const kOCRDateControllerSegue;
 
 // Miscellaneous constants
 extern CGFloat const kOCRAddButtonWidth;

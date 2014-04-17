@@ -442,6 +442,7 @@
                         <rect key="frame" x="0.0" y="64" width="320" height="436"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="OCRDateHeaderTableCell" id="5J7-BE-21f" customClass="OCRDateHeaderTableViewCell">
                                 <rect key="frame" x="0.0" y="22" width="320" height="44"/>
@@ -785,6 +786,9 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                         <outlet property="jobTitle" destination="AZJ-qs-wEh" id="NKl-ut-hxX"/>
                         <outlet property="tableHeaderView" destination="9KN-Pa-xZg" id="IuH-IO-s6M"/>
                         <outlet property="tableView" destination="S0h-TU-gcf" id="fzT-Fr-cUV"/>
+                        <segue destination="ajB-Ob-2oB" kind="popover" identifier="OCRDateControllerSegue" popoverAnchorView="OmE-vc-sLk" id="3mI-7h-1ea">
+                            <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                        </segue>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="At1-PF-GE1" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -95,6 +95,8 @@
  */
 @property (nonatomic, assign, getter=isEditing) BOOL editing;
 
+@property (nonatomic, strong) UIPopoverController   *dateControllerPopover;
+
 @end
 
 @implementation OCRJobsViewController
@@ -1122,12 +1124,31 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
 {
     DLog();
     
-//    if ([[segue identifier] isEqualToString: kOCRAccomplishmentsSegue]) {
-//        OCRAccomplishmentsViewController *detailViewController = segue.destinationViewController;
-//        [detailViewController setSelectedManagedObject: (Accomplishments *)sender];
-//        [detailViewController setBackButtonTitle: _selectedJobs.name];
-//        [detailViewController setFetchedResultsController: self.fetchedResultsController];
-//    }
+    if ([segue.identifier isEqualToString: kOCRDateControllerSegue]) {
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+            if (_dateControllerPopover) {
+                // Menu is being displayed, dismiss it
+                [self dismissDateControllerPopover];
+            } else {
+                UIStoryboardPopoverSegue* popSegue = (UIStoryboardPopoverSegue*)segue;
+                self.dateControllerPopover = popSegue.popoverController;
+                _dateControllerPopover.delegate = self;
+                OCRDateTableViewController *dateControllerVC = (OCRDateTableViewController *)segue.destinationViewController;
+                dateControllerVC.delegate = self;
+                dateControllerVC.selectedJob = _selectedJob;
+                dateControllerVC.preferredContentSize = CGSizeMake(320.0f, 460.0f);
+            }
+        } else {
+            // TODO iPhone segue
+        }
+    }
+}
+
+
+- (void)dismissDateControllerPopover
+{
+    [_dateControllerPopover dismissPopoverAnimated: YES];
+    self.dateControllerPopover = nil;
 }
 
 
@@ -1234,24 +1255,15 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     
     _activeDateFld = 0;
     if (textField.tag == kJobStartDateFieldTag ||
-        textField.tag == kJobEndDateFieldTag) {
+        textField.tag == kJobEndDateFieldTag)
+    {
+        [OCAUtilities dismissKeyboard];
         [textField resignFirstResponder];
         if (!self.selectedJob.start_date) {
             self.selectedJob.start_date = [NSDate date];
         }
-        UIStoryboard *storyboard;
-        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-            storyboard = [UIStoryboard storyboardWithName:@"Main_iPad"
-                                                   bundle:nil];
-        } else {
-            storyboard = [UIStoryboard storyboardWithName:@"Main_iPhone"
-                                                      bundle:nil];
-        }
-        OCRDateTableViewController* viewController = [storyboard instantiateViewControllerWithIdentifier: kOCRDateTableViewController];
-        viewController.selectedJob = _selectedJob;
-        // Display the date view controller
-        [self.navigationController pushViewController: viewController
-                                             animated: YES];
+        [self performSegueWithIdentifier:kOCRDateControllerSegue
+                                  sender:nil];
         return NO;
     }
     

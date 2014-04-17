@@ -39,6 +39,7 @@ NSString *const kOCRCvrLtrSegue                                             = @"
 NSString *const kOCRResumeSegue                                             = @"OCRResumeSegue";
 NSString *const kOCRJobsSegue                                               = @"OCRJobsSegue";
 NSString *const kOCREducationSegue                                          = @"OCREducationSegue";
+NSString *const kOCRDateControllerSegue                                     = @"OCRDateControllerSegue";
 
 // Miscellaneous constants
 CGFloat const kOCRAddButtonWidth                                            = 29.0f;
