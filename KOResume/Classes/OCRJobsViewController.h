@@ -7,9 +7,14 @@
 //
 
 #import "OCRBaseDetailViewController.h"
+#import "OCRDateTableViewController.h"
 
+/**
+ @brief Manage a Jobs object.
+ */
 @interface OCRJobsViewController : OCRBaseDetailViewController  <UITextViewDelegate, UISplitViewControllerDelegate, OCRDetailViewProtocol, UIScrollViewDelegate,
-                                                                 NSFetchedResultsControllerDelegate, UITableViewDataSource, UITableViewDelegate, UIPopoverControllerDelegate>
+                                                                 NSFetchedResultsControllerDelegate, OCRDateTableViewProtocol,
+                                                                 UITableViewDataSource, UITableViewDelegate, UIPopoverControllerDelegate>
 
 /**
  IBOutlet to the tableHeaderView.

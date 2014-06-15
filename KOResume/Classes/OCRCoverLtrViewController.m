@@ -361,7 +361,7 @@
  method had returned YES.
  
  @param textView        The text view for which editing is about to begin.
- @returns               YES if an editing session should be initiated; otherwise, NO to disallow editing.
+ @return               YES if an editing session should be initiated; otherwise, NO to disallow editing.
  */
 - (BOOL)textViewShouldBeginEditing: (UITextView *)textView
 {

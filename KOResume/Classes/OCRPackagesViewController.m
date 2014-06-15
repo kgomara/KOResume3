@@ -288,7 +288,7 @@ BOOL isEditModeActive;
  
  In iOS 5 and earlier, the default return value was NO.
  
- @returns           YES if the content should rotate, otherwise NO. Default value is YES.
+ @return           YES if the content should rotate, otherwise NO. Default value is YES.
  */
 - (BOOL)shouldAutorotate
 {
@@ -313,7 +313,7 @@ BOOL isEditModeActive;
  determined by the Info.plist file or the app delegate's application:supportedInterfaceOrientationsForWindow:
  method) to determine whether to rotate.
  
- @returns           A bit mask specifying which orientations are supported. See UIInterfaceOrientationMask for
+ @return           A bit mask specifying which orientations are supported. See UIInterfaceOrientationMask for
  valid bit-mask values. The value returned by this method must not be 0.
  */
 - (NSUInteger)supportedInterfaceOrientations

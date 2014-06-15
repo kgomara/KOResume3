@@ -71,26 +71,7 @@
  */
 @property (nonatomic, strong) IBOutlet UILabel              *titleLabel;
 
-//----------------------------------------------------------------------------------------------------------
-/**
- Helper method to initialize a UITextField with text or placeholder.
- 
- @param textField       The text field to populate.
- @param text            The text candidate.
- @param placeholder     The placeholder to use if candidate text is empty.
- */
-- (void)setTextField: (UITextField *)textField
-             forData: (NSString *)text
-       orPlaceHolder: (NSString *)placeholder;
+- (void)reloadFetchedResults: (NSNotification*)aNote;
 
-
-/**
- Reloads the fetched results.
- 
- Invoked by notification when the underlying data objects may have changed.
- 
- @param note the NSNotification describing the changes.
- */
-- (void)reloadFetchedResults: (NSNotification*)note;
 
 @end

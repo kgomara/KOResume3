@@ -12,7 +12,6 @@
 #import "Jobs.h"
 #import "Accomplishments.h"
 #import "SVWebViewController.h"
-#import "OCRDateTableViewController.h"
 
 #define kJobStartDateFieldTag           5
 #define kJobEndDateFieldTag             6
@@ -36,15 +35,15 @@
      */
     UIBarButtonItem     *saveBtn;
     
-    /**
-     Reference to the done button to facilitate swapping buttons for the date picker.
-     */
-    UIBarButtonItem     *doneBtn;
+//    /**
+//     Reference to the done button to facilitate swapping buttons for the date picker.
+//     */
+//    UIBarButtonItem     *doneBtn;
     
-    /**
-     Reference to the undo button to facilitate swapping buttons for the date picker.
-     */
-    UIBarButtonItem     *undoBtn;
+//    /**
+//     Reference to the undo button to facilitate swapping buttons for the date picker.
+//     */
+//    UIBarButtonItem     *undoBtn;
     
     /**
      Reference to the cancel button to facilitate swapping buttons between display and edit modes.
@@ -66,10 +65,10 @@
      */
     UIDatePicker        *datePicker;
 
-    /**
-     Indicator of which date field is currently active.
-     */
-    int                 _activeDateFld;
+//    /**
+//     Indicator of which date field is currently active.
+//     */
+//    int                 _activeDateFld;
 }
 
 /**
@@ -124,7 +123,8 @@
 	self.view.backgroundColor = [UIColor clearColor];
     
     // Set the default button title
-    self.backButtonTitle        = NSLocalizedString(@"Resume", nil);
+    self.backButtonTitle    = NSLocalizedString(@"Resume", nil);
+    self.title              = _selectedJob.name;
     
     // Set up button items
     backBtn     = self.navigationItem.leftBarButtonItem;
@@ -137,13 +137,16 @@
     cancelBtn   = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel
                                                                 target: self
                                                                 action: @selector(didPressCancelButton)];
-    doneBtn     = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemDone
-                                                                target: self
-                                                                action: @selector(didPressDoneButton)];
-    undoBtn    = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemUndo
-                                                               target: self
-                                                               action: @selector(didPressUndoButton)];
-    
+//    doneBtn     = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemDone
+//                                                                target: self
+//                                                                action: @selector(didPressDoneButton)];
+//    undoBtn     = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemUndo
+//                                                                target: self
+//                                                                action: @selector(didPressUndoButton)];
+    /*
+     Instantiating a date formatter is a relatively expensive operation and is used often in our controller.
+     We instantiate one in view controller and use it throughout.
+     */
     // Set a dateFormatter.
     dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateStyle: NSDateFormatterMediumStyle];
@@ -227,7 +230,7 @@
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey: kOCRSequenceNumberAttributeName
                                                                    ascending: YES];
     NSArray *sortDescriptors    = [NSArray arrayWithObject: sortDescriptor];
-    self.accomplishmentsArray               = [NSMutableArray arrayWithArray: [_selectedJob.accomplishment sortedArrayUsingDescriptors: sortDescriptors]];
+    self.accomplishmentsArray   = [NSMutableArray arrayWithArray: [_selectedJob.accomplishment sortedArrayUsingDescriptors: sortDescriptors]];
 }
 
 
@@ -239,9 +242,8 @@
 {
     DLog();
     
-    [self setTextField: _jobName
-               forData: _selectedJob.name
-         orPlaceHolder: NSLocalizedString(@"Enter resume name", nil)];
+    [_jobName setText: _selectedJob.name
+        orPlaceHolder: NSLocalizedString(@"Enter resume name", nil)];
     
     /*
      It's important to set the placeholder text in case the data field is "empty" because we are using
@@ -250,16 +252,12 @@
      empty fields.
      */
     // For each of the tableHeaderView's text fields, set either it's text or placeholder property
-    [self setTextField: _jobCity
-               forData: _selectedJob.city
-         orPlaceHolder: NSLocalizedString(@"Enter city", nil)];
-    
-    [self setTextField: _jobTitle
-               forData: _selectedJob.title
+    [_jobCity setText: _selectedJob.city
+        orPlaceHolder: NSLocalizedString(@"Enter city", nil)];
+    [_jobTitle setText: _selectedJob.title
          orPlaceHolder: NSLocalizedString(@"Enter job title", nil)];
     
-    [self setTextField: _jobState
-               forData: _selectedJob.state
+    [_jobState setText: _selectedJob.state
          orPlaceHolder: NSLocalizedString(@"Enter State", nil)];
     
 	self.jobStartDate.text = [dateFormatter stringFromDate: self.selectedJob.start_date];
@@ -293,7 +291,7 @@
 {
     DLog();
     
-    // Set all the text fields (and the text view as well) enable property
+    // Set all the text fields enable property (and text view's editable)
     [_jobName      setEnabled: editable];
     [_jobTitle     setEnabled: editable];
     [_jobCity      setEnabled: editable];
@@ -343,7 +341,7 @@
 }
 
 
-#pragma mark - OCRDetailViewProtocol delegates
+#pragma mark - OCRDetailViewProtocol delegate methods
 
 //----------------------------------------------------------------------------------------------------------
 /**
@@ -355,6 +353,23 @@
     
     // Use the information in the selected managed object to update the UI fields
     [self loadViewFromSelectedObject];
+}
+
+#pragma mark - OCRDateTableViewProtocal delegate methods
+//----------------------------------------------------------------------------------------------------------
+/**
+ Update the start and end dates when changed.
+ */
+- (void)dateControllerDidUpdate
+{
+    DLog();
+    
+	self.jobStartDate.text = [dateFormatter stringFromDate: self.selectedJob.start_date];
+    if (_selectedJob.end_date) {
+        self.jobEndDate.text = [dateFormatter stringFromDate: self.selectedJob.end_date];
+    } else {
+        self.jobEndDate.text = NSLocalizedString(@"Current", nil);
+    }    
 }
 
 
@@ -499,42 +514,47 @@
 
 
 //----------------------------------------------------------------------------------------------------------
-- (void)didPressDoneButton
-{
-    DLog();
-    
-    CGRect screenRect   = [[UIScreen mainScreen] applicationFrame];
-    CGRect endFrame     = datePicker.frame;
-    
-    endFrame.origin.y = screenRect.origin.y + screenRect.size.height;
-    
-    // Start the slide down animation
-    [UIView animateWithDuration: 0.3
-                     animations: ^{
-                         datePicker.frame = endFrame;
-                         [self.tableView setContentOffset: CGPointZero
-                                               animated: NO];
-                     }];
-    
-    // Reset the UI
-    self.navigationItem.rightBarButtonItem = saveBtn;
-    self.navigationItem.leftBarButtonItem  = cancelBtn;
-}
+///**
+// The user tapped the Done button.
+// 
+// 
+// */
+//- (void)didPressDoneButton
+//{
+//    DLog();
+//    
+//    CGRect screenRect   = [[UIScreen mainScreen] applicationFrame];
+//    CGRect endFrame     = datePicker.frame;
+//    
+//    endFrame.origin.y = screenRect.origin.y + screenRect.size.height;
+//    
+//    // Start the slide down animation
+//    [UIView animateWithDuration: 0.3
+//                     animations: ^{
+//                         datePicker.frame = endFrame;
+//                         [self.tableView setContentOffset: CGPointZero
+//                                               animated: NO];
+//                     }];
+//    
+//    // Reset the UI
+//    self.navigationItem.rightBarButtonItem = saveBtn;
+//    self.navigationItem.leftBarButtonItem  = cancelBtn;
+//}
 
 
 //----------------------------------------------------------------------------------------------------------
-- (void)didPressUndoButton
-{
-    DLog();
-    
-    if (_activeDateFld == kJobStartDateFieldTag) {
-        self.selectedJob.start_date = NULL;
-        self.jobStartDate.text      = @"";
-    } else {
-        self.selectedJob.end_date   = NULL;
-        self.jobEndDate.text        = @"";
-    }
-}
+//- (void)didPressUndoButton
+//{
+//    DLog();
+//    
+//    if (_activeDateFld == kJobStartDateFieldTag) {
+//        self.selectedJob.start_date = NULL;
+//        self.jobStartDate.text      = @"";
+//    } else {
+//        self.selectedJob.end_date   = NULL;
+//        self.jobEndDate.text        = @"";
+//    }
+//}
 
 
 //----------------------------------------------------------------------------------------------------------
@@ -746,7 +766,7 @@
  Asks the data source to return the number of sections in the table view.
  
  @param tableView       An object representing the table view requesting this information.
- @returns               The number of sections in tableView. The default value is 1.
+ @return               The number of sections in tableView. The default value is 1.
  */
 - (NSInteger)numberOfSectionsInTableView: (UITableView *)tableView
 {
@@ -763,7 +783,7 @@
  
  @param tableView       The table-view object requesting this information.
  @param indexPath       An index path locating a row in tableView.
- @returns               YES to allow editing, NO otherwise,
+ @return               YES to allow editing, NO otherwise,
  */
 - (BOOL)    tableView: (UITableView *)tableView
 canEditRowAtIndexPath: (NSIndexPath *)indexPath
@@ -787,7 +807,7 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
  
  @param tableView       A table-view object requesting the cell.
  @param indexPath       An index path locating a row in tableView.
- @returns               An object inheriting from UITableViewCell that the table view can use for the specified row.
+ @return               An object inheriting from UITableViewCell that the table view can use for the specified row.
  An assertion is raised if you return nil.
  */
 - (UITableViewCell *)tableView: (UITableView *)tableView
@@ -808,7 +828,7 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
 
 //----------------------------------------------------------------------------------------------------------
 /**
- Configure a cell for the resume.
+ Configure a cell for the job.
  
  @param cell        A cell to configure.
  @param indexPath   The indexPath of the section and row the cell represents.
@@ -916,7 +936,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
  
  @param tableView       The table-view object requesting this information.
  @param section         An index number identifying a section in tableView.
- @returns               The number of rows in section.
+ @return               The number of rows in section.
  */
 - (NSInteger)tableView: (UITableView *)tableView
  numberOfRowsInSection: (NSInteger)section
@@ -964,7 +984,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
  
  @param tableView       The table-view object requesting this information.
  @param section         An index number identifying a section of tableView .
- @returns               A nonnegative floating-point value that specifies the height (in points) of the header
+ @return               A nonnegative floating-point value that specifies the height (in points) of the header
  for section.
  */
 - (CGFloat)     tableView: (UITableView *)tableView
@@ -992,7 +1012,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
  
  @param tableView       The table-view object requesting this information.
  @param indexPath       An index path that locates a row in tableView.
- @returns               A nonnegative floating-point value that specifies the height (in points) that row should be.
+ @return               A nonnegative floating-point value that specifies the height (in points) that row should be.
  */
 - (CGFloat)     tableView: (UITableView *)tableView
   heightForRowAtIndexPath: (NSIndexPath *)indexPath
@@ -1047,7 +1067,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
  
  @param tableView       The table-view object asking for the view object.
  @param section         An index number identifying a section of tableView .
- @returns               A view object to be displayed in the header of section .
+ @return               A view object to be displayed in the header of section .
  */
 - (UIView *)    tableView: (UITableView *)tableView
    viewForHeaderInSection: (NSInteger)section
@@ -1125,30 +1145,24 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     DLog();
     
     if ([segue.identifier isEqualToString: kOCRDateControllerSegue]) {
-        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-            if (_dateControllerPopover) {
-                // Menu is being displayed, dismiss it
-                [self dismissDateControllerPopover];
-            } else {
-                UIStoryboardPopoverSegue* popSegue = (UIStoryboardPopoverSegue*)segue;
-                self.dateControllerPopover = popSegue.popoverController;
-                _dateControllerPopover.delegate = self;
-                OCRDateTableViewController *dateControllerVC = (OCRDateTableViewController *)segue.destinationViewController;
-                dateControllerVC.delegate = self;
-                dateControllerVC.selectedJob = _selectedJob;
-                dateControllerVC.preferredContentSize = CGSizeMake(320.0f, 460.0f);
-            }
+        if (_dateControllerPopover) {
+            // Menu is being displayed, dismiss it
+            [_dateControllerPopover dismissPopoverAnimated: YES];
+            self.dateControllerPopover = nil;
         } else {
-            // TODO iPhone segue
+            // Get the seque from the Storyboard
+            UIStoryboardPopoverSegue* popSegue  = (UIStoryboardPopoverSegue*)segue;
+            self.dateControllerPopover          = popSegue.popoverController;
+            // ...and set the delegate
+            _dateControllerPopover.delegate     = self;
+            
+            // Get the destination view controller and set a few properties
+            OCRDateTableViewController *dateControllerVC    = (OCRDateTableViewController *)segue.destinationViewController;
+            dateControllerVC.delegate                       = self;
+            dateControllerVC.selectedJob                    = _selectedJob;
+            dateControllerVC.preferredContentSize           = CGSizeMake(320.0f, 460.0f);
         }
     }
-}
-
-
-- (void)dismissDateControllerPopover
-{
-    [_dateControllerPopover dismissPopoverAnimated: YES];
-    self.dateControllerPopover = nil;
 }
 
 
@@ -1170,20 +1184,20 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     NSDictionary *info = [aNotification userInfo];
     CGSize kbSize = [[info objectForKey: UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
     // ...and adjust the contentInset for its height
-    //    UIEdgeInsets contentInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height, 0.0);
-    
-    //    self.coverLtrFld.contentInset           = contentInsets;
-    //    self.coverLtrFld.scrollIndicatorInsets  = contentInsets;
+//    UIEdgeInsets contentInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height, 0.0);
+
+//    self.coverLtrFld.contentInset           = contentInsets;
+//    self.coverLtrFld.scrollIndicatorInsets  = contentInsets;
     
     // If active text field is hidden by keyboard, scroll it so it's visible
     CGRect aRect = self.view.frame;
     aRect.size.height -= kbSize.height;
-    //    if (!CGRectContainsPoint(aRect, self.coverLtrFld.frame.origin)) {
-    //        // calculate the contentOffset for the scroller
-    //        CGPoint scrollPoint = CGPointMake(0.0, self.coverLtrFld.frame.origin.y - kbSize.height);
-    //        [self.coverLtrFld setContentOffset: scrollPoint
-    //                                  animated: YES];
-    //    }
+//    if (!CGRectContainsPoint(aRect, self.coverLtrFld.frame.origin)) {
+//        // calculate the contentOffset for the scroller
+//        CGPoint scrollPoint = CGPointMake(0.0, self.coverLtrFld.frame.origin.y - kbSize.height);
+//        [self.coverLtrFld setContentOffset: scrollPoint
+//                                  animated: YES];
+//    }
 }
 
 
@@ -1199,10 +1213,10 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
 {
     DLog();
     
-    //    UIEdgeInsets contentInsets = UIEdgeInsetsZero;
-    
-    //    self.coverLtrFld.contentInset          = contentInsets;
-    //    self.coverLtrFld.scrollIndicatorInsets = contentInsets;
+//    UIEdgeInsets contentInsets = UIEdgeInsetsZero;
+
+//    self.coverLtrFld.contentInset          = contentInsets;
+//    self.coverLtrFld.scrollIndicatorInsets = contentInsets;
 }
 
 #pragma mark - UITextView delegate methods
@@ -1219,13 +1233,13 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
  method had returned YES.
  
  @param textView        The text view for which editing is about to begin.
- @returns               YES if an editing session should be initiated; otherwise, NO to disallow editing.
+ @return               YES if an editing session should be initiated; otherwise, NO to disallow editing.
  */
 - (BOOL)textViewShouldBeginEditing: (UITextView *)textView
 {
     DLog();
     
-    // Always return YES
+    // Always allow editing
     return YES;
 }
 
@@ -1249,21 +1263,39 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
 #pragma mark - UITextFieldDelegate methods
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Asks the delegate if editing should begin in the specified text field.
+ 
+ When the user performs an action that would normally initiate an editing session, the text field calls this method 
+ first to see if editing should actually proceed. In most circumstances, you would simply return YES from this method 
+ to allow editing to proceed.
+ 
+ Implementation of this method by the delegate is optional. If it is not present, editing proceeds as if this method 
+ had returned YES.
+ 
+ @param textField   The text field for which editing is about to begin.
+ @return            YES if an editing session should be initiated; otherwise, NO to disallow editing.
+ */
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {
     DLog();
     
-    _activeDateFld = 0;
+//    _activeDateFld = 0;
+    // Check to see if the tap occured in one of the date fields
     if (textField.tag == kJobStartDateFieldTag ||
         textField.tag == kJobEndDateFieldTag)
     {
+        // We are in a date field. Dismiss the keyboard, if any.
         [OCAUtilities dismissKeyboard];
         [textField resignFirstResponder];
         if (!self.selectedJob.start_date) {
+            // If there is no start_date yet, default to today
             self.selectedJob.start_date = [NSDate date];
         }
+        // Segue to the date controller
         [self performSegueWithIdentifier:kOCRDateControllerSegue
                                   sender:nil];
+        // and return NO to disallow standard UITextField editing.
         return NO;
     }
     
@@ -1272,15 +1304,53 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
 
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Tells the delegate that editing began for the specified text field.
+ 
+ This method notifies the delegate that the specified text field just became the first responder. You can use 
+ this method to update your delegate’s state information. For example, you might use this method to show overlay
+ views that should be visible while editing.
+ 
+ Implementation of this method by the delegate is optional.
+ 
+ @param textField   The text field for which an editing session began.
+ */
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
     DLog();
     
-	[self scrollToViewTextField:textField];
 }
 
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Asks the delegate if editing should stop in the specified text field.
+ 
+ This method is called when the text field is asked to resign the first responder status. This might occur 
+ when your application asks the text field to resign focus or when the user tries to change the editing focus 
+ to another control. Before the focus actually changes, however, the text field calls this method to give your 
+ delegate a chance to decide whether it should.
+ 
+ Normally, you would return YES from this method to allow the text field to resign the first responder status. 
+ You might return NO, however, in cases where your delegate detects invalid contents in the text field. By 
+ returning NO, you could prevent the user from switching to another control until the text field contained a 
+ valid value.
+ 
+ Note: If you use this method to validate the contents of the text field, you might also want to provide feedback 
+ to that effect using an overlay view. For example, you could temporarily display a small icon indicating the 
+ text was invalid and needs to be corrected. For more information about adding overlays to text fields, see the 
+ methods of UITextField.
+ 
+ Be aware that this method provides only a recommendation about whether editing should end. Even if you return 
+ NO from this method, it is possible that editing might still end. For example, this might happen when the text 
+ field is forced to resign the first responder status by being removed from its parent view or window.
+ 
+ Implementation of this method by the delegate is optional. If it is not present, the first responder status is 
+ resigned as if this method had returned YES.
+ 
+ @param textField   The text field for which editing is about to end.
+ @return            YES if editing should stop; otherwise, NO if the editing session should continue.
+ */
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField
 {
 	// Validate fields - nothing to do in this version
@@ -1290,63 +1360,50 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
 
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Asks the delegate if the text field should process the pressing of the return button.
+ 
+ The text field calls this method whenever the user taps the return button. You can use this method to implement 
+ any custom behavior when the button is tapped.
+ 
+ @param textField   The text field whose return button was pressed.
+ @return            YES if the text field should implement its default behavior for the return button; otherwise, NO.
+ */
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     DLog();
     
+    /*
+     Another use of the tag field...in Interface Builder, each of the UITextFields is given a sequential tag value,
+     and the keyboard Return key is set to "Next". When the user taps the Next key, this delegate method is invoked
+     We use the tag field to find the next field, and if there is one we set it as firstResponder.
+     */
+    // Get the value of the next field's tag
 	int nextTag = [textField tag] + 1;
+    // ...and attempt to get it using the viewWithTag method
 	UIResponder *nextResponder = [textField.superview viewWithTag: nextTag];
 	
 	if (nextResponder) {
+        // If there is a nextResponser, make it firstResponder - i.e., give it focus
         [nextResponder becomeFirstResponder];
 	} else {
+        // ...otherwise this textfield must be the last.
 		[textField resignFirstResponder];       // Dismisses the keyboard
         [self resetView];
 	}
 	
-	return NO;
+	return NO;                                  // We always return NO as we are implementing the textField's behavior
 }
 
+#pragma mark - UIPopoverDelegate methods
 
 //----------------------------------------------------------------------------------------------------------
-- (void)animateDatePickerOn
+- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController
 {
     DLog();
     
-    [datePicker setHidden: NO];
-    [self.view bringSubviewToFront: datePicker];
-    
-    // Size up the picker view to our screen and compute the start/end frame origin for our slide up animation
-    // ... compute the start frame
-    CGRect screenRect = [self.view bounds];
-    CGSize pickerSize = [datePicker sizeThatFits: CGSizeZero];
-    CGRect startRect = CGRectMake(0.0, screenRect.origin.y + screenRect.size.height, pickerSize.width, pickerSize.height);
-    datePicker.frame = startRect;
-    
-    // ... compute the end frame
-    CGRect pickerRect = CGRectMake(0.0, screenRect.origin.y + screenRect.size.height - pickerSize.height, pickerSize.width, pickerSize.height);
-    
-    // Start the slide up animation
-    [UIView animateWithDuration: 0.3
-                     animations: ^ {
-                         datePicker.frame = pickerRect;
-                         [self.tableView setContentOffset: CGPointMake(0.0f, 80.f)];
-                     }];
-    // add the "Done" button to the nav bar
-    self.navigationItem.rightBarButtonItem = doneBtn;
-    // ...and the undo button
-    self.navigationItem.leftBarButtonItem = undoBtn;
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-- (void)scrollToViewTextField:(UITextField *)textField
-{
-    DLog();
-    
-	float textFieldOriginY = textField.frame.origin.y;
-	[self.tableView setContentOffset: CGPointMake(0.0f, textFieldOriginY - 20.0f)
-                          animated: YES];
+    self.dateControllerPopover = nil;
+    [self configureView];
 }
 
 #pragma mark - Fetched Results Controller delegate methods

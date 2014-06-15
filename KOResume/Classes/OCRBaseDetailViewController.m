@@ -158,7 +158,7 @@
  
  In iOS 5 and earlier, the default return value was NO.
  
- @returns           YES if the content should rotate, otherwise NO. Default value is YES.
+ @return           YES if the content should rotate, otherwise NO. Default value is YES.
  */
 - (BOOL)shouldAutorotate
 {
@@ -183,33 +183,13 @@
  determined by the Info.plist file or the app delegate's application:supportedInterfaceOrientationsForWindow: 
  method) to determine whether to rotate.
  
- @returns           A bit mask specifying which orientations are supported. See UIInterfaceOrientationMask for 
+ @return           A bit mask specifying which orientations are supported. See UIInterfaceOrientationMask for 
                     valid bit-mask values. The value returned by this method must not be 0.
  */
 - (NSUInteger)supportedInterfaceOrientations
 {
     // All view controllers support all orientations
     return UIInterfaceOrientationMaskAll;
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-- (void)setTextField: (UITextField *)textField
-             forData: (NSString *)text
-       orPlaceHolder: (NSString *)placeholder
-{
-    DLog();
-    
-    // Check if the text candidate is null or "empty"
-    if ([text length] > 0) {
-        // There is something in the text candidate - use it
-        textField.text          =  text;
-    } else {
-        // Nothing in text, set the textField.text to an empty string
-        textField.text          = @"";
-        // ...and use the placeholder instead
-        textField.placeholder   = placeholder;
-    }
 }
 
 

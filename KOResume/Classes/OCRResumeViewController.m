@@ -207,15 +207,14 @@
 
 //----------------------------------------------------------------------------------------------------------
 /**
- Update the data fields of the view - the resume.
+ Update the data fields of the view from the resume managed object.
  */
 - (void)loadViewFromSelectedObject
 {
     DLog();
     
-    [self setTextField: _resumeName
-               forData: _selectedResume.name
-         orPlaceHolder: NSLocalizedString(@"Enter resume name", nil)];
+    [_resumeName setText: _selectedResume.name
+           orPlaceHolder: NSLocalizedString(@"Enter resume name", nil)];
 
     
     // Check to see if we are iPad - only the iPad has current job information
@@ -246,33 +245,20 @@
      empty fields.
      */
     // For each of the tableHeaderView's text fields, set either it's text or placeholder property
-    [self setTextField: _resumeStreet1
-               forData: _selectedResume.street1
-         orPlaceHolder: NSLocalizedString(@"Enter street1 address", nil)];
-    
-    [self setTextField: _resumeCity
-               forData: _selectedResume.city
-         orPlaceHolder: NSLocalizedString(@"Enter city", nil)];
-    
-    [self setTextField: _resumeState
-               forData: _selectedResume.state
-         orPlaceHolder: NSLocalizedString(@"Enter State", nil)];
-    
-    [self setTextField: _resumePostalCode
-               forData: _selectedResume.postal_code
-         orPlaceHolder: NSLocalizedString(@"Enter zip code", nil)];
-
-    [self setTextField: _resumeHomePhone
-               forData: _selectedResume.home_phone
-         orPlaceHolder: NSLocalizedString(@"Enter home phone", nil)];
-    
-    [self setTextField: _resumeMobilePhone
-               forData: _selectedResume.mobile_phone
-         orPlaceHolder: NSLocalizedString(@"Enter mobile phone", nil)];
-    
-    [self setTextField: _resumeEmail
-               forData: _selectedResume.email
-         orPlaceHolder: NSLocalizedString(@"Enter email address", nil)];
+    [_resumeStreet1 setText: _selectedResume.street1
+              orPlaceHolder: NSLocalizedString(@"Enter street1 address", nil)];
+    [_resumeCity setText: _selectedResume.city
+           orPlaceHolder: NSLocalizedString(@"Enter city", nil)];
+    [_resumeState setText: _selectedResume.state
+            orPlaceHolder: NSLocalizedString(@"Enter State", nil)];
+    [_resumePostalCode setText: _selectedResume.postal_code
+                 orPlaceHolder: NSLocalizedString(@"Enter zip code", nil)];
+    [_resumeHomePhone setText: _selectedResume.home_phone
+                orPlaceHolder: NSLocalizedString(@"Enter home phone", nil)];
+    [_resumeMobilePhone setText: _selectedResume.mobile_phone
+                  orPlaceHolder: NSLocalizedString(@"Enter mobile phone", nil)];
+    [_resumeEmail setText: _selectedResume.email
+            orPlaceHolder: NSLocalizedString(@"Enter email address", nil)];
 
     /*
      resumeSummary is a textView, and always has width and height, so the autolayout concern mentioned
@@ -281,33 +267,6 @@
     // resumeSummary is a UITextView
     _resumeSummary.text = _selectedResume.summary;
     [_resumeSummary scrollRangeToVisible: NSMakeRange(0, 0)];
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Helper method to initialize a UITextField with text or placeholder.
- 
- @param textField       The text field to populate.
- @param text            The text candidate.
- @param placeholder     The placeholder to use if candidate text is empty.
- */
-- (void)setTextField: (UITextField *)textField
-             forData: (NSString *)text
-       orPlaceHolder: (NSString *)placeholder
-{
-    DLog();
-    
-    // Check if the text candidate is null or "empty"
-    if ([text length] > 0) {
-        // There is something in the text candidate - use it
-        textField.text          =  text;
-    } else {
-        // Nothing in text, set the textField.text to an empty string
-        textField.text          = @"";
-        // ...and use the placeholder instead
-        textField.placeholder   = placeholder;
-    }
 }
 
 
@@ -808,7 +767,7 @@
  Asks the data source to return the number of sections in the table view.
  
  @param tableView       An object representing the table view requesting this information.
- @returns               The number of sections in tableView. The default value is 1.
+ @return                The number of sections in tableView. The default value is 1.
  */
 - (NSInteger)numberOfSectionsInTableView: (UITableView *)tableView
 {
@@ -825,7 +784,7 @@
  
  @param tableView       The table-view object requesting this information.
  @param indexPath       An index path locating a row in tableView.
- @returns               YES to allow editing, NO otherwise,
+ @return                YES to allow editing, NO otherwise,
  */
 - (BOOL)    tableView: (UITableView *)tableView
 canEditRowAtIndexPath: (NSIndexPath *)indexPath
@@ -849,7 +808,7 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
  
  @param tableView       A table-view object requesting the cell.
  @param indexPath       An index path locating a row in tableView.
- @returns               An object inheriting from UITableViewCell that the table view can use for the specified row.
+ @return                An object inheriting from UITableViewCell that the table view can use for the specified row.
                         An assertion is raised if you return nil.
  */
 - (UITableViewCell *)tableView: (UITableView *)tableView
@@ -1011,7 +970,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
  
  @param tableView       The table-view object requesting this information.
  @param section         An index number identifying a section in tableView.
- @returns               The number of rows in section.
+ @return                The number of rows in section.
  */
 - (NSInteger)tableView: (UITableView *)tableView
  numberOfRowsInSection: (NSInteger)section
@@ -1103,7 +1062,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
 
  @param tableView       The table-view object requesting this information.
  @param section         An index number identifying a section of tableView .
- @returns               A nonnegative floating-point value that specifies the height (in points) of the header 
+ @return                A nonnegative floating-point value that specifies the height (in points) of the header
                         for section.
  */
 - (CGFloat)     tableView: (UITableView *)tableView
@@ -1131,7 +1090,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
  
  @param tableView       The table-view object requesting this information.
  @param indexPath       An index path that locates a row in tableView.
- @returns               A nonnegative floating-point value that specifies the height (in points) that row should be.
+ @return                A nonnegative floating-point value that specifies the height (in points) that row should be.
  */
 - (CGFloat)     tableView: (UITableView *)tableView
   heightForRowAtIndexPath: (NSIndexPath *)indexPath
@@ -1186,7 +1145,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
  
  @param tableView       The table-view object asking for the view object.
  @param section         An index number identifying a section of tableView .
- @returns               A view object to be displayed in the header of section .
+ @return                A view object to be displayed in the header of section .
  */
 - (UIView *)    tableView: (UITableView *)tableView
    viewForHeaderInSection: (NSInteger)section
@@ -1351,7 +1310,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
  method had returned YES.
  
  @param textView        The text view for which editing is about to begin.
- @returns               YES if an editing session should be initiated; otherwise, NO to disallow editing.
+ @return                YES if an editing session should be initiated; otherwise, NO to disallow editing.
  */
 - (BOOL)textViewShouldBeginEditing: (UITextView *)textView
 {
