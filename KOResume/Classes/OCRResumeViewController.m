@@ -13,6 +13,7 @@
 #import "Jobs.h"
 #import "Education.h"
 #import "OCRJobsViewController.h"
+#import "OCREducationTableViewCell.h"
 
 #define	k_JobsSection       0
 #define k_EducationSection	1
@@ -50,6 +51,11 @@
      Reference to the button available in table edit mode that allows the user to add an Education/Certification.
      */
     UIButton            *addEducationBtn;
+
+    /**
+     Reference to the date formatter object.
+     */
+    NSDateFormatter     *dateFormatter;
 }
 
 /**
@@ -122,6 +128,15 @@
     cancelBtn   = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel
                                                                 target: self
                                                                 action: @selector(didPressCancelButton)];
+    
+    /*
+     Instantiating a date formatter is a relatively expensive operation and is used often in our controller.
+     We instantiate one in view controller and use it throughout.
+     */
+    // Set a dateFormatter.
+    dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateStyle: NSDateFormatterMediumStyle];
+    [dateFormatter setTimeStyle: NSDateFormatterNoStyle];	//Not shown
     
     // ...and the NavBar
     [self configureDefaultNavBar];
@@ -297,7 +312,7 @@
     [_resumeSummary     setEditable: editable];     // resumeSummary is a UITextView
     
     // Determine the background color for the fields based on the editable param
-    UIColor *backgroundColor = editable? [UIColor whiteColor] : [UIColor clearColor];
+    UIColor *backgroundColor = editable? self.view.tintColor /* [UIColor whiteColor] */ : [UIColor clearColor];
     
     // ...and set the background color
     [_resumeName        setBackgroundColor: backgroundColor];
@@ -309,6 +324,9 @@
     [_resumeMobilePhone setBackgroundColor: backgroundColor];
     [_resumeEmail       setBackgroundColor: backgroundColor];
     [_resumeSummary     setBackgroundColor: backgroundColor];
+    
+    [self.tableView reloadRowsAtIndexPaths:[self.tableView indexPathsForVisibleRows]
+                          withRowAnimation:UITableViewRowAnimationNone];
 }
 
 
@@ -816,55 +834,110 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
 {
     DLog();
     
-    // Get a Subtitle cell
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: kOCRSubtitleTableCell];
+    // Declare a cell to use
+    UITableViewCell *cell;
     
-	// ...and configure it
-    [self configureCell: cell
-            atIndexPath: indexPath];
-
+    switch (indexPath.section) {
+        case k_JobsSection:
+             //  Configure a jobs cell
+            cell = [self        tableView: tableView
+                     jobsCellForIndexPath: indexPath];
+            break;
+        case k_EducationSection:
+            // Configure an education cell
+            cell = [self            tableView: tableView
+                    educationCellForIndexPath: indexPath];
+            break;
+            
+        default:
+            break;
+    }
+    
     return cell;
 }
 
 //----------------------------------------------------------------------------------------------------------
 /**
- Configure a cell for the resume.
+ Configure a jobs cell for the resume.
  
  @param cell        A cell to configure.
  @param indexPath   The indexPath of the section and row the cell represents.
  */
-- (void)configureCell: (UITableViewCell *)cell
-          atIndexPath: (NSIndexPath *)indexPath
+- (UITableViewCell *)tableView: (UITableView *)tableView
+          jobsCellForIndexPath: (NSIndexPath *)indexPath
 {
     DLog();
 
-    switch (indexPath.section) {
-		case k_JobsSection:
-            // We're in the Jobs section,
-            // ...set the title text content and dynamic text font
-			cell.textLabel.text         = [[_jobArray objectAtIndex: indexPath.row] name];
-            cell.textLabel.font         = [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline];
-            // ...the detail text content and dynamic text font
-            cell.detailTextLabel.text   = [[_jobArray objectAtIndex: indexPath.row] title];
-            cell.detailTextLabel.font   = [UIFont preferredFontForTextStyle: UIFontTextStyleSubheadline];
-            // ...and the accessory disclosure indicator
-			cell.accessoryType          = UITableViewCellAccessoryDisclosureIndicator;
-			break;
-		case k_EducationSection:
-            // We're in the Eduction and Certifications section,
-            // ...set the title text content and dynamic text font
-			cell.textLabel.text         = [[_educationArray objectAtIndex: indexPath.row] name];
-            cell.textLabel.font         = [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline];
-            // ...the detail text content and dynamic text font
-            cell.detailTextLabel.text   = [[_educationArray objectAtIndex: indexPath.row] title];
-            cell.detailTextLabel.font   = [UIFont preferredFontForTextStyle: UIFontTextStyleSubheadline];
-            // ...and the accessory disclosure indicator
-			cell.accessoryType          = UITableViewCellAccessoryDisclosureIndicator;
-			break;
-		default:
-			ALog(@"Unexpected section = %ld", (long)indexPath.section);
-			break;
-	}
+    // Get a Subtitle cell
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: kOCRSubtitleTableCell];
+    
+    // ...set the title text content and dynamic text font
+    cell.textLabel.text         = [[_jobArray objectAtIndex: indexPath.row] name];
+    cell.textLabel.font         = [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline];
+    // ...the detail text content and dynamic text font
+    cell.detailTextLabel.text   = [[_jobArray objectAtIndex: indexPath.row] title];
+    cell.detailTextLabel.font   = [UIFont preferredFontForTextStyle: UIFontTextStyleSubheadline];
+    // ...and the accessory disclosure indicator
+    cell.accessoryType          = UITableViewCellAccessoryDisclosureIndicator;
+    
+    return cell;
+}
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Configure an education cell for the resume.
+ 
+ @param cell        A cell to configure.
+ @param indexPath   The indexPath of the section and row the cell represents.
+ */
+- (OCREducationTableViewCell *)tableView: (UITableView *)tableView
+               educationCellForIndexPath: (NSIndexPath *)indexPath
+{
+    DLog();
+    
+    // Determine the background color for the fields based on whether or not we are editing
+    UIColor *backgroundColor = self.editing? self.view.tintColor : [UIColor whiteColor];
+
+    // Get an Education cell
+    OCREducationTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier: kOCREducationTableCell];
+    
+    // Set the title text content, dynamic font, enable state, and backgroundColor
+    cell.title.text                 = [[_educationArray objectAtIndex: indexPath.row] title];
+    cell.title.font                 = [UIFont preferredFontForTextStyle: UIFontTextStyleSubheadline];
+    cell.title.enabled              = self.editing;
+    cell.title.backgroundColor      = backgroundColor;
+    
+    // ...same for degree/certification
+    cell.name.text                  = [[_educationArray objectAtIndex: indexPath.row] name];
+    cell.name.font                  = [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline];
+    cell.name.enabled               = self.editing;
+    cell.name.backgroundColor       = backgroundColor;
+    
+    // ...earnedDate
+    cell.earnedDate.text            = [dateFormatter stringFromDate: [[_educationArray objectAtIndex: indexPath.row] earned_date]];
+    cell.earnedDate.font            = [UIFont preferredFontForTextStyle: UIFontTextStyleSubheadline];
+    cell.earnedDate.enabled         = self.editing;
+    cell.earnedDate.backgroundColor = backgroundColor;
+    
+    // ...city
+    cell.city.text                  = [[_educationArray objectAtIndex: indexPath.row] city];
+    cell.city.font                  = [UIFont preferredFontForTextStyle: UIFontTextStyleSubheadline];
+    cell.city.enabled               = self.editing;
+    cell.city.backgroundColor       = backgroundColor;
+
+    // ...and state
+    cell.state.text                 = [(Education *)[_educationArray objectAtIndex: indexPath.row] state];
+    cell.state.font                 = [UIFont preferredFontForTextStyle: UIFontTextStyleSubheadline];
+    cell.state.enabled              = self.editing;
+    cell.state.backgroundColor      = backgroundColor;
+    
+    // Make the cell not selectable
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    // ...with no accessory indicator
+    cell.accessoryType  = UITableViewCellAccessoryNone;
+    // ...and set our self as delegate
+    
+    return cell;
 }
 
 //----------------------------------------------------------------------------------------------------------
@@ -1115,25 +1188,45 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
         downward and its size upward to the nearest whole integers, such that the result contains the original rectangle.
      */
     
+    // Declare a test string for use in the calculations. We are only concerned about height here, so any text (that has a descender character) will work for our calculation
+    NSString *stringToSize  = @"Sample String";
     // maxTextSize establishes bounds for the largest rect we can allow
     CGSize maxTextSize = CGSizeMake( CGRectGetWidth(CGRectIntegral(tableView.bounds)), CGRectGetHeight(CGRectIntegral(tableView.bounds)));
     
-    // First, determine the size required by the the title string, given the user's dynamic text size preference.
-    // ...we are only concerned about height here, so any text (that has a descender character) will work for our calculation
-    NSString *stringToSize  = @"Sample String";
-    // ...get the bounding rect using UIFontTextStyleHeadline
-	CGRect titleRect        = [stringToSize boundingRectWithSize: maxTextSize
-                                                         options: NSStringDrawingUsesLineFragmentOrigin
-                                                      attributes: @{NSFontAttributeName: [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline]}
-                                                         context: nil];
-    // ...and the bounding rect using UIFontTextStyleSubheadline
-	CGRect detailRect       = [stringToSize boundingRectWithSize: maxTextSize
-                                                         options: NSStringDrawingUsesLineFragmentOrigin
-                                                      attributes: @{NSFontAttributeName: [UIFont preferredFontForTextStyle: UIFontTextStyleSubheadline]}
-                                                         context: nil];
-    
-    // Return the larger of 44 or the sum of the heights plus some padding
-	return MAX(44.0f, CGRectGetHeight( CGRectIntegral( titleRect)) + CGRectGetHeight( CGRectIntegral( detailRect)) + 20);
+    if (indexPath.section == k_JobsSection) {
+        // First, determine the size required by the the title string, given the user's dynamic text size preference.
+        // ...get the bounding rect using UIFontTextStyleHeadline
+        CGRect titleRect        = [stringToSize boundingRectWithSize: maxTextSize
+                                                             options: NSStringDrawingUsesLineFragmentOrigin
+                                                          attributes: @{NSFontAttributeName: [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline]}
+                                                             context: nil];
+        // ...and the bounding rect using UIFontTextStyleSubheadline
+        CGRect detailRect       = [stringToSize boundingRectWithSize: maxTextSize
+                                                             options: NSStringDrawingUsesLineFragmentOrigin
+                                                          attributes: @{NSFontAttributeName: [UIFont preferredFontForTextStyle: UIFontTextStyleSubheadline]}
+                                                             context: nil];
+        
+        // Return the larger of 44 or the sum of the heights plus some padding
+        return MAX(44.0f, CGRectGetHeight( CGRectIntegral( titleRect)) + CGRectGetHeight( CGRectIntegral( detailRect)) + 20);
+    } else {
+        // First, determine the size required by the the name string, given the user's dynamic text size preference.
+        // ...get the bounding rect using UIFontTextStyleSubheadline
+        CGRect subHeadRect        = [stringToSize boundingRectWithSize: maxTextSize
+                                                               options: NSStringDrawingUsesLineFragmentOrigin
+                                                            attributes: @{NSFontAttributeName: [UIFont preferredFontForTextStyle: UIFontTextStyleSubheadline]}
+                                                               context: nil];
+        // ...and the bounding rect using UIFontTextStyleHeadline
+        CGRect headRect       = [stringToSize boundingRectWithSize: maxTextSize
+                                                           options: NSStringDrawingUsesLineFragmentOrigin
+                                                        attributes: @{NSFontAttributeName: [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline]}
+                                                           context: nil];
+        
+        // Return the larger of 44 or the sum of the heights plus some padding
+        CGFloat result = MAX(44.0f, CGRectGetHeight( CGRectIntegral( subHeadRect))*3 + CGRectGetHeight( CGRectIntegral( headRect)) + 120);
+        DLog(@"result=%f", result);
+        
+        return result;
+    }
 }
 
 //----------------------------------------------------------------------------------------------------------
@@ -1336,6 +1429,77 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     DLog();
 }
 
+//----------------------------------------------------------------------------------------------------------
+/**
+ Asks the delegate if the text field should proc
+ 
+ The text field calls this method whenever the user taps the return button. You can use this method to implement 
+ any custom behavior when the button is tapped.
+ 
+ In our Storyboard scene, we set the textfield tag values incrementally, and then use the tag of the current 
+ textField responder to determine what to do next. We also set the other keyboard atttributes appropriately for]
+ the data type we expect to see, and in particular set the return key to "Next" if hitting return will advance
+ the user to the next field.
+ 
+ Note the specific check for the date fields, in which case we bring up the data picker.
+ 
+ @param textField       The text field whose return button was pressed.
+ @return                YES if the text field should implement its default behavior for the return button; otherwise, NO.
+ */
+- (BOOL)textFieldShouldReturn: (UITextField *)textField
+{
+    DLog();
+    
+	int nextTag = [textField tag] + 1;
+	UIResponder *nextResponder = [textField.superview viewWithTag: nextTag];
+	
+	if (nextResponder) {
+        [nextResponder becomeFirstResponder];
+	} else {
+		[textField resignFirstResponder];       // Dismisses the keyboard
+        [self resetView];
+	}
+	
+	return NO;
+}
+
+#pragma mark - OCRCellTextFieldDelegate methods
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Update the object represented by the updated text field.
+ 
+ @param textField       The UITextField updated by OCREducationTextViewCell
+ @param cell            The OCREducationTextViewCell representing the education object
+ */
+- (void)doUpdateTextField: (UITextField *)textField
+             forTableCell: (UITableViewCell *)cell
+{
+    DLog();
+    
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+    
+    Education *education = [_educationArray objectAtIndex: indexPath.row];
+    
+    if (textField.tag == kTitleFieldTag) {
+        education.title         = textField.text;
+    }
+    else if (textField.tag == kNameFieldTag) {
+        education.name          = textField.text;
+    }
+    else if (textField.tag == kEarnedDateFieldTag) {
+        education.earned_date   = [dateFormatter dateFromString:textField.text];
+    }
+    else if (textField.tag == kCityFieldTag) {
+        education.city          = textField.text;
+    }
+    else if (textField.tag == kStateFieldTag) {
+        education.state         = textField.text;
+    }
+    
+    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject: indexPath]
+                          withRowAnimation:UITableViewRowAnimationFade];
+}
 
 #pragma mark - Fetched Results Controller delegate methods
 
@@ -1407,8 +1571,8 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
             
         case NSFetchedResultsChangeUpdate:
             // Underlying contents have changed, re-configure the cell
-            [self configureCell: [_tableView cellForRowAtIndexPath: indexPath]
-                    atIndexPath: indexPath];
+             [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject: newIndexPath]
+                                  withRowAnimation:UITableViewRowAnimationFade];
             break;
             
         case NSFetchedResultsChangeMove:

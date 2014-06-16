@@ -7,12 +7,14 @@
 //
 
 #import "OCRBaseDetailViewController.h"
+#import "OCRCellTextFieldDelegateProtocol.h"
 
 /**
  Manage a Resume object.
  */
 @interface OCRResumeViewController : OCRBaseDetailViewController <UITextViewDelegate, UISplitViewControllerDelegate, OCRDetailViewProtocol,
-                                                                  NSFetchedResultsControllerDelegate, UITableViewDataSource, UITableViewDelegate>
+                                                                  NSFetchedResultsControllerDelegate, UITableViewDataSource, UITableViewDelegate,
+                                                                  OCRCellTextFieldDelegate>
 
 /**
  IBOutlet to the tableHeaderView.

@@ -65,10 +65,6 @@
      */
     UIDatePicker        *datePicker;
 
-//    /**
-//     Indicator of which date field is currently active.
-//     */
-//    int                 _activeDateFld;
 }
 
 /**
@@ -137,12 +133,6 @@
     cancelBtn   = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel
                                                                 target: self
                                                                 action: @selector(didPressCancelButton)];
-//    doneBtn     = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemDone
-//                                                                target: self
-//                                                                action: @selector(didPressDoneButton)];
-//    undoBtn     = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemUndo
-//                                                                target: self
-//                                                                action: @selector(didPressUndoButton)];
     /*
      Instantiating a date formatter is a relatively expensive operation and is used often in our controller.
      We instantiate one in view controller and use it throughout.
@@ -323,7 +313,7 @@
     DLog();
     
     // Set the title
-    self.navigationItem.title = NSLocalizedString(@"Resume", nil);
+    self.navigationItem.title = _selectedJob.name;
     
     // Set up the navigation items and save/cancel buttons
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
