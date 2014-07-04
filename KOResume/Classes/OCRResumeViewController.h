@@ -12,7 +12,7 @@
 /**
  Manage a Resume object.
  */
-@interface OCRResumeViewController : OCRBaseDetailViewController <UITextViewDelegate, UISplitViewControllerDelegate, OCRDetailViewProtocol,
+@interface OCRResumeViewController : OCRBaseDetailViewController <UITextViewDelegate, UITextFieldDelegate, UISplitViewControllerDelegate, OCRDetailViewProtocol,
                                                                   NSFetchedResultsControllerDelegate, UITableViewDataSource, UITableViewDelegate,
                                                                   OCRCellTextFieldDelegate>
 

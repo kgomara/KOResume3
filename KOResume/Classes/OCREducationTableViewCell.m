@@ -10,32 +10,6 @@
 
 @implementation OCREducationTableViewCell
 
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
-    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-    if (self) {
-        // Initialization code
-    }
-    return self;
-}
-
-- (void)awakeFromNib
-{
-    // Initialization code
-}
-
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated
-{
-    [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
-}
-
-- (void)textFieldDidBeginEditing:(UITextField *)textField
-{
-    
-}
-
 //----------------------------------------------------------------------------------------------------------
 /**
  Asks the delegate if the text field should proc
@@ -53,21 +27,21 @@
  @param textField       The text field whose return button was pressed.
  @return                YES if the text field should implement its default behavior for the return button; otherwise, NO.
  */
-- (BOOL)textFieldShouldReturn:(UITextField *)textField
-{
-    DLog();
-    
-	int nextTag = [textField tag] + 1;
-	UIResponder *nextResponder = [textField.superview viewWithTag: nextTag];
-	
-	if (nextResponder) {
-        [nextResponder becomeFirstResponder];
-	} else {
-		[textField resignFirstResponder];       // Dismisses the keyboard
-	}
-	
-	return NO;
-}
+//- (BOOL)textFieldShouldReturn:(UITextField *)textField
+//{
+//    DLog();
+//    
+//	int nextTag = [textField tag] + 1;
+//	UIResponder *nextResponder = [textField.superview viewWithTag: nextTag];
+//	
+//	if (nextResponder) {
+//        [nextResponder becomeFirstResponder];
+//	} else {
+//		[textField resignFirstResponder];       // Dismisses the keyboard
+//	}
+//	
+//	return NO;
+//}
 
 
 //----------------------------------------------------------------------------------------------------------
@@ -80,13 +54,14 @@
  
  @param textView The text view in which editing ended.
  */
-- (void)textFieldDidEndEditing: (UITextField *)textField
-{
-    DLog();
-    
-    [self.delegate doUpdateTextField:textField
-                        forTableCell:self];
-}
+//- (void)textFieldDidEndEditing: (UITextField *)textField
+//{
+//    DLog();
+//    
+//    [self.delegate doUpdateTextField:textField
+//                        forTableCell:self];
+//    [textField resignFirstResponder];
+//}
 
 
 

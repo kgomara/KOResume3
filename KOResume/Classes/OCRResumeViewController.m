@@ -312,7 +312,8 @@
     [_resumeSummary     setEditable: editable];     // resumeSummary is a UITextView
     
     // Determine the background color for the fields based on the editable param
-    UIColor *backgroundColor = editable? self.view.tintColor /* [UIColor whiteColor] */ : [UIColor clearColor];
+//    UIColor *backgroundColor = editable? self.view.tintColor /* [UIColor whiteColor] */ : [UIColor clearColor];
+    UIColor *backgroundColor = editable? [UIColor colorWithRed:1 green:0 blue:0 alpha:0.2f] /* [UIColor whiteColor] */ : [UIColor clearColor];
     
     // ...and set the background color
     [_resumeName        setBackgroundColor: backgroundColor];
@@ -906,36 +907,40 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
     cell.title.font                 = [UIFont preferredFontForTextStyle: UIFontTextStyleSubheadline];
     cell.title.enabled              = self.editing;
     cell.title.backgroundColor      = backgroundColor;
+    cell.title.delegate             = self;
     
     // ...same for degree/certification
     cell.name.text                  = [[_educationArray objectAtIndex: indexPath.row] name];
     cell.name.font                  = [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline];
     cell.name.enabled               = self.editing;
     cell.name.backgroundColor       = backgroundColor;
+    cell.name.delegate              = self;
     
     // ...earnedDate
     cell.earnedDate.text            = [dateFormatter stringFromDate: [[_educationArray objectAtIndex: indexPath.row] earned_date]];
     cell.earnedDate.font            = [UIFont preferredFontForTextStyle: UIFontTextStyleSubheadline];
     cell.earnedDate.enabled         = self.editing;
     cell.earnedDate.backgroundColor = backgroundColor;
+    cell.earnedDate.delegate        = self;
     
     // ...city
     cell.city.text                  = [[_educationArray objectAtIndex: indexPath.row] city];
     cell.city.font                  = [UIFont preferredFontForTextStyle: UIFontTextStyleSubheadline];
     cell.city.enabled               = self.editing;
     cell.city.backgroundColor       = backgroundColor;
+    cell.city.delegate              = self;
 
     // ...and state
     cell.state.text                 = [(Education *)[_educationArray objectAtIndex: indexPath.row] state];
     cell.state.font                 = [UIFont preferredFontForTextStyle: UIFontTextStyleSubheadline];
     cell.state.enabled              = self.editing;
     cell.state.backgroundColor      = backgroundColor;
+    cell.state.delegate             = self;
     
     // Make the cell not selectable
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     // ...with no accessory indicator
     cell.accessoryType  = UITableViewCellAccessoryNone;
-    // ...and set our self as delegate
     
     return cell;
 }
@@ -1093,8 +1098,8 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
 - (void)        tableView: (UITableView *)tableView
   didSelectRowAtIndexPath: (NSIndexPath *)indexPath
 {
-    
     DLog();
+    
     switch (indexPath.section) {
 		case k_JobsSection: {
             DLog(@"Job selected");
@@ -1429,6 +1434,9 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     DLog();
 }
 
+
+#pragma mark - UITextField delegate methods
+
 //----------------------------------------------------------------------------------------------------------
 /**
  Asks the delegate if the text field should proc
@@ -1450,7 +1458,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
 {
     DLog();
     
-	int nextTag = [textField tag] + 1;
+	NSInteger nextTag = [textField tag] + 1;
 	UIResponder *nextResponder = [textField.superview viewWithTag: nextTag];
 	
 	if (nextResponder) {
@@ -1462,6 +1470,46 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
 	
 	return NO;
 }
+
+//----------------------------------------------------------------------------------------------------------
+- (void)textFieldDidBeginEditing:(UITextField*)textField
+{
+    DLog();
+    
+    UITableViewCell* cell = [self parentCellFor:textField];
+    if (cell)
+    {
+        NSIndexPath* indexPath = [self.tableView indexPathForCell:cell];
+        [self.tableView scrollToRowAtIndexPath: indexPath
+                              atScrollPosition: UITableViewScrollPositionMiddle
+                                      animated: YES];
+    }
+}
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Tells the delegate that editing of the specified text view has ended.
+ 
+ Implementation of this method is optional. A text view sends this message to its delegate after it closes out
+ any pending edits and resigns its first responder status. You can use this method to tear down any data structures
+ or change any state information that you set when editing began.
+ 
+ @param textView The text view in which editing ended.
+ */
+- (void)textFieldDidEndEditing: (UITextField *)textField
+{
+    DLog();
+
+    UITableViewCell* cell = [self parentCellFor:textField];
+    if (cell)
+    {
+        NSIndexPath* indexPath = [self.tableView indexPathForCell:cell];
+        [self doUpdateTextField:textField
+                   forTableCell:cell];
+        [self.tableView reloadRowsAtIndexPaths:@[ indexPath ] withRowAnimation:UITableViewRowAnimationNone];
+    }
+}
+
 
 #pragma mark - OCRCellTextFieldDelegate methods
 
@@ -1499,6 +1547,18 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     
     [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject: indexPath]
                           withRowAnimation:UITableViewRowAnimationFade];
+}
+
+
+- (UITableViewCell*)parentCellFor:(UIView*)view
+{
+    DLog();
+    
+    if (!view)
+        return nil;
+    if ([view isMemberOfClass:[OCREducationTableViewCell class]])
+        return (UITableViewCell*)view;
+    return [self parentCellFor:view.superview];
 }
 
 #pragma mark - Fetched Results Controller delegate methods

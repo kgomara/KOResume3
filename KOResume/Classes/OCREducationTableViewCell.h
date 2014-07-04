@@ -27,6 +27,6 @@
 
 @property (weak, nonatomic) IBOutlet    UITextField *state;
 
-@property (strong, nonatomic)           UIViewController<OCRCellTextFieldDelegate>    *delegate;
+//@property (strong, nonatomic)           UIViewController<OCRCellTextFieldDelegate>    *delegate;
 
 @end
