@@ -310,7 +310,7 @@
     
     // Get the size of the keyboard
     NSDictionary *info = [aNotification userInfo];
-    CGSize kbSize = [[info objectForKey: UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    CGSize kbSize = [info[UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
     // ...and adjust the contentInset for its height
     UIEdgeInsets contentInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height, 0.0);
     

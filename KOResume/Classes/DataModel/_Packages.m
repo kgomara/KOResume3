@@ -86,7 +86,7 @@ const struct PackagesFetchedProperties PackagesFetchedProperties = {
 }
 
 - (void)setSequence_numberValue:(int16_t)value_ {
-	[self setSequence_number:[NSNumber numberWithShort:value_]];
+	[self setSequence_number:@(value_)];
 }
 
 - (int16_t)primitiveSequence_numberValue {
@@ -95,7 +95,7 @@ const struct PackagesFetchedProperties PackagesFetchedProperties = {
 }
 
 - (void)setPrimitiveSequence_numberValue:(int16_t)value_ {
-	[self setPrimitiveSequence_number:[NSNumber numberWithShort:value_]];
+	[self setPrimitiveSequence_number:@(value_)];
 }
 
 

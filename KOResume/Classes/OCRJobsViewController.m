@@ -219,7 +219,7 @@
     // Sort accomplishments in the order they should appear in the table
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey: kOCRSequenceNumberAttributeName
                                                                    ascending: YES];
-    NSArray *sortDescriptors    = [NSArray arrayWithObject: sortDescriptor];
+    NSArray *sortDescriptors    = @[sortDescriptor];
     self.accomplishmentsArray   = [NSMutableArray arrayWithArray: [_selectedJob.accomplishment sortedArrayUsingDescriptors: sortDescriptors]];
 }
 
@@ -317,7 +317,7 @@
     
     // Set up the navigation items and save/cancel buttons
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects: editBtn, nil];
+        self.navigationItem.rightBarButtonItems = @[editBtn];
     } else {
         self.navigationItem.leftBarButtonItem  = backBtn;
         self.navigationItem.rightBarButtonItem = editBtn;
@@ -574,7 +574,7 @@
     if (isEditingMode) {
         // Set up the navigation items and save/cancel buttons
         if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-            self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects: saveBtn, cancelBtn, nil];
+            self.navigationItem.rightBarButtonItems = @[saveBtn, cancelBtn];
         } else {
             self.navigationItem.leftBarButtonItem  = cancelBtn;
             self.navigationItem.rightBarButtonItem = saveBtn;
@@ -644,10 +644,10 @@
     // The job array is in the order (including deletes) the user wants
     // ...loop through the array by index, resetting the job's sequence_number attribute
     for (int i = 0; i < [_accomplishmentsArray count]; i++) {
-        if ([[_accomplishmentsArray objectAtIndex: i] isDeleted]) {
+        if ([_accomplishmentsArray[i] isDeleted]) {
             // no need to update the sequence number of deleted objects
         } else {
-            [[_accomplishmentsArray objectAtIndex: i] setSequence_numberValue: i];
+            [_accomplishmentsArray[i] setSequence_numberValue: i];
         }
     }
 }
@@ -690,7 +690,7 @@
      and other content for visible cells.
      */
     // Animate the insertion of the new row
-    [self.tableView insertRowsAtIndexPaths: [NSArray arrayWithObject: indexPath]
+    [self.tableView insertRowsAtIndexPaths: @[indexPath]
                           withRowAnimation: UITableViewRowAnimationFade];
     // ...and scroll the tableView back to the top to ensure the user can see the result of adding the Job
     [self.tableView scrollToRowAtIndexPath: indexPath
@@ -830,10 +830,10 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
     
     // We're in the Jobs section,
     // ...set the title text content and dynamic text font
-    cell.textLabel.text         = [(Accomplishments *)[_accomplishmentsArray objectAtIndex: indexPath.row] name];
+    cell.textLabel.text         = [(Accomplishments *)_accomplishmentsArray[indexPath.row] name];
     cell.textLabel.font         = [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline];
     // ...the detail text content and dynamic text font
-    cell.detailTextLabel.text   = [[(Accomplishments *)[_accomplishmentsArray objectAtIndex: indexPath.row] summary] first30];
+    cell.detailTextLabel.text   = [[(Accomplishments *)_accomplishmentsArray[indexPath.row] summary] first30];
     cell.detailTextLabel.font   = [UIFont preferredFontForTextStyle: UIFontTextStyleSubheadline];
     // ...and the accessory disclosure indicator
     cell.accessoryType          = UITableViewCellAccessoryDisclosureIndicator;
@@ -869,16 +869,16 @@ commitEditingStyle: (UITableViewCellEditingStyle)editingStyle
     
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         // Delete the managed object at the given index path.
-        NSManagedObject *accomplishmentToDelete = [_accomplishmentsArray objectAtIndex: indexPath.row];
+        NSManagedObject *accomplishmentToDelete = _accomplishmentsArray[indexPath.row];
         [[kAppDelegate managedObjectContext] deleteObject: accomplishmentToDelete];
         [_accomplishmentsArray removeObjectAtIndex: indexPath.row];
         // ...delete the object from the tableView
-        [tableView deleteRowsAtIndexPaths: [NSArray arrayWithObject: indexPath]
+        [tableView deleteRowsAtIndexPaths: @[indexPath]
                          withRowAnimation: UITableViewRowAnimationFade];
         // ...and reload the table
         [tableView reloadData];
     } else {
-        DLog(@"editingStyle=%@", [NSNumber numberWithInt: editingStyle]);
+        DLog(@"editingStyle=%d", (int)editingStyle);
     }
 }
 
@@ -911,7 +911,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     NSUInteger toRow    = [toIndexPath row];
     
     // Get the accomplishments object at the fromRow
-    Accomplishments *movedAccomplishment = [_accomplishmentsArray objectAtIndex: fromRow];
+    Accomplishments *movedAccomplishment = _accomplishmentsArray[fromRow];
     // ...remove it from that "order"
     [_accomplishmentsArray removeObjectAtIndex: fromRow];
     // ...and insert it where the user wants
@@ -1172,7 +1172,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     
     // Get the size of the keyboard
     NSDictionary *info = [aNotification userInfo];
-    CGSize kbSize = [[info objectForKey: UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    CGSize kbSize = [info[UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
     // ...and adjust the contentInset for its height
 //    UIEdgeInsets contentInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height, 0.0);
 
@@ -1454,13 +1454,13 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     switch(type) {
         case NSFetchedResultsChangeInsert:
             // Insert a row
-            [_tableView insertRowsAtIndexPaths: [NSArray arrayWithObject: newIndexPath]
+            [_tableView insertRowsAtIndexPaths: @[newIndexPath]
                               withRowAnimation: UITableViewRowAnimationFade];
             break;
             
         case NSFetchedResultsChangeDelete:
             // Delete a row
-            [_tableView deleteRowsAtIndexPaths: [NSArray arrayWithObject:indexPath]
+            [_tableView deleteRowsAtIndexPaths: @[indexPath]
                               withRowAnimation: UITableViewRowAnimationFade];
             break;
             
@@ -1472,7 +1472,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
             
         case NSFetchedResultsChangeMove:
             // On a move, delete the rows where they were...
-            [_tableView deleteRowsAtIndexPaths: [NSArray arrayWithObject: indexPath]
+            [_tableView deleteRowsAtIndexPaths: @[indexPath]
                               withRowAnimation: UITableViewRowAnimationFade];
             // ...and reload the section to insert new rows and ensure titles are updated appropriately.
             [_tableView reloadSections: [NSIndexSet indexSetWithIndex: newIndexPath.section]

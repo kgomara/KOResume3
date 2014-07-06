@@ -125,12 +125,12 @@ BOOL isEditModeActive;
     self.collectionView.pagingEnabled = YES;
     
     // If the device is an iPad...
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+//    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         // Set the clearsSelectionOnViewWillAppear property to keep selected cells
         self.clearsSelectionOnViewWillAppear    = NO;
         // ...and set the content size of our view
         self.preferredContentSize               = CGSizeMake(320.0, 600.0);
-    }
+//    }
     
     [super awakeFromNib];
 }
@@ -154,7 +154,7 @@ BOOL isEditModeActive;
     NSString *title = NSLocalizedString(@"Packages", nil);
 #ifdef DEBUG
     // Include the version in the title for debug builds
-    NSString *version           = [[[NSBundle mainBundle] infoDictionary] objectForKey: @"CFBundleVersion"];
+    NSString *version           = [[NSBundle mainBundle] infoDictionary][@"CFBundleVersion"];
     self.navigationItem.title   = [NSString stringWithFormat: @"%@-%@", title, version];
 #else
     self.navigationItem.title   = title;
@@ -525,7 +525,7 @@ BOOL isEditModeActive;
      In our case, we only want a single section, so our fetchedResultsController is set up to retrieve everything
      in one section, and we just return the number of objects in section[0]
      */
-    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController.sections objectAtIndex:0];
+    id <NSFetchedResultsSectionInfo> sectionInfo = (self.fetchedResultsController.sections)[0];
     NSUInteger rows = [sectionInfo numberOfObjects];
     DLog(@"rows=%@", @(rows));
 
@@ -572,8 +572,8 @@ BOOL isEditModeActive;
 {
     DLog(@"%@", indexPath.debugDescription);
     
-    id <NSFetchedResultsSectionInfo> sectionInfo    = [self.fetchedResultsController.sections objectAtIndex: indexPath.section];
-    Packages *aPackage                              = (Packages *) [sectionInfo.objects objectAtIndex: indexPath.row];
+    id <NSFetchedResultsSectionInfo> sectionInfo    = (self.fetchedResultsController.sections)[indexPath.section];
+    Packages *aPackage                              = (Packages *) (sectionInfo.objects)[indexPath.row];
     /*
      Set the tag for the cell and its buttons to the row of the Packages object.
      The tag property is often used to carry identifying information for later use. In our case, we'll use it in the
@@ -646,8 +646,8 @@ BOOL isEditModeActive;
     CGSize result;
 
     // Get the Package represented by the cell at indexPath
-    id <NSFetchedResultsSectionInfo> sectionInfo    = [self.fetchedResultsController.sections objectAtIndex: indexPath.section];
-    Packages *aPackage                              = (Packages *) [sectionInfo.objects objectAtIndex: indexPath.row];
+    id <NSFetchedResultsSectionInfo> sectionInfo    = (self.fetchedResultsController.sections)[indexPath.section];
+    Packages *aPackage                              = (Packages *) (sectionInfo.objects)[indexPath.row];
     
     /*
      To support Dynamic Text, we need to calculate the size required by the text at run time given the
@@ -909,7 +909,7 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
     self.packagesPopoverController  = aPopoverController;
     self.rootPopoverButtonItem      = barButtonItem;
     
-    OCRBaseDetailViewController <SubstitutableDetailViewController> *detailViewController = (OCRBaseDetailViewController<SubstitutableDetailViewController>*)[[svc.viewControllers objectAtIndex: 1] topViewController];
+    OCRBaseDetailViewController <SubstitutableDetailViewController> *detailViewController = (OCRBaseDetailViewController<SubstitutableDetailViewController>*)[(svc.viewControllers)[1] topViewController];
     [detailViewController showRootPopoverButtonItem: _rootPopoverButtonItem
                                      withController: aPopoverController];
 }
@@ -934,7 +934,7 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
     DLog();
     
     // Nil out references to the popover controller and the popover button, and tell the detail view controller to hide the button.
-    OCRBaseDetailViewController <SubstitutableDetailViewController> *detailViewController = (OCRBaseDetailViewController<SubstitutableDetailViewController>*)[[svc.viewControllers objectAtIndex: 1] topViewController];
+    OCRBaseDetailViewController <SubstitutableDetailViewController> *detailViewController = (OCRBaseDetailViewController<SubstitutableDetailViewController>*)[(svc.viewControllers)[1] topViewController];
     [detailViewController invalidateRootPopoverButtonItem: _rootPopoverButtonItem];
     self.packagesPopoverController  = nil;
     self.rootPopoverButtonItem      = nil;
@@ -972,8 +972,8 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
             // ...and get the cooresponding cell from the collection view
             OCRPackagesCell *packagesCell   = (OCRPackagesCell *)[self.collectionView cellForItemAtIndexPath: indexPath];
 
-            Packages *aPackage = [packages objectAtIndex: packagesCell.tag];    // TODO - backwards - we want to iterate this array?
-            [aPackage setSequence_number: [NSNumber numberWithInt: i++]];       // TODO - sequence number does not seem to stick
+            Packages *aPackage = packages[packagesCell.tag];    // TODO - backwards - we want to iterate this array?
+            [aPackage setSequence_number: @(i++)];       // TODO - sequence number does not seem to stick
             DLog(@"%@", [aPackage debugDescription]);
         }
     }
@@ -1052,26 +1052,21 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
         /*
          We want to pass a few data object references to the cover letter controller (discussed
          in more detail below) - so we must first get a reference to the cover letter controller.
-         
-         The segue differs between iPad and iPhone.
-         On iPad, the detail view is governed by its own navigation controller, and the segue is replacing
-         the navigation controller.
-         OniPhone, the segue is a relationship segue.
          */
         OCRBaseDetailViewController *cvrLtrController;
-        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+//        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
             /*
              On the iPad, we are getting a UIStoryboardReplaceSegue, so the destinationViewController is a UINavigationController.
              We need to get the detail view controller, which is the first controller in the navigation controller's stack.
 
              The UINavigationController cast isn't strictly necessary, but helps make the code more self-documenting
              */
-            cvrLtrController = [[(UINavigationController *)[segue destinationViewController] viewControllers] objectAtIndex: 0];
+            cvrLtrController = [(UINavigationController *)[segue destinationViewController] viewControllers][0];
             /*
              Update the splitViewController's delegate
              */            
             if (_rootPopoverButtonItem != nil) {
-                OCRBaseDetailViewController<SubstitutableDetailViewController>* detailViewController = (OCRBaseDetailViewController<SubstitutableDetailViewController>*)[[[segue destinationViewController] viewControllers] objectAtIndex: 0];
+                OCRBaseDetailViewController<SubstitutableDetailViewController>* detailViewController = (OCRBaseDetailViewController<SubstitutableDetailViewController>*)[[segue destinationViewController] viewControllers][0];
                 [detailViewController showRootPopoverButtonItem:_rootPopoverButtonItem
                                                  withController:_packagesPopoverController];
             }
@@ -1079,10 +1074,10 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
             if (self.packagesPopoverController) {
                 [self.packagesPopoverController dismissPopoverAnimated: YES];
             }
-        } else {
-            // On the iPhone, the cover letter controller is the destination of the segue
-            cvrLtrController = [segue destinationViewController];
-        }
+//        } else {
+//            // On the iPhone, the cover letter controller is the destination of the segue
+//            cvrLtrController = [segue destinationViewController];
+//        }
         /*
          A common strategy for passing data between controller objects is to declare public properties in the receiving object
          and have the instantiator set those properties.
@@ -1112,12 +1107,12 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
          This code follows the same pattern as kOCRCvrLtrSegue above.
          */
         OCRBaseDetailViewController *resumeController;
-        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+//        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
             // Get a reference to the resume controller
-            resumeController = [[(UINavigationController *)[segue destinationViewController] viewControllers] objectAtIndex: 0];
+            resumeController = [(UINavigationController *)[segue destinationViewController] viewControllers][0];
             // Update the splitViewController's delegate
             if (_rootPopoverButtonItem != nil) {
-                OCRBaseDetailViewController<SubstitutableDetailViewController>* detailViewController = (OCRBaseDetailViewController<SubstitutableDetailViewController>*)[[[segue destinationViewController] viewControllers] objectAtIndex: 0];
+                OCRBaseDetailViewController<SubstitutableDetailViewController>* detailViewController = (OCRBaseDetailViewController<SubstitutableDetailViewController>*)[[segue destinationViewController] viewControllers][0];
                 [detailViewController showRootPopoverButtonItem: _rootPopoverButtonItem
                                                  withController: _packagesPopoverController];
             }
@@ -1125,10 +1120,10 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
             if (self.packagesPopoverController) {
                 [self.packagesPopoverController dismissPopoverAnimated: YES];
             }
-        } else {
-            // On the iPhone, the resume controller is the destination of the segue
-            resumeController = [segue destinationViewController];
-        }
+//        } else {
+//            // On the iPhone, the resume controller is the destination of the segue
+//            resumeController = [segue destinationViewController];
+//        }
         [resumeController setSelectedManagedObject: aPackage.resume];
         [resumeController setBackButtonTitle: NSLocalizedString(@"Packages", nil)];
         [resumeController setFetchedResultsController: self.fetchedResultsController];
@@ -1163,7 +1158,7 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
     // Sort by package sequence_number
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey: kOCRSequenceNumberAttributeName
                                                                    ascending: YES];
-    NSArray *sortDescriptors = [[NSArray alloc] initWithObjects: sortDescriptor, nil];
+    NSArray *sortDescriptors = @[sortDescriptor];
     [fetchRequest setSortDescriptors: sortDescriptors];
     
     // Alloc and initialize the controller

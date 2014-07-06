@@ -221,18 +221,15 @@
         
         if(self.availableActions == 0) {
             toolbarWidth = 200.0f;
-            items = [NSArray arrayWithObjects:
-                     fixedSpace,
+            items = @[fixedSpace,
                      refreshStopBarButtonItem,
                      flexibleSpace,
                      self.backBarButtonItem,
                      flexibleSpace,
                      self.forwardBarButtonItem,
-                     fixedSpace,
-                     nil];
+                     fixedSpace];
         } else {
-            items = [NSArray arrayWithObjects:
-                     fixedSpace,
+            items = @[fixedSpace,
                      refreshStopBarButtonItem,
                      flexibleSpace,
                      self.backBarButtonItem,
@@ -240,8 +237,7 @@
                      self.forwardBarButtonItem,
                      flexibleSpace,
                      self.actionBarButtonItem,
-                     fixedSpace,
-                     nil];
+                     fixedSpace];
         }
         
         UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0.0f, 0.0f, toolbarWidth, 44.0f)];
@@ -255,18 +251,15 @@
         NSArray *items;
         
         if(self.availableActions == 0) {
-            items = [NSArray arrayWithObjects:
-                     flexibleSpace,
+            items = @[flexibleSpace,
                      self.backBarButtonItem, 
                      flexibleSpace,
                      self.forwardBarButtonItem,
                      flexibleSpace,
                      refreshStopBarButtonItem,
-                     flexibleSpace,
-                     nil];
+                     flexibleSpace];
         } else {
-            items = [NSArray arrayWithObjects:
-                     fixedSpace,
+            items = @[fixedSpace,
                      self.backBarButtonItem, 
                      flexibleSpace,
                      self.forwardBarButtonItem,
@@ -274,8 +267,7 @@
                      refreshStopBarButtonItem,
                      flexibleSpace,
                      self.actionBarButtonItem,
-                     fixedSpace,
-                     nil];
+                     fixedSpace];
         }
         
 				self.navigationController.toolbar.barStyle = self.navigationController.navigationBar.barStyle;

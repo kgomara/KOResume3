@@ -213,7 +213,7 @@
     // Sort jobs in the order they should appear in the table
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey: kOCRSequenceNumberAttributeName
                                                                    ascending: YES];
-    NSArray *sortDescriptors    = [NSArray arrayWithObject: sortDescriptor];
+    NSArray *sortDescriptors    = @[sortDescriptor];
     self.jobArray               = [NSMutableArray arrayWithArray: [_selectedResume.job sortedArrayUsingDescriptors: sortDescriptors]];
     // ...sort the Education and Certification array
     self.educationArray = [NSMutableArray arrayWithArray: [_selectedResume.education sortedArrayUsingDescriptors: sortDescriptors]];
@@ -238,7 +238,7 @@
         // Check to see if there is at least 1 Job...
         if ([_jobArray count] > 0) {
             // ...if so, get the first one,
-            Jobs *currentJob        = [_jobArray objectAtIndex:0];
+            Jobs *currentJob        = _jobArray[0];
             // ...use it to populate the current job information in the summaryView,
             _currentJobTitle.text   = currentJob.title;
             _currentJobName.text    = currentJob.name;
@@ -344,7 +344,7 @@
 
     // Set up the navigation items and save/cancel buttons
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects: editBtn, nil];
+        self.navigationItem.rightBarButtonItems = @[editBtn];
     } else {
         self.navigationItem.leftBarButtonItem  = backBtn;
         self.navigationItem.rightBarButtonItem = editBtn;
@@ -550,7 +550,7 @@
     if (isEditingMode) {
         // Set up the navigation items and save/cancel buttons
         if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-            self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects: saveBtn, cancelBtn, nil];
+            self.navigationItem.rightBarButtonItems = @[saveBtn, cancelBtn];
         } else {
             self.navigationItem.leftBarButtonItem  = cancelBtn;
             self.navigationItem.rightBarButtonItem = saveBtn;
@@ -606,18 +606,18 @@
     // The job array is in the order (including deletes) the user wants
     // ...loop through the array by index, resetting the job's sequence_number attribute
     for (int i = 0; i < [_jobArray count]; i++) {
-        if ([[_jobArray objectAtIndex: i] isDeleted]) {
+        if ([_jobArray[i] isDeleted]) {
             // no need to update the sequence number of deleted objects
         } else {
-            [[_jobArray objectAtIndex: i] setSequence_numberValue: i];
+            [_jobArray[i] setSequence_numberValue: i];
         }
     }
     // ...same for the education array
     for (int i = 0; i < [_educationArray count]; i++) {
-        if ([[_educationArray objectAtIndex: i] isDeleted]) {
+        if ([_educationArray[i] isDeleted]) {
             // no need to update the sequence number of deleted objects
         } else {
-            [[_educationArray objectAtIndex: i] setSequence_numberValue: i];
+            [_educationArray[i] setSequence_numberValue: i];
         }
     }
 }
@@ -660,7 +660,7 @@
      and other content for visible cells.
      */
     // Animate the insertion of the new row
-    [self.tableView insertRowsAtIndexPaths: [NSArray arrayWithObject: indexPath]
+    [self.tableView insertRowsAtIndexPaths: @[indexPath]
                           withRowAnimation: UITableViewRowAnimationFade];
     // ...and scroll the tableView back to the top to ensure the user can see the result of adding the Job
     [self.tableView scrollToRowAtIndexPath: indexPath
@@ -719,7 +719,7 @@
                                                 inSection: k_EducationSection];
     
     // Animate the insertion of the new row
-    [self.tableView insertRowsAtIndexPaths: [NSArray arrayWithObject: indexPath]
+    [self.tableView insertRowsAtIndexPaths: @[indexPath]
                           withRowAnimation: UITableViewRowAnimationFade];
     // ...and scroll the tableView back to the top to ensure the user can see the result of adding the Job
     [self.tableView scrollToRowAtIndexPath: indexPath
@@ -873,10 +873,10 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: kOCRSubtitleTableCell];
     
     // ...set the title text content and dynamic text font
-    cell.textLabel.text         = [[_jobArray objectAtIndex: indexPath.row] name];
+    cell.textLabel.text         = [_jobArray[indexPath.row] name];
     cell.textLabel.font         = [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline];
     // ...the detail text content and dynamic text font
-    cell.detailTextLabel.text   = [[_jobArray objectAtIndex: indexPath.row] title];
+    cell.detailTextLabel.text   = [_jobArray[indexPath.row] title];
     cell.detailTextLabel.font   = [UIFont preferredFontForTextStyle: UIFontTextStyleSubheadline];
     // ...and the accessory disclosure indicator
     cell.accessoryType          = UITableViewCellAccessoryDisclosureIndicator;
@@ -903,35 +903,35 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
     OCREducationTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier: kOCREducationTableCell];
     
     // Set the title text content, dynamic font, enable state, and backgroundColor
-    cell.title.text                 = [[_educationArray objectAtIndex: indexPath.row] title];
+    cell.title.text                 = [_educationArray[indexPath.row] title];
     cell.title.font                 = [UIFont preferredFontForTextStyle: UIFontTextStyleSubheadline];
     cell.title.enabled              = self.editing;
     cell.title.backgroundColor      = backgroundColor;
     cell.title.delegate             = self;
     
     // ...same for degree/certification
-    cell.name.text                  = [[_educationArray objectAtIndex: indexPath.row] name];
+    cell.name.text                  = [_educationArray[indexPath.row] name];
     cell.name.font                  = [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline];
     cell.name.enabled               = self.editing;
     cell.name.backgroundColor       = backgroundColor;
     cell.name.delegate              = self;
     
     // ...earnedDate
-    cell.earnedDate.text            = [dateFormatter stringFromDate: [[_educationArray objectAtIndex: indexPath.row] earned_date]];
+    cell.earnedDate.text            = [dateFormatter stringFromDate: [_educationArray[indexPath.row] earned_date]];
     cell.earnedDate.font            = [UIFont preferredFontForTextStyle: UIFontTextStyleSubheadline];
     cell.earnedDate.enabled         = self.editing;
     cell.earnedDate.backgroundColor = backgroundColor;
     cell.earnedDate.delegate        = self;
     
     // ...city
-    cell.city.text                  = [[_educationArray objectAtIndex: indexPath.row] city];
+    cell.city.text                  = [_educationArray[indexPath.row] city];
     cell.city.font                  = [UIFont preferredFontForTextStyle: UIFontTextStyleSubheadline];
     cell.city.enabled               = self.editing;
     cell.city.backgroundColor       = backgroundColor;
     cell.city.delegate              = self;
 
     // ...and state
-    cell.state.text                 = [(Education *)[_educationArray objectAtIndex: indexPath.row] state];
+    cell.state.text                 = [(Education *)_educationArray[indexPath.row] state];
     cell.state.font                 = [UIFont preferredFontForTextStyle: UIFontTextStyleSubheadline];
     cell.state.enabled              = self.editing;
     cell.state.backgroundColor      = backgroundColor;
@@ -976,21 +976,21 @@ commitEditingStyle: (UITableViewCellEditingStyle)editingStyle
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         // Delete the managed object at the given index path.
         if (indexPath.section == k_JobsSection) {
-            NSManagedObject *jobToDelete = [_jobArray objectAtIndex: indexPath.row];
+            NSManagedObject *jobToDelete = _jobArray[indexPath.row];
             [[kAppDelegate managedObjectContext] deleteObject: jobToDelete];
             [_jobArray removeObjectAtIndex: indexPath.row];
         } else {
-            NSManagedObject *jobToDelete = [_educationArray objectAtIndex: indexPath.row];
+            NSManagedObject *jobToDelete = _educationArray[indexPath.row];
             [[kAppDelegate managedObjectContext] deleteObject: jobToDelete];
             [_educationArray removeObjectAtIndex: indexPath.row];
         }
         // ...delete the object from the tableView
-        [tableView deleteRowsAtIndexPaths: [NSArray arrayWithObject: indexPath]
+        [tableView deleteRowsAtIndexPaths: @[indexPath]
                          withRowAnimation: UITableViewRowAnimationFade];
         // ...and reload the table
         [tableView reloadData];
     } else {
-        DLog(@"editingStyle=%@", [NSNumber numberWithInt: editingStyle]);
+        DLog(@"editingStyle=%d", (int)editingStyle);       // TODO - cast to int?
     }
 }
 
@@ -1024,7 +1024,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     
     if (toIndexPath.section == k_JobsSection) {
         // Get the Job at the fromRow
-        Jobs *movedJob = [_jobArray objectAtIndex: fromRow];
+        Jobs *movedJob = _jobArray[fromRow];
         // ...remove it from that "order"
         [_jobArray removeObjectAtIndex: fromRow];
         // ...and insert it where the user wants
@@ -1032,7 +1032,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
                         atIndex: toRow];
     } else {
         // Get the Education at the fromRow
-        Education *movedEducation = [_educationArray objectAtIndex: fromRow];
+        Education *movedEducation = _educationArray[fromRow];
         // ...remove it from that "order"
         [_educationArray removeObjectAtIndex: fromRow];
         // ...and insert it where the user wants
@@ -1105,7 +1105,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
             DLog(@"Job selected");
             // Segue to the job
             [self performSegueWithIdentifier: kOCRJobsSegue
-                                      sender: [self.jobArray objectAtIndex: indexPath.row]];
+                                      sender: (self.jobArray)[indexPath.row]];
 			break;
 		}
 		case k_EducationSection: {
@@ -1357,7 +1357,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     
     // Get the size of the keyboard
     NSDictionary *info = [aNotification userInfo];
-    CGSize kbSize = [[info objectForKey: UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    CGSize kbSize = [info[UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
     // ...and adjust the contentInset for its height
 //    UIEdgeInsets contentInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height, 0.0);
     
@@ -1527,7 +1527,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     
     NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
     
-    Education *education = [_educationArray objectAtIndex: indexPath.row];
+    Education *education = _educationArray[indexPath.row];
     
     if (textField.tag == kTitleFieldTag) {
         education.title         = textField.text;
@@ -1545,7 +1545,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
         education.state         = textField.text;
     }
     
-    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject: indexPath]
+    [self.tableView reloadRowsAtIndexPaths:@[indexPath]
                           withRowAnimation:UITableViewRowAnimationFade];
 }
 
@@ -1619,25 +1619,25 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     switch(type) {
         case NSFetchedResultsChangeInsert:
             // Insert a row
-            [_tableView insertRowsAtIndexPaths: [NSArray arrayWithObject: newIndexPath]
+            [_tableView insertRowsAtIndexPaths: @[newIndexPath]
                               withRowAnimation: UITableViewRowAnimationFade];
             break;
             
         case NSFetchedResultsChangeDelete:
             // Delete a row
-            [_tableView deleteRowsAtIndexPaths: [NSArray arrayWithObject:indexPath]
+            [_tableView deleteRowsAtIndexPaths: @[indexPath]
                               withRowAnimation: UITableViewRowAnimationFade];
             break;
             
         case NSFetchedResultsChangeUpdate:
             // Underlying contents have changed, re-configure the cell
-             [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject: newIndexPath]
+             [self.tableView reloadRowsAtIndexPaths:@[newIndexPath]
                                   withRowAnimation:UITableViewRowAnimationFade];
             break;
             
         case NSFetchedResultsChangeMove:
             // On a move, delete the rows where they were...
-            [_tableView deleteRowsAtIndexPaths: [NSArray arrayWithObject: indexPath]
+            [_tableView deleteRowsAtIndexPaths: @[indexPath]
                               withRowAnimation: UITableViewRowAnimationFade];
             // ...and reload the section to insert new rows and ensure titles are updated appropriately.
             [_tableView reloadSections: [NSIndexSet indexSetWithIndex: newIndexPath.section]

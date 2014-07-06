@@ -38,12 +38,14 @@
 {
     DLog();
     
-    if (__managedObjectContext != nil) {
+    if (__managedObjectContext != nil)
+    {
         return __managedObjectContext;
     }
     
     NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
-    if (coordinator != nil) {
+    if (coordinator != nil)
+    {
         NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType: NSMainQueueConcurrencyType];
         
         // PerformBlockAndWait adds the block to the backing queue and schedules it to run on its own thread.
@@ -86,7 +88,8 @@
 {
     DLog();
     
-    if (__managedObjectModel != nil) {
+    if (__managedObjectModel != nil)
+    {
         return __managedObjectModel;
     }
     
@@ -106,7 +109,8 @@
 {
     DLog();
     
-    if (__persistentStoreCoordinator != nil) {
+    if (__persistentStoreCoordinator != nil)
+    {
         return __persistentStoreCoordinator;
     }
 
@@ -114,10 +118,11 @@
     
     // TODO - move the database to ubiquity container, so check from version 2.0 in Documents and move...
     
-    if (__persistentStoreCoordinator) {
+    if (__persistentStoreCoordinator)
+    {
         // Set up the path to the location of the database
         // TODO need to get it inside iCloud if enabled
-        NSString *docDir            = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+        NSString *docDir            = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
         NSString *dbFileName        = [NSString stringWithFormat: @"%@.%@", kOCRDatabaseName, kOCRDatabaseType];
         NSString *dbPath            = [docDir stringByAppendingPathComponent: dbFileName];
         // TODO - need to put this in iCloud (if enabled) with .nosync
@@ -130,7 +135,8 @@
         
         dispatch_async(queue, ^{
             NSFileManager *fileManager = [NSFileManager defaultManager];
-            if ( ![fileManager fileExistsAtPath: dbPath]) {
+            if ( ![fileManager fileExistsAtPath: dbPath])
+            {
                 // database does not exist, need to copy the seed database in from the app bundle
                 NSURL *bundleSeedURL = [NSURL fileURLWithPath: [[NSBundle mainBundle] pathForResource: kOCRDatabaseName
                                                                                                ofType: kOCRDatabaseType]];
@@ -140,7 +146,9 @@
                                          error: &error])
                 {
                     DLog(@"Copied store from bundle successfully!");
-                } else {
+                }
+                else
+                {
                     ELog(error, @"Copy seed Error");
                     return;
                 }
@@ -149,7 +157,8 @@
             // A database should exist now in the user's documents, just add it to the persistent store coordinator
             // ...first, get options appropriate for iCloud available or not
             NSDictionary *options = [self createStoreOptions];
-            if (options) {
+            if (options)
+            {
                 // ...load the store to the persistentStoreCoordinator
                 if ([self addStore: storeURL
                            withOptions: options])
@@ -161,14 +170,20 @@
                                                                           userInfo: nil];
                         
                     });
-                } else {
+                }
+                else
+                {
                     ALog(@"Failed to add store to coordinator");
                 }
-            } else {
+            }
+            else
+            {
                 ALog(@"Failed to create options");
             }
         });
-    } else {
+    }
+    else
+    {
         ALog(@"Could not inititialize NSPersistentStoreCoordinator");
     }
     
@@ -208,10 +223,8 @@
 //                   nil];
 //    } else {
         // iCloud is not available
-        options = [NSDictionary dictionaryWithObjectsAndKeys:
-                   [NSNumber numberWithBool: YES], NSMigratePersistentStoresAutomaticallyOption,
-                   [NSNumber numberWithBool: YES], NSInferMappingModelAutomaticallyOption,
-                   nil];
+        options = @{NSMigratePersistentStoresAutomaticallyOption: @YES,
+                          NSInferMappingModelAutomaticallyOption: @YES};
 //    }
     
     return options;
@@ -270,23 +283,26 @@
 {
     DLog();
     
-    BOOL success = NO;
+    __block BOOL success = NO;
     
-    NSError *error = nil;
+    __block NSError *error = nil;
     
-    [__persistentStoreCoordinator lock];
-    if ( [__persistentStoreCoordinator addPersistentStoreWithType: NSSQLiteStoreType
-                                                    configuration: nil
-                                                              URL: storeURL
-                                                          options: options
-                                                            error: &error])
-    {
-        success = YES;
-        DLog(@"Success!");
-    } else {
-        ELog(error, @"Could not add PersistentStore");
-    }
-    [__persistentStoreCoordinator unlock];
+    [__persistentStoreCoordinator performBlockAndWait:^{
+        if ( [__persistentStoreCoordinator addPersistentStoreWithType: NSSQLiteStoreType
+                                                        configuration: nil
+                                                                  URL: storeURL
+                                                              options: options
+                                                                error: &error])
+        {
+            success = YES;
+            DLog(@"Success!");
+        }
+        else
+        {
+            ELog(error, @"Could not add PersistentStore");
+        };
+    }];
+    
     
     return success;
 }

@@ -31,13 +31,15 @@
     DLog();
     
     // Check to see if the new package is different than the current one
-    if (_selectedManagedObject != aSelectedPackage) {
+    if (_selectedManagedObject != aSelectedPackage)
+    {
         _selectedManagedObject  = aSelectedPackage;
         // Update the view.
         [self configureView];
     }
 
-    if (self.masterPopoverController != nil) {
+    if (self.masterPopoverController != nil)
+    {
         [self.masterPopoverController dismissPopoverAnimated: YES];
     }        
 }

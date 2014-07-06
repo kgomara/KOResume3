@@ -32,29 +32,29 @@
     
     // Initialize the coreDataController class.
     _managedObjectContext = self.coreDataController.managedObjectContext;
-    if (!_managedObjectContext) {
+    if (!_managedObjectContext)
+    {
         ALog(@"Could not get managedObjectContext");
         NSString *msg = NSLocalizedString(@"Failed to open database.", nil);
         [OCAUtilities showErrorWithMessage: msg];
     }
     
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-        // Setup Master-Detail controller paradigm for iPad
-        UISplitViewController *splitViewController      = (UISplitViewController *)self.window.rootViewController;
-        UINavigationController *navigationController    = [splitViewController.viewControllers firstObject];
+    // Setup Master-Detail controller paradigm
+    UISplitViewController *splitViewController      = (UISplitViewController *)self.window.rootViewController;
+//    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
+//    {
+        UINavigationController *navigationController    = [splitViewController.viewControllers lastObject];
         splitViewController.delegate                    = (id)navigationController.topViewController;
-    } else {
-        // Set the managedObjectContext property on OCRPackagesViewController for iPhone
-        // ...first, get the rootViewController
-        UINavigationController *navigationController    = (UINavigationController *)self.window.rootViewController;
-        // ...in the iPhone Storyboard, we "embedded" OCRPackagesViewController in rootViewController, so it is topViewController
-        OCRPackagesViewController *controller           = (OCRPackagesViewController *)navigationController.topViewController;
-        controller.managedObjectContext                 = self.managedObjectContext;
-    }
+//    }
+//    else
+//    {
+//        splitViewController.delegate = [splitViewController.viewControllers lastObject];
+        DLog(@"class=%@", [[splitViewController.viewControllers lastObject] class]);
+//    }
     
     return YES;
 }
-							
+
 //----------------------------------------------------------------------------------------------------------
 /**
  Invoked by the framework when the app is about to become inactive.
@@ -165,16 +165,22 @@
     
     // Save changes to application's managed object context
     [moc performBlock:^{
-        if ([moc hasChanges]) {
+        if ([moc hasChanges])
+        {
             NSError *error = nil;
-            if ([moc save: &error]) {
+            if ([moc save: &error])
+            {
                 DLog(@"Save successful");
-            } else {
+            }
+            else
+            {
                 ELog(error, @"Failed to save data");
                 NSString* msg = NSLocalizedString( @"Failed to save data.", nil);
                 [OCAUtilities showErrorWithMessage: msg];
             }
-        } else {
+        }
+        else
+        {
             DLog(@"No changes to save");
         }
     }];
