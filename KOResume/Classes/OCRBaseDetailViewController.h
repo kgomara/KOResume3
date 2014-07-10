@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "Packages.h"
-#import "OCRPackagesViewController.h"
+//#import "OCRPackagesViewController.h"
 
 /**
  OCRDetailViewProtocol is a protocol that detail view controllers must adopt. It defines methods that 
@@ -31,7 +31,7 @@
 /**
  This class defines common properties and methods for detail veiw controllers.
  */
-@interface OCRBaseDetailViewController : UIViewController <UITableViewDelegate, SubstitutableDetailViewController>
+@interface OCRBaseDetailViewController : UIViewController <UITableViewDelegate /*, SubstitutableDetailViewController */ >
 
 /**
  The managed object the user selected.
@@ -70,6 +70,12 @@
  IBOutlet to the titleLabel.
  */
 @property (nonatomic, strong) IBOutlet UILabel              *titleLabel;
+
+/**
+ Reloads the fetched Results
+ 
+ @param     note    The NSNotification object, or nil.
+ */
 
 - (void)reloadFetchedResults: (NSNotification*)aNote;
 

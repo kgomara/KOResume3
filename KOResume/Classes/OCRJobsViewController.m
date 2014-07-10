@@ -1566,6 +1566,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     DLog();
     
     [super reloadFetchedResults: aNote];
+    
     [self loadViewFromSelectedObject];
 }
 

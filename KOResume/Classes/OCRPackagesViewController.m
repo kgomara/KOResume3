@@ -881,64 +881,64 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
     return NO;
 }
 
-//----------------------------------------------------------------------------------------------------------
-/**
- Tells the delegate that the specified view controller is about to be hidden.
- 
- When the split view controller rotates from a landscape to portrait orientation, it normally hides one of its 
- view controllers. When that happens, it calls this method to coordinate the addition of a button to the toolbar 
- (or navigation bar) of the remaining custom view controller. If you want the soon-to-be hidden view controller 
- to be displayed in a popover, you must implement this method and use it to add the specified button to your 
- interface.
+////----------------------------------------------------------------------------------------------------------
+///**
+// Tells the delegate that the specified view controller is about to be hidden.
+// 
+// When the split view controller rotates from a landscape to portrait orientation, it normally hides one of its 
+// view controllers. When that happens, it calls this method to coordinate the addition of a button to the toolbar 
+// (or navigation bar) of the remaining custom view controller. If you want the soon-to-be hidden view controller 
+// to be displayed in a popover, you must implement this method and use it to add the specified button to your 
+// interface.
+//
+// @param svc                 The split view controller that owns the specified view controller.
+// @param aViewController     The view controller being hidden.
+// @param barButtonItem       A button you can add to your toolbar.
+// @param aPopoverController  The popover controller that uses taps in barButtonItem to display the specified 
+//                            view controller.
+// */
+//- (void)splitViewController: (UISplitViewController*)svc
+//     willHideViewController: (UIViewController *)aViewController
+//          withBarButtonItem: (UIBarButtonItem*)barButtonItem
+//       forPopoverController: (UIPopoverController*)aPopoverController
+//{
+//    DLog();
+//    
+//    // Keep references to the popover controller and the popover button, and tell the detail view controller to show the button.
+//    barButtonItem.title             = @"Packages";
+//    self.packagesPopoverController  = aPopoverController;
+//    self.rootPopoverButtonItem      = barButtonItem;
+//    
+//    OCRBaseDetailViewController <SubstitutableDetailViewController> *detailViewController = (OCRBaseDetailViewController<SubstitutableDetailViewController>*)[(svc.viewControllers)[1] topViewController];
+//    [detailViewController showRootPopoverButtonItem: _rootPopoverButtonItem
+//                                     withController: aPopoverController];
+//}
 
- @param svc                 The split view controller that owns the specified view controller.
- @param aViewController     The view controller being hidden.
- @param barButtonItem       A button you can add to your toolbar.
- @param aPopoverController  The popover controller that uses taps in barButtonItem to display the specified 
-                            view controller.
- */
-- (void)splitViewController: (UISplitViewController*)svc
-     willHideViewController: (UIViewController *)aViewController
-          withBarButtonItem: (UIBarButtonItem*)barButtonItem
-       forPopoverController: (UIPopoverController*)aPopoverController
-{
-    DLog();
-    
-    // Keep references to the popover controller and the popover button, and tell the detail view controller to show the button.
-    barButtonItem.title             = @"Packages";
-    self.packagesPopoverController  = aPopoverController;
-    self.rootPopoverButtonItem      = barButtonItem;
-    
-    OCRBaseDetailViewController <SubstitutableDetailViewController> *detailViewController = (OCRBaseDetailViewController<SubstitutableDetailViewController>*)[(svc.viewControllers)[1] topViewController];
-    [detailViewController showRootPopoverButtonItem: _rootPopoverButtonItem
-                                     withController: aPopoverController];
-}
 
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Tells the delegate that the specified view controller is about to be shown again.
- 
- When the view controller rotates from a portrait to landscape orientation, it shows its hidden view controller 
- once more. If you added the specified button to your toolbar to facilitate the display of the hidden view 
- controller in a popover, you must implement this method and use it to remove that button.
-
- @param svc                 The split view controller that owns the specified view controller.
- @param aViewController     The view controller being hidden.
- @param button              The button used to display the view controller while it was hidden.
- */
-- (void)splitViewController: (UISplitViewController*)svc
-     willShowViewController: (UIViewController *)aViewController
-  invalidatingBarButtonItem: (UIBarButtonItem *)button
-{
-    DLog();
-    
-    // Nil out references to the popover controller and the popover button, and tell the detail view controller to hide the button.
-    OCRBaseDetailViewController <SubstitutableDetailViewController> *detailViewController = (OCRBaseDetailViewController<SubstitutableDetailViewController>*)[(svc.viewControllers)[1] topViewController];
-    [detailViewController invalidateRootPopoverButtonItem: _rootPopoverButtonItem];
-    self.packagesPopoverController  = nil;
-    self.rootPopoverButtonItem      = nil;
-}
+////----------------------------------------------------------------------------------------------------------
+///**
+// Tells the delegate that the specified view controller is about to be shown again.
+// 
+// When the view controller rotates from a portrait to landscape orientation, it shows its hidden view controller 
+// once more. If you added the specified button to your toolbar to facilitate the display of the hidden view 
+// controller in a popover, you must implement this method and use it to remove that button.
+//
+// @param svc                 The split view controller that owns the specified view controller.
+// @param aViewController     The view controller being hidden.
+// @param button              The button used to display the view controller while it was hidden.
+// */
+//- (void)splitViewController: (UISplitViewController*)svc
+//     willShowViewController: (UIViewController *)aViewController
+//  invalidatingBarButtonItem: (UIBarButtonItem *)button
+//{
+//    DLog();
+//    
+//    // Nil out references to the popover controller and the popover button, and tell the detail view controller to hide the button.
+//    OCRBaseDetailViewController <SubstitutableDetailViewController> *detailViewController = (OCRBaseDetailViewController<SubstitutableDetailViewController>*)[(svc.viewControllers)[1] topViewController];
+//    [detailViewController invalidateRootPopoverButtonItem: _rootPopoverButtonItem];
+//    self.packagesPopoverController  = nil;
+//    self.rootPopoverButtonItem      = nil;
+//}
 
 
 #pragma mark - Private methods
@@ -955,7 +955,6 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
     DLog();
     
     // Get the array of packages as they are after the add, move, or delete
-#warning TODO - don't we want the UI's order?
     NSArray *packages = [self.fetchedResultsController fetchedObjects];
     
     // Get the number of sections in order to construct an indexPath
@@ -1065,15 +1064,15 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
             /*
              Update the splitViewController's delegate
              */            
-            if (_rootPopoverButtonItem != nil) {
-                OCRBaseDetailViewController<SubstitutableDetailViewController>* detailViewController = (OCRBaseDetailViewController<SubstitutableDetailViewController>*)[[segue destinationViewController] viewControllers][0];
-                [detailViewController showRootPopoverButtonItem:_rootPopoverButtonItem
-                                                 withController:_packagesPopoverController];
-            }
-            
-            if (self.packagesPopoverController) {
-                [self.packagesPopoverController dismissPopoverAnimated: YES];
-            }
+//            if (_rootPopoverButtonItem != nil) {
+//                OCRBaseDetailViewController<SubstitutableDetailViewController>* detailViewController = (OCRBaseDetailViewController<SubstitutableDetailViewController>*)[[segue destinationViewController] viewControllers][0];
+//                [detailViewController showRootPopoverButtonItem:_rootPopoverButtonItem
+//                                                 withController:_packagesPopoverController];
+//            }
+//            
+//            if (self.packagesPopoverController) {
+//                [self.packagesPopoverController dismissPopoverAnimated: YES];
+//            }
 //        } else {
 //            // On the iPhone, the cover letter controller is the destination of the segue
 //            cvrLtrController = [segue destinationViewController];
@@ -1111,15 +1110,15 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
             // Get a reference to the resume controller
             resumeController = [(UINavigationController *)[segue destinationViewController] viewControllers][0];
             // Update the splitViewController's delegate
-            if (_rootPopoverButtonItem != nil) {
-                OCRBaseDetailViewController<SubstitutableDetailViewController>* detailViewController = (OCRBaseDetailViewController<SubstitutableDetailViewController>*)[[segue destinationViewController] viewControllers][0];
-                [detailViewController showRootPopoverButtonItem: _rootPopoverButtonItem
-                                                 withController: _packagesPopoverController];
-            }
-            
-            if (self.packagesPopoverController) {
-                [self.packagesPopoverController dismissPopoverAnimated: YES];
-            }
+//            if (_rootPopoverButtonItem != nil) {
+//                OCRBaseDetailViewController<SubstitutableDetailViewController>* detailViewController = (OCRBaseDetailViewController<SubstitutableDetailViewController>*)[[segue destinationViewController] viewControllers][0];
+//                [detailViewController showRootPopoverButtonItem: _rootPopoverButtonItem
+//                                                 withController: _packagesPopoverController];
+//            }
+//            
+//            if (self.packagesPopoverController) {
+//                [self.packagesPopoverController dismissPopoverAnimated: YES];
+//            }
 //        } else {
 //            // On the iPhone, the resume controller is the destination of the segue
 //            resumeController = [segue destinationViewController];

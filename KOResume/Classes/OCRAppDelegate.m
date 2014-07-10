@@ -41,10 +41,13 @@
     
     // Setup Master-Detail controller paradigm
     UISplitViewController *splitViewController      = (UISplitViewController *)self.window.rootViewController;
+    UINavigationController *navigationController    = [splitViewController.viewControllers lastObject];
+    splitViewController.delegate                    = (id)navigationController.topViewController;
+//    UISplitViewController *splitViewController      = (UISplitViewController *)self.window.rootViewController;
 //    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
 //    {
-        UINavigationController *navigationController    = [splitViewController.viewControllers lastObject];
-        splitViewController.delegate                    = (id)navigationController.topViewController;
+//        UINavigationController *navigationController    = [splitViewController.viewControllers lastObject];
+//        splitViewController.delegate                    = (id)navigationController.topViewController;
 //    }
 //    else
 //    {

@@ -38,10 +38,10 @@
         [self configureView];
     }
 
-    if (self.masterPopoverController != nil)
-    {
-        [self.masterPopoverController dismissPopoverAnimated: YES];
-    }        
+//    if (self.masterPopoverController != nil)
+//    {
+//        [self.masterPopoverController dismissPopoverAnimated: YES];
+//    }        
 }
 
 #pragma mark - View lifecycle
@@ -82,28 +82,28 @@
 }
 
 
-//----------------------------------------------------------------------------------------------------------
-/**
- Notifies the view controller that its view was added to a view hierarchy.
- 
- You can override this method to perform additional tasks associated with presenting the view. If you override 
- this method, you must call super at some point in your implementation.
- 
- Note - If a view controller is presented by a view controller inside of a popover, this method is not invoked 
- on the presenting view controller after the presented controller is dismissed.
- 
- @param animated        If YES, the disappearance of the view is being animated.
- */
-- (void)viewDidAppear: (BOOL)animated
-{
-    DLog();
-    
-    [super viewDidAppear: animated];
-    
-    // Show the subclass' back button
-    [self showRootPopoverButtonItem: _backButtonCached
-                     withController: _popoverControllerCached];
-}
+////----------------------------------------------------------------------------------------------------------
+///**
+// Notifies the view controller that its view was added to a view hierarchy.
+// 
+// You can override this method to perform additional tasks associated with presenting the view. If you override 
+// this method, you must call super at some point in your implementation.
+// 
+// Note - If a view controller is presented by a view controller inside of a popover, this method is not invoked 
+// on the presenting view controller after the presented controller is dismissed.
+// 
+// @param animated        If YES, the disappearance of the view is being animated.
+// */
+//- (void)viewDidAppear: (BOOL)animated
+//{
+//    DLog();
+//    
+//    [super viewDidAppear: animated];
+//    
+//    // Show the subclass' back button
+//    [self showRootPopoverButtonItem: _backButtonCached
+//                     withController: _popoverControllerCached];
+//}
 
 
 //----------------------------------------------------------------------------------------------------------
@@ -124,8 +124,8 @@
 {
     DLog();
     
-    // Hide the subclass' back button
-    [self invalidateRootPopoverButtonItem: _backButtonCached];
+//    // Hide the subclass' back button
+//    [self invalidateRootPopoverButtonItem: _backButtonCached];
     
     // Remove all observers
     [[NSNotificationCenter defaultCenter] removeObserver: self];
@@ -154,45 +154,45 @@
     [super didReceiveMemoryWarning];
 }
 
-//----------------------------------------------------------------------------------------------------------
-/**
- Returns whether the view controller’s contents should auto rotate.
- 
- In iOS 5 and earlier, the default return value was NO.
- 
- @return           YES if the content should rotate, otherwise NO. Default value is YES.
- */
-- (BOOL)shouldAutorotate
-{
-    // All view controllers support rotation
-    return YES;
-}
+////----------------------------------------------------------------------------------------------------------
+///**
+// Returns whether the view controller’s contents should auto rotate.
+// 
+// In iOS 5 and earlier, the default return value was NO.
+// 
+// @return           YES if the content should rotate, otherwise NO. Default value is YES.
+// */
+//- (BOOL)shouldAutorotate
+//{
+//    // All view controllers support rotation
+//    return YES;
+//}
 
-//----------------------------------------------------------------------------------------------------------
-/**
- Returns all of the interface orientations that the view controller supports.
- 
- When the user changes the device orientation, the system calls this method on the root view controller or the 
- topmost presented view controller that fills the window. If the view controller supports the new orientation, 
- the window and view controller are rotated to the new orientation. This method is only called if the view 
- controller’s shouldAutorotate method returns YES.
- 
- Override this method to report all of the orientations that the view controller supports. The default values 
- for a view controller’s supported interface orientations is set to UIInterfaceOrientationMaskAll for the iPad 
- idiom and UIInterfaceOrientationMaskAllButUpsideDown for the iPhone idiom.
- 
- The system intersects the view controller’s supported orientations with the app's supported orientations (as 
- determined by the Info.plist file or the app delegate's application:supportedInterfaceOrientationsForWindow: 
- method) to determine whether to rotate.
- 
- @return           A bit mask specifying which orientations are supported. See UIInterfaceOrientationMask for 
-                    valid bit-mask values. The value returned by this method must not be 0.
- */
-- (NSUInteger)supportedInterfaceOrientations
-{
-    // All view controllers support all orientations
-    return UIInterfaceOrientationMaskAll;
-}
+////----------------------------------------------------------------------------------------------------------
+///**
+// Returns all of the interface orientations that the view controller supports.
+// 
+// When the user changes the device orientation, the system calls this method on the root view controller or the 
+// topmost presented view controller that fills the window. If the view controller supports the new orientation, 
+// the window and view controller are rotated to the new orientation. This method is only called if the view 
+// controller’s shouldAutorotate method returns YES.
+// 
+// Override this method to report all of the orientations that the view controller supports. The default values 
+// for a view controller’s supported interface orientations is set to UIInterfaceOrientationMaskAll for the iPad 
+// idiom and UIInterfaceOrientationMaskAllButUpsideDown for the iPhone idiom.
+// 
+// The system intersects the view controller’s supported orientations with the app's supported orientations (as 
+// determined by the Info.plist file or the app delegate's application:supportedInterfaceOrientationsForWindow: 
+// method) to determine whether to rotate.
+// 
+// @return           A bit mask specifying which orientations are supported. See UIInterfaceOrientationMask for 
+//                    valid bit-mask values. The value returned by this method must not be 0.
+// */
+//- (NSUInteger)supportedInterfaceOrientations
+//{
+//    // All view controllers support all orientations
+//    return UIInterfaceOrientationMaskAll;
+//}
 
 
 //----------------------------------------------------------------------------------------------------------
@@ -210,48 +210,48 @@
                 format: @"configureView is required"];
 }
 
-#pragma mark - SubstitutableDetailViewController protocols
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Sets the bar button item that will invoke the master view.
- 
- @param aBarButtonItem  the bar button item to install.
- @param aPopoverController  the popoverController of the master view.
- */
-- (void)showRootPopoverButtonItem: (UIBarButtonItem *)aBarButtonItem
-                   withController: (UIPopoverController *)aPopoverController;
-{
-    DLog();
-    
-    // The detail view passes in the back button item to use
-    self.backButtonCached   = aBarButtonItem;
-    // In our case, the back button invokes the OCRPackagesViewController as master view
-    aBarButtonItem.title    = NSLocalizedString(@"Packages", @"Packages");
-    [self.navigationItem setLeftBarButtonItem: aBarButtonItem
-                                     animated: YES];
-    // Save the reference to the popoverController
-    self.popoverControllerCached = aPopoverController;
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Hides the bar button item.
- 
- @param aBarButtonItem the bar button item to hide.
- */
-- (void)invalidateRootPopoverButtonItem: (UIBarButtonItem *)aBarButtonItem
-{
-    DLog();
-    
-    // Hide (by removing the references) the back button
-    [self.navigationItem setLeftBarButtonItem: nil
-                                     animated: YES];
-    // ...and properties set by the detail view
-    self.backButtonCached           = nil;
-    self.popoverControllerCached    = nil;
-}
+//#pragma mark - SubstitutableDetailViewController protocols
+//
+////----------------------------------------------------------------------------------------------------------
+///**
+// Sets the bar button item that will invoke the master view.
+// 
+// @param aBarButtonItem  the bar button item to install.
+// @param aPopoverController  the popoverController of the master view.
+// */
+//- (void)showRootPopoverButtonItem: (UIBarButtonItem *)aBarButtonItem
+//                   withController: (UIPopoverController *)aPopoverController;
+//{
+//    DLog();
+//    
+//    // The detail view passes in the back button item to use
+//    self.backButtonCached   = aBarButtonItem;
+//    // In our case, the back button invokes the OCRPackagesViewController as master view
+//    aBarButtonItem.title    = NSLocalizedString(@"Packages", @"Packages");
+//    [self.navigationItem setLeftBarButtonItem: aBarButtonItem
+//                                     animated: YES];
+//    // Save the reference to the popoverController
+//    self.popoverControllerCached = aPopoverController;
+//}
+//
+//
+////----------------------------------------------------------------------------------------------------------
+///**
+// Hides the bar button item.
+// 
+// @param aBarButtonItem the bar button item to hide.
+// */
+//- (void)invalidateRootPopoverButtonItem: (UIBarButtonItem *)aBarButtonItem
+//{
+//    DLog();
+//    
+//    // Hide (by removing the references) the back button
+//    [self.navigationItem setLeftBarButtonItem: nil
+//                                     animated: YES];
+//    // ...and properties set by the detail view
+//    self.backButtonCached           = nil;
+//    self.popoverControllerCached    = nil;
+//}
 
 //----------------------------------------------------------------------------------------------------------
 /**
