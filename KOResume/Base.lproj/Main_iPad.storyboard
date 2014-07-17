@@ -512,7 +512,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0zj-bN-PyU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2583" y="-328"/>
+            <point key="canvasLocation" x="2720" y="-328"/>
         </scene>
         <!--Date Table View Controller-->
         <scene sceneID="dPP-Gf-NBA">
@@ -607,7 +607,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dG8-Cv-gQT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3814" y="-328"/>
+            <point key="canvasLocation" x="3991" y="-328"/>
         </scene>
         <!--Jobs View Controller-->
         <scene sceneID="Jtn-fi-8dk">
@@ -841,7 +841,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="At1-PF-GE1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3259" y="-328"/>
+            <point key="canvasLocation" x="3476" y="-328"/>
         </scene>
         <!--Cover Letter-->
         <scene sceneID="hfl-R1-ALC">
@@ -890,7 +890,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="43f-MU-1zR" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2583" y="314"/>
+            <point key="canvasLocation" x="2576" y="444"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="DYP-56-Dua">
@@ -913,6 +913,7 @@
         <!--Navigation Controller-->
         <scene sceneID="0IA-EN-dtm">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="zOw-vr-yv2" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="XX5-Pm-hCl" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="WnV-Ah-Ybt">
@@ -924,16 +925,15 @@
                         <segue destination="vVr-UZ-WMh" kind="relationship" relationship="rootViewController" id="dK7-0o-voU"/>
                     </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="zOw-vr-yv2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1919" y="314"/>
+            <point key="canvasLocation" x="1919" y="444"/>
         </scene>
     </scenes>
     <resources>
         <image name="addButton" width="29" height="29"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="LBf-p3-SP1"/>
+        <segue reference="Q9H-LK-qvS"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
 </document>

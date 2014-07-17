@@ -8,6 +8,15 @@
 
 #import "OCRAppDelegate.h"
 #import "OCRPackagesViewController.h"
+#import "OCRCoverLtrViewController.h"
+
+@interface OCRAppDelegate ()
+
+@property (nonatomic, strong) OCRPackagesViewController *masterViewController;
+
+@property (nonatomic, strong) OCRCoverLtrViewController *detailViewController;
+
+@end
 
 @implementation OCRAppDelegate
 
@@ -41,19 +50,16 @@
     
     // Setup Master-Detail controller paradigm
     UISplitViewController *splitViewController      = (UISplitViewController *)self.window.rootViewController;
+    // Get the UINavigation controller in which the OCRCoverLtrViewController is embedded
     UINavigationController *navigationController    = [splitViewController.viewControllers lastObject];
-    splitViewController.delegate                    = (id)navigationController.topViewController;
-//    UISplitViewController *splitViewController      = (UISplitViewController *)self.window.rootViewController;
-//    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
-//    {
-//        UINavigationController *navigationController    = [splitViewController.viewControllers lastObject];
-//        splitViewController.delegate                    = (id)navigationController.topViewController;
-//    }
-//    else
-//    {
-//        splitViewController.delegate = [splitViewController.viewControllers lastObject];
-        DLog(@"class=%@", [[splitViewController.viewControllers lastObject] class]);
-//    }
+    // ...and maintain a reference to it.
+    self.detailViewController                       = (OCRCoverLtrViewController *)navigationController.topViewController;
+    // Similarly, get the nav controller containing the OCRPackagesViewController
+    navigationController                            = [splitViewController.viewControllers firstObject];
+    // ...and maintain a reference to it.
+    self.masterViewController                       = (OCRPackagesViewController *)navigationController.topViewController;
+    // Set OCRPackagesViewController as the delegate of the splitViewController
+    splitViewController.delegate                    = self.masterViewController;
     
     return YES;
 }
