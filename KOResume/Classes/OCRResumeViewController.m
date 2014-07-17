@@ -233,6 +233,7 @@
 
     
     // Check to see if we are iPad - only the iPad has current job information
+#warning TODO update the storyboard accordingly
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         // The jobsArray is always in sequence_number order
         // Check to see if there is at least 1 Job...

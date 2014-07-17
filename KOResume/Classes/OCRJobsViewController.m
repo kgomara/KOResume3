@@ -35,16 +35,6 @@
      */
     UIBarButtonItem     *saveBtn;
     
-//    /**
-//     Reference to the done button to facilitate swapping buttons for the date picker.
-//     */
-//    UIBarButtonItem     *doneBtn;
-    
-//    /**
-//     Reference to the undo button to facilitate swapping buttons for the date picker.
-//     */
-//    UIBarButtonItem     *undoBtn;
-    
     /**
      Reference to the cancel button to facilitate swapping buttons between display and edit modes.
      */
@@ -501,50 +491,6 @@
     [self setUIWithEditing: NO];
     [self resetView];
 }
-
-
-//----------------------------------------------------------------------------------------------------------
-///**
-// The user tapped the Done button.
-// 
-// 
-// */
-//- (void)didPressDoneButton
-//{
-//    DLog();
-//    
-//    CGRect screenRect   = [[UIScreen mainScreen] applicationFrame];
-//    CGRect endFrame     = datePicker.frame;
-//    
-//    endFrame.origin.y = screenRect.origin.y + screenRect.size.height;
-//    
-//    // Start the slide down animation
-//    [UIView animateWithDuration: 0.3
-//                     animations: ^{
-//                         datePicker.frame = endFrame;
-//                         [self.tableView setContentOffset: CGPointZero
-//                                               animated: NO];
-//                     }];
-//    
-//    // Reset the UI
-//    self.navigationItem.rightBarButtonItem = saveBtn;
-//    self.navigationItem.leftBarButtonItem  = cancelBtn;
-//}
-
-
-//----------------------------------------------------------------------------------------------------------
-//- (void)didPressUndoButton
-//{
-//    DLog();
-//    
-//    if (_activeDateFld == kJobStartDateFieldTag) {
-//        self.selectedJob.start_date = NULL;
-//        self.jobStartDate.text      = @"";
-//    } else {
-//        self.selectedJob.end_date   = NULL;
-//        self.jobEndDate.text        = @"";
-//    }
-//}
 
 
 //----------------------------------------------------------------------------------------------------------
