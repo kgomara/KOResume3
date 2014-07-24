@@ -726,6 +726,55 @@ BOOL isEditModeActive;
 
 
 //----------------------------------------------------------------------------------------------------------
+- (void)            collectionView: (UICollectionView *)collectionView
+                            layout: (UICollectionViewLayout *)collectionViewLayout
+  willBeginDraggingItemAtIndexPath: (NSIndexPath *)indexPath
+{
+    DLog(@"will begin drag");
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+- (void)            collectionView: (UICollectionView *)collectionView
+                            layout: (UICollectionViewLayout *)collectionViewLayout
+   didBeginDraggingItemAtIndexPath: (NSIndexPath *)indexPath
+{
+    DLog(@"did begin drag");
+    
+    [self performSelector: @selector(invalidateLayout:)
+               withObject: collectionViewLayout
+               afterDelay: 0.1f];
+}
+
+//----------------------------------------------------------------------------------------------------------
+- (void)invalidateLayout: (UICollectionViewLayout *)collectionViewLayout
+{
+    [self.collectionViewLayout invalidateLayout];
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+- (void)        collectionView:(UICollectionView *)collectionView
+                        layout:(UICollectionViewLayout *)collectionViewLayout
+willEndDraggingItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    DLog(@"will end drag");
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+- (void)        collectionView:(UICollectionView *)collectionView
+                        layout:(UICollectionViewLayout *)collectionViewLayout
+ didEndDraggingItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    DLog(@"did end drag");
+    
+    [self performSelector: @selector(invalidateLayout:)
+               withObject: collectionViewLayout
+               afterDelay: 0.1f];
+}
+
+//----------------------------------------------------------------------------------------------------------
 /**
  Ask the delegate if editing is allowed by this collectionview and layout.
  

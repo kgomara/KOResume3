@@ -50,14 +50,29 @@
     
     // Setup Master-Detail controller paradigm
     UISplitViewController *splitViewController      = (UISplitViewController *)self.window.rootViewController;
-    // Get the UINavigation controller in which the OCRCoverLtrViewController is embedded
-    UINavigationController *navigationController    = [splitViewController.viewControllers lastObject];
-    // ...and maintain a reference to it.
+    UINavigationController *navigationController;
+    if ([splitViewController isKindOfClass:[UISplitViewController class]]) {
+        // Get the UINavigation controller in which the OCRCoverLtrViewController is embedded
+        navigationController        = [splitViewController.viewControllers lastObject];
+        // ...and maintain a reference to it.
+        self.detailViewController   = (OCRCoverLtrViewController *)navigationController.topViewController;
+        // Similarly, get the nav controller containing the OCRPackagesViewController
+        navigationController        = [splitViewController.viewControllers firstObject];
+        // ...and maintain a reference to it.
+        self.masterViewController   = (OCRPackagesViewController *)navigationController.topViewController;
+    }
+    else
+    {
+        self.masterViewController                       = ((UINavigationController *)splitViewController).topViewController;
+    }
+//    // Get the UINavigation controller in which the OCRCoverLtrViewController is embedded
+//    UINavigationController *navigationController    = [splitViewController.viewControllers lastObject];
+//    // ...and maintain a reference to it.
     self.detailViewController                       = (OCRCoverLtrViewController *)navigationController.topViewController;
     // Similarly, get the nav controller containing the OCRPackagesViewController
-    navigationController                            = [splitViewController.viewControllers firstObject];
+//    navigationController                            = [splitViewController.viewControllers firstObject];
     // ...and maintain a reference to it.
-    self.masterViewController                       = (OCRPackagesViewController *)navigationController.topViewController;
+//    self.masterViewController                       = (OCRPackagesViewController *)navigationController.topViewController;
     // Set OCRPackagesViewController as the delegate of the splitViewController
     splitViewController.delegate                    = self.masterViewController;
     

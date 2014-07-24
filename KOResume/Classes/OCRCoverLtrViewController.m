@@ -70,7 +70,6 @@
     cancelBtn   = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel
                                                                 target: self
                                                                 action: @selector(didPressCancelButton)];
-    
 }
 
 
