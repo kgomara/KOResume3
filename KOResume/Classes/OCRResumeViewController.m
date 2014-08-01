@@ -233,7 +233,7 @@
 
     
     // Check to see if we are iPad - only the iPad has current job information
-#warning TODO update the storyboard accordingly
+#warning TODO update the storyboard accordingly (see if we can 'remove' the elements in compact size, and check for presence/absence)
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         // The jobsArray is always in sequence_number order
         // Check to see if there is at least 1 Job...
@@ -1681,6 +1681,18 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
         case NSFetchedResultsChangeDelete:
             [_tableView deleteSections: [NSIndexSet indexSetWithIndex: sectionIndex]
                       withRowAnimation: UITableViewRowAnimationFade];
+            break;
+            
+        case NSFetchedResultsChangeMove:
+//            [_tableView deleteSections: [NSIndexSet indexSetWithIndex: sectionIndex]
+//                      withRowAnimation: UITableViewRowAnimationFade];
+//            [_tableView insertSections: [NSIndexSet indexSetWithIndex: sectionIndex]
+//                      withRowAnimation: UITableViewRowAnimationFade];
+            break;
+            
+        case NSFetchedResultsChangeUpdate:
+//            [_tableView updateSections: [NSIndexSet indexSetWithIndex: sectionIndex]
+//                      withRowAnimation: UITableViewRowAnimationFade];
             break;
     }
 }

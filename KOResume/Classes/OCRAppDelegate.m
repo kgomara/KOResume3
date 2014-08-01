@@ -63,18 +63,21 @@
     }
     else
     {
-        self.masterViewController                       = ((UINavigationController *)splitViewController).topViewController;
+        self.masterViewController   = (OCRPackagesViewController *)((UINavigationController *)splitViewController).topViewController;
+        self.detailViewController   = nil;
     }
 //    // Get the UINavigation controller in which the OCRCoverLtrViewController is embedded
-//    UINavigationController *navigationController    = [splitViewController.viewControllers lastObject];
+//    navigationController    = [splitViewController.viewControllers lastObject];
 //    // ...and maintain a reference to it.
-    self.detailViewController                       = (OCRCoverLtrViewController *)navigationController.topViewController;
+//    self.detailViewController                       = (OCRCoverLtrViewController *)navigationController.topViewController;
     // Similarly, get the nav controller containing the OCRPackagesViewController
 //    navigationController                            = [splitViewController.viewControllers firstObject];
     // ...and maintain a reference to it.
 //    self.masterViewController                       = (OCRPackagesViewController *)navigationController.topViewController;
     // Set OCRPackagesViewController as the delegate of the splitViewController
-    splitViewController.delegate                    = self.masterViewController;
+    splitViewController.delegate = self.masterViewController;
+    DLog(@"master=%@", self.masterViewController);
+    DLog(@"detail=%@", self.detailViewController);
     
     return YES;
 }

@@ -574,6 +574,12 @@ BOOL isEditModeActive;
     // Set the title of the resume button
     [cell.resumeButton setTitle: aPackage.resume.name
                        forState: UIControlStateNormal];
+    [cell.resumeButton addTarget:self
+                          action:@selector(didPressResumeButton:)
+                forControlEvents:UIControlEventTouchUpInside];
+    [cell.coverLtrButton addTarget:self
+                            action:@selector(didPressCoverLtrButton:)
+                  forControlEvents:UIControlEventTouchUpInside];
 }
 
 
@@ -1088,46 +1094,49 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
          in more detail below) - so we must first get a reference to the cover letter controller.
          */
         OCRBaseDetailViewController *cvrLtrController;
-//        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+        // Check to see if the segue is pointing to a UINavigationController
+        if ([[segue destinationViewController] isMemberOfClass:[UINavigationController class]]) {
             /*
-             On the iPad, we are getting a UIStoryboardReplaceSegue, so the destinationViewController is a UINavigationController.
+             On the iPad, OCRCvrLtrController is embedded in a UINavigationController.
              We need to get the detail view controller, which is the first controller in the navigation controller's stack.
-
+             
              The UINavigationController cast isn't strictly necessary, but helps make the code more self-documenting
              */
             cvrLtrController = [(UINavigationController *)[segue destinationViewController] viewControllers][0];
+        } else {
             /*
-             Update the splitViewController's delegate
-             */            
-            if (_rootPopoverButtonItem != nil) {
-                OCRBaseDetailViewController<SubstitutableDetailViewController>* detailViewController = (OCRBaseDetailViewController<SubstitutableDetailViewController>*)[[segue destinationViewController] viewControllers][0];
-                [detailViewController showRootPopoverButtonItem:_rootPopoverButtonItem
-                                                 withController:_packagesPopoverController];
-            }
-            
-            if (self.packagesPopoverController) {
-                [self.packagesPopoverController dismissPopoverAnimated: YES];
-            }
-//        } else {
-//            // On the iPhone, the cover letter controller is the destination of the segue
-//            cvrLtrController = [segue destinationViewController];
-//        }
+             Otherwise, the segue's destination should be a OCRCvrLtrController
+             */
+            cvrLtrController = [segue destinationViewController];
+        }
+        /*
+         Update the splitViewController's delegate
+         */
+        if (_rootPopoverButtonItem != nil) {
+            OCRBaseDetailViewController<SubstitutableDetailViewController>* detailViewController = (OCRBaseDetailViewController<SubstitutableDetailViewController>*)[[segue destinationViewController] viewControllers][0];
+            [detailViewController showRootPopoverButtonItem:_rootPopoverButtonItem
+                                             withController:_packagesPopoverController];
+        }
+        
+        if (self.packagesPopoverController) {
+            [self.packagesPopoverController dismissPopoverAnimated: YES];
+        }
         /*
          A common strategy for passing data between controller objects is to declare public properties in the receiving object
          and have the instantiator set those properties.
          
-         Here we pass the Package represented by the cell the user tapped, as well as the ManagedObjectContext and 
+         Here we pass the Package represented by the cell the user tapped, as well as the ManagedObjectContext and
          FetchedResultsController.
          
          An alternative strategy for data that is global scope by nature is to set those properties on the UIApplication
          delegate and reference them as [[[UIApplication sharedApplication] delegate] foo_bar]. In our case, there is only one
          managedObjectContext used throughout the app, so I reference it as a global variable:
          
-            @property (nonatomic, strong, readonly) NSManagedObjectContext  *managedObjectContext;
+         @property (nonatomic, strong, readonly) NSManagedObjectContext  *managedObjectContext;
          
          I also created a macro (see GlobalMacros.h):
          
-            #define kAppDelegate    (OCRAppDelegate *)[[UIApplication sharedApplication] delegate]      // Note it DOES NOT end with a ';'
+         #define kAppDelegate    (OCRAppDelegate *)[[UIApplication sharedApplication] delegate]      // Note it DOES NOT end with a ';'
          
          Thus, in other source files [kAppDelegate managedObjectContext] returns a reference to our managedObjectContext
          */
@@ -1141,23 +1150,27 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
          This code follows the same pattern as kOCRCvrLtrSegue above.
          */
         OCRBaseDetailViewController *resumeController;
-//        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-            // Get a reference to the resume controller
+        if ([[segue destinationViewController] isMemberOfClass:[UINavigationController class]]) {
+            /*
+             On the iPad, OCRCvrLtrController is embedded in a UINavigationController.
+             We need to get the detail view controller, which is the first controller in the navigation controller's stack.
+             
+             The UINavigationController cast isn't strictly necessary, but helps make the code more self-documenting
+             */
             resumeController = [(UINavigationController *)[segue destinationViewController] viewControllers][0];
-            // Update the splitViewController's delegate
-            if (_rootPopoverButtonItem != nil) {
-                OCRBaseDetailViewController<SubstitutableDetailViewController>* detailViewController = (OCRBaseDetailViewController<SubstitutableDetailViewController>*)[[segue destinationViewController] viewControllers][0];
-                [detailViewController showRootPopoverButtonItem: _rootPopoverButtonItem
-                                                 withController: _packagesPopoverController];
-            }
-            
-            if (self.packagesPopoverController) {
-                [self.packagesPopoverController dismissPopoverAnimated: YES];
-            }
-//        } else {
-//            // On the iPhone, the resume controller is the destination of the segue
-//            resumeController = [segue destinationViewController];
-//        }
+        } else {
+            resumeController = [segue destinationViewController];
+        }
+        // Update the splitViewController's delegate
+        if (_rootPopoverButtonItem != nil) {
+            OCRBaseDetailViewController<SubstitutableDetailViewController>* detailViewController = (OCRBaseDetailViewController<SubstitutableDetailViewController>*)[[segue destinationViewController] viewControllers][0];
+            [detailViewController showRootPopoverButtonItem: _rootPopoverButtonItem
+                                             withController: _packagesPopoverController];
+        }
+        
+        if (self.packagesPopoverController) {
+            [self.packagesPopoverController dismissPopoverAnimated: YES];
+        }
         [resumeController setSelectedManagedObject: aPackage.resume];
         [resumeController setBackButtonTitle: NSLocalizedString(@"Packages", nil)];
         [resumeController setFetchedResultsController: self.fetchedResultsController];
@@ -1279,6 +1292,14 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
         case NSFetchedResultsChangeDelete:
             change[@(type)] = @[@(sectionIndex)];
             break;
+            
+        case NSFetchedResultsChangeMove:
+            change[@(type)] = @[@(sectionIndex)];
+            break;
+            
+        case NSFetchedResultsChangeUpdate:
+            change[@(type)] = @[@(sectionIndex)];
+            break;
     }
     
     [_sectionChanges addObject: change];
@@ -1391,6 +1412,11 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
                             
                         case NSFetchedResultsChangeUpdate:
                             [self.collectionView reloadSections: [NSIndexSet indexSetWithIndex: [obj unsignedIntegerValue]]];
+                            break;
+                            
+                        case NSFetchedResultsChangeMove:
+                            [self.collectionView deleteSections: [NSIndexSet indexSetWithIndex: [obj unsignedIntegerValue]]];
+                            [self.collectionView insertSections: [NSIndexSet indexSetWithIndex: [obj unsignedIntegerValue]]];
                             break;
                     }
                 }];

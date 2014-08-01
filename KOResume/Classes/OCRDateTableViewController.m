@@ -228,7 +228,7 @@ static CGFloat pickerCellRowHeight;
         cell = [self configureDateHeaderCell: NSLocalizedString(@"End", nil)
                                         date: _selectedJob.end_date];
     } else {
-        ALog(@"Unexpected row=%d", indexPath.row);
+        ALog(@"Unexpected row=%ld", (long)indexPath.row);
     }
     
     return cell;
