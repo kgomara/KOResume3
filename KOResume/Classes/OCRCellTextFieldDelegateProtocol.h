@@ -10,7 +10,7 @@
 
 @protocol OCRCellTextFieldDelegate <NSObject>
 
-- (void)doUpdateTextField:(UITextField *)textField
-             forTableCell:(UITableViewCell *)cell;
+- (void)doUpdateTextField: (UITextField *)textField
+             forTableCell: (UITableViewCell *)cell;
 
 @end

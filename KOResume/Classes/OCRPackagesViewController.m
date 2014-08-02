@@ -214,7 +214,8 @@ BOOL isEditModeActive;
                                                object: nil];
     
     // Loop through all the packages writing their debugDescription to the log
-    for (Packages *aPackage in [self.fetchedResultsController fetchedObjects]) {
+    for (Packages *aPackage in [self.fetchedResultsController fetchedObjects])
+    {
         DLog(@"%@", [aPackage debugDescription]);
     }
     

@@ -18,6 +18,7 @@
 #define	k_JobsSection       0
 #define k_EducationSection	1
 
+#define k_OKButtonIndex     1
 
 @interface OCRResumeViewController ()
 {
@@ -230,14 +231,15 @@
     
     [_resumeName setText: _selectedResume.name
            orPlaceHolder: NSLocalizedString(@"Enter resume name", nil)];
-
     
     // Check to see if we are iPad - only the iPad has current job information
 #warning TODO update the storyboard accordingly (see if we can 'remove' the elements in compact size, and check for presence/absence)
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
+    {
         // The jobsArray is always in sequence_number order
         // Check to see if there is at least 1 Job...
-        if ([_jobArray count] > 0) {
+        if ([_jobArray count] > 0)
+        {
             // ...if so, get the first one,
             Jobs *currentJob        = _jobArray[0];
             // ...use it to populate the current job information in the summaryView,
@@ -245,7 +247,9 @@
             _currentJobName.text    = currentJob.name;
             // ...and make sure the "at" label is visible
             _atLabel.hidden         = NO;
-        } else {
+        }
+        else
+        {
             // If the are no jobs, clear the current job fields
             _currentJobTitle.text   = @"";
             _currentJobName.text    = @"";
@@ -344,9 +348,12 @@
     self.navigationItem.title = NSLocalizedString(@"Resume", nil);
 
     // Set up the navigation items and save/cancel buttons
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
+    {
         self.navigationItem.rightBarButtonItems = @[editBtn];
-    } else {
+    }
+    else
+    {
         self.navigationItem.leftBarButtonItem  = backBtn;
         self.navigationItem.rightBarButtonItem = editBtn;
     }
@@ -397,7 +404,9 @@
      apply the new content size because UIFont instances are immutable.
      */
     _resumeName.Font        = [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline];
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+#warning TODO refactor to check for presence of labels...
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
+    {
         // These UI elements only exist on iPad
         _currentJobTitle.font   = [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline];
         _atLabel.font           = [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline];
@@ -505,7 +514,8 @@
     [[[kAppDelegate managedObjectContext] undoManager] setActionName:kOCRUndoActionName];
     [[[kAppDelegate managedObjectContext] undoManager] endUndoGrouping];
     
-    if ([[[kAppDelegate managedObjectContext] undoManager] canUndo]) {
+    if ([[[kAppDelegate managedObjectContext] undoManager] canUndo])
+    {
         // Changes were made - discard them
         [[[kAppDelegate managedObjectContext] undoManager] undoNestedGroup];
     }
@@ -548,15 +558,22 @@
     // ...enable/disable resume fields
     [self setFieldsEditable: isEditingMode];
     
-    if (isEditingMode) {
+    if (isEditingMode)
+    {
         // Set up the navigation items and save/cancel buttons
-        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+#warning TODO refactor to use size classes
+        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
+        {
             self.navigationItem.rightBarButtonItems = @[saveBtn, cancelBtn];
-        } else {
+        }
+        else
+        {
             self.navigationItem.leftBarButtonItem  = cancelBtn;
             self.navigationItem.rightBarButtonItem = saveBtn;
         }
-    } else {
+    }
+    else
+    {
         // Reset the nav bar defaults
         [self configureDefaultNavBar];
     }
@@ -580,7 +597,8 @@
     DLog();
     
     // Use the tag of the sender UIButton to prompt for the appropriate entity name.
-    switch ([(UIButton *)sender tag]) {
+    switch ([(UIButton *)sender tag])
+    {
         case k_JobsSection:
             [self promptForJobName];
             break;
@@ -606,19 +624,27 @@
     
     // The job array is in the order (including deletes) the user wants
     // ...loop through the array by index, resetting the job's sequence_number attribute
-    for (int i = 0; i < [_jobArray count]; i++) {
-        if ([_jobArray[i] isDeleted]) {
-            // no need to update the sequence number of deleted objects
-        } else {
-            [_jobArray[i] setSequence_numberValue: i];
+    int i = 0;
+    for (Jobs *job in _jobArray) {
+        if (job.isDeleted) {
+            // No need to update the sequence number of deleted objects
+        }
+        else
+        {
+            // Set the sequence number on this job object and increment the counter
+            [job setSequence_numberValue: i++];
         }
     }
     // ...same for the education array
-    for (int i = 0; i < [_educationArray count]; i++) {
-        if ([_educationArray[i] isDeleted]) {
-            // no need to update the sequence number of deleted objects
-        } else {
-            [_educationArray[i] setSequence_numberValue: i];
+    i = 0;
+    for (Education *education in _educationArray) {
+        if (education.isDeleted) {
+            // No need to update the sequence number of deleted objects
+        }
+        else
+        {
+            // Set the sequence number on this education object and increment the counter
+            [education setSequence_numberValue: i++];
         }
     }
 }
@@ -764,16 +790,23 @@
 {
     DLog();
     
-    if (buttonIndex == 1) {
+    if (buttonIndex == k_OKButtonIndex)
+    {
         // OK button was pressed, get the user's input
+#warning TODO refactor to pass entity name as parameter
         self.nuEntityName = [[alertView textFieldAtIndex: 0] text];
         // Use the tag to determine which entity is being added
-        if (alertView.tag == k_JobsSection) {
+        if (alertView.tag == k_JobsSection)
+        {
             [self addJob];
-        } else {
+        }
+        else
+        {
             [self addEducation];
         }
-    } else {
+    }
+    else
+    {
         // User cancelled
         [self configureDefaultNavBar];
     }
@@ -839,7 +872,8 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
     // Declare a cell to use
     UITableViewCell *cell;
     
-    switch (indexPath.section) {
+    switch (indexPath.section)
+    {
         case k_JobsSection:
              //  Configure a jobs cell
             cell = [self        tableView: tableView
@@ -974,13 +1008,17 @@ commitEditingStyle: (UITableViewCellEditingStyle)editingStyle
 {
     DLog();
     
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
+    if (editingStyle == UITableViewCellEditingStyleDelete)
+    {
         // Delete the managed object at the given index path.
-        if (indexPath.section == k_JobsSection) {
+        if (indexPath.section == k_JobsSection)
+        {
             NSManagedObject *jobToDelete = _jobArray[indexPath.row];
             [[kAppDelegate managedObjectContext] deleteObject: jobToDelete];
             [_jobArray removeObjectAtIndex: indexPath.row];
-        } else {
+        }
+        else
+        {
             NSManagedObject *jobToDelete = _educationArray[indexPath.row];
             [[kAppDelegate managedObjectContext] deleteObject: jobToDelete];
             [_educationArray removeObjectAtIndex: indexPath.row];
@@ -990,8 +1028,10 @@ commitEditingStyle: (UITableViewCellEditingStyle)editingStyle
                          withRowAnimation: UITableViewRowAnimationFade];
         // ...and reload the table
         [tableView reloadData];
-    } else {
-        DLog(@"editingStyle=%d", (int)editingStyle);       // TODO - cast to int?
+    }
+    else
+    {
+        ALog(@"Unexpected editingStyle=%d", (int)editingStyle);
     }
 }
 
@@ -1012,7 +1052,8 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
 {
     DLog();
     
-    if (fromIndexPath.section != toIndexPath.section) {
+    if (fromIndexPath.section != toIndexPath.section)
+    {
         // Cannot move between sections
         [OCAUtilities showErrorWithMessage: NSLocalizedString(@"Sorry, move not allowed.", nil)];
         [self.tableView reloadData];
@@ -1023,7 +1064,8 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     NSUInteger fromRow  = [fromIndexPath row];
     NSUInteger toRow    = [toIndexPath row];
     
-    if (toIndexPath.section == k_JobsSection) {
+    if (toIndexPath.section == k_JobsSection)
+    {
         // Get the Job at the fromRow
         Jobs *movedJob = _jobArray[fromRow];
         // ...remove it from that "order"
@@ -1031,7 +1073,9 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
         // ...and insert it where the user wants
         [_jobArray insertObject: movedJob
                         atIndex: toRow];
-    } else {
+    }
+    else
+    {
         // Get the Education at the fromRow
         Education *movedEducation = _educationArray[fromRow];
         // ...remove it from that "order"
@@ -1065,7 +1109,8 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
      */
     NSInteger rowsInSection;
     
-	switch (section) {
+	switch (section)
+    {
 		case k_JobsSection:
 			rowsInSection = [_jobArray count];
 			break;
@@ -1101,9 +1146,9 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
 {
     DLog();
     
-    switch (indexPath.section) {
+    switch (indexPath.section)
+    {
 		case k_JobsSection: {
-            DLog(@"Job selected");
             // Segue to the job
             [self performSegueWithIdentifier: kOCRJobsSegue
                                       sender: (self.jobArray)[indexPath.row]];
@@ -1127,6 +1172,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
 		default:
 			break;
 	}
+    
     // Clear the selection highlight
 	[tableView deselectRowAtIndexPath: indexPath
 							 animated: YES];
@@ -1199,7 +1245,8 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     // maxTextSize establishes bounds for the largest rect we can allow
     CGSize maxTextSize = CGSizeMake( CGRectGetWidth(CGRectIntegral(tableView.bounds)), CGRectGetHeight(CGRectIntegral(tableView.bounds)));
     
-    if (indexPath.section == k_JobsSection) {
+    if (indexPath.section == k_JobsSection)
+    {
         // First, determine the size required by the the title string, given the user's dynamic text size preference.
         // ...get the bounding rect using UIFontTextStyleHeadline
         CGRect titleRect        = [stringToSize boundingRectWithSize: maxTextSize
@@ -1214,7 +1261,9 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
         
         // Return the larger of 44 or the sum of the heights plus some padding
         return MAX(44.0f, CGRectGetHeight( CGRectIntegral( titleRect)) + CGRectGetHeight( CGRectIntegral( detailRect)) + 20);
-    } else {
+    }
+    else
+    {
         // First, determine the size required by the the name string, given the user's dynamic text size preference.
         // ...get the bounding rect using UIFontTextStyleSubheadline
         CGRect subHeadRect        = [stringToSize boundingRectWithSize: maxTextSize
@@ -1281,25 +1330,20 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     [headerView.addButton setTag:section];
     
     // Hide or show the addButton depending on whether we are in editing mode
-    if (self.isEditing) {
-        [headerView.addButton setHidden: NO];
-    } else {
-        [headerView.addButton setHidden: YES];
-    }
+    [headerView.addButton setHidden: !self.isEditing];      // Set the addButton hidden property to the opposite of isEditing
     
     // Finally, set the text content and save a reference to the respective add buttons so they can be
     // shown or hidden whenever the user turns editing mode on or off
-	switch (section) {
-		case k_JobsSection: {
+	switch (section)
+    {
+		case k_JobsSection:
 			headerView.sectionLabel.text    = NSLocalizedString(@"Professional History", nil);
             addJobBtn                       = headerView.addButton;
             break;
-		}
-		case k_EducationSection: {
+		case k_EducationSection:
 			headerView.sectionLabel.text    = NSLocalizedString(@"Education & Certifications", nil);
             addEducationBtn                 = headerView.addButton;
             break;
-		}
 		default:
 			ALog(@"Unexpected section = %ld", (long)section);
 	}
@@ -1333,7 +1377,8 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
 {
     DLog();
 
-    if ([[segue identifier] isEqualToString: kOCRJobsSegue]) {
+    if ([[segue identifier] isEqualToString: kOCRJobsSegue])
+    {
         OCRJobsViewController *detailViewController = segue.destinationViewController;
         [detailViewController setSelectedManagedObject: (Jobs *)sender];
         [detailViewController setBackButtonTitle: _selectedResume.name];
@@ -1355,6 +1400,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
 - (void)keyboardWillShow: (NSNotification*)aNotification
 {
     DLog();
+#warning TODO refactor
     
     // Get the size of the keyboard
     NSDictionary *info = [aNotification userInfo];
@@ -1388,6 +1434,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
 - (void)keyboardWillBeHidden: (NSNotification*)aNotification
 {
     DLog();
+#warning TODO refactor
     
 //    UIEdgeInsets contentInsets = UIEdgeInsetsZero;
     
@@ -1462,9 +1509,12 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
 	NSInteger nextTag = [textField tag] + 1;
 	UIResponder *nextResponder = [textField.superview viewWithTag: nextTag];
 	
-	if (nextResponder) {
+	if (nextResponder)
+    {
         [nextResponder becomeFirstResponder];
-	} else {
+	}
+    else
+    {
 		[textField resignFirstResponder];       // Dismisses the keyboard
         [self resetView];
 	}
@@ -1504,10 +1554,11 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     UITableViewCell* cell = [self parentCellFor:textField];
     if (cell)
     {
-        NSIndexPath* indexPath = [self.tableView indexPathForCell:cell];
+        NSIndexPath* indexPath = [self.tableView indexPathForCell: cell];
         [self doUpdateTextField:textField
                    forTableCell:cell];
-        [self.tableView reloadRowsAtIndexPaths:@[ indexPath ] withRowAnimation:UITableViewRowAnimationNone];
+        [self.tableView reloadRowsAtIndexPaths: @[ indexPath ]
+                              withRowAnimation: UITableViewRowAnimationNone];
     }
 }
 
@@ -1530,36 +1581,48 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     
     Education *education = _educationArray[indexPath.row];
     
-    if (textField.tag == kTitleFieldTag) {
+    if (textField.tag == kTitleFieldTag)
+    {
         education.title         = textField.text;
     }
-    else if (textField.tag == kNameFieldTag) {
+    else if (textField.tag == kNameFieldTag)
+    {
         education.name          = textField.text;
     }
-    else if (textField.tag == kEarnedDateFieldTag) {
-        education.earned_date   = [dateFormatter dateFromString:textField.text];
+    else if (textField.tag == kEarnedDateFieldTag)
+    {
+        education.earned_date   = [dateFormatter dateFromString: textField.text];
     }
-    else if (textField.tag == kCityFieldTag) {
+    else if (textField.tag == kCityFieldTag)
+    {
         education.city          = textField.text;
     }
-    else if (textField.tag == kStateFieldTag) {
+    else if (textField.tag == kStateFieldTag)
+    {
         education.state         = textField.text;
     }
     
-    [self.tableView reloadRowsAtIndexPaths:@[indexPath]
-                          withRowAnimation:UITableViewRowAnimationFade];
+    [self.tableView reloadRowsAtIndexPaths: @[indexPath]
+                          withRowAnimation: UITableViewRowAnimationFade];
 }
 
 
-- (UITableViewCell*)parentCellFor:(UIView*)view
+//----------------------------------------------------------------------------------------------------------
+#warning TODO needs commenting
+- (UITableViewCell*)parentCellFor: (UIView*)view
 {
     DLog();
     
     if (!view)
+    {
         return nil;
+    }
+    
     if ([view isMemberOfClass:[OCREducationTableViewCell class]])
+    {
         return (UITableViewCell*)view;
-    return [self parentCellFor:view.superview];
+    }
+    return [self parentCellFor: view.superview];
 }
 
 #pragma mark - Fetched Results Controller delegate methods
@@ -1617,7 +1680,8 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     DLog();
     
     // Use the type to determine the operation to perform
-    switch(type) {
+    switch(type)
+    {
         case NSFetchedResultsChangeInsert:
             // Insert a row
             [_tableView insertRowsAtIndexPaths: @[newIndexPath]
@@ -1672,7 +1736,8 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     DLog();
     
     // Use the type to determine the operation to perform
-    switch(type) {
+    switch(type)
+    {
         case NSFetchedResultsChangeInsert:
             [_tableView insertSections: [NSIndexSet indexSetWithIndex: sectionIndex]
                       withRowAnimation: UITableViewRowAnimationFade];
@@ -1684,15 +1749,11 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
             break;
             
         case NSFetchedResultsChangeMove:
-//            [_tableView deleteSections: [NSIndexSet indexSetWithIndex: sectionIndex]
-//                      withRowAnimation: UITableViewRowAnimationFade];
-//            [_tableView insertSections: [NSIndexSet indexSetWithIndex: sectionIndex]
-//                      withRowAnimation: UITableViewRowAnimationFade];
+            ALog(@"Did not expect NSFetchedResultsChangeMove");
             break;
             
         case NSFetchedResultsChangeUpdate:
-//            [_tableView updateSections: [NSIndexSet indexSetWithIndex: sectionIndex]
-//                      withRowAnimation: UITableViewRowAnimationFade];
+            ALog(@"Did not expect NSFetchedResultsChangeUpdate");
             break;
     }
 }

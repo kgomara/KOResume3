@@ -132,10 +132,13 @@ static CGFloat pickerCellRowHeight;
     parentCellIndexPath = [NSIndexPath indexPathForRow: self.datePickerIndexPath.row - 1
                                              inSection: 0];
     
-    if (parentCellIndexPath.row == 0) {
+    if (parentCellIndexPath.row == 0)
+    {
         // The date is for the start_date
         _selectedJob.start_date = sender.date;
-    } else {
+    }
+    else
+    {
         _selectedJob.end_date   = sender.date;
     }
     // Inform the delegate one of the dates have changed
@@ -194,23 +197,29 @@ static CGFloat pickerCellRowHeight;
     int clearButtonRow = [self.tableView numberOfRowsInSection:0] - 1;
     
     // The start date is always the first row
-    if (indexPath.row == 0) {
+    if (indexPath.row == 0)
+    {
         // Create a cell for the start date
         cell = [self configureDateHeaderCell: NSLocalizedString(@"Start", nil)
                                         date: _selectedJob.start_date];
     }
-    else if (indexPath.row == clearButtonRow) {
+    else if (indexPath.row == clearButtonRow)
+    {
         // Create a clear button cell
         cell = [self configureDateClearCell];
     }
-    else if (self.datePickerIsShown) {
+    else if (self.datePickerIsShown)
+    {
         assert(self.datePickerIndexPath.row == indexPath.row);
         // Date picker is in "this" row, instantiate a NSDate object to hold our date
         NSDate *pickerDate;
-        if (indexPath.row == 1) {
+        if (indexPath.row == 1)
+        {
             // If the picker is going in row 1, then we want the date from row zero, which is start date.
             pickerDate = _selectedJob.start_date;
-        } else {
+        }
+        else
+        {
             // Must be end date
             pickerDate = _selectedJob.end_date;
         }
@@ -218,7 +227,8 @@ static CGFloat pickerCellRowHeight;
         cell = [self configurePickerCell: pickerDate];
     }
     // Date picker is not on screen
-    else if (indexPath.row == 1) {          // The check for indexPath.row == 1 is (arguably) not necessary
+    else if (indexPath.row == 1)          // This check for indexPath.row == 1 is (arguably) not necessary
+    {
         assert( self.datePickerIndexPath != indexPath);
         /*
          If the datePicker is being shown for start_date, it would be in row 1 and should be caught by the first if
@@ -227,7 +237,9 @@ static CGFloat pickerCellRowHeight;
         // Create a cell for the end date
         cell = [self configureDateHeaderCell: NSLocalizedString(@"End", nil)
                                         date: _selectedJob.end_date];
-    } else {
+    }
+    else
+    {
         ALog(@"Unexpected row=%ld", (long)indexPath.row);
     }
     
@@ -248,7 +260,8 @@ static CGFloat pickerCellRowHeight;
 {
     assert(aDescription);
     
-    if (!aDate) {
+    if (!aDate)
+    {
         // The date field is nill, use today
         aDate = [NSDate date];
     }
@@ -271,7 +284,8 @@ static CGFloat pickerCellRowHeight;
  */
 - (UITableViewCell *)configurePickerCell: (NSDate *)aDate
 {
-    if (!aDate) {
+    if (!aDate)
+    {
         // The date field is nill, use today
         aDate = [NSDate date];
     }
@@ -317,11 +331,14 @@ static CGFloat pickerCellRowHeight;
  numberOfRowsInSection:(NSInteger)section
 {
     // If the date picker is occupying a cell,
-    if (self.datePickerIsShown) {
+    if (self.datePickerIsShown)
+    {
         // ...we have 4 cells in our table
         DLog(@"returning 4");
         return 4;
-    } else {
+    }
+    else
+    {
         // ...otherwise we have 3
         DLog(@"Returning 3");
         return 3;
@@ -363,22 +380,31 @@ static CGFloat pickerCellRowHeight;
     int clearButtonRow = [self.tableView numberOfRowsInSection:0] - 1;
     
     // First check to see if the date picker is on screen and user tapped row above it
-    if (self.datePickerIsShown && (self.datePickerIndexPath.row - 1 == indexPath.row)) {
+    if (self.datePickerIsShown && (self.datePickerIndexPath.row - 1 == indexPath.row))
+    {
         // ...yes, user is done editing - hide the date picker.
         [self hideExistingPicker];
     }
-    else if (indexPath.row == clearButtonRow) {
+    else if (indexPath.row == clearButtonRow)
+    {
         // Clear end date button pressed
         _selectedJob.end_date = nil;
         // Inform the delegate one of the dates have changed
         [_delegate dateControllerDidUpdate];
     }
-    else {
+    else
+    {
+        // Get the index where the picker will go
         NSIndexPath *newPickerIndexPath = [self calculateIndexPathForNewPicker: indexPath];
-        if (self.datePickerIsShown) {
+        // Check if a datePicker is currently on screen
+        if (self.datePickerIsShown)
+        {
+            // ...and hide it if so
             [self hideExistingPicker];
         }
+        // Show the new picker at the indexPath calculated above
         [self showNewPickerAtIndex: newPickerIndexPath];
+        // ...and keep track of where it is
         self.datePickerIndexPath = newPickerIndexPath;
     }
     
@@ -414,9 +440,11 @@ static CGFloat pickerCellRowHeight;
     CGFloat rowHeight = self.tableView.rowHeight;
     
     // If the indexPath is pointing at the date picker
-    if (self.datePickerIsShown) {
+    if (self.datePickerIsShown)
+    {
         // The date picker is in the cell after the date we are editing
-        if (self.datePickerIndexPath.row == indexPath.row){
+        if (self.datePickerIndexPath.row == indexPath.row)
+        {
             // use the value we set in viewDidLoad
             rowHeight = pickerCellRowHeight;
         }
@@ -467,10 +495,13 @@ static CGFloat pickerCellRowHeight;
     NSIndexPath *newIndexPath;
     
     // If the picker is on screen, is the selectedIndexPath after the current location of the picker?
-    if (self.datePickerIsShown && (self.datePickerIndexPath.row < selectedIndexPath.row)) {
+    if (self.datePickerIsShown && (self.datePickerIndexPath.row < selectedIndexPath.row))
+    {
         // Yes, the tap was below the cell where the picker resides, the new date picker will end up in the cell that was tapped.
         newIndexPath = selectedIndexPath;
-    } else {
+    }
+    else
+    {
         // The new date picker will end up in the row after the one that was tapped.
         newIndexPath = [NSIndexPath indexPathForRow: selectedIndexPath.row + 1
                                           inSection: 0];

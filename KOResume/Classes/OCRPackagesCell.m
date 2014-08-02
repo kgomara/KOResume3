@@ -111,11 +111,7 @@ CGFloat const kOCRPackagesCellWidthPadding  =  20.0f;
     
 
     // Update the UI to manifest the highlight effect
-    if (highlighted) {
-        [self setBackgroundColor: [UIColor redColor]];
-    } else {
-        [self setBackgroundColor: [UIColor darkGrayColor]];
-    }
+    [self setBackgroundColor: highlighted ? [UIColor redColor] : [UIColor darkGrayColor]];
 }
 
 

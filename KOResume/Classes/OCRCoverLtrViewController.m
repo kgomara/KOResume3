@@ -153,9 +153,12 @@
     DLog();
     
     // Load the cover letter into the view
-    if ([(Packages *)self.selectedManagedObject cover_ltr]) {
+    if ([(Packages *)self.selectedManagedObject cover_ltr])
+    {
         self.coverLtrFld.text	= [(Packages *)self.selectedManagedObject cover_ltr];
-    } else {
+    }
+    else
+    {
         self.coverLtrFld.text	= @"";
     }
 }
@@ -280,7 +283,8 @@
     [[[kAppDelegate managedObjectContext] undoManager] setActionName:kOCRUndoActionName];
     [[[kAppDelegate managedObjectContext] undoManager] endUndoGrouping];
     
-    if ([[[kAppDelegate managedObjectContext] undoManager] canUndo]) {
+    if ([[[kAppDelegate managedObjectContext] undoManager] canUndo])
+    {
         [[[kAppDelegate managedObjectContext] undoManager] undoNestedGroup];
     }
     
@@ -319,7 +323,8 @@
     // If active text field is hidden by keyboard, scroll it so it's visible
     CGRect aRect = self.view.frame;
     aRect.size.height -= kbSize.height;
-    if (!CGRectContainsPoint(aRect, self.coverLtrFld.frame.origin)) {
+    if (!CGRectContainsPoint(aRect, self.coverLtrFld.frame.origin))
+    {
         // calculate the contentOffset for the scroller
         CGPoint scrollPoint = CGPointMake(0.0, self.coverLtrFld.frame.origin.y - kbSize.height);
         [self.coverLtrFld setContentOffset: scrollPoint

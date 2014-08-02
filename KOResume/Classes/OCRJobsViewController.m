@@ -16,6 +16,7 @@
 #define kJobStartDateFieldTag           5
 #define kJobEndDateFieldTag             6
 
+#define k_OKButtonIndex                 1
 
 @interface OCRJobsViewController ()
 {
@@ -241,9 +242,12 @@
          orPlaceHolder: NSLocalizedString(@"Enter State", nil)];
     
 	self.jobStartDate.text = [dateFormatter stringFromDate: self.selectedJob.start_date];
-    if (_selectedJob.end_date) {
+    if (_selectedJob.end_date)
+    {
         self.jobEndDate.text = [dateFormatter stringFromDate: self.selectedJob.end_date];
-    } else {
+    }
+    else
+    {
         self.jobEndDate.text = NSLocalizedString(@"Current", nil);
     }
     
@@ -306,9 +310,12 @@
     self.navigationItem.title = _selectedJob.name;
     
     // Set up the navigation items and save/cancel buttons
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
+    {
         self.navigationItem.rightBarButtonItems = @[editBtn];
-    } else {
+    }
+    else
+    {
         self.navigationItem.leftBarButtonItem  = backBtn;
         self.navigationItem.rightBarButtonItem = editBtn;
     }
@@ -345,9 +352,12 @@
     DLog();
     
 	self.jobStartDate.text = [dateFormatter stringFromDate: self.selectedJob.start_date];
-    if (_selectedJob.end_date) {
+    if (_selectedJob.end_date)
+    {
         self.jobEndDate.text = [dateFormatter stringFromDate: self.selectedJob.end_date];
-    } else {
+    }
+    else
+    {
         self.jobEndDate.text = NSLocalizedString(@"Current", nil);
     }    
 }
@@ -438,9 +448,12 @@
     _selectedJob.city           = _jobCity.text;
     _selectedJob.state          = _jobState.text;
     _selectedJob.start_date     = [dateFormatter dateFromString: _jobStartDate.text];
-    if ([_jobStartDate.text isEqualToString: @"Current"]) {
+    if ([_jobStartDate.text isEqualToString: @"Current"])
+    {
         _selectedJob.end_date   = nil;
-    } else {
+    }
+    else
+    {
         _selectedJob.end_date   = [dateFormatter dateFromString: _jobEndDate.text];
     }
     _selectedJob.summary        = _jobSummary.text;
@@ -475,7 +488,8 @@
     [[[kAppDelegate managedObjectContext] undoManager] setActionName:kOCRUndoActionName];
     [[[kAppDelegate managedObjectContext] undoManager] endUndoGrouping];
     
-    if ([[[kAppDelegate managedObjectContext] undoManager] canUndo]) {
+    if ([[[kAppDelegate managedObjectContext] undoManager] canUndo])
+    {
         // Changes were made - discard them
         [[[kAppDelegate managedObjectContext] undoManager] undoNestedGroup];
     }
@@ -504,6 +518,7 @@
 - (void)setUIWithEditing: (BOOL)isEditingMode
 {
     DLog();
+#warning TODO figure out why URL isn't editable
     
     // Update editing flag
     self.editing = isEditingMode;
@@ -517,7 +532,9 @@
     // ...enable/disable resume fields
     [self setFieldsEditable: isEditingMode];
     
-    if (isEditingMode) {
+    if (isEditingMode)
+    {
+#warning TODO - fix up
         // Set up the navigation items and save/cancel buttons
         if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
             self.navigationItem.rightBarButtonItems = @[saveBtn, cancelBtn];
@@ -525,7 +542,9 @@
             self.navigationItem.leftBarButtonItem  = cancelBtn;
             self.navigationItem.rightBarButtonItem = saveBtn;
         }
-    } else {
+    }
+    else
+    {
         // Reset the nav bar defaults
         [self configureDefaultNavBar];
     }
@@ -559,9 +578,12 @@
 {
     DLog();
     
-    if (self.isEditing) {
+    if (self.isEditing)
+    {
         [self promptForJobURI];
-    } else {
+    }
+    else
+    {
         // Open the job.uri in a UIWebView.
         // First, check to see if we have something that looks like a URI
         if (self.selectedJob.uri == NULL ||
@@ -572,6 +594,7 @@
         }
         
         // Open the Url in an application webView
+#warning TODO replace with iOS8 WKWebView
         SVWebViewController *webViewController = [[SVWebViewController alloc] initWithAddress: self.selectedJob.uri];
         [self.navigationController pushViewController: webViewController
                                              animated: YES];
@@ -589,11 +612,16 @@
     
     // The job array is in the order (including deletes) the user wants
     // ...loop through the array by index, resetting the job's sequence_number attribute
-    for (int i = 0; i < [_accomplishmentsArray count]; i++) {
-        if ([_accomplishmentsArray[i] isDeleted]) {
-            // no need to update the sequence number of deleted objects
-        } else {
-            [_accomplishmentsArray[i] setSequence_numberValue: i];
+    int i = 0;
+    for (Accomplishments *accomplishment in _accomplishmentsArray)
+    {
+        if ([accomplishment isDeleted])
+        {
+            // Do not update the sequence number of deleted objects
+        }
+        else
+        {
+            [accomplishment setSequence_numberValue:i++];
         }
     }
 }
@@ -684,11 +712,14 @@
 {
     DLog();
     
-    if (buttonIndex == 1) {
+    if (buttonIndex == k_OKButtonIndex)
+    {
         // OK button was pressed, get the user's input
         self.nuEntityName = [[alertView textFieldAtIndex: 0] text];
         [self addAccomplishment];
-    } else {
+    }
+    else
+    {
         // User cancelled
         [self configureDefaultNavBar];
     }
@@ -708,7 +739,7 @@
 {
     DLog();
     
-    // We have one sections in our table
+    // We have one section in our table
     return 1;
 }
 
@@ -813,7 +844,8 @@ commitEditingStyle: (UITableViewCellEditingStyle)editingStyle
 {
     DLog();
     
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
+    if (editingStyle == UITableViewCellEditingStyleDelete)
+    {
         // Delete the managed object at the given index path.
         NSManagedObject *accomplishmentToDelete = _accomplishmentsArray[indexPath.row];
         [[kAppDelegate managedObjectContext] deleteObject: accomplishmentToDelete];
@@ -823,8 +855,10 @@ commitEditingStyle: (UITableViewCellEditingStyle)editingStyle
                          withRowAnimation: UITableViewRowAnimationFade];
         // ...and reload the table
         [tableView reloadData];
-    } else {
-        DLog(@"editingStyle=%d", (int)editingStyle);
+    }
+    else
+    {
+        ALog(@"Unexpected editingStyle=%d", (int)editingStyle);
     }
 }
 
@@ -845,7 +879,8 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
 {
     DLog();
     
-    if (fromIndexPath.section != toIndexPath.section) {
+    if (fromIndexPath.section != toIndexPath.section)
+    {
         // Cannot move between sections
         [OCAUtilities showErrorWithMessage: NSLocalizedString(@"Sorry, move not allowed.", nil)];
         [self.tableView reloadData];
@@ -1040,9 +1075,12 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     [headerView.addButton setTag:section];
     
     // Hide or show the addButton depending on whether we are in editing mode
-    if (self.isEditing) {
+    if (self.isEditing)
+    {
         [headerView.addButton setHidden: NO];
-    } else {
+    }
+    else
+    {
         [headerView.addButton setHidden: YES];
     }
     
@@ -1080,12 +1118,17 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
 {
     DLog();
     
-    if ([segue.identifier isEqualToString: kOCRDateControllerSegue]) {
-        if (_dateControllerPopover) {
+    if ([segue.identifier isEqualToString: kOCRDateControllerSegue])
+    {
+        if (_dateControllerPopover)
+        {
             // Menu is being displayed, dismiss it
             [_dateControllerPopover dismissPopoverAnimated: YES];
             self.dateControllerPopover = nil;
-        } else {
+        }
+        else
+        {
+#warning TODO made need to refactor for iPhone popover support
             // Get the seque from the Storyboard
             UIStoryboardPopoverSegue* popSegue  = (UIStoryboardPopoverSegue*)segue;
             self.dateControllerPopover          = popSegue.popoverController;
@@ -1116,6 +1159,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
 {
     DLog();
     
+#warning TODO may need to refactor
     // Get the size of the keyboard
     NSDictionary *info = [aNotification userInfo];
     CGSize kbSize = [info[UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
@@ -1149,6 +1193,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
 {
     DLog();
     
+#warning TODO may need to refactor
 //    UIEdgeInsets contentInsets = UIEdgeInsetsZero;
 
 //    self.coverLtrFld.contentInset          = contentInsets;
@@ -1224,7 +1269,8 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
         // We are in a date field. Dismiss the keyboard, if any.
         [OCAUtilities dismissKeyboard];
         [textField resignFirstResponder];
-        if (!self.selectedJob.start_date) {
+        if (!self.selectedJob.start_date)
+        {
             // If there is no start_date yet, default to today
             self.selectedJob.start_date = [NSDate date];
         }
@@ -1319,10 +1365,13 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     // ...and attempt to get it using the viewWithTag method
 	UIResponder *nextResponder = [textField.superview viewWithTag: nextTag];
 	
-	if (nextResponder) {
+	if (nextResponder)
+    {
         // If there is a nextResponser, make it firstResponder - i.e., give it focus
         [nextResponder becomeFirstResponder];
-	} else {
+	}
+    else
+    {
         // ...otherwise this textfield must be the last.
 		[textField resignFirstResponder];       // Dismisses the keyboard
         [self resetView];
@@ -1397,7 +1446,8 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     DLog();
     
     // Use the type to determine the operation to perform
-    switch(type) {
+    switch(type)
+    {
         case NSFetchedResultsChangeInsert:
             // Insert a row
             [_tableView insertRowsAtIndexPaths: @[newIndexPath]
@@ -1452,7 +1502,8 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     DLog();
     
     // Use the type to determine the operation to perform
-    switch(type) {
+    switch(type)
+    {
         case NSFetchedResultsChangeInsert:
             [_tableView insertSections: [NSIndexSet indexSetWithIndex: sectionIndex]
                       withRowAnimation: UITableViewRowAnimationFade];
@@ -1461,6 +1512,9 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
         case NSFetchedResultsChangeDelete:
             [_tableView deleteSections: [NSIndexSet indexSetWithIndex: sectionIndex]
                       withRowAnimation: UITableViewRowAnimationFade];
+            break;
+        default:
+            ALog(@"Unexpected type=%d", type);
             break;
     }
 }

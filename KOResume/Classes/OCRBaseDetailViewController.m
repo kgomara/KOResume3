@@ -227,7 +227,8 @@
     // Create an NSError object for the fetch
     NSError *error = nil;
     // ...and fetch the data
-    if ( ![[self fetchedResultsController] performFetch: &error]) {
+    if ( ![[self fetchedResultsController] performFetch: &error])
+    {
         ELog(error, @"Fetch failed!");
         NSString* msg = NSLocalizedString(@"Failed to reload data.", nil);
         [OCAUtilities showErrorWithMessage: msg];

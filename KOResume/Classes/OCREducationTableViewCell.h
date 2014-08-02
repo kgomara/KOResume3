@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "OCRCellTextFieldDelegateProtocol.h"
 
 #define kTitleFieldTag          100
 #define kNameFieldTag           101
@@ -26,7 +25,5 @@
 @property (weak, nonatomic) IBOutlet    UITextField *city;
 
 @property (weak, nonatomic) IBOutlet    UITextField *state;
-
-//@property (strong, nonatomic)           UIViewController<OCRCellTextFieldDelegate>    *delegate;
 
 @end
