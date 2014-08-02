@@ -32,6 +32,8 @@
 #define k_cover_ltrRow      0
 #define k_resumeRow         1
 
+#define k_OKButtonIndex     1
+
 @interface OCRPackagesViewController ()
 {
 @private
@@ -422,10 +424,13 @@ BOOL isEditModeActive;
     DLog();
     
     // Check whether the user entered a Package name or cancelled
-    if (buttonIndex == 1) {
+    if (buttonIndex == k_OKButtonIndex)
+    {
         // OK - get the Package name from the alertView and pass it to addPackage
         [self addPackage: [[alertView textFieldAtIndex: 0] text]];
-    } else {
+    }
+    else
+    {
         // Cancel - reset the UI to "normal" state
         [self configureDefaultNavBar];
     }
@@ -445,9 +450,12 @@ BOOL isEditModeActive;
     DLog(@"sender = %@", @([(UIButton *)sender tag]));
     
     // Check to see if we're in editMode
-    if (isEditModeActive) {
-        // ignore the tap
-    } else {
+    if (isEditModeActive)
+    {
+        // If we are in edit mode, ignore the tap
+    }
+    else
+    {
         // Perform the segue using the identifier in the Storyboard
         [self performSegueWithIdentifier: kOCRCvrLtrSegue
                                   sender: sender];
@@ -467,9 +475,12 @@ BOOL isEditModeActive;
     DLog(@"sender = %@", @([(UIButton *)sender tag]));
     
     // Check to see if we're in editMode
-    if (isEditModeActive) {
-        // ignore the tap
-    } else {
+    if (isEditModeActive)
+    {
+        // If we are in edit mode, ignore the tap
+    }
+    else
+    {
         // Perform the segue using the identifier in the Storyboard
         [self performSegueWithIdentifier: kOCRResumeSegue
                                   sender: sender];
@@ -598,11 +609,7 @@ BOOL isEditModeActive;
 {
     DLog();
     
-    if (isEditModeActive) {
-        return NO;
-    } else {
-        return YES;
-    }
+    return isEditModeActive ? NO : YES;
 }
 
 #pragma mark - OCAEditableCollectionViewDelegateFlowLayout methods
@@ -884,8 +891,8 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
     
     /*
      Here we save the context and wait for the operation to complete. If we invoked the asynchronous saveContext
-     method it would return immediately and the collectionView throw an assertion error because the collectionView
-     would be out of sync with the data model.
+     method it would return immediately and the collectionView throws an assertion error because it
+     is out of sync with the data model.
      */
     [kAppDelegate saveContextAndWait: moc];
 }
@@ -910,7 +917,8 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
    shouldHideViewController: (UIViewController *)vc
               inOrientation: (UIInterfaceOrientation)orientation
 {
-    if (UIInterfaceOrientationIsPortrait(orientation)) {
+    if (UIInterfaceOrientationIsPortrait(orientation))
+    {
         return YES; // if you return NO, it will display side by side, not above.
     }
     
@@ -998,9 +1006,11 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
     
     // Start our sequence numbers at 1
     int i = 1;
-    for (NSInteger section = 0; section < sectionCount; section++) {
+    for (NSInteger section = 0; section < sectionCount; section++)
+    {
         NSInteger itemCount = [self.collectionView numberOfItemsInSection: section];
-        for (NSInteger item = 0; item < itemCount; item++) {
+        for (NSInteger item = 0; item < itemCount; item++)
+        {
             // Construct an NSIndexPath given the section and row
             NSIndexPath *indexPath          = [NSIndexPath indexPathForItem: item
                                                                   inSection: section];
@@ -1044,7 +1054,8 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
     // All of the objects are now in their correct order. Update each
     // object's sequence_number field by iterating through the array.
     int i = 0;
-    for (Packages *aPackage in packages) {
+    for (Packages *aPackage in packages)
+    {
         [aPackage setSequence_numberValue: i++];
     }
 }
@@ -1073,70 +1084,69 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
                  sender: (id)sender
 {
     DLog();
-    
     /*
      See the comment in - configureCell:atIndexPath: to understand how we are using sender.tag with fetchedResultsController
 
      The sender is one of the buttons in a UICollectionViewCell (not the cell itself). To construct the indexPath
-     we use the tag on the UIButton
+     we use the tag on the UIButton, which is set in configureCell:atIndexPath:
      */
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow: [(UIButton *)sender tag]
                                                 inSection: 0];
-    if ([[segue identifier] isEqualToString: kOCRCvrLtrSegue]) {
+    if ([[segue identifier] isEqualToString: kOCRCvrLtrSegue])
+    {
         Packages *aPackage = [self.fetchedResultsController objectAtIndexPath: indexPath];
         /*
-         We want to pass a few data object references to the cover letter controller (discussed
-         in more detail below) - so we must first get a reference to the cover letter controller, which
-         is embedded in a UINavigationController.
+         We want to pass a few data object references to the cover letter controller (discussed in more detail below) - so we 
+         first get a reference to the cover letter controller, which is embedded in a UINavigationController.
          */
         OCRBaseDetailViewController *cvrLtrController = [(UINavigationController *)[segue destinationViewController] viewControllers][0];
         // Check to see if we have a popover button
-        if (_rootPopoverButtonItem != nil) {
+        if (_rootPopoverButtonItem != nil)
+        {
             // ...if so, have the cvrLtrController show it
             [cvrLtrController showRootPopoverButtonItem:_rootPopoverButtonItem
                                          withController:_packagesPopoverController];
         }
         
-        if (self.packagesPopoverController) {
+        if (self.packagesPopoverController)
+        {
             [self.packagesPopoverController dismissPopoverAnimated: YES];
         }
         /*
          A common strategy for passing data between controller objects is to declare public properties in the receiving object
-         and have the instantiator set those properties.
-         
-         Here we pass the Package represented by the cell the user tapped, as well as the ManagedObjectContext and
-         FetchedResultsController.
+         and have the instantiator set those properties. Here we pass the Package represented by the cell the user tapped.
          
          An alternative strategy for data that is global scope by nature is to set those properties on the UIApplication
          delegate and reference them as [[[UIApplication sharedApplication] delegate] foo_bar]. In our case, there is only one
-         managedObjectContext used throughout the app, so I reference it as a global variable:
-         
-         @property (nonatomic, strong, readonly) NSManagedObjectContext  *managedObjectContext;
+         managedObjectContext used throughout the app, which is a public property on OCRAppDelegate
          
          I also created a macro (see GlobalMacros.h):
          
-         #define kAppDelegate    (OCRAppDelegate *)[[UIApplication sharedApplication] delegate]      // Note it DOES NOT end with a ';'
+            #define kAppDelegate    (OCRAppDelegate *)[[UIApplication sharedApplication] delegate]      // Note it DOES NOT end with a ';'
          
-         Thus, in other source files [kAppDelegate managedObjectContext] returns a reference to our managedObjectContext
+         Thus, in other source files [kAppDelegate managedObjectContext] returns a reference to our managedObjectContext.
          */
         [cvrLtrController setSelectedManagedObject: aPackage];
         [cvrLtrController setBackButtonTitle: NSLocalizedString(@"Packages", nil)];
         [cvrLtrController setFetchedResultsController: self.fetchedResultsController];
     }
-    else if ([[segue identifier] isEqualToString: kOCRResumeSegue]) {
+    else if ([[segue identifier] isEqualToString: kOCRResumeSegue])
+    {
         Packages *aPackage = [self.fetchedResultsController objectAtIndexPath: indexPath];
         /*
          This code follows the same pattern as kOCRCvrLtrSegue above.
          */
         OCRBaseDetailViewController *resumeController = [(UINavigationController *)[segue destinationViewController] viewControllers][0];
         // Check to see if we have a popover button
-        if (_rootPopoverButtonItem != nil) {
+        if (_rootPopoverButtonItem != nil)
+        {
             // ...if so, have the cvrLtrController show it
             [resumeController showRootPopoverButtonItem: _rootPopoverButtonItem
                                          withController: _packagesPopoverController];
         }
         
-        if (self.packagesPopoverController) {
+        if (self.packagesPopoverController)
+        {
             [self.packagesPopoverController dismissPopoverAnimated: YES];
         }
         [resumeController setSelectedManagedObject: aPackage.resume];

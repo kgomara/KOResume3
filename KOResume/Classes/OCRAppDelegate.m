@@ -208,11 +208,14 @@
     [moc performBlockAndWait:^{
         [moc save: &error];
     }];
-    if (error) {
+    if (error)
+    {
         ELog(error, @"Failed to save data");
         NSString* msg = NSLocalizedString( @"Failed to save data.", nil);
         [OCAUtilities showErrorWithMessage: msg];
-    } else {
+    }
+    else
+    {
         DLog(@"Save successful");
     }
 }
