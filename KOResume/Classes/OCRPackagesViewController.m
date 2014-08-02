@@ -574,12 +574,7 @@ BOOL isEditModeActive;
     // Set the title of the resume button
     [cell.resumeButton setTitle: aPackage.resume.name
                        forState: UIControlStateNormal];
-    [cell.resumeButton addTarget:self
-                          action:@selector(didPressResumeButton:)
-                forControlEvents:UIControlEventTouchUpInside];
-    [cell.coverLtrButton addTarget:self
-                            action:@selector(didPressCoverLtrButton:)
-                  forControlEvents:UIControlEventTouchUpInside];
+
 }
 
 
@@ -1091,31 +1086,15 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
         Packages *aPackage = [self.fetchedResultsController objectAtIndexPath: indexPath];
         /*
          We want to pass a few data object references to the cover letter controller (discussed
-         in more detail below) - so we must first get a reference to the cover letter controller.
+         in more detail below) - so we must first get a reference to the cover letter controller, which
+         is embedded in a UINavigationController.
          */
-        OCRBaseDetailViewController *cvrLtrController;
-        // Check to see if the segue is pointing to a UINavigationController
-        if ([[segue destinationViewController] isMemberOfClass:[UINavigationController class]]) {
-            /*
-             On the iPad, OCRCvrLtrController is embedded in a UINavigationController.
-             We need to get the detail view controller, which is the first controller in the navigation controller's stack.
-             
-             The UINavigationController cast isn't strictly necessary, but helps make the code more self-documenting
-             */
-            cvrLtrController = [(UINavigationController *)[segue destinationViewController] viewControllers][0];
-        } else {
-            /*
-             Otherwise, the segue's destination should be a OCRCvrLtrController
-             */
-            cvrLtrController = [segue destinationViewController];
-        }
-        /*
-         Update the splitViewController's delegate
-         */
+        OCRBaseDetailViewController *cvrLtrController = [(UINavigationController *)[segue destinationViewController] viewControllers][0];
+        // Check to see if we have a popover button
         if (_rootPopoverButtonItem != nil) {
-            OCRBaseDetailViewController<SubstitutableDetailViewController>* detailViewController = (OCRBaseDetailViewController<SubstitutableDetailViewController>*)[[segue destinationViewController] viewControllers][0];
-            [detailViewController showRootPopoverButtonItem:_rootPopoverButtonItem
-                                             withController:_packagesPopoverController];
+            // ...if so, have the cvrLtrController show it
+            [cvrLtrController showRootPopoverButtonItem:_rootPopoverButtonItem
+                                         withController:_packagesPopoverController];
         }
         
         if (self.packagesPopoverController) {
@@ -1149,23 +1128,12 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
         /*
          This code follows the same pattern as kOCRCvrLtrSegue above.
          */
-        OCRBaseDetailViewController *resumeController;
-        if ([[segue destinationViewController] isMemberOfClass:[UINavigationController class]]) {
-            /*
-             On the iPad, OCRCvrLtrController is embedded in a UINavigationController.
-             We need to get the detail view controller, which is the first controller in the navigation controller's stack.
-             
-             The UINavigationController cast isn't strictly necessary, but helps make the code more self-documenting
-             */
-            resumeController = [(UINavigationController *)[segue destinationViewController] viewControllers][0];
-        } else {
-            resumeController = [segue destinationViewController];
-        }
-        // Update the splitViewController's delegate
+        OCRBaseDetailViewController *resumeController = [(UINavigationController *)[segue destinationViewController] viewControllers][0];
+        // Check to see if we have a popover button
         if (_rootPopoverButtonItem != nil) {
-            OCRBaseDetailViewController<SubstitutableDetailViewController>* detailViewController = (OCRBaseDetailViewController<SubstitutableDetailViewController>*)[[segue destinationViewController] viewControllers][0];
-            [detailViewController showRootPopoverButtonItem: _rootPopoverButtonItem
-                                             withController: _packagesPopoverController];
+            // ...if so, have the cvrLtrController show it
+            [resumeController showRootPopoverButtonItem: _rootPopoverButtonItem
+                                         withController: _packagesPopoverController];
         }
         
         if (self.packagesPopoverController) {
