@@ -727,10 +727,14 @@ BOOL isEditModeActive;
     // Unset the flag indicating we are in edit mode
     isEditModeActive = NO;
 
+    NSArray *packages = [self.fetchedResultsController fetchedObjects];
+    DLog(@"packages=%@", packages);
+
     // Resequence the Packages in case the order was changed in the UI
     [self resequencePackages];
     // Save the context
     [kAppDelegate saveContext: _managedObjectContext];
+    [self.collectionView reloadData];
 }
 
 
@@ -1002,27 +1006,41 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
     // Get the array of packages as they are after the add, move, or delete
     NSArray *packages = [self.fetchedResultsController fetchedObjects];
     
-    // Get the number of sections in order to construct an indexPath
-    NSInteger sectionCount = [self.collectionView numberOfSections];
-    
-    // Start our sequence numbers at 1
     int i = 1;
-    for (NSInteger section = 0; section < sectionCount; section++)
+    for (Packages *package in packages)
     {
-        NSInteger itemCount = [self.collectionView numberOfItemsInSection: section];
-        for (NSInteger item = 0; item < itemCount; item++)
+        if (package.isDeleted)
         {
-            // Construct an NSIndexPath given the section and row
-            NSIndexPath *indexPath          = [NSIndexPath indexPathForItem: item
-                                                                  inSection: section];
-            // ...and get the cooresponding cell from the collection view
-            OCRPackagesCell *packagesCell   = (OCRPackagesCell *)[self.collectionView cellForItemAtIndexPath: indexPath];
-
-            Packages *aPackage = packages[packagesCell.tag];    // TODO - backwards - we want to iterate this array?
-            [aPackage setSequence_number: @(i++)];       // TODO - sequence number does not seem to stick
-            DLog(@"%@", [aPackage debugDescription]);
+            // skip
+        }
+        else
+        {
+            [package setSequence_numberValue:i++];
         }
     }
+    DLog(@"packages=%@", packages);
+    
+//    // Get the number of sections in order to construct an indexPath
+//    NSInteger sectionCount = [self.collectionView numberOfSections];
+//    
+//    // Start our sequence numbers at 1
+//    int i = 1;
+//    for (NSInteger section = 0; section < sectionCount; section++)
+//    {
+//        NSInteger itemCount = [self.collectionView numberOfItemsInSection: section];
+//        for (NSInteger item = 0; item < itemCount; item++)
+//        {
+//            // Construct an NSIndexPath given the section and row
+//            NSIndexPath *indexPath          = [NSIndexPath indexPathForItem: item
+//                                                                  inSection: section];
+//            // ...and get the cooresponding cell from the collection view
+//            OCRPackagesCell *packagesCell   = (OCRPackagesCell *)[self.collectionView cellForItemAtIndexPath: indexPath];
+//#warning TODO fix...
+//            Packages *aPackage = packages[packagesCell.tag];    // TODO - backwards - we want to iterate this array?
+//            [aPackage setSequence_number: @(i++)];       // TODO - sequence number does not seem to stick
+//            DLog(@"%@", [aPackage debugDescription]);
+//        }
+//    }
 }
 
 
@@ -1208,6 +1226,7 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
 	    ELog(error, @"Unresolved error");
 	    [OCAUtilities showErrorWithMessage: NSLocalizedString(@"Could not read the database. Try quitting the app. If that fails, try deleting KOResume and restoring from iCloud or iTunes backup. Please contact the developer by emailing kevin@omaraconsultingassoc.com", nil)];
 	}
+    DLog(@"results=%@", self.fetchedResultsController.sections[0]);
     
     return _fetchedResultsController;
 }    

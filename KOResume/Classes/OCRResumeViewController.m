@@ -1806,7 +1806,15 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     
     [super reloadFetchedResults: aNote];
     
-    [self loadViewFromSelectedObject];
+    if (self.selectedResume.isDeleted)
+    {
+        // Need to display a message
+        [OCAUtilities showWarningWithMessage:@"resume delete"];
+    }
+    else
+    {
+        [self loadViewFromSelectedObject];
+    }
 }
 
 

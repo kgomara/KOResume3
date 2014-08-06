@@ -168,7 +168,7 @@
                         <rect key="frame" x="0.0" y="32" width="768" height="704"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tJm-pQ-3QS">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="768" placeholderIntrinsicHeight="704" translatesAutoresizingMaskIntoConstraints="NO" id="tJm-pQ-3QS">
                                 <rect key="frame" x="0.0" y="0.0" width="768" height="704"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="J18-CA-jZK">
@@ -312,7 +312,7 @@
                                             <constraint firstItem="roL-cc-yNN" firstAttribute="leading" secondItem="dZC-r7-xaL" secondAttribute="leading" id="xSN-vy-0jK"/>
                                         </constraints>
                                     </view>
-                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="infinite" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="uLa-FC-hD8">
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="768" placeholderIntrinsicHeight="347" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="uLa-FC-hD8">
                                         <rect key="frame" x="0.0" y="346" width="768" height="347"/>
                                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                         <constraints>
@@ -350,8 +350,8 @@
                                                     <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                                     <constraints>
                                                         <constraint firstAttribute="centerY" secondItem="Axf-Xl-ycX" secondAttribute="centerY" id="Edm-xD-Jtd"/>
+                                                        <constraint firstAttribute="trailing" secondItem="Axf-Xl-ycX" secondAttribute="trailing" constant="20" id="U3x-5B-vCV"/>
                                                         <constraint firstAttribute="centerY" secondItem="bJT-bp-GHN" secondAttribute="centerY" id="XHh-Ls-7eD"/>
-                                                        <constraint firstAttribute="trailing" secondItem="Axf-Xl-ycX" secondAttribute="trailing" constant="20" id="ZwB-SA-DGN"/>
                                                         <constraint firstItem="bJT-bp-GHN" firstAttribute="leading" secondItem="jkn-0J-GWg" secondAttribute="leading" constant="20" symbolic="YES" id="jdA-kx-lk7"/>
                                                     </constraints>
                                                 </tableViewCellContentView>
@@ -472,6 +472,7 @@
                                     <constraint firstItem="J18-CA-jZK" firstAttribute="leading" secondItem="tJm-pQ-3QS" secondAttribute="leading" id="FYs-nF-Wng"/>
                                     <constraint firstItem="uLa-FC-hD8" firstAttribute="leading" secondItem="tJm-pQ-3QS" secondAttribute="leading" id="IrX-0F-XmS"/>
                                     <constraint firstAttribute="trailing" secondItem="uLa-FC-hD8" secondAttribute="trailing" id="kHU-CD-BGG"/>
+                                    <constraint firstAttribute="bottom" secondItem="uLa-FC-hD8" secondAttribute="bottom" constant="11" id="lF6-rM-FhJ"/>
                                     <constraint firstItem="J18-CA-jZK" firstAttribute="top" secondItem="tJm-pQ-3QS" secondAttribute="top" constant="5" id="oFD-5d-F5A"/>
                                     <constraint firstItem="uLa-FC-hD8" firstAttribute="leading" secondItem="J18-CA-jZK" secondAttribute="leading" id="qwh-pL-hNK"/>
                                     <constraint firstItem="uLa-FC-hD8" firstAttribute="top" secondItem="J18-CA-jZK" secondAttribute="bottom" constant="8" id="vFD-fG-wqP"/>
@@ -858,7 +859,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Lfy-sr-PAy">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <subviews>
-                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Mnf-31-eRP">
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Mnf-31-eRP">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                         <color key="backgroundColor" red="0.80000000000000004" green="0.80000000000000004" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                                         <inset key="scrollIndicatorInsets" minX="3" minY="3" maxX="3" maxY="3"/>
@@ -869,8 +870,10 @@
                                 </subviews>
                                 <color key="backgroundColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstItem="Mnf-31-eRP" firstAttribute="height" secondItem="Lfy-sr-PAy" secondAttribute="height" id="2s2-4h-96s"/>
-                                    <constraint firstItem="Mnf-31-eRP" firstAttribute="width" secondItem="Lfy-sr-PAy" secondAttribute="width" id="ugp-CJ-hgn"/>
+                                    <constraint firstItem="Mnf-31-eRP" firstAttribute="top" secondItem="Lfy-sr-PAy" secondAttribute="top" id="7gY-gH-NRB"/>
+                                    <constraint firstAttribute="bottom" secondItem="Mnf-31-eRP" secondAttribute="bottom" id="Sdc-Fh-zes"/>
+                                    <constraint firstAttribute="trailing" secondItem="Mnf-31-eRP" secondAttribute="trailing" id="Xtd-4W-44G"/>
+                                    <constraint firstItem="Mnf-31-eRP" firstAttribute="leading" secondItem="Lfy-sr-PAy" secondAttribute="leading" id="uae-SL-c5s"/>
                                 </constraints>
                             </view>
                         </subviews>
