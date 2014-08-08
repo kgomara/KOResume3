@@ -1,19 +1,23 @@
 //
-//  OCRBaseDetailViewController.m
+//  OCRBaseDetailTableViewController.m
 //  KOResume
 //
-//  Created by Kevin O'Mara on 7/14/13.
-//  Copyright (c) 2013-2014 O'Mara Consulting Associates. All rights reserved.
+//  Created by Kevin O'Mara on 8/7/14.
+//  Copyright (c) 2014 O'Mara Consulting Associates. All rights reserved.
 //
 
-#import "OCRBaseDetailViewController.h"
+#import "OCRBaseDetailTableViewController.h"
 #import "OCRAppDelegate.h"
 #import "Resumes.h"
 
 #define kSummaryTableCell   0
 #define kResumeTableCell    1
 
-@implementation OCRBaseDetailViewController
+/*
+ This class is a nearly perfect duplicate of OCRBaseDetailViewController
+ */
+
+@implementation OCRBaseDetailTableViewController
 
 @synthesize backButtonCached;
 @synthesize fetchedResultsController;
@@ -44,11 +48,11 @@
         // Update the view.
         [self configureView];
     }
-
+    
     if (self.masterPopoverController != nil)
     {
         [self.masterPopoverController dismissPopoverAnimated: YES];
-    }        
+    }
 }
 
 #pragma mark - View lifecycle
@@ -67,7 +71,7 @@
  messages that occur, see “Responding to Display-Related Notifications”.
  
  Note
- If a view controller is presented by a view controller inside of a popover, this method is not invoked on the 
+ If a view controller is presented by a view controller inside of a popover, this method is not invoked on the
  presenting view controller after the presented controller is dismissed.
  
  @param animated        If YES, the view is being added to the window using an animation.
@@ -93,10 +97,10 @@
 /**
  Notifies the view controller that its view was added to a view hierarchy.
  
- You can override this method to perform additional tasks associated with presenting the view. If you override 
+ You can override this method to perform additional tasks associated with presenting the view. If you override
  this method, you must call super at some point in your implementation.
  
- Note - If a view controller is presented by a view controller inside of a popover, this method is not invoked 
+ Note - If a view controller is presented by a view controller inside of a popover, this method is not invoked
  on the presenting view controller after the presented controller is dismissed.
  
  @param animated        If YES, the disappearance of the view is being animated.
@@ -131,15 +135,15 @@
 {
     DLog();
     
-//    // Hide the subclass' back button
-//    [self invalidateRootPopoverButtonItem: _backButtonCached];
+    //    // Hide the subclass' back button
+    //    [self invalidateRootPopoverButtonItem: _backButtonCached];
     
     // Remove all observers
     [[NSNotificationCenter defaultCenter] removeObserver: self];
     
     // ...and save any changes
     [kAppDelegate saveContext: [kAppDelegate managedObjectContext]];
-
+    
     [super viewWillDisappear: animated];
 }
 
@@ -147,10 +151,10 @@
 /**
  Sent to the view controller when the app receives a memory warning.
  
- Your app never calls this method directly. Instead, this method is called when the system determines that the 
+ Your app never calls this method directly. Instead, this method is called when the system determines that the
  amount of available memory is low.
  
- You can override this method to release any additional memory used by your view controller. If you do, your 
+ You can override this method to release any additional memory used by your view controller. If you do, your
  implementation of this method must call the super implementation at some point.
  */
 - (void)didReceiveMemoryWarning
@@ -246,5 +250,6 @@
      [self.tblView reloadData];
      */
 }
+
 
 @end

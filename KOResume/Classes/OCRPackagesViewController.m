@@ -958,9 +958,34 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
     self.packagesPopoverController  = aPopoverController;
     self.rootPopoverButtonItem      = barButtonItem;
     
-    OCRBaseDetailViewController <SubstitutableDetailViewController> *detailViewController = (OCRBaseDetailViewController<SubstitutableDetailViewController>*)[(svc.viewControllers)[1] topViewController];
-    [detailViewController showRootPopoverButtonItem: _rootPopoverButtonItem
-                                     withController: aPopoverController];
+    /*
+     The detail view may be the cover letter - a simple UIViewController, or the resume - a UITabBarController containing several 
+     aspects of the resume. Figure out which one we have and tell any and all subordinate objects to showRootPopoverButtonItem
+     */
+    // Let's guess we are doing a resume segue, in which case we have a UITabBarController
+    UITabBarController *tabBarController = (svc.viewControllers)[1];
+    DLog(@"vc=%@, items=%@", tabBarController, tabBarController.childViewControllers );
+    // Check to see if we have a UITabBarController
+    if ([tabBarController isMemberOfClass:[UITabBarController class]])
+    {
+        // We have a UITabBarController, loop through all its children (which are embedded in UINavigationController objects) and tell them to showRootPopoverButtonItem
+        for (UINavigationController *navigationController in tabBarController.childViewControllers)
+        {
+            // Get the topViewController
+            id<SubstitutableDetailViewController> viewController = (id)navigationController.topViewController;
+            // ...and send it the showRootPopoverButtonItem:withController message
+            [viewController showRootPopoverButtonItem: _rootPopoverButtonItem
+                                       withController: aPopoverController];
+        }
+    }
+    else
+    {
+        // We have cover letter. Get the UINavigationController's topViewController
+        OCRBaseDetailViewController <SubstitutableDetailViewController> *detailViewController = (OCRBaseDetailViewController<SubstitutableDetailViewController>*)[(svc.viewControllers)[1] topViewController];
+        // ...and send it the showRootPopoverButtonItem:withController message
+        [detailViewController showRootPopoverButtonItem: _rootPopoverButtonItem
+                                         withController: aPopoverController];
+    }
 }
 
 
@@ -971,6 +996,8 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
  When the view controller rotates from a portrait to landscape orientation, it shows its hidden view controller 
  once more. If you added the specified button to your toolbar to facilitate the display of the hidden view 
  controller in a popover, you must implement this method and use it to remove that button.
+ 
+ Nil out references to the popover controller and the popover button, and tell the detail view controller to hide the button.
 
  @param svc                 The split view controller that owns the specified view controller.
  @param aViewController     The view controller being hidden.
@@ -982,9 +1009,30 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
 {
     DLog();
     
-    // Nil out references to the popover controller and the popover button, and tell the detail view controller to hide the button.
-    OCRBaseDetailViewController <SubstitutableDetailViewController> *detailViewController = (OCRBaseDetailViewController<SubstitutableDetailViewController>*)[(svc.viewControllers)[1] topViewController];
-    [detailViewController invalidateRootPopoverButtonItem: _rootPopoverButtonItem];
+    /*
+     The detail view may be the cover letter - a simple UIViewController, or the resume - a UITabBarController containing several
+     aspects of the resume. Figure out which one we have and tell any and all subordinate objects to invalidateRootPopoverButtonItem
+     */
+    // Let's guess we are doing a resume segue, in which case we have a UITabBarController
+    UITabBarController *tabBarController = (svc.viewControllers)[1];
+    DLog(@"vc=%@, items=%@", tabBarController, tabBarController.childViewControllers );
+    // Check to see if we have a UITabBarController
+    if ([tabBarController isMemberOfClass:[UITabBarController class]])
+    {
+        // We have a UITabBarController, loop through all its children (which are embedded in UINavigationController objects) and tell them to invalidateRootPopoverButtonItem
+        for (UINavigationController *navigationController in tabBarController.childViewControllers)
+        {
+            // Get the topViewController
+            id<SubstitutableDetailViewController> viewController = (id)navigationController.topViewController;
+            // ...and send it the invalidateRootPopoverButtonItem message
+            [viewController invalidateRootPopoverButtonItem: _rootPopoverButtonItem];
+        }
+    }
+    else
+    {
+        OCRBaseDetailViewController <SubstitutableDetailViewController> *detailViewController = (OCRBaseDetailViewController<SubstitutableDetailViewController>*)[(svc.viewControllers)[1] topViewController];
+        [detailViewController invalidateRootPopoverButtonItem: _rootPopoverButtonItem];
+    }
     self.packagesPopoverController  = nil;
     self.rootPopoverButtonItem      = nil;
 }
@@ -1153,9 +1201,11 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
     {
         Packages *aPackage = [self.fetchedResultsController objectAtIndexPath: indexPath];
         /*
-         This code follows the same pattern as kOCRCvrLtrSegue above.
+         In this case, there is a UITabBarController intermediary container, which contains 3 controller objects, each of
+         which is embedded in a UINavigationController.
          */
-        OCRBaseDetailViewController *resumeController = [(UINavigationController *)[segue destinationViewController] viewControllers][0];
+        UINavigationController *navigationController = [(UITabBarController *)[segue destinationViewController] viewControllers][0];
+        OCRBaseDetailViewController *resumeController = [navigationController viewControllers][0];
         // Check to see if we have a popover button
         if (_rootPopoverButtonItem != nil)
         {

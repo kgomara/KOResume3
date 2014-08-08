@@ -10,33 +10,37 @@
 	<string>KOResume</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>76B3B2A6-45B1-45BB-9C1C-3572E5D6648B</key>
+		<key>7AF9D398DD352529E61A6611104D40C04D6CB75E</key>
 		<string>https://github.com/kgomara/OCAEditableCollectionViewFlowLayout.git</string>
-		<key>EFDF479D-FFBE-4627-9C48-324C39FBA751</key>
+		<key>D049786119D00829BC67FDE4F5CE0871F4B18CC4</key>
+		<string>https://github.com/kgomara/OCAUtilities.git</string>
+		<key>E72AB269AF8D18291BC7CFFEABCAD0DC0B4C5414</key>
 		<string>https://github.com/kgomara/KOResume3.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>KOResume.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>76B3B2A6-45B1-45BB-9C1C-3572E5D6648B</key>
+		<key>7AF9D398DD352529E61A6611104D40C04D6CB75E</key>
 		<string>../../OCAEditableCollectionViewFlowLayout</string>
-		<key>EFDF479D-FFBE-4627-9C48-324C39FBA751</key>
+		<key>D049786119D00829BC67FDE4F5CE0871F4B18CC4</key>
+		<string>../../OCAUtilities</string>
+		<key>E72AB269AF8D18291BC7CFFEABCAD0DC0B4C5414</key>
 		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>https://github.com/kgomara/KOResume3.git</string>
 	<key>IDESourceControlProjectVersion</key>
-	<integer>110</integer>
+	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>EFDF479D-FFBE-4627-9C48-324C39FBA751</string>
+	<string>E72AB269AF8D18291BC7CFFEABCAD0DC0B4C5414</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>EFDF479D-FFBE-4627-9C48-324C39FBA751</string>
+			<string>E72AB269AF8D18291BC7CFFEABCAD0DC0B4C5414</string>
 			<key>IDESourceControlWCCName</key>
 			<string>KOResume3</string>
 		</dict>
@@ -44,9 +48,17 @@
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>76B3B2A6-45B1-45BB-9C1C-3572E5D6648B</string>
+			<string>7AF9D398DD352529E61A6611104D40C04D6CB75E</string>
 			<key>IDESourceControlWCCName</key>
 			<string>OCAEditableCollectionViewFlowLayout</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>D049786119D00829BC67FDE4F5CE0871F4B18CC4</string>
+			<key>IDESourceControlWCCName</key>
+			<string>OCAUtilities</string>
 		</dict>
 	</array>
 </dict>
