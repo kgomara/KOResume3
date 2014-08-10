@@ -972,10 +972,10 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
         for (UINavigationController *navigationController in tabBarController.childViewControllers)
         {
             // Get the topViewController
-            id<SubstitutableDetailViewController> viewController = (id)navigationController.topViewController;
+            id<SubstitutableDetailViewController> detailViewController = (id)navigationController.topViewController;
             // ...and send it the showRootPopoverButtonItem:withController message
-            [viewController showRootPopoverButtonItem: _rootPopoverButtonItem
-                                       withController: aPopoverController];
+            [detailViewController showRootPopoverButtonItem: _rootPopoverButtonItem
+                                             withController: aPopoverController];
         }
     }
     else
@@ -1023,9 +1023,9 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
         for (UINavigationController *navigationController in tabBarController.childViewControllers)
         {
             // Get the topViewController
-            id<SubstitutableDetailViewController> viewController = (id)navigationController.topViewController;
+            id<SubstitutableDetailViewController> detailViewController = (id)navigationController.topViewController;
             // ...and send it the invalidateRootPopoverButtonItem message
-            [viewController invalidateRootPopoverButtonItem: _rootPopoverButtonItem];
+            [detailViewController invalidateRootPopoverButtonItem: _rootPopoverButtonItem];
         }
     }
     else
@@ -1204,23 +1204,26 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
          In this case, there is a UITabBarController intermediary container, which contains 3 controller objects, each of
          which is embedded in a UINavigationController.
          */
-        UINavigationController *navigationController = [(UITabBarController *)[segue destinationViewController] viewControllers][0];
-        OCRBaseDetailViewController *resumeController = [navigationController viewControllers][0];
-        // Check to see if we have a popover button
-        if (_rootPopoverButtonItem != nil)
+        UITabBarController *tabBarController = (UITabBarController *)[segue destinationViewController];
+        for (UINavigationController *navigationController in tabBarController.viewControllers)
         {
-            // ...if so, have the cvrLtrController show it
-            [resumeController showRootPopoverButtonItem: _rootPopoverButtonItem
-                                         withController: _packagesPopoverController];
+            OCRBaseDetailViewController *detailViewController = [navigationController viewControllers][0];
+            // Check to see if we have a popover button
+            if (_rootPopoverButtonItem != nil)
+            {
+                // ...if so, have the detail view show it
+                [detailViewController showRootPopoverButtonItem: _rootPopoverButtonItem
+                                             withController: _packagesPopoverController];
+            }
+            [detailViewController setSelectedManagedObject: aPackage.resume];
+            [detailViewController setBackButtonTitle: NSLocalizedString(@"Packages", nil)];
+            [detailViewController setFetchedResultsController: self.fetchedResultsController];
         }
-        
+
         if (self.packagesPopoverController)
         {
             [self.packagesPopoverController dismissPopoverAnimated: YES];
         }
-        [resumeController setSelectedManagedObject: aPackage.resume];
-        [resumeController setBackButtonTitle: NSLocalizedString(@"Packages", nil)];
-        [resumeController setFetchedResultsController: self.fetchedResultsController];
     }
 }
 

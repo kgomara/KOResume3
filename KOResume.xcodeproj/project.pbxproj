@@ -59,6 +59,7 @@
 		D66D87C91991D44700644D39 /* student-32.png in Resources */ = {isa = PBXBuildFile; fileRef = D66D87C81991D44700644D39 /* student-32.png */; };
 		D66D87D01991D55900644D39 /* OCRResumeOverviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D66D87CF1991D55900644D39 /* OCRResumeOverviewViewController.m */; };
 		D66D87D11991D55900644D39 /* OCRResumeOverviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D66D87CF1991D55900644D39 /* OCRResumeOverviewViewController.m */; };
+		D67C0F16199707F20053C04C /* OCRResumeEducationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D67C0F15199707F20053C04C /* OCRResumeEducationViewController.m */; };
 		D6ABF9A8187A066100AECF28 /* libOCAEditableCollectionViewFlowLayout.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D6C7AA631870BEED00C72A52 /* libOCAEditableCollectionViewFlowLayout.a */; };
 		D6ABF9A9187A066900AECF28 /* libOCAUtilities.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D6BFCF4818748D8F0088D928 /* libOCAUtilities.a */; };
 		D6AC3D3E179A3F21001D8D75 /* OCRPackagesCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D6AC3D3D179A3F21001D8D75 /* OCRPackagesCell.m */; };
@@ -222,6 +223,8 @@
 		D66D87C81991D44700644D39 /* student-32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "student-32.png"; sourceTree = "<group>"; };
 		D66D87CE1991D55900644D39 /* OCRResumeOverviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRResumeOverviewViewController.h; path = Classes/OCRResumeOverviewViewController.h; sourceTree = "<group>"; };
 		D66D87CF1991D55900644D39 /* OCRResumeOverviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRResumeOverviewViewController.m; path = Classes/OCRResumeOverviewViewController.m; sourceTree = "<group>"; };
+		D67C0F14199707F20053C04C /* OCRResumeEducationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRResumeEducationViewController.h; path = Classes/OCRResumeEducationViewController.h; sourceTree = "<group>"; };
+		D67C0F15199707F20053C04C /* OCRResumeEducationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRResumeEducationViewController.m; path = Classes/OCRResumeEducationViewController.m; sourceTree = "<group>"; };
 		D6ABF9AA187A0DD700AECF28 /* OCRGlobalMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCRGlobalMacros.h; sourceTree = "<group>"; };
 		D6AC3D3C179A3F21001D8D75 /* OCRPackagesCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRPackagesCell.h; path = Classes/OCRPackagesCell.h; sourceTree = "<group>"; };
 		D6AC3D3D179A3F21001D8D75 /* OCRPackagesCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRPackagesCell.m; path = Classes/OCRPackagesCell.m; sourceTree = "<group>"; };
@@ -322,12 +325,16 @@
 		D61163CA19948161001A24B4 /* Resume */ = {
 			isa = PBXGroup;
 			children = (
+				D6CB27CB194D419C009E8D50 /* OCREducationTableViewCell.h */,
+				D6CB27CC194D419C009E8D50 /* OCREducationTableViewCell.m */,
 				D61163CB199481D2001A24B4 /* OCRResumeJobsViewController.h */,
 				D61163CC199481D2001A24B4 /* OCRResumeJobsViewController.m */,
 				D66D87CE1991D55900644D39 /* OCRResumeOverviewViewController.h */,
 				D66D87CF1991D55900644D39 /* OCRResumeOverviewViewController.m */,
 				D6C61B37189DF1F6003E996B /* OCRResumeViewController.h */,
 				D6C61B38189DF1F6003E996B /* OCRResumeViewController.m */,
+				D67C0F14199707F20053C04C /* OCRResumeEducationViewController.h */,
+				D67C0F15199707F20053C04C /* OCRResumeEducationViewController.m */,
 			);
 			name = Resume;
 			sourceTree = "<group>";
@@ -490,8 +497,6 @@
 				D6C619FD18FD021100D5BB5D /* OCRDateTableViewController.h */,
 				D6C619FE18FD021100D5BB5D /* OCRDateTableViewController.m */,
 				D61163C219947D5F001A24B4 /* OCRDetailViewProtocol.h */,
-				D6CB27CB194D419C009E8D50 /* OCREducationTableViewCell.h */,
-				D6CB27CC194D419C009E8D50 /* OCREducationTableViewCell.m */,
 				D6C8D2DD18F1D3E200E76376 /* OCRJobsViewController.h */,
 				D6C8D2DE18F1D3E200E76376 /* OCRJobsViewController.m */,
 				D6AC3D3C179A3F21001D8D75 /* OCRPackagesCell.h */,
@@ -760,6 +765,7 @@
 				D6C6F15918B27AD3003A8C92 /* KOResume.xcdatamodeld in Sources */,
 				D6AC3D3E179A3F21001D8D75 /* OCRPackagesCell.m in Sources */,
 				D66D87D01991D55900644D39 /* OCRResumeOverviewViewController.m in Sources */,
+				D67C0F16199707F20053C04C /* OCRResumeEducationViewController.m in Sources */,
 				D63D82DB179311350065F0A9 /* OCRPackagesViewController.m in Sources */,
 				D61163CD199481D2001A24B4 /* OCRResumeJobsViewController.m in Sources */,
 				D6B4735118F7B00F004E9D84 /* SVModalWebViewController.m in Sources */,

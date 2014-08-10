@@ -114,9 +114,9 @@
     
     // Set editing off
     self.editing = NO;
-//    
-//    // Sort the job and education tables by sequence_number
-//    [self sortTables];
+    
+    // Sort the job table by sequence_number
+    [self sortTables];
 }
 
 
@@ -419,10 +419,12 @@
     DLog();
     
     // The job array is in the order (including deletes) the user wants
-    // ...loop through the array by index, resetting the job's sequence_number attribute
+    // ...loop through the array by index, resetting the job object's sequence_number attribute
     int i = 0;
-    for (Jobs *job in _jobArray) {
-        if (job.isDeleted) {
+    for (Jobs *job in _jobArray)
+    {
+        if (job.isDeleted)
+        {
             // No need to update the sequence number of deleted objects
         }
         else
@@ -543,7 +545,7 @@
 {
     DLog();
     
-    // We have one sections in our table
+    // We have one section in our table
     return 1;
 }
 
