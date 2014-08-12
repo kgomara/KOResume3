@@ -10,8 +10,12 @@
 #import "OCRPackagesViewController.h"
 #import "OCRBaseDetailViewController.h"
 
-@interface OCRResumeOverviewViewController : OCRBaseDetailViewController
+@interface OCRResumeOverviewViewController : OCRBaseDetailViewController    <UITextFieldDelegate, UIScrollViewDelegate>
 
+/**
+ IBOutlet to the scrollview
+ */
+@property (weak, nonatomic) IBOutlet UIScrollView           *scrollView;
 /**
  IBOutlet to the name of the resume.
  */

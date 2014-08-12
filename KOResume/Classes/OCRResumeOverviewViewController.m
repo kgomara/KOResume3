@@ -140,6 +140,7 @@
     
 //    self.fetchedResultsController.delegate = self;
     
+    [self.scrollView setContentOffset:CGPointZero];
     [self configureDefaultNavBar];
     [self configureView];
     [self setFieldsEditable: NO];
