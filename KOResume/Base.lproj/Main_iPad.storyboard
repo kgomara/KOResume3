@@ -525,7 +525,7 @@
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <textField opaque="NO" clipsSubviews="YES" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="resume.city" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Xmk-1H-0O1">
+                                    <textField opaque="NO" clipsSubviews="YES" tag="2" contentMode="scaleToFill" horizontalHuggingPriority="750" horizontalCompressionResistancePriority="250" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="resume.city" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Xmk-1H-0O1">
                                         <rect key="frame" x="0.0" y="96" width="105" height="30"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="no" returnKeyType="next"/>
@@ -533,7 +533,7 @@
                                             <outlet property="delegate" destination="ngm-IE-UTk" id="ogo-4V-Wxg"/>
                                         </connections>
                                     </textField>
-                                    <textField opaque="NO" clipsSubviews="YES" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="resume.state" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="two-Ic-W1y">
+                                    <textField opaque="NO" clipsSubviews="YES" tag="3" contentMode="scaleToFill" horizontalHuggingPriority="750" horizontalCompressionResistancePriority="250" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="resume.state" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="two-Ic-W1y">
                                         <rect key="frame" x="113" y="96" width="115" height="30"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters" autocorrectionType="no" returnKeyType="next"/>
@@ -541,7 +541,7 @@
                                             <outlet property="delegate" destination="ngm-IE-UTk" id="o56-IZ-cZ4"/>
                                         </connections>
                                     </textField>
-                                    <textField opaque="NO" clipsSubviews="YES" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="resume.zip" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="yyq-I8-39Z">
+                                    <textField opaque="NO" clipsSubviews="YES" tag="4" contentMode="scaleToFill" horizontalHuggingPriority="750" horizontalCompressionResistancePriority="250" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="resume.zip" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="yyq-I8-39Z">
                                         <rect key="frame" x="236" y="96" width="101" height="30"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                         <textInputTraits key="textInputTraits" returnKeyType="next"/>
@@ -561,20 +561,9 @@
                                         <rect key="frame" x="178" y="139" width="34" height="20"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                         <nil key="highlightedColor"/>
-                                        <variation key="widthClass=compact" ambiguous="YES" misplaced="YES">
-                                            <rect key="frame" x="178" y="139" width="34" height="20"/>
-                                        </variation>
                                     </label>
-                                    <textField opaque="NO" clipsSubviews="YES" tag="6" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="resume.mobile_phone" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="1rS-rC-fTt">
-                                        <rect key="frame" x="232" y="134" width="182" height="30"/>
-                                        <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                        <textInputTraits key="textInputTraits" keyboardType="phonePad" returnKeyType="next"/>
-                                        <connections>
-                                            <outlet property="delegate" destination="ngm-IE-UTk" id="odL-U4-B2T"/>
-                                        </connections>
-                                    </textField>
                                     <textField opaque="NO" clipsSubviews="YES" tag="7" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="resume.email" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="eZE-Vp-X15">
-                                        <rect key="frame" x="0.0" y="172" width="118" height="30"/>
+                                        <rect key="frame" x="0.0" y="210" width="118" height="30"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                         <textInputTraits key="textInputTraits" keyboardType="emailAddress" returnKeyType="next"/>
                                         <connections>
@@ -582,8 +571,11 @@
                                         </connections>
                                     </textField>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" tag="8" contentMode="scaleToFill" verticalHuggingPriority="249" placeholderIntrinsicWidth="571" placeholderIntrinsicHeight="222" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CkK-dE-dge">
-                                        <rect key="frame" x="0.0" y="210" width="560" height="257"/>
+                                        <rect key="frame" x="0.0" y="248" width="560" height="150"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="150" id="wU4-1J-QRc"/>
+                                        </constraints>
                                         <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -599,17 +591,23 @@
                                             <outlet property="delegate" destination="ngm-IE-UTk" id="qFi-Jm-ymf"/>
                                         </connections>
                                     </textField>
+                                    <textField opaque="NO" clipsSubviews="YES" tag="6" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="resume.mobile_phone" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="1rS-rC-fTt">
+                                        <rect key="frame" x="0.0" y="172" width="182" height="30"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                        <textInputTraits key="textInputTraits" keyboardType="phonePad" returnKeyType="next"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="ngm-IE-UTk" id="odL-U4-B2T"/>
+                                        </connections>
+                                    </textField>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="(Mb)" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rV7-yM-Qs0">
-                                        <rect key="frame" x="418" y="139" width="33" height="20"/>
+                                        <rect key="frame" x="186" y="177" width="33" height="20"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                         <nil key="highlightedColor"/>
-                                        <variation key="widthClass=compact" ambiguous="YES" misplaced="YES">
-                                            <rect key="frame" x="186" y="177" width="33" height="20"/>
-                                        </variation>
                                     </label>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="1rS-rC-fTt" firstAttribute="baseline" secondItem="rV7-yM-Qs0" secondAttribute="baseline" id="0MU-VD-TcL"/>
+                                    <constraint firstItem="roL-cc-yNN" firstAttribute="leading" secondItem="1rS-rC-fTt" secondAttribute="leading" id="1pT-go-Phm"/>
                                     <constraint firstItem="roL-cc-yNN" firstAttribute="leading" secondItem="CkK-dE-dge" secondAttribute="leading" id="5fA-9e-ILX"/>
                                     <constraint firstItem="roL-cc-yNN" firstAttribute="leading" secondItem="J18-CA-jZK" secondAttribute="leading" id="6NS-Qr-tq2">
                                         <variation key="widthClass=compact" constant="0.0"/>
@@ -620,30 +618,27 @@
                                     <constraint firstItem="two-Ic-W1y" firstAttribute="leading" secondItem="Xmk-1H-0O1" secondAttribute="trailing" constant="8" id="B0s-HP-ZcH"/>
                                     <constraint firstItem="rV7-yM-Qs0" firstAttribute="leading" secondItem="1rS-rC-fTt" secondAttribute="trailing" constant="4" id="BdX-lr-20a"/>
                                     <constraint firstItem="LuA-1p-Uhv" firstAttribute="leading" secondItem="Jzn-sU-j13" secondAttribute="trailing" constant="5" id="CdW-Kt-RZr"/>
-                                    <constraint firstAttribute="bottom" secondItem="CkK-dE-dge" secondAttribute="bottom" constant="20" symbolic="YES" id="Cvk-Sr-q6K"/>
+                                    <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="CkK-dE-dge" secondAttribute="bottom" constant="20" symbolic="YES" id="Cvk-Sr-q6K"/>
                                     <constraint firstItem="AnB-oA-dIM" firstAttribute="top" secondItem="Xmk-1H-0O1" secondAttribute="bottom" constant="8" id="D3v-fH-f0T"/>
                                     <constraint firstItem="roL-cc-yNN" firstAttribute="baseline" secondItem="iok-d2-0Xm" secondAttribute="baseline" id="EXZ-GO-RAn"/>
                                     <constraint firstItem="roL-cc-yNN" firstAttribute="top" secondItem="J18-CA-jZK" secondAttribute="top" constant="20" id="FiA-UK-Lkk"/>
                                     <constraint firstItem="Xmk-1H-0O1" firstAttribute="top" secondItem="dZC-r7-xaL" secondAttribute="bottom" constant="8" id="IVK-Ye-eXl"/>
                                     <constraint firstAttribute="trailing" secondItem="CkK-dE-dge" secondAttribute="trailing" id="O0P-Qx-rjc"/>
-                                    <constraint firstItem="eZE-Vp-X15" firstAttribute="top" secondItem="AnB-oA-dIM" secondAttribute="bottom" constant="8" id="OL1-5X-j72"/>
                                     <constraint firstItem="yyq-I8-39Z" firstAttribute="baseline" secondItem="two-Ic-W1y" secondAttribute="baseline" id="OZg-bh-OIx"/>
                                     <constraint firstItem="Xmk-1H-0O1" firstAttribute="baseline" secondItem="two-Ic-W1y" secondAttribute="baseline" id="PN9-7n-zEX"/>
                                     <constraint firstItem="yyq-I8-39Z" firstAttribute="leading" secondItem="two-Ic-W1y" secondAttribute="trailing" constant="8" id="QLz-7f-Zly"/>
-                                    <constraint firstItem="1rS-rC-fTt" firstAttribute="top" secondItem="AnB-oA-dIM" secondAttribute="bottom" constant="8" id="ZLn-m3-tnr"/>
                                     <constraint firstItem="roL-cc-yNN" firstAttribute="baseline" secondItem="Jzn-sU-j13" secondAttribute="baseline" id="Zxu-hc-jDB"/>
                                     <constraint firstItem="CkK-dE-dge" firstAttribute="top" secondItem="eZE-Vp-X15" secondAttribute="bottom" constant="8" id="cCs-PC-VDB"/>
-                                    <constraint firstItem="1rS-rC-fTt" firstAttribute="baseline" secondItem="IJp-IY-aRT" secondAttribute="baseline" id="ez1-aj-htX"/>
                                     <constraint firstItem="IJp-IY-aRT" firstAttribute="baseline" secondItem="AnB-oA-dIM" secondAttribute="baseline" id="fBq-pk-vg0"/>
                                     <constraint firstItem="iok-d2-0Xm" firstAttribute="leading" secondItem="roL-cc-yNN" secondAttribute="trailing" constant="8" id="fae-Gk-51m"/>
                                     <constraint firstItem="Jzn-sU-j13" firstAttribute="leading" secondItem="iok-d2-0Xm" secondAttribute="trailing" constant="5" id="fcL-sP-IdP"/>
-                                    <constraint firstItem="1rS-rC-fTt" firstAttribute="leading" secondItem="IJp-IY-aRT" secondAttribute="trailing" constant="20" id="g7K-m2-VPF"/>
                                     <constraint firstItem="AnB-oA-dIM" firstAttribute="top" secondItem="two-Ic-W1y" secondAttribute="bottom" constant="8" id="hXY-sE-CKZ"/>
                                     <constraint firstItem="IJp-IY-aRT" firstAttribute="leading" secondItem="AnB-oA-dIM" secondAttribute="trailing" constant="4" id="jcp-wZ-bB8"/>
                                     <constraint firstItem="dZC-r7-xaL" firstAttribute="top" secondItem="roL-cc-yNN" secondAttribute="bottom" constant="8" id="mBi-gn-lFi"/>
                                     <constraint firstItem="roL-cc-yNN" firstAttribute="leading" secondItem="Xmk-1H-0O1" secondAttribute="leading" id="r5z-4J-8o1"/>
-                                    <constraint firstItem="eZE-Vp-X15" firstAttribute="top" secondItem="1rS-rC-fTt" secondAttribute="bottom" constant="4" id="sFL-vd-apT"/>
+                                    <constraint firstItem="eZE-Vp-X15" firstAttribute="top" secondItem="1rS-rC-fTt" secondAttribute="bottom" constant="8" id="sG6-ew-g4N"/>
                                     <constraint firstItem="roL-cc-yNN" firstAttribute="baseline" secondItem="LuA-1p-Uhv" secondAttribute="baseline" id="se7-2P-e81"/>
+                                    <constraint firstItem="1rS-rC-fTt" firstAttribute="top" secondItem="AnB-oA-dIM" secondAttribute="bottom" constant="8" id="slW-yl-h0R"/>
                                     <constraint firstItem="1rS-rC-fTt" firstAttribute="leading" secondItem="roL-cc-yNN" secondAttribute="leading" id="uck-sb-wJr"/>
                                     <constraint firstItem="roL-cc-yNN" firstAttribute="leading" secondItem="dZC-r7-xaL" secondAttribute="leading" id="xnp-9H-NWs"/>
                                 </constraints>
@@ -651,18 +646,25 @@
                                     <mask key="constraints">
                                         <exclude reference="PN9-7n-zEX"/>
                                         <exclude reference="D3v-fH-f0T"/>
-                                        <exclude reference="sFL-vd-apT"/>
-                                        <exclude reference="ZLn-m3-tnr"/>
                                         <exclude reference="uck-sb-wJr"/>
                                     </mask>
                                 </variation>
                                 <variation key="widthClass=compact">
+                                    <mask key="subviews">
+                                        <exclude reference="iok-d2-0Xm"/>
+                                        <exclude reference="Jzn-sU-j13"/>
+                                        <exclude reference="LuA-1p-Uhv"/>
+                                    </mask>
                                     <mask key="constraints">
+                                        <exclude reference="EXZ-GO-RAn"/>
+                                        <exclude reference="Zxu-hc-jDB"/>
+                                        <exclude reference="se7-2P-e81"/>
                                         <include reference="PN9-7n-zEX"/>
+                                        <exclude reference="fae-Gk-51m"/>
                                         <include reference="D3v-fH-f0T"/>
-                                        <include reference="sFL-vd-apT"/>
-                                        <include reference="ZLn-m3-tnr"/>
                                         <include reference="uck-sb-wJr"/>
+                                        <exclude reference="fcL-sP-IdP"/>
+                                        <exclude reference="CdW-Kt-RZr"/>
                                     </mask>
                                 </variation>
                             </view>
