@@ -7,13 +7,14 @@
 //
 
 #import "OCRGlobalConstants.h"
+#import "PrivateKeys.h"
 
 @implementation OCRGlobalConstants
 
 // App constants
 NSString *const kOCRDatabaseName                                            = @"KOResume";
 NSString *const kOCRDatabaseType                                            = @"sqlite";
-NSString *const kOCRUbiquityID                                              = @"<insert your key here>";
+NSString *const kOCRUbiquityID                                              = kPrivateOCRUbiquityID;
 
 
 // Notifications

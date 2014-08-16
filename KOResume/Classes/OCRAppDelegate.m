@@ -39,6 +39,9 @@
     // Set the overall tint color
     self.window.tintColor = [UIColor redColor];     // window is nil!!!!!
     
+    // Start Crittercism
+    [Crittercism enableWithAppID: kPrivateCrittercismAppID];
+    
     // Initialize the coreDataController class.
     _managedObjectContext = self.coreDataController.managedObjectContext;
     if (!_managedObjectContext)

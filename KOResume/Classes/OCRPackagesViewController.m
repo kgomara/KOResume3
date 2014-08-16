@@ -359,7 +359,7 @@ BOOL isEditModeActive;
     DLog();
     
     // Insert a new Package into the managed object context
-    Packages *nuPackage = (Packages *)[NSEntityDescription insertNewObjectForEntityForName: kOCRPackagesEntity
+    Packages *nuPackage = (Packages *)[NSEntityDescription insertNewObjectForEntityForName: @"Packages" /* kOCRPackagesEntity */
                                                                     inManagedObjectContext: [kAppDelegate managedObjectContext]];
     // Set the name of the Package (provided by the user)
     nuPackage.name                  = aPackage;
@@ -370,7 +370,7 @@ BOOL isEditModeActive;
     
     // Add a Resume for the package
     // First, insert a new Resume into the managed object context
-    Resumes *nuResume  = (Resumes *)[NSEntityDescription insertNewObjectForEntityForName: kOCRResumesEntity
+    Resumes *nuResume  = (Resumes *)[NSEntityDescription insertNewObjectForEntityForName: @"Resumes" /* kOCRResumesEntity */
                                                                   inManagedObjectContext: [kAppDelegate managedObjectContext]];
     // Set the default name of the resume
     nuResume.name                   = NSLocalizedString(@"Resume", nil);
@@ -1245,7 +1245,7 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
     
     // Create the fetch request for the entity
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    NSEntityDescription *entity  = [NSEntityDescription entityForName: kOCRPackagesEntity
+    NSEntityDescription *entity  = [NSEntityDescription entityForName: @"Packages" /* kOCRPackagesEntity */
                                                inManagedObjectContext: [kAppDelegate managedObjectContext]];
     [fetchRequest setEntity:entity];
     

@@ -496,7 +496,7 @@
     DLog();
     
     // Insert a new Education entity into the managedObjectContext
-    Education *education = (Education *)[NSEntityDescription insertNewObjectForEntityForName: kOCREducationEntity
+    Education *education = (Education *)[NSEntityDescription insertNewObjectForEntityForName: @"Education" /* kOCREducationEntity */
                                                                       inManagedObjectContext: [kAppDelegate managedObjectContext]];
     // Set the name to the value the user provided in the prompt
     education.name            = _nuEntityName;
@@ -881,29 +881,31 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
      That is, given a rectangle with fractional origin or size values, CGRectIntegral rounds the rectangle’s origin
      downward and its size upward to the nearest whole integers, such that the result contains the original rectangle.
      */
+#warning TODO use the iOS estimated size construct
+    return 160;
     
-    // Declare a test string for use in the calculations. We are only concerned about height here, so any text (that has a descender character) will work for our calculation
-    NSString *stringToSize  = @"Sample String";
-    // maxTextSize establishes bounds for the largest rect we can allow
-    CGSize maxTextSize = CGSizeMake( CGRectGetWidth(CGRectIntegral(tableView.bounds)), CGRectGetHeight(CGRectIntegral(tableView.bounds)));
-    
-    // First, determine the size required by the the name string, given the user's dynamic text size preference.
-    // ...get the bounding rect using UIFontTextStyleSubheadline
-    CGRect subHeadRect        = [stringToSize boundingRectWithSize: maxTextSize
-                                                           options: NSStringDrawingUsesLineFragmentOrigin
-                                                        attributes: @{NSFontAttributeName: [UIFont preferredFontForTextStyle: UIFontTextStyleSubheadline]}
-                                                           context: nil];
-    // ...and the bounding rect using UIFontTextStyleHeadline
-    CGRect headRect       = [stringToSize boundingRectWithSize: maxTextSize
-                                                       options: NSStringDrawingUsesLineFragmentOrigin
-                                                    attributes: @{NSFontAttributeName: [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline]}
-                                                       context: nil];
-    
-    // Return the larger of 44 or the sum of the heights plus some padding
-    CGFloat result = MAX(44.0f, CGRectGetHeight( CGRectIntegral( subHeadRect))*3 + CGRectGetHeight( CGRectIntegral( headRect)) + 120);
-    DLog(@"result=%f", result);
-    
-    return result;
+//    // Declare a test string for use in the calculations. We are only concerned about height here, so any text (that has a descender character) will work for our calculation
+//    NSString *stringToSize  = @"Sample String";
+//    // maxTextSize establishes bounds for the largest rect we can allow
+//    CGSize maxTextSize = CGSizeMake( CGRectGetWidth(CGRectIntegral(tableView.bounds)), CGRectGetHeight(CGRectIntegral(tableView.bounds)));
+//    
+//    // First, determine the size required by the the name string, given the user's dynamic text size preference.
+//    // ...get the bounding rect using UIFontTextStyleSubheadline
+//    CGRect subHeadRect        = [stringToSize boundingRectWithSize: maxTextSize
+//                                                           options: NSStringDrawingUsesLineFragmentOrigin
+//                                                        attributes: @{NSFontAttributeName: [UIFont preferredFontForTextStyle: UIFontTextStyleSubheadline]}
+//                                                           context: nil];
+//    // ...and the bounding rect using UIFontTextStyleHeadline
+//    CGRect headRect       = [stringToSize boundingRectWithSize: maxTextSize
+//                                                       options: NSStringDrawingUsesLineFragmentOrigin
+//                                                    attributes: @{NSFontAttributeName: [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline]}
+//                                                       context: nil];
+//#warning TODO - this calculation is way wrong! I think it is getting the textsize, not the textfield
+//    // Return the larger of 44 or the sum of the heights plus constraints between text fields
+//    CGFloat result = MAX(44.0f, CGRectGetHeight( CGRectIntegral( subHeadRect))*3 + CGRectGetHeight( CGRectIntegral( headRect)) + 40);
+//    DLog(@"result=%f", result);
+//    
+//    return result;
 }
 
 #pragma mark - Keyboard handlers

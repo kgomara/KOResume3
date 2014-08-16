@@ -636,7 +636,7 @@
     DLog();
     
     // Insert a new Jobs entity into the managedObjectContext
-    Accomplishments *accomplishment = (Accomplishments *)[NSEntityDescription insertNewObjectForEntityForName: kOCRAccomplishmentsEntity
+    Accomplishments *accomplishment = (Accomplishments *)[NSEntityDescription insertNewObjectForEntityForName: @"Accomplishments" /* kOCRAccomplishmentsEntity */
                                                       inManagedObjectContext: [kAppDelegate managedObjectContext]];
     
     // Set the name to the value the user provided in the prompt
