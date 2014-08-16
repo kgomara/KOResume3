@@ -954,7 +954,7 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
     DLog();
     
     // Keep references to the popover controller and the popover button, and tell the detail view controller to show the button.
-    barButtonItem.title             = @"Packages";
+    barButtonItem.title             = NSLocalizedString( @"Packages", nil);
     self.packagesPopoverController  = aPopoverController;
     self.rootPopoverButtonItem      = barButtonItem;
     

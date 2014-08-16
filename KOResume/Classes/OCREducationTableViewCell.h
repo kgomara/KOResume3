@@ -16,6 +16,8 @@
 
 @interface OCREducationTableViewCell : UITableViewCell  <UITextFieldDelegate>
 
+extern CGFloat const                    kOCREducationTableViewCellDefaultHeight;
+
 @property (weak, nonatomic) IBOutlet    UITextField *name;
 
 @property (weak, nonatomic) IBOutlet    UITextField *title;

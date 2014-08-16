@@ -10,5 +10,6 @@
 
 @implementation OCREducationTableViewCell
 
+CGFloat const kOCREducationTableViewCellDefaultHeight = 160.0f;
 
 @end

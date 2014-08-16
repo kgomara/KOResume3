@@ -101,6 +101,9 @@
     
     self.view.backgroundColor = [UIColor clearColor];
     
+    // Initialize estimate row height to support dynamic text sizing
+    self.tableView.estimatedRowHeight = kOCREducationTableViewCellDefaultHeight;
+    
     // Set the default button title
     self.backButtonTitle        = NSLocalizedString(@"Resume", nil);
     
@@ -859,31 +862,31 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
  @param indexPath       An index path that locates a row in tableView.
  @return                A nonnegative floating-point value that specifies the height (in points) that row should be.
  */
-- (CGFloat)     tableView: (UITableView *)tableView
-  heightForRowAtIndexPath: (NSIndexPath *)indexPath
-{
-    DLog();
-    
-    /*
-     To support Dynamic Text, we need to calculate the size required by the text at run time given the
-     user's preferred dynamic text size.
-     
-     We use boundingRectWithSize:options:attributes:context on a text string to determine the height required to show
-     the content as completely as possible.
-     
-     Using this information we determine the height of the title and detail labels in the cell, return their total
-     plus padding.
-     
-     We use CGRectIntegral here to ensure the rect is actually large enough. Here's the "help" for CGRectIntegral:
-     Returns the smallest rectangle that results from converting the source rectangle values to integers.
-     
-     Returns a rectangle with the smallest integer values for its origin and size that contains the source rectangle.
-     That is, given a rectangle with fractional origin or size values, CGRectIntegral rounds the rectangle’s origin
-     downward and its size upward to the nearest whole integers, such that the result contains the original rectangle.
-     */
-#warning TODO use the iOS estimated size construct
-    return 160;
-    
+//- (CGFloat)     tableView: (UITableView *)tableView
+//  heightForRowAtIndexPath: (NSIndexPath *)indexPath
+//{
+//    DLog();
+//    
+//    /*
+//     To support Dynamic Text, we need to calculate the size required by the text at run time given the
+//     user's preferred dynamic text size.
+//     
+//     We use boundingRectWithSize:options:attributes:context on a text string to determine the height required to show
+//     the content as completely as possible.
+//     
+//     Using this information we determine the height of the title and detail labels in the cell, return their total
+//     plus padding.
+//     
+//     We use CGRectIntegral here to ensure the rect is actually large enough. Here's the "help" for CGRectIntegral:
+//     Returns the smallest rectangle that results from converting the source rectangle values to integers.
+//     
+//     Returns a rectangle with the smallest integer values for its origin and size that contains the source rectangle.
+//     That is, given a rectangle with fractional origin or size values, CGRectIntegral rounds the rectangle’s origin
+//     downward and its size upward to the nearest whole integers, such that the result contains the original rectangle.
+//     */
+//#warning TODO use the iOS estimated size construct
+//    return 160;
+//    
 //    // Declare a test string for use in the calculations. We are only concerned about height here, so any text (that has a descender character) will work for our calculation
 //    NSString *stringToSize  = @"Sample String";
 //    // maxTextSize establishes bounds for the largest rect we can allow
@@ -906,7 +909,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
 //    DLog(@"result=%f", result);
 //    
 //    return result;
-}
+//}
 
 #pragma mark - Keyboard handlers
 

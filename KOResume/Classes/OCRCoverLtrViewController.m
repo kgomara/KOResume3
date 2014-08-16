@@ -55,7 +55,6 @@
     
     [super viewDidLoad];
 	
-	self.view.backgroundColor   = [UIColor clearColor];
     // Set the default button title
     self.backButtonTitle        = NSLocalizedString(@"Packages", nil);
     
@@ -64,9 +63,11 @@
     editBtn     = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemEdit
                                                                 target: self
                                                                 action: @selector(didPressEditButton)];
+    
     saveBtn     = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemSave
                                                                 target: self
                                                                 action: @selector(didPressSaveButton)];
+    
     cancelBtn   = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel
                                                                 target: self
                                                                 action: @selector(didPressCancelButton)];
@@ -99,13 +100,14 @@
     
     // Set up the navigation bar items
     [self configureDefaultNavBar];
+    
     // ...and configure the view
     [self configureView];
     
     // Register for keyboard notifications
     [[NSNotificationCenter defaultCenter] addObserver: self
-                                             selector: @selector(keyboardWillShow:)
-                                                 name: UIKeyboardWillShowNotification
+                                             selector: @selector(keyboardDidShow:)
+                                                 name: UIKeyboardDidShowNotification
                                                object: nil];
     [[NSNotificationCenter defaultCenter] addObserver: self
                                              selector: @selector(keyboardWillBeHidden:)
@@ -173,8 +175,7 @@
     DLog();
     
     // Set the buttons.
-    self.navigationItem.rightBarButtonItem = editBtn;
-    self.navigationItem.leftBarButtonItem  = backBtn;
+    self.navigationItem.rightBarButtonItems = @[editBtn];
     
     // ...by default, the user cannot edit the text, make it un-editable until the user taps the edit button
     [self.coverLtrFld setEditable:NO];
@@ -194,12 +195,13 @@
     
     /*
      The navigation bar title is set here rather configureDefaultNavBar to be consistent with this delegate
-     method in other OCRBaseDetailViewController subclasses where the title may change if he selected object
-     changes.
+     method in other OCRBaseDetailViewController subclasses. In other classes, the title may change if the 
+     selected object changes.
      */
 
     // Set the title in the navigation bar.
     self.navigationItem.title = NSLocalizedString(@"Cover Letter", nil);
+    
     // ...and load the data fields with updated data from the selected object.
     [self loadViewFromSelectedObject];
 }
@@ -221,8 +223,7 @@
     DLog();
     
     // Set up the navigation item and save button
-    self.navigationItem.leftBarButtonItem  = cancelBtn;
-    self.navigationItem.rightBarButtonItem = saveBtn;
+    self.navigationItem.rightBarButtonItems = @[saveBtn, cancelBtn];
     
     // Enable the fields for editing
     [self.coverLtrFld setEditable: YES];
@@ -230,6 +231,7 @@
     // Start an undo group...it will either be commited in didPressSaveButton or
     //    undone in didPressCancelButton
     [[[kAppDelegate managedObjectContext] undoManager] beginUndoGrouping];
+    
     // ...and bring the keyboard onscreen with the cursor in coverLtrFld
     [self.coverLtrFld becomeFirstResponder];
 }
@@ -259,6 +261,7 @@
     
     // Cleanup the undoManager
     [[[kAppDelegate managedObjectContext] undoManager] removeAllActionsWithTarget:self];
+    
     // ...and reset the UI defaults
     [self configureDefaultNavBar];
     [self resetView];
@@ -290,8 +293,10 @@
     
     // Cleanup the undoManager
     [[[kAppDelegate managedObjectContext] undoManager] removeAllActionsWithTarget: self];
+    
     // ...re-load the view with the data from the (unchanged) cover letter
     [self loadViewFromSelectedObject];
+    
     // ...and reset the UI defaults
     [self configureDefaultNavBar];
     [self resetView];
@@ -303,33 +308,30 @@
 /**
  Invoked when the keyboard is about to show.
  
- Scroll the content to ensure the active field is visible.
+ Adjust the scrollview contentInsets to ensure the content of the textView can be scrolled by the user to
+ wherever they wish to edit the text.
  
  @param aNotification   the NSNotification containing information about the keyboard.
  */
-- (void)keyboardWillShow: (NSNotification*)aNotification
+- (void)keyboardDidShow: (NSNotification*)aNotification
 {
     DLog();
     
     // Get the size of the keyboard
     NSDictionary *info = [aNotification userInfo];
-    CGSize kbSize = [info[UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    
     // ...and adjust the contentInset for its height
     UIEdgeInsets contentInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height, 0.0);
     
     self.coverLtrFld.contentInset           = contentInsets;
     self.coverLtrFld.scrollIndicatorInsets  = contentInsets;
     
-    // If active text field is hidden by keyboard, scroll it so it's visible
-    CGRect aRect = self.view.frame;
-    aRect.size.height -= kbSize.height;
-    if (!CGRectContainsPoint(aRect, self.coverLtrFld.frame.origin))
-    {
-        // calculate the contentOffset for the scroller
-        CGPoint scrollPoint = CGPointMake(0.0, self.coverLtrFld.frame.origin.y - kbSize.height);
-        [self.coverLtrFld setContentOffset: scrollPoint
-                                  animated: YES];
-    }
+    /*
+     In the case of the coverletter, the textView is the only editable object and it is not clear
+     where - or even if -- we should scroll the textView. In other view controllers we would
+     send the scrollRectToVisible to the scrollView here. For example, see OCRResumeOverviewViewController.
+     */
 }
 
 
@@ -418,6 +420,7 @@
     
     // Invoke super to fetch the object(s)
     [super reloadFetchedResults: aNote];
+    
     // ...and update the view with the new data
     [self loadViewFromSelectedObject];
 }

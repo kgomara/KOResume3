@@ -812,7 +812,7 @@
                                                 <outlet property="delegate" destination="eYe-co-7bk" id="aBd-3U-DJC"/>
                                             </connections>
                                         </textField>
-                                        <textField opaque="NO" clipsSubviews="YES" tag="103" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="City" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="qP1-g8-l8G">
+                                        <textField opaque="NO" clipsSubviews="YES" tag="103" contentMode="scaleToFill" horizontalCompressionResistancePriority="500" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="City" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="qP1-g8-l8G">
                                             <rect key="frame" x="20" y="121" width="51" height="30"/>
                                             <color key="backgroundColor" red="0.80000000000000004" green="0.80000000000000004" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
@@ -833,8 +833,12 @@
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="Dvq-IV-ttv" firstAttribute="top" secondItem="f0K-cp-foM" secondAttribute="bottom" constant="8" symbolic="YES" id="2RD-9T-ddg"/>
+                                        <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="mv2-Eo-0GW" secondAttribute="trailing" id="56Y-Ku-1Bv"/>
+                                        <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="A0J-KN-swN" secondAttribute="trailing" id="7sS-nw-r9S"/>
+                                        <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="Dvq-IV-ttv" secondAttribute="trailing" id="IbI-gI-3w6"/>
                                         <constraint firstItem="qP1-g8-l8G" firstAttribute="leading" secondItem="Dvq-IV-ttv" secondAttribute="leading" id="KEN-cA-Ple"/>
                                         <constraint firstItem="A0J-KN-swN" firstAttribute="leading" secondItem="qP1-g8-l8G" secondAttribute="trailing" constant="8" symbolic="YES" id="WkH-KF-bj7"/>
+                                        <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="f0K-cp-foM" secondAttribute="trailing" id="bj1-SZ-7t8"/>
                                         <constraint firstItem="qP1-g8-l8G" firstAttribute="centerY" secondItem="A0J-KN-swN" secondAttribute="centerY" id="j5b-Sj-93y"/>
                                         <constraint firstItem="f0K-cp-foM" firstAttribute="top" secondItem="mv2-Eo-0GW" secondAttribute="bottom" constant="8" symbolic="YES" id="mRE-4h-uJK"/>
                                         <constraint firstItem="mv2-Eo-0GW" firstAttribute="top" secondItem="vuU-YA-Kd3" secondAttribute="top" constant="8" id="nMb-8v-Phw"/>
@@ -877,13 +881,13 @@
                         <viewControllerLayoutGuide type="bottom" id="kwy-S2-8W9"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="nzg-EE-imo">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="536"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Lfy-sr-PAy">
+                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Lfy-sr-PAy">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <subviews>
-                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Mnf-31-eRP">
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Mnf-31-eRP">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                         <color key="backgroundColor" red="0.80000000000000004" green="0.80000000000000004" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                                         <inset key="scrollIndicatorInsets" minX="3" minY="3" maxX="3" maxY="3"/>
@@ -910,6 +914,7 @@
                             <constraint firstItem="Lfy-sr-PAy" firstAttribute="leading" secondItem="nzg-EE-imo" secondAttribute="leading" id="uCq-jG-f9J"/>
                         </constraints>
                     </view>
+                    <extendedEdge key="edgesForExtendedLayout"/>
                     <navigationItem key="navigationItem" id="g10-EI-NNn"/>
                     <connections>
                         <outlet property="coverLtrFld" destination="Mnf-31-eRP" id="p6o-ru-YR8"/>
