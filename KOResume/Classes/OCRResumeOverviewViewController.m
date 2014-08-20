@@ -9,6 +9,7 @@
 #import "OCRResumeOverviewViewController.h"
 #import "OCRAppDelegate.h"
 #import "Resumes.h"
+#import "Jobs.h"
 
 #define k_OKButtonIndex     1
 
@@ -39,7 +40,17 @@
      Reference to the date formatter object.
      */
     NSDateFormatter     *dateFormatter;
+    
+    /**
+     Reference to the active UITextField
+     */
+    UITextField         *activeField;
 }
+
+/**
+ Array used to keep the Resume's job objects sorted by sequence_number.
+ */
+@property (nonatomic, strong)   NSMutableArray      *jobArray;
 
 /**
  Convenience reference to the managed object instance we are managing.
@@ -75,10 +86,38 @@
     
     [super viewDidLoad];
     
+    /*
+     From http://spin.atomicobject.com/2014/03/05/uiscrollview-autolayout-ios/
+     
+     I feel this is a work-around to a poor implementation of autolayout with scrollview - perhaps Apple
+     will come up with a better Storyboard/IB paradigm in a later Beta of Xcode 6.
+     
+     Bascially, the above post points out that the "content view" (contained in our scrollView) needs to
+     be pinned to the scrollView's superview - which cannot be done in IB. 
+     
+     The constant 16 is another work-around, as the UIScrollview really, really wants to have some kind 
+     of inset.
+     */
+    NSLayoutConstraint *leftConstraint = [NSLayoutConstraint constraintWithItem:self.contentView
+                                                                      attribute:NSLayoutAttributeLeading
+                                                                      relatedBy:NSLayoutRelationEqual
+                                                                         toItem:self.view
+                                                                      attribute:NSLayoutAttributeLeading
+                                                                     multiplier:1.0
+                                                                       constant:0];
+    [self.view addConstraint:leftConstraint];
+    
+    NSLayoutConstraint *rightConstraint = [NSLayoutConstraint constraintWithItem:self.contentView
+                                                                       attribute:NSLayoutAttributeTrailing
+                                                                       relatedBy:NSLayoutRelationEqual
+                                                                          toItem:self.view
+                                                                       attribute:NSLayoutAttributeTrailing
+                                                                      multiplier:1.0
+                                                                        constant:0];
+    [self.view addConstraint:rightConstraint];
+    
     // For convenience, make a type-correct reference to the Resume we're working on
     self.selectedResume = (Resumes *)self.selectedManagedObject;
-    
-    self.view.backgroundColor = [UIColor clearColor];
     
     // Set the default button title
     self.backButtonTitle        = NSLocalizedString(@"Resume", nil);
@@ -88,9 +127,11 @@
     editBtn     = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemEdit
                                                                 target: self
                                                                 action: @selector(didPressEditButton)];
+    
     saveBtn     = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemSave
                                                                 target: self
                                                                 action: @selector(didPressSaveButton)];
+    
     cancelBtn   = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel
                                                                 target: self
                                                                 action: @selector(didPressCancelButton)];
@@ -109,7 +150,9 @@
     
     // Set editing off
     self.editing = NO;
-    [self setUIWithEditing: NO];
+    
+    // Sort the job table by sequence_number
+    [self sortTables];
 }
 
 
@@ -143,17 +186,19 @@
     [self.scrollView setContentOffset:CGPointZero];
     [self configureDefaultNavBar];
     [self configureView];
-    [self setFieldsEditable: NO];
+    [self setFieldsEditable: self.editing];
     
     // Register for keyboard notifications
     [[NSNotificationCenter defaultCenter] addObserver: self
                                              selector: @selector(keyboardWillShow:)
                                                  name: UIKeyboardWillShowNotification
                                                object: nil];
+    
     [[NSNotificationCenter defaultCenter] addObserver: self
                                              selector: @selector(keyboardWillBeHidden:)
                                                  name: UIKeyboardWillHideNotification
                                                object: nil];
+    
     // ...add an observer for Dynamic Text size changes
     [[NSNotificationCenter defaultCenter] addObserver: self
                                              selector: @selector(userTextSizeDidChange:)
@@ -162,6 +207,31 @@
     /*
      This class inherits viewWillDisappear from the base class, which calls removeObserver
      */
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    DLog(@"scrollview=%@", self.scrollView.debugDescription);
+    DLog(@"  contentView=%@", self.contentView.debugDescription);
+    DLog(@"  resumeSummary=%@", self.resumeSummary);
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Sort the job and education arrays into sequence_number order.
+ */
+- (void)sortTables
+{
+    DLog();
+    
+    // Sort jobs in the order they should appear in the table
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey: kOCRSequenceNumberAttributeName
+                                                                   ascending: YES];
+    NSArray *sortDescriptors    = @[sortDescriptor];
+    self.jobArray               = [NSMutableArray arrayWithArray: [_selectedResume.job sortedArrayUsingDescriptors: sortDescriptors]];
 }
 
 
@@ -174,32 +244,27 @@
     DLog();
     
     [_resumeName setText: _selectedResume.name
-           orPlaceHolder: NSLocalizedString(@"Enter resume name", nil)];
+           orPlaceHolder: NSLocalizedString(@"Resume name", nil)];
     
-    // Check to see if we are iPad - only the iPad has current job information
-#warning TODO update the storyboard accordingly (see if we can 'remove' the elements in compact size, and check for presence/absence)
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
+    // The jobsArray is always in sequence_number order
+    // Check to see if there is at least 1 Job...
+    if ([_jobArray count] > 0)
     {
-        // The jobsArray is always in sequence_number order
-        // Check to see if there is at least 1 Job...
-//        if ([_jobArray count] > 0)
-//        {
-//            // ...if so, get the first one,
-//            Jobs *currentJob        = _jobArray[0];
-//            // ...use it to populate the current job information in the summaryView,
-//            _currentJobTitle.text   = currentJob.title;
-//            _currentJobName.text    = currentJob.name;
-//            // ...and make sure the "at" label is visible
-//            _atLabel.hidden         = NO;
-//        }
-//        else
-        {
-            // If the are no jobs, clear the current job fields
-            _currentJobTitle.text   = @"";
-            _currentJobName.text    = @"";
-            // ...and hide the "at" label
-            _atLabel.hidden         = YES;
-        }
+        // ...if so, get the first one,
+        Jobs *currentJob        = _jobArray[0];
+        // ...use it to populate the current job information in the summaryView,
+        _currentJobTitle.text   = currentJob.title;
+        _currentJobName.text    = currentJob.name;
+        // ...and make sure the "at" label is visible
+        _atLabel.hidden         = NO;
+    }
+    else
+    {
+        // If the are no jobs, clear the current job fields
+        _currentJobTitle.text   = @"";
+        _currentJobName.text    = @"";
+        // ...and hide the "at" label
+        _atLabel.hidden         = YES;
     }
     
     /*
@@ -210,19 +275,19 @@
      */
     // For each of the tableHeaderView's text fields, set either it's text or placeholder property
     [_resumeStreet1 setText: _selectedResume.street1
-              orPlaceHolder: NSLocalizedString(@"Enter street1 address", nil)];
+              orPlaceHolder: NSLocalizedString(@"Street address", nil)];
     [_resumeCity setText: _selectedResume.city
-           orPlaceHolder: NSLocalizedString(@"Enter city", nil)];
+           orPlaceHolder: NSLocalizedString(@"City", nil)];
     [_resumeState setText: _selectedResume.state
-            orPlaceHolder: NSLocalizedString(@"Enter State", nil)];
+            orPlaceHolder: NSLocalizedString(@"ST", nil)];
     [_resumePostalCode setText: _selectedResume.postal_code
-                 orPlaceHolder: NSLocalizedString(@"Enter zip code", nil)];
+                 orPlaceHolder: NSLocalizedString(@"Zip code", nil)];
     [_resumeHomePhone setText: _selectedResume.home_phone
-                orPlaceHolder: NSLocalizedString(@"Enter home phone", nil)];
+                orPlaceHolder: NSLocalizedString(@"Home phone", nil)];
     [_resumeMobilePhone setText: _selectedResume.mobile_phone
-                  orPlaceHolder: NSLocalizedString(@"Enter mobile phone", nil)];
+                  orPlaceHolder: NSLocalizedString(@"Mobile phone", nil)];
     [_resumeEmail setText: _selectedResume.email
-            orPlaceHolder: NSLocalizedString(@"Enter email address", nil)];
+            orPlaceHolder: NSLocalizedString(@"Email address", nil)];
     
     /*
      resumeSummary is a textView, and always has width and height, so the autolayout concern mentioned
@@ -260,8 +325,7 @@
     [_resumeEmail       setEnabled: editable];
     [_resumeSummary     setEditable: editable];     // resumeSummary is a UITextView
     
-    // Determine the background color for the fields based on the editable param
-    //    UIColor *backgroundColor = editable? self.view.tintColor /* [UIColor whiteColor] */ : [UIColor clearColor];
+    // Set the background color for the fields based on the editable param
     UIColor *backgroundColor = editable? [UIColor colorWithRed:1 green:0 blue:0 alpha:0.2f] /* [UIColor whiteColor] */ : [UIColor clearColor];
     
     // ...and set the background color
@@ -289,15 +353,7 @@
     self.navigationItem.title = NSLocalizedString(@"Resume", nil);
     
     // Set up the navigation items and save/cancel buttons
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
-    {
-        self.navigationItem.rightBarButtonItems = @[editBtn];
-    }
-    else
-    {
-        self.navigationItem.leftBarButtonItem  = backBtn;
-        self.navigationItem.rightBarButtonItem = editBtn;
-    }
+    self.navigationItem.rightBarButtonItems = @[editBtn];
 }
 
 
@@ -338,14 +394,11 @@
      apply the new content size because UIFont instances are immutable.
      */
     _resumeName.Font        = [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline];
-#warning TODO refactor to check for presence of labels...
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
-    {
         // These UI elements only exist on iPad
         _currentJobTitle.font   = [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline];
         _atLabel.font           = [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline];
         _currentJobName.font    = [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline];
-    }
+
     _resumeStreet1.font     = [UIFont preferredFontForTextStyle: UIFontTextStyleBody];
     _resumeCity.font        = [UIFont preferredFontForTextStyle: UIFontTextStyleBody];
     _resumeState.font       = [UIFont preferredFontForTextStyle: UIFontTextStyleBody];
@@ -382,11 +435,14 @@
     DLog();
     
     // Turn on editing in the UI
-    [self setUIWithEditing: YES];
+    [self setUIForEditing: YES];
     
     // Start an undo group...it will either be commited in didPressSaveButton or
     //    undone in didPressCancelButton
     [[[kAppDelegate managedObjectContext] undoManager] beginUndoGrouping];
+    
+    // ...and bring the keyboard onscreen with the cursor in resume name
+    [_resumeName becomeFirstResponder];
 }
 
 
@@ -416,12 +472,15 @@
     
     // ...end the undo group
     [[[kAppDelegate managedObjectContext] undoManager] endUndoGrouping];
+
+    // ...commit the changes
     [kAppDelegate saveContextAndWait: [kAppDelegate managedObjectContext]];
     
     // Cleanup the undoManager
     [[[kAppDelegate managedObjectContext] undoManager] removeAllActionsWithTarget: self];
+    
     // ...and turn off editing in the UI
-    [self setUIWithEditing: NO];
+    [self setUIForEditing: NO];
     [self resetView];
 }
 
@@ -453,8 +512,11 @@
     // Cleanup the undoManager
     [[[kAppDelegate managedObjectContext] undoManager] removeAllActionsWithTarget: self];
     
+    // ...re-load the view with the data from the (unchanged) resume
+    [self loadViewFromSelectedObject];
+    
     // Turn off editing in the UI
-    [self setUIWithEditing: NO];
+    [self setUIForEditing: NO];
     [self resetView];
 }
 
@@ -467,7 +529,7 @@
  
  @param isEditingMode   YES if we are going into edit mode, NO otherwise.
  */
-- (void)setUIWithEditing: (BOOL)isEditingMode
+- (void)setUIForEditing: (BOOL)isEditingMode
 {
     DLog();
     
@@ -480,16 +542,7 @@
     if (isEditingMode)
     {
         // Set up the navigation items and save/cancel buttons
-#warning TODO refactor to use size classes
-        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
-        {
-            self.navigationItem.rightBarButtonItems = @[saveBtn, cancelBtn];
-        }
-        else
-        {
-            self.navigationItem.leftBarButtonItem  = cancelBtn;
-            self.navigationItem.rightBarButtonItem = saveBtn;
-        }
+        self.navigationItem.rightBarButtonItems = @[saveBtn, cancelBtn];
     }
     else
     {
@@ -512,26 +565,25 @@
 - (void)keyboardWillShow: (NSNotification*)aNotification
 {
     DLog();
-#warning TODO refactor
     
     // Get the size of the keyboard
     NSDictionary *info = [aNotification userInfo];
     CGSize kbSize = [info[UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-    // ...and adjust the contentInset for its height
-    //    UIEdgeInsets contentInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height, 0.0);
     
-    //    self.coverLtrFld.contentInset           = contentInsets;
-    //    self.coverLtrFld.scrollIndicatorInsets  = contentInsets;
+    // ...and adjust the contentInset for its height
+    UIEdgeInsets contentInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height, 0.0);
+    
+    self.scrollView.contentInset            = contentInsets;
+    self.scrollView.scrollIndicatorInsets   = contentInsets;
     
     // If active text field is hidden by keyboard, scroll it so it's visible
-    CGRect aRect = self.view.frame;
-    aRect.size.height -= kbSize.height;
-    //    if (!CGRectContainsPoint(aRect, self.coverLtrFld.frame.origin)) {
-    //        // calculate the contentOffset for the scroller
-    //        CGPoint scrollPoint = CGPointMake(0.0, self.coverLtrFld.frame.origin.y - kbSize.height);
-    //        [self.coverLtrFld setContentOffset: scrollPoint
-    //                                  animated: YES];
-    //    }
+    CGRect aRect        = self.view.frame;
+    aRect.size.height  -= kbSize.height;
+    if (!CGRectContainsPoint(aRect, activeField.frame.origin)) {
+        // calculate the contentOffset for the scroller
+        [self.scrollView scrollRectToVisible:activeField.frame
+                                    animated:YES];
+    }
 }
 
 
@@ -546,12 +598,11 @@
 - (void)keyboardWillBeHidden: (NSNotification*)aNotification
 {
     DLog();
-#warning TODO refactor
     
-    //    UIEdgeInsets contentInsets = UIEdgeInsetsZero;
-    
-    //    self.coverLtrFld.contentInset          = contentInsets;
-    //    self.coverLtrFld.scrollIndicatorInsets = contentInsets;
+    UIEdgeInsets contentInsets = UIEdgeInsetsZero;
+
+    self.scrollView.contentInset          = contentInsets;
+    self.scrollView.scrollIndicatorInsets = contentInsets;
 }
 
 #pragma mark - UITextView delegate methods
@@ -579,6 +630,27 @@
 }
 
 
+/**
+ Tells the delegate that editing began for the specified text field.
+ 
+ This method notifies the delegate that the specified text field just became the first responder. You can use 
+ this method to update your delegate’s state information. For example, you might use this method to show overlay 
+ views that should be visible while editing.
+ 
+ Implementation of this method by the delegate is optional.
+ 
+ In our case, we set the activeField property which is used in in the calculation to scroll fields so they are
+ visible when the keyboard is on-screen.
+
+ @param textField       The text field for which an editing session began.
+
+ */
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    activeField = textField;
+}
+
+
 //----------------------------------------------------------------------------------------------------------
 /**
  Tells the delegate that editing of the specified text view has ended.
@@ -592,6 +664,8 @@
 - (void)textViewDidEndEditing: (UITextView *)textView
 {
     DLog();
+    
+    activeField = nil;
 }
 
 

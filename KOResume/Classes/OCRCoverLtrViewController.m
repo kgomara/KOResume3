@@ -34,6 +34,11 @@
     UIBarButtonItem     *cancelBtn;
 }
 
+/**
+ A boolean flag to indicate whether the user is editing information or simply viewing.
+ */
+@property (nonatomic, assign, getter=isEditing) BOOL editing;
+
 @end
 
 @implementation OCRCoverLtrViewController
@@ -71,6 +76,10 @@
     cancelBtn   = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel
                                                                 target: self
                                                                 action: @selector(didPressCancelButton)];
+    
+    // Set editing off
+    self.editing = NO;
+    [self setUIForEditing: NO];
 }
 
 
@@ -109,6 +118,7 @@
                                              selector: @selector(keyboardDidShow:)
                                                  name: UIKeyboardDidShowNotification
                                                object: nil];
+    
     [[NSNotificationCenter defaultCenter] addObserver: self
                                              selector: @selector(keyboardWillBeHidden:)
                                                  name: UIKeyboardWillHideNotification
@@ -157,12 +167,38 @@
     // Load the cover letter into the view
     if ([(Packages *)self.selectedManagedObject cover_ltr])
     {
-        self.coverLtrFld.text	= [(Packages *)self.selectedManagedObject cover_ltr];
+        _coverLtrFld.text	= [(Packages *)self.selectedManagedObject cover_ltr];
     }
     else
     {
-        self.coverLtrFld.text	= @"";
+        _coverLtrFld.text	= @"";
     }
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Enables or disables all the UI text fields for editing.
+ 
+ As a resume app, a major Use Case is the user sharing his/her experience by passing the iOS device around.
+ To avoid accidently changing information, the app defaults to non-editable and there is an explicit Edit
+ button when the user wants to change information. This method sets the enabled state as appropriate and also
+ changes the background color to make "edit mode" more visually distinct.
+ 
+ @param editable    A BOOL that determines whether the fields should be enabled for editing - or not.
+ */
+- (void)setFieldsEditable: (BOOL)editable
+{
+    DLog();
+    
+    // Set all the text fields (and the text view as well) enable property
+    [_coverLtrFld        setEditable: editable];
+    
+    // Set the background color for the text view on the editable param
+    UIColor *backgroundColor = editable? [UIColor colorWithRed:1 green:0 blue:0 alpha:0.2f] /* [UIColor whiteColor] */ : [UIColor clearColor];
+    
+    // ...and set the background color
+    [_coverLtrFld        setBackgroundColor: backgroundColor];
 }
 
 
@@ -222,18 +258,15 @@
 {
     DLog();
     
-    // Set up the navigation item and save button
-    self.navigationItem.rightBarButtonItems = @[saveBtn, cancelBtn];
-    
-    // Enable the fields for editing
-    [self.coverLtrFld setEditable: YES];
+    // Turn on editing in the UI
+    [self setUIForEditing: YES];
     
     // Start an undo group...it will either be commited in didPressSaveButton or
     //    undone in didPressCancelButton
     [[[kAppDelegate managedObjectContext] undoManager] beginUndoGrouping];
     
     // ...and bring the keyboard onscreen with the cursor in coverLtrFld
-    [self.coverLtrFld becomeFirstResponder];
+    [_coverLtrFld becomeFirstResponder];
 }
 
 
@@ -253,7 +286,7 @@
     // Save the changes from the textView into the selected cover letter
     [(Packages *)self.selectedManagedObject setCover_ltr: self.coverLtrFld.text];
     
-    // We've complete editing, "close" the undo group
+    // ...end the undo group
     [[[kAppDelegate managedObjectContext] undoManager] endUndoGrouping];
     
     // ...commit the changes
@@ -263,7 +296,7 @@
     [[[kAppDelegate managedObjectContext] undoManager] removeAllActionsWithTarget:self];
     
     // ...and reset the UI defaults
-    [self configureDefaultNavBar];
+    [self setUIForEditing: NO];
     [self resetView];
 }
 
@@ -298,8 +331,39 @@
     [self loadViewFromSelectedObject];
     
     // ...and reset the UI defaults
-    [self configureDefaultNavBar];
+    [self setUIForEditing: NO];
     [self resetView];
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Set the UI for for editing enabled or disabled.
+ 
+ Called when the user presses the Edit, Save, or Cancel buttons.
+ 
+ @param isEditingMode   YES if we are going into edit mode, NO otherwise.
+ */
+- (void)setUIForEditing: (BOOL)isEditingMode
+{
+    DLog();
+    
+    // Update editing flag
+    self.editing = isEditingMode;
+    
+    // ...enable/disable resume fields
+    [self setFieldsEditable: isEditingMode];
+    
+    if (isEditingMode)
+    {
+        // Set up the navigation items and save/cancel buttons
+        self.navigationItem.rightBarButtonItems = @[saveBtn, cancelBtn];
+    }
+    else
+    {
+        // Reset the nav bar defaults
+        [self configureDefaultNavBar];
+    }
 }
 
 #pragma mark - Keyboard handlers

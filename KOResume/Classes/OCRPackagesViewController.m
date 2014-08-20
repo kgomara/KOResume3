@@ -214,10 +214,10 @@ BOOL isEditModeActive;
                                                object: nil];
     
     // Loop through all the packages writing their debugDescription to the log
-    for (Packages *aPackage in [self.fetchedResultsController fetchedObjects])
-    {
-        DLog(@"%@", [aPackage debugDescription]);
-    }
+//    for (Packages *aPackage in [self.fetchedResultsController fetchedObjects])
+//    {
+//        DLog(@"%@", [aPackage debugDescription]);
+//    }
     
     // Reload the fetched results
     [self reloadFetchedResults: nil];
@@ -964,7 +964,6 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
      */
     // Let's guess we are doing a resume segue, in which case we have a UITabBarController
     UITabBarController *tabBarController = (svc.viewControllers)[1];
-    DLog(@"vc=%@, items=%@", tabBarController, tabBarController.childViewControllers );
     // Check to see if we have a UITabBarController
     if ([tabBarController isMemberOfClass:[UITabBarController class]])
     {
@@ -1015,7 +1014,6 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
      */
     // Let's guess we are doing a resume segue, in which case we have a UITabBarController
     UITabBarController *tabBarController = (svc.viewControllers)[1];
-    DLog(@"vc=%@, items=%@", tabBarController, tabBarController.childViewControllers );
     // Check to see if we have a UITabBarController
     if ([tabBarController isMemberOfClass:[UITabBarController class]])
     {

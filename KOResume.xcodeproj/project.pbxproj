@@ -554,6 +554,7 @@
 				D63D82B5179311350065F0A9 /* Sources */,
 				D63D82B6179311350065F0A9 /* Frameworks */,
 				D63D82B7179311350065F0A9 /* Resources */,
+				D628FF9719A1AAB400238F1E /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -707,6 +708,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		D628FF9719A1AAB400238F1E /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "APP_ID=\"53ecd54583fb796006000007\"\nAPI_KEY=\"fCEL0nfW7kMazSbWkqgaw7dMXpLU5mq4\"\nsource \"${SRCROOT}\"/CrittercismSDK/dsym_upload.sh";
+		};
 		D6988A3418839DC200DEC402 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -898,7 +912,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				COPY_PHASE_STRIP = NO;
+				COPY_PHASE_STRIP = YES;
 				FRAMEWORK_SEARCH_PATHS = "\"/Applications/Spark Inspector.app/Contents/Resources/Frameworks\"";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;

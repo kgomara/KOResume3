@@ -92,6 +92,13 @@
  */
 @property (weak, nonatomic) IBOutlet UITextView             *resumeSummary;
 
+/**
+ IBOutlet to the contentView containing all the UI elements.
+ */
+@property (weak, nonatomic) IBOutlet UIView                 *contentView;
 
-
+/**
+ IBOutlet to the bottom constraint of the contentView.
+ */
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint     *contentViewBottomConstraint;
 @end
