@@ -213,7 +213,7 @@ BOOL isEditModeActive;
                                                  name: kOCRApplicationDidMergeChangesFrom_iCloudNotification
                                                object: nil];
     
-    // Loop through all the packages writing their debugDescription to the log
+    // Loop through all the packages writing their debugDescription to the log - useful when debugging
 //    for (Packages *aPackage in [self.fetchedResultsController fetchedObjects])
 //    {
 //        DLog(@"%@", [aPackage debugDescription]);
@@ -638,6 +638,7 @@ BOOL isEditModeActive;
                   layout: (UICollectionViewLayout*)collectionViewLayout
   sizeForItemAtIndexPath: (NSIndexPath *)indexPath
 {
+#warning TODO - can we replace this with auto-resizing cells?
     CGSize result;
 
     // Get the Package represented by the cell at indexPath
@@ -727,13 +728,12 @@ BOOL isEditModeActive;
     // Unset the flag indicating we are in edit mode
     isEditModeActive = NO;
 
-    NSArray *packages = [self.fetchedResultsController fetchedObjects];
-    DLog(@"packages=%@", packages);
-
     // Resequence the Packages in case the order was changed in the UI
     [self resequencePackages];
+    
     // Save the context
-    [kAppDelegate saveContext: _managedObjectContext];
+    [kAppDelegate saveContext: [kAppDelegate managedObjectContext]];
+    [self reloadFetchedResults:nil];
     [self.collectionView reloadData];
 }
 
@@ -1052,41 +1052,40 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
     // Get the array of packages as they are after the add, move, or delete
     NSArray *packages = [self.fetchedResultsController fetchedObjects];
     
-    int i = 1;
-    for (Packages *package in packages)
-    {
-        if (package.isDeleted)
-        {
-            // skip
-        }
-        else
-        {
-            [package setSequence_numberValue:i++];
-        }
-    }
-    DLog(@"packages=%@", packages);
-    
-//    // Get the number of sections in order to construct an indexPath
-//    NSInteger sectionCount = [self.collectionView numberOfSections];
-//    
-//    // Start our sequence numbers at 1
 //    int i = 1;
-//    for (NSInteger section = 0; section < sectionCount; section++)
+//    for (Packages *package in packages)
 //    {
-//        NSInteger itemCount = [self.collectionView numberOfItemsInSection: section];
-//        for (NSInteger item = 0; item < itemCount; item++)
+//        if (package.isDeleted)
 //        {
-//            // Construct an NSIndexPath given the section and row
-//            NSIndexPath *indexPath          = [NSIndexPath indexPathForItem: item
-//                                                                  inSection: section];
-//            // ...and get the cooresponding cell from the collection view
-//            OCRPackagesCell *packagesCell   = (OCRPackagesCell *)[self.collectionView cellForItemAtIndexPath: indexPath];
-//#warning TODO fix...
-//            Packages *aPackage = packages[packagesCell.tag];    // TODO - backwards - we want to iterate this array?
-//            [aPackage setSequence_number: @(i++)];       // TODO - sequence number does not seem to stick
-//            DLog(@"%@", [aPackage debugDescription]);
+//            // skip
+//        }
+//        else
+//        {
+//            [package setSequence_numberValue:i++];
 //        }
 //    }
+//    DLog(@"packages=%@", packages);
+    
+    // Get the number of sections in order to construct an indexPath
+    NSInteger sectionCount = [self.collectionView numberOfSections];
+    
+    // Start our sequence numbers at 1
+    int i = 1;
+    for (NSInteger section = 0; section < sectionCount; section++)
+    {
+        NSInteger itemCount = [self.collectionView numberOfItemsInSection: section];
+        for (NSInteger item = 0; item < itemCount; item++)
+        {
+            // Construct an NSIndexPath given the section and row
+            NSIndexPath *indexPath          = [NSIndexPath indexPathForItem: item
+                                                                  inSection: section];
+            // ...and get the cooresponding cell from the collection view
+            OCRPackagesCell *packagesCell   = (OCRPackagesCell *)[self.collectionView cellForItemAtIndexPath: indexPath];
+            Packages *aPackage = packages[packagesCell.tag];    // TODO - backwards - we want to iterate this array?
+            [aPackage setSequence_number: @(i++)];       // TODO - sequence number does not seem to stick
+            DLog(@"seq=%d, name=%@", [aPackage sequence_numberValue], [aPackage name]);
+        }
+    }
 }
 
 
@@ -1115,14 +1114,9 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
     // Now re-insert it at the destination.
     [packages insertObject: movedPackage
                    atIndex: newIndexPath.row];
-    
-    // All of the objects are now in their correct order. Update each
-    // object's sequence_number field by iterating through the array.
-    int i = 0;
-    for (Packages *aPackage in packages)
-    {
-        [aPackage setSequence_numberValue: i++];
-    }
+//    
+//    // All of the objects are now in their correct order. Resequence them.
+//    [self resequencePackages];
 }
 
 
@@ -1269,7 +1263,8 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
     
     // ...and start fetching results
 	NSError *error = nil;
-	if (![self.fetchedResultsController performFetch:&error]) {
+	if (![self.fetchedResultsController performFetch:&error])
+    {
 	     /*
           This is a case where something serious has gone wrong. Let the user know and try to give them some options that might actually help.
           I'm providing my direct contact information in the hope I can help the user and avoid a bad review.
@@ -1295,7 +1290,7 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
 - (void)reloadFetchedResults: (NSNotification*)note
 {
     DLog();
-    
+
     /*
      Because the app delegate now loads the NSPersistentStore into the NSPersistentStoreCoordinator asynchronously
      the NSManagedObjectContext is set up before any persistent stores are registered we need to fetch again
@@ -1304,7 +1299,8 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
     
     NSError *error = nil;
     
-    if (![[self fetchedResultsController] performFetch: &error]) {
+    if (![[self fetchedResultsController] performFetch: &error])
+    {
         ELog(error, @"Fetch failed!");
         NSString* msg = NSLocalizedString( @"Failed to reload data after syncing with iCloud.", nil);
         [OCAUtilities showErrorWithMessage: msg];
@@ -1333,7 +1329,8 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
     
     NSMutableDictionary *change = [NSMutableDictionary new];
     
-    switch(type) {
+    switch(type)
+    {
         case NSFetchedResultsChangeInsert:
             change[@(type)] = @[@(sectionIndex)];
             break;
@@ -1388,7 +1385,8 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
     DLog();
     
     NSMutableDictionary *change = [NSMutableDictionary new];
-    switch(type) {
+    switch(type)
+    {
         case NSFetchedResultsChangeInsert:
             change[@(type)] = newIndexPath;
             break;
@@ -1432,7 +1430,8 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
      sake of completeness.
      */
     // Check to see if there are section changes
-    if ([_sectionChanges count] > 0) {
+    if ([_sectionChanges count] > 0)
+    {
         // ...yes, we have changes to make
         [self.collectionView performBatchUpdates: ^{
             /*
@@ -1477,19 +1476,22 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
      objectChanges is an array of NSDictionary objects used to batch changes to objects in the collection view
      */
     // Check to see if there are object changes -- but sectionChanges, if any, have all been applied
-    if ([_objectChanges count] > 0 && [_sectionChanges count] == 0) {
+    if ([_objectChanges count] > 0 && [_sectionChanges count] == 0)
+    {
         // ...yes, we have changes to make
         [self.collectionView performBatchUpdates: ^{
             /*
              see the performBatchUpdates comment above
              */
-            for (NSDictionary *change in _objectChanges) {
+            for (NSDictionary *change in _objectChanges)
+            {
                 // For each change dictionary, iterate through the changes
                 [change enumerateKeysAndObjectsUsingBlock: ^(NSNumber *key, id obj, BOOL *stop) {
                     // ...get the type
                     NSFetchedResultsChangeType type = [key unsignedIntegerValue];
                     // ...and perform the insert, delete, update, or move operation on the collection view
-                    switch (type) {
+                    switch (type)
+                    {
                         case NSFetchedResultsChangeInsert:
                             [self.collectionView insertItemsAtIndexPaths: @[obj]];
                             break;
