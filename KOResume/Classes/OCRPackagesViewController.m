@@ -1305,6 +1305,11 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
         NSString* msg = NSLocalizedString( @"Failed to reload data after syncing with iCloud.", nil);
         [OCAUtilities showErrorWithMessage: msg];
     }
+    else
+    {
+        // Get the fetchedObjects re-loaded
+        [self.fetchedResultsController fetchedObjects];
+    }
 }
 
 #pragma mark - Fetched results controller delegate
