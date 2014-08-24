@@ -120,6 +120,8 @@ BOOL isEditModeActive;
     layout.minimumLineSpacing       = 6;
     layout.scrollDirection          = UICollectionViewScrollDirectionVertical;
     layout.sectionInset             = UIEdgeInsetsMake(5, 5, 5, 5);
+#warning TODO throws Assertion failure in -[_UIFlowLayoutSection computeLayoutInRect:forSection:invalidating:]
+//    layout.estimatedItemSize        = CGSizeMake(kOCRPackagesCellWidth, kOCRPackagesCellHeight);
     
     // Set our layout on the collectionView
     self.collectionView.collectionViewLayout = layout;
@@ -163,7 +165,7 @@ BOOL isEditModeActive;
     [self configureDefaultNavBar];
     
     // Set tintColor on the collection view
-    [self.collectionView setTintColor: [UIColor redColor]];
+    [self.collectionView setTintColor: [UIColor redColor]];    
 }
 
 //----------------------------------------------------------------------------------------------------------
@@ -639,6 +641,7 @@ BOOL isEditModeActive;
   sizeForItemAtIndexPath: (NSIndexPath *)indexPath
 {
 #warning TODO - can we replace this with auto-resizing cells?
+    DLog();
     CGSize result;
 
     // Get the Package represented by the cell at indexPath

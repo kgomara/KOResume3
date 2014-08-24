@@ -10,6 +10,7 @@
 
 @implementation OCRPackagesCell
 
+CGFloat const kOCRPackagesCellWidth         = 150.0f;
 CGFloat const kOCRPackagesCellHeight        = 132.0f;
 CGFloat const kOCRPackagesCellWidthPadding  =  20.0f;
 
@@ -63,6 +64,7 @@ CGFloat const kOCRPackagesCellWidthPadding  =  20.0f;
     // ...and retrieve the current settings to set the actual font size of the UI elements in the cell
     [self calculateAndSetFonts];
 }
+
 
 //----------------------------------------------------------------------------------------------------------
 /**

@@ -167,10 +167,13 @@
     // Load the cover letter into the view
     if ([(Packages *)self.selectedManagedObject cover_ltr])
     {
+        [_noSelectionView setHidden:YES];
         _coverLtrFld.text	= [(Packages *)self.selectedManagedObject cover_ltr];
     }
     else
     {
+        [_noSelectionView setHidden:NO];
+        [self.view bringSubviewToFront:_noSelectionView];
         _coverLtrFld.text	= @"";
     }
 }

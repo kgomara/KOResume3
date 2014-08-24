@@ -891,7 +891,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="536"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Lfy-sr-PAy">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Lfy-sr-PAy" userLabel="Content View">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="536"/>
                                 <subviews>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Mnf-31-eRP">
@@ -901,12 +901,32 @@
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textView>
+                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1QW-s3-6FX" userLabel="No Selection View">
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="536"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Nothing selected." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Ia-Mn-ROz">
+                                                <rect key="frame" x="235" y="258" width="131" height="20"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="centerY" secondItem="0Ia-Mn-ROz" secondAttribute="centerY" id="Nca-eB-fVw"/>
+                                            <constraint firstAttribute="centerX" secondItem="0Ia-Mn-ROz" secondAttribute="centerX" id="xIR-Vf-WHl"/>
+                                        </constraints>
+                                    </view>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="Mnf-31-eRP" firstAttribute="top" secondItem="Lfy-sr-PAy" secondAttribute="top" id="7gY-gH-NRB"/>
-                                    <constraint firstAttribute="bottom" secondItem="Mnf-31-eRP" secondAttribute="bottom" id="Sdc-Fh-zes"/>
-                                    <constraint firstAttribute="trailing" secondItem="Mnf-31-eRP" secondAttribute="trailing" id="Xtd-4W-44G"/>
-                                    <constraint firstItem="Mnf-31-eRP" firstAttribute="leading" secondItem="Lfy-sr-PAy" secondAttribute="leading" id="uae-SL-c5s"/>
+                                    <constraint firstItem="1QW-s3-6FX" firstAttribute="top" secondItem="Lfy-sr-PAy" secondAttribute="top" id="I7V-KU-Wgv"/>
+                                    <constraint firstItem="Mnf-31-eRP" firstAttribute="top" secondItem="Lfy-sr-PAy" secondAttribute="top" id="Ir2-oI-eCc"/>
+                                    <constraint firstItem="1QW-s3-6FX" firstAttribute="leading" secondItem="Lfy-sr-PAy" secondAttribute="leading" id="PTt-HZ-ZSg"/>
+                                    <constraint firstAttribute="trailing" secondItem="1QW-s3-6FX" secondAttribute="trailing" id="aRg-Fi-HFl"/>
+                                    <constraint firstAttribute="trailing" secondItem="Mnf-31-eRP" secondAttribute="trailing" id="ch5-hJ-vfB"/>
+                                    <constraint firstItem="Mnf-31-eRP" firstAttribute="leading" secondItem="Lfy-sr-PAy" secondAttribute="leading" id="iCq-vh-oTu"/>
+                                    <constraint firstAttribute="bottom" secondItem="Mnf-31-eRP" secondAttribute="bottom" id="stK-DJ-N1x"/>
+                                    <constraint firstAttribute="bottom" secondItem="1QW-s3-6FX" secondAttribute="bottom" id="u9n-PO-KyZ"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -923,6 +943,7 @@
                     <navigationItem key="navigationItem" id="g10-EI-NNn"/>
                     <connections>
                         <outlet property="coverLtrFld" destination="Mnf-31-eRP" id="p6o-ru-YR8"/>
+                        <outlet property="noSelectionView" destination="1QW-s3-6FX" id="gHz-nE-3h0"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="43f-MU-1zR" userLabel="First Responder" sceneMemberID="firstResponder"/>
