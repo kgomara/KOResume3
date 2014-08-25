@@ -19,6 +19,7 @@ FOUNDATION_EXPORT NSString *const kOCRUbiquityID;
 // Notifications
 FOUNDATION_EXPORT NSString *const kOCRApplicationDidAddPersistentStoreCoordinatorNotification;
 FOUNDATION_EXPORT NSString *const kOCRApplicationDidMergeChangesFrom_iCloudNotification;
+FOUNDATION_EXPORT NSString *const kOCRMocDidDeletePackageNotification;
 
 // Database Attribute names
 FOUNDATION_EXPORT NSString *const kOCRSequenceNumberAttributeName;

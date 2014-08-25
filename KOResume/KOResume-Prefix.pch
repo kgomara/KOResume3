@@ -9,7 +9,7 @@
 #import "OCRGlobalConstants.h"
 #import "OCRGlobalMacros.h"
 #import "Crittercism.h"
-#import "PrivateKeys.h"
+#import "OCRPrivateKeys.h"
 
 #ifdef __OBJC__
     #import <UIKit/UIKit.h>

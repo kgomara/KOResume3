@@ -27,11 +27,6 @@
  Stan Chang, Khin Boon's "LXReorderableCollectionViewFlowLayout" https://github.com/lxcid/LXReorderableCollectionViewFlowLayout
  */
 
-#define k_tblHdrHeight      50.0f
-
-#define k_cover_ltrRow      0
-#define k_resumeRow         1
-
 #define k_OKButtonIndex     1
 
 @interface OCRPackagesViewController ()
@@ -40,12 +35,12 @@
     /**
      Array to keep track of changes made to collectionView section.
      */
-    NSMutableArray *_sectionChanges;
+    NSMutableArray *__sectionChanges;
     
     /**
      Array to keep track of changes made to collectionView objects.
      */
-    NSMutableArray *_objectChanges;
+    NSMutableArray *__itemChanges;
 }
 
 /**
@@ -121,7 +116,7 @@ BOOL isEditModeActive;
     layout.scrollDirection          = UICollectionViewScrollDirectionVertical;
     layout.sectionInset             = UIEdgeInsetsMake(5, 5, 5, 5);
 #warning TODO throws Assertion failure in -[_UIFlowLayoutSection computeLayoutInRect:forSection:invalidating:]
-//    layout.estimatedItemSize        = CGSizeMake(kOCRPackagesCellWidth, kOCRPackagesCellHeight);
+    layout.estimatedItemSize        = CGSizeMake(kOCRPackagesCellWidth, kOCRPackagesCellHeight);
     
     // Set our layout on the collectionView
     self.collectionView.collectionViewLayout = layout;
@@ -165,7 +160,7 @@ BOOL isEditModeActive;
     [self configureDefaultNavBar];
     
     // Set tintColor on the collection view
-    [self.collectionView setTintColor: [UIColor redColor]];    
+    [self.collectionView setTintColor: [UIColor redColor]];
 }
 
 //----------------------------------------------------------------------------------------------------------
@@ -275,47 +270,6 @@ BOOL isEditModeActive;
 
 //----------------------------------------------------------------------------------------------------------
 /**
- Returns whether the view controller’s contents should auto rotate.
- 
- In iOS 5 and earlier, the default return value was NO.
- 
- @return           YES if the content should rotate, otherwise NO. Default value is YES.
- */
-- (BOOL)shouldAutorotate
-{
-    // Always support rotation
-    return YES;
-}
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Returns all of the interface orientations that the view controller supports.
- 
- When the user changes the device orientation, the system calls this method on the root view controller or the
- topmost presented view controller that fills the window. If the view controller supports the new orientation,
- the window and view controller are rotated to the new orientation. This method is only called if the view
- controller’s shouldAutorotate method returns YES.
- 
- Override this method to report all of the orientations that the view controller supports. The default values
- for a view controller’s supported interface orientations is set to UIInterfaceOrientationMaskAll for the iPad
- idiom and UIInterfaceOrientationMaskAllButUpsideDown for the iPhone idiom.
- 
- The system intersects the view controller’s supported orientations with the app's supported orientations (as
- determined by the Info.plist file or the app delegate's application:supportedInterfaceOrientationsForWindow:
- method) to determine whether to rotate.
- 
- @return           A bit mask specifying which orientations are supported. See UIInterfaceOrientationMask for
- valid bit-mask values. The value returned by this method must not be 0.
- */
-- (NSUInteger)supportedInterfaceOrientations
-{
-    // All interface orientations are supported
-    return UIInterfaceOrientationMaskAll;
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-/**
  Configure the default items for the navigation bar.
  */
 - (void)configureDefaultNavBar
@@ -361,18 +315,18 @@ BOOL isEditModeActive;
     DLog();
     
     // Insert a new Package into the managed object context
-    Packages *nuPackage = (Packages *)[NSEntityDescription insertNewObjectForEntityForName: @"Packages" /* kOCRPackagesEntity */
+    Packages *nuPackage = (Packages *)[NSEntityDescription insertNewObjectForEntityForName: kOCRPackagesEntity
                                                                     inManagedObjectContext: [kAppDelegate managedObjectContext]];
     // Set the name of the Package (provided by the user)
     nuPackage.name                  = aPackage;
     // ...the created_date to "now"
     nuPackage.created_date          = [NSDate date];
     // ...and set its sequence_number to be the last Package
-    nuPackage.sequence_numberValue  = [[self.fetchedResultsController fetchedObjects] count];
+    nuPackage.sequence_numberValue  = [[self.fetchedResultsController fetchedObjects] count] + 1;
     
     // Add a Resume for the package
     // First, insert a new Resume into the managed object context
-    Resumes *nuResume  = (Resumes *)[NSEntityDescription insertNewObjectForEntityForName: @"Resumes" /* kOCRResumesEntity */
+    Resumes *nuResume  = (Resumes *)[NSEntityDescription insertNewObjectForEntityForName: kOCRResumesEntity
                                                                   inManagedObjectContext: [kAppDelegate managedObjectContext]];
     // Set the default name of the resume
     nuResume.name                   = NSLocalizedString(@"Resume", nil);
@@ -522,7 +476,7 @@ BOOL isEditModeActive;
     DLog(@"section=%@", @([[self.fetchedResultsController sections] count]));
     
     /*
-     In our case, we only want a single section, so our fetchedResultsController is set up to retrieve everything
+     In our case, we only want a single section - our fetchedResultsController is set up to retrieve everything
      in one section, and we just return the number of objects in section[0]
      */
     id <NSFetchedResultsSectionInfo> sectionInfo = (self.fetchedResultsController.sections)[0];
@@ -617,87 +571,6 @@ BOOL isEditModeActive;
 
 #pragma mark - OCAEditableCollectionViewDelegateFlowLayout methods
 
-//----------------------------------------------------------------------------------------------------------
-/**
- Asks the delegate for the size of the specified item’s cell.
- 
- If you do not implement this method, the flow layout uses the values in its itemSize property to set the size 
- of items instead. Your implementation of this method can return a fixed set of sizes or dynamically adjust 
- the sizes based on the cell’s content.
- 
- The flow layout does not crop a cell’s bounds to make it fit into the grid. Therefore, the values you return 
- must allow for the item to be displayed fully in the collection view. For example, in a vertically scrolling 
- grid, the width of a single item must not exceed the width of the collection view view (minus any section 
- insets) itself. However, in the scrolling direction, items can be larger than the collection view because the 
- remaining content can always be scrolled into view.
- 
- @param collectionView          The collection view object displaying the flow layout.
- @param collectionViewLayout    The layout object requesting the information.
- @param indexPath               The index path of the item.
- @return                        The width and height of the specified item. Both values must be greater than 0.
- */
-- (CGSize)collectionView: (UICollectionView *)collectionView
-                  layout: (UICollectionViewLayout*)collectionViewLayout
-  sizeForItemAtIndexPath: (NSIndexPath *)indexPath
-{
-#warning TODO - can we replace this with auto-resizing cells?
-    DLog();
-    CGSize result;
-
-    // Get the Package represented by the cell at indexPath
-    id <NSFetchedResultsSectionInfo> sectionInfo    = (self.fetchedResultsController.sections)[indexPath.section];
-    Packages *aPackage                              = (Packages *) (sectionInfo.objects)[indexPath.row];
-    
-    /*
-     To support Dynamic Text, we need to calculate the size required by the text at run time given the
-     user's preferred dynamic text size.
-     
-     We use boundingRectWithSize:options:attributes:context on each of the text strings of the cell's UI 
-     elements to determine the width required to show the content as completely as possible.
-     
-     Using this information we determine the largest width of the three (but not too large to fit in the
-     content area) and return a CGSize structure.
-     We use CGRectIntegral here to ensure the rect is actually large enough. Here's the "help" for CGRectIntegral:
-        Returns the smallest rectangle that results from converting the source rectangle values to integers.
-     
-        Returns a rectangle with the smallest integer values for its origin and size that contains the source rectangle.
-        That is, given a rectangle with fractional origin or size values, CGRectIntegral rounds the rectangle’s origin
-        downward and its size upward to the nearest whole integers, such that the result contains the original rectangle.
-     */
-    
-    // maxTextSize establishes bounds for the largest rect we can allow
-    CGSize maxTextSize = CGSizeMake( collectionView.contentSize.width - 10.0f, kOCRPackagesCellHeight / 3);
-    
-    // First, determine the size required by the the name string, given the user's dynamic text size preference
-    NSString *stringToSize  = aPackage.name;
-    // ...get the bounding rect
-	CGRect titleRect        = CGRectIntegral( [stringToSize boundingRectWithSize: maxTextSize
-                                                                         options: NSStringDrawingUsesLineFragmentOrigin
-                                                                      attributes: @{NSFontAttributeName: [UIFont preferredFontForTextStyle: [OCRPackagesCell titleFont]]}
-                                                                         context: nil]);
-    // Similarly, determine the size required by "Cover Letter"
-    stringToSize            = NSLocalizedString(@"Cover Letter", nil);
-	CGRect coverLtrRect     = CGRectIntegral( [stringToSize boundingRectWithSize: maxTextSize
-                                                                         options: NSStringDrawingUsesLineFragmentOrigin
-                                                                      attributes: @{NSFontAttributeName: [UIFont preferredFontForTextStyle: [OCRPackagesCell detailFont]]}
-                                                                         context: nil]);
-    // ...and the name of the resume
-    stringToSize            = aPackage.resume.name;
-	CGRect resumeRect       = CGRectIntegral( [stringToSize boundingRectWithSize: maxTextSize
-                                                                         options: NSStringDrawingUsesLineFragmentOrigin
-                                                                      attributes: @{NSFontAttributeName: [UIFont preferredFontForTextStyle: [OCRPackagesCell detailFont]]}
-                                                                         context: nil]);
-    
-    // In our case we can keep the height constant because the 2 buttons already have sufficient vertical padding.
-    result.height       = kOCRPackagesCellHeight;
-    // ...and the width as the largest of the three strings (plus padding), but capped at the collection
-    //    view's contentSize.width (minus padding)
-    CGFloat cellWidth   = MAX(titleRect.size.width, coverLtrRect.size.width);
-    cellWidth           = MAX(resumeRect.size.width, cellWidth);
-    result.width        = MIN(cellWidth + kOCRPackagesCellWidthPadding, collectionView.contentSize.width - 10.0f);
-    
-	return result;
-}
 
 //----------------------------------------------------------------------------------------------------------
 /**
@@ -894,6 +767,7 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
     Packages *packageToDelete   = [self.fetchedResultsController objectAtIndexPath: indexPath];
     // ...and the managed object context
     NSManagedObjectContext *moc = [self.fetchedResultsController managedObjectContext];
+#warning TODO determine if we really need to delete the object here - or controller:didChange... or at all
     // ...and delete it from the data model
     [moc deleteObject: packageToDelete];
     
@@ -902,7 +776,21 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
      method it would return immediately and the collectionView throws an assertion error because it
      is out of sync with the data model.
      */
-    [kAppDelegate saveContextAndWait: moc];
+//    [kAppDelegate saveContextAndWait: moc];
+    // Save all the changes to the context, and wait for the operation to complete...
+    [kAppDelegate saveContextAndWait: [kAppDelegate managedObjectContext]];
+    // ...when the save completes, reload the data
+    [self reloadFetchedResults: nil];
+    // ...and collectionView
+    [self.collectionView reloadData];
+}
+
+- (void)    collectionView:(UICollectionView *)collectionView
+  didDeleteItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    DLog();
+    
+    [self postDeleteNotification];
 }
 
 
@@ -983,7 +871,8 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
     else
     {
         // We have cover letter. Get the UINavigationController's topViewController
-        OCRBaseDetailViewController <SubstitutableDetailViewController> *detailViewController = (OCRBaseDetailViewController<SubstitutableDetailViewController>*)[(svc.viewControllers)[1] topViewController];
+        OCRBaseDetailViewController <SubstitutableDetailViewController> *detailViewController;
+        detailViewController = (OCRBaseDetailViewController<SubstitutableDetailViewController>*)[(svc.viewControllers)[1] topViewController];
         // ...and send it the showRootPopoverButtonItem:withController message
         [detailViewController showRootPopoverButtonItem: _rootPopoverButtonItem
                                          withController: aPopoverController];
@@ -1055,20 +944,6 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
     // Get the array of packages as they are after the add, move, or delete
     NSArray *packages = [self.fetchedResultsController fetchedObjects];
     
-//    int i = 1;
-//    for (Packages *package in packages)
-//    {
-//        if (package.isDeleted)
-//        {
-//            // skip
-//        }
-//        else
-//        {
-//            [package setSequence_numberValue:i++];
-//        }
-//    }
-//    DLog(@"packages=%@", packages);
-    
     // Get the number of sections in order to construct an indexPath
     NSInteger sectionCount = [self.collectionView numberOfSections];
     
@@ -1084,9 +959,8 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
                                                                   inSection: section];
             // ...and get the cooresponding cell from the collection view
             OCRPackagesCell *packagesCell   = (OCRPackagesCell *)[self.collectionView cellForItemAtIndexPath: indexPath];
-            Packages *aPackage = packages[packagesCell.tag];    // TODO - backwards - we want to iterate this array?
-            [aPackage setSequence_number: @(i++)];       // TODO - sequence number does not seem to stick
-            DLog(@"seq=%d, name=%@", [aPackage sequence_numberValue], [aPackage name]);
+            Packages *aPackage              = packages[packagesCell.tag];
+            [aPackage setSequence_number: @(i++)];
         }
     }
 }
@@ -1117,9 +991,6 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
     // Now re-insert it at the destination.
     [packages insertObject: movedPackage
                    atIndex: newIndexPath.row];
-//    
-//    // All of the objects are now in their correct order. Resequence them.
-//    [self resequencePackages];
 }
 
 
@@ -1234,13 +1105,14 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
 {
     DLog();
     
-    if (_fetchedResultsController != nil) {
+    if (_fetchedResultsController != nil)
+    {
         return _fetchedResultsController;
     }
     
     // Create the fetch request for the entity
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    NSEntityDescription *entity  = [NSEntityDescription entityForName: @"Packages" /* kOCRPackagesEntity */
+    NSEntityDescription *entity  = [NSEntityDescription entityForName: kOCRPackagesEntity
                                                inManagedObjectContext: [kAppDelegate managedObjectContext]];
     [fetchRequest setEntity:entity];
     
@@ -1317,6 +1189,16 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
 
 #pragma mark - Fetched results controller delegate
 
+- (void)controllerWillChangeContent: (NSFetchedResultsController *)controller
+{
+    DLog();
+    
+    // Init the section and object change arrays
+    __sectionChanges    = [[NSMutableArray alloc] initWithCapacity:3];
+    __itemChanges     = [[NSMutableArray alloc] initWithCapacity:3];
+
+}
+
 //----------------------------------------------------------------------------------------------------------
 /**
  The fetched results controller can "batch" updates to improve performance and preserve battery life.
@@ -1335,28 +1217,12 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
 {
     DLog();
     
+    // Create a dictionary for the change
     NSMutableDictionary *change = [NSMutableDictionary new];
-    
-    switch(type)
-    {
-        case NSFetchedResultsChangeInsert:
-            change[@(type)] = @[@(sectionIndex)];
-            break;
-            
-        case NSFetchedResultsChangeDelete:
-            change[@(type)] = @[@(sectionIndex)];
-            break;
-            
-        case NSFetchedResultsChangeMove:
-            change[@(type)] = @[@(sectionIndex)];
-            break;
-            
-        case NSFetchedResultsChangeUpdate:
-            change[@(type)] = @[@(sectionIndex)];
-            break;
-    }
-    
-    [_sectionChanges addObject: change];
+    // ...set an object in the dictionary with a key of type and value of sectionIndex
+    change[@(type)] = @[@(sectionIndex)];
+    // ...and add it to the sectionChanges dictionary
+    [__sectionChanges addObject: change];
 }
 
 
@@ -1390,7 +1256,7 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
      forChangeType: (NSFetchedResultsChangeType)type
       newIndexPath: (NSIndexPath *)newIndexPath
 {
-    DLog();
+    DLog(@"change type=%d", type);
     
     NSMutableDictionary *change = [NSMutableDictionary new];
     switch(type)
@@ -1412,7 +1278,7 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
             break;
     }
     
-    [_objectChanges addObject:change];
+    [__itemChanges addObject:change];
 }
 
 
@@ -1438,7 +1304,9 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
      sake of completeness.
      */
     // Check to see if there are section changes
-    if ([_sectionChanges count] > 0)
+    
+    __block BOOL objectWasDeleted = NO;
+    if ([__sectionChanges count] > 0)
     {
         // ...yes, we have changes to make
         [self.collectionView performBatchUpdates: ^{
@@ -1451,7 +1319,7 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
              or more cells. Use the blocked passed in the updates parameter to specify all of the operations you 
              want to perform.
              */
-            for (NSDictionary *change in _sectionChanges) {
+            for (NSDictionary *change in __sectionChanges) {
                 // For each change dictionary, iterate through the changes
                 [change enumerateKeysAndObjectsUsingBlock: ^(NSNumber *key, id obj, BOOL *stop) {
                     // ...get the type
@@ -1464,6 +1332,8 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
                             
                         case NSFetchedResultsChangeDelete:
                             [self.collectionView deleteSections: [NSIndexSet indexSetWithIndex: [obj unsignedIntegerValue]]];
+                            objectWasDeleted = YES;
+                            DLog(@"set deleted flag in section");
                             break;
                             
                         case NSFetchedResultsChangeUpdate:
@@ -1484,14 +1354,14 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
      objectChanges is an array of NSDictionary objects used to batch changes to objects in the collection view
      */
     // Check to see if there are object changes -- but sectionChanges, if any, have all been applied
-    if ([_objectChanges count] > 0 && [_sectionChanges count] == 0)
+    if ([__itemChanges count] > 0 && [__sectionChanges count] == 0)
     {
         // ...yes, we have changes to make
         [self.collectionView performBatchUpdates: ^{
             /*
              see the performBatchUpdates comment above
              */
-            for (NSDictionary *change in _objectChanges)
+            for (NSDictionary *change in __itemChanges)
             {
                 // For each change dictionary, iterate through the changes
                 [change enumerateKeysAndObjectsUsingBlock: ^(NSNumber *key, id obj, BOOL *stop) {
@@ -1506,6 +1376,8 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
                             
                         case NSFetchedResultsChangeDelete:
                             [self.collectionView deleteItemsAtIndexPaths: @[obj]];
+                            objectWasDeleted = YES;
+                            DLog(@"set deleted flag in object");
                             break;
                             
                         case NSFetchedResultsChangeUpdate:
@@ -1522,9 +1394,29 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
         } completion:nil];
     }
     
-    // We processed all the changes, empty the arrays
-    [_sectionChanges removeAllObjects];
-    [_objectChanges removeAllObjects];
+    // We processed all the changes, nil the arrays
+    __sectionChanges    = nil;
+    __itemChanges       = nil;
+    
+    DLog(@"deleted flag = %@", objectWasDeleted? @"YES" : @"NO");
+    // Check to see if a delete has occured
+    if (objectWasDeleted)
+    {
+        // If so, notify all the listners of the delete
+        [self postDeleteNotification];
+    }
+}
+
+- (void)postDeleteNotification
+{
+    DLog();
+    // Post a notification to inform interested objects - i.e., the view controllers that a package has been deleted
+    NSNotification *deleteNotification = [NSNotification notificationWithName: kOCRMocDidDeletePackageNotification
+                                                                       object: self
+                                                                     userInfo: nil];
+    
+    [[NSNotificationCenter defaultCenter] postNotification: deleteNotification];
+   
 }
 
 

@@ -241,7 +241,7 @@
         [OCAUtilities showErrorWithMessage: msg];
     }
     /*
-     Subclasses should override this method to reload views as necessary. For example:
+     Subclasses should override and invoke super on this method to reload views as necessary. For example:
      [super reloadFetchedResults: note]
      [self.tblView reloadData];
      */

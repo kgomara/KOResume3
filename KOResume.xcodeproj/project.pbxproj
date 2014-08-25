@@ -234,6 +234,7 @@
 		D6BA20EC17B881E90068F4D9 /* OCRCoverLtrViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRCoverLtrViewController.h; path = Classes/OCRCoverLtrViewController.h; sourceTree = "<group>"; };
 		D6BA20ED17B881E90068F4D9 /* OCRCoverLtrViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRCoverLtrViewController.m; path = Classes/OCRCoverLtrViewController.m; sourceTree = "<group>"; };
 		D6BE16D019A97BBF00147081 /* OCRGlobalConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCRGlobalConstants.h; sourceTree = "<group>"; };
+		D6BE16D119A98AA200147081 /* OCRPrivateKeys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCRPrivateKeys.h; sourceTree = "<group>"; };
 		D6BFCF4118748D8F0088D928 /* OCAUtilities.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OCAUtilities.xcodeproj; path = OCAUtilities/OCAUtilities/OCAUtilities.xcodeproj; sourceTree = SOURCE_ROOT; };
 		D6C3FC42199F0F71000457F4 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		D6C619FD18FD021100D5BB5D /* OCRDateTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRDateTableViewController.h; path = Classes/OCRDateTableViewController.h; sourceTree = "<group>"; };
@@ -256,7 +257,6 @@
 		D6CB2581199DB72E0042FC33 /* CrittercismDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CrittercismDelegate.h; sourceTree = "<group>"; };
 		D6CB2582199DB72E0042FC33 /* dsym_upload.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = dsym_upload.sh; sourceTree = "<group>"; };
 		D6CB2583199DB72E0042FC33 /* libCrittercism_v4_3_4.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libCrittercism_v4_3_4.a; sourceTree = "<group>"; };
-		D6CB258A199DB89D0042FC33 /* PrivateKeys.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrivateKeys.h; sourceTree = "<group>"; };
 		D6CB27CB194D419C009E8D50 /* OCREducationTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCREducationTableViewCell.h; path = Classes/OCREducationTableViewCell.h; sourceTree = "<group>"; };
 		D6CB27CC194D419C009E8D50 /* OCREducationTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCREducationTableViewCell.m; path = Classes/OCREducationTableViewCell.m; sourceTree = "<group>"; };
 		D6CB27D3194E4079009E8D50 /* OCRCellTextFieldDelegateProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OCRCellTextFieldDelegateProtocol.h; path = Classes/OCRCellTextFieldDelegateProtocol.h; sourceTree = "<group>"; };
@@ -386,6 +386,7 @@
 		D63D82C5179311350065F0A9 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				D6BE16D119A98AA200147081 /* OCRPrivateKeys.h */,
 				D6BE16D019A97BBF00147081 /* OCRGlobalConstants.h */,
 				D6D571B31793395F00034AF3 /* OCRGlobalConstants.m */,
 				D6ABF9AA187A0DD700AECF28 /* OCRGlobalMacros.h */,
@@ -393,7 +394,6 @@
 				D63D82C7179311350065F0A9 /* InfoPlist.strings */,
 				D63D82CA179311350065F0A9 /* main.m */,
 				D63D82CC179311350065F0A9 /* KOResume-Prefix.pch */,
-				D6CB258A199DB89D0042FC33 /* PrivateKeys.h */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";

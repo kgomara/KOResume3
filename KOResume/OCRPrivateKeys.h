@@ -1,5 +1,5 @@
 //
-//  PrivateKeys.h
+//  OCRPrivateKeys.h
 //  KOResume
 //
 //  Created by Kevin O'Mara on 8/14/14.

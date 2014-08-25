@@ -7,7 +7,7 @@
 //
 
 #import "OCRGlobalConstants.h"
-#import "PrivateKeys.h"
+#import "OCRPrivateKeys.h"
 
 @implementation OCRGlobalConstants
 
@@ -20,6 +20,7 @@ NSString *const kOCRUbiquityID                                              = kP
 // Notifications
 NSString *const kOCRApplicationDidAddPersistentStoreCoordinatorNotification = @"RefetchAllDatabaseData";
 NSString *const kOCRApplicationDidMergeChangesFrom_iCloudNotification       = @"RefreshAllViews";
+NSString *const kOCRMocDidDeletePackageNotification                         = @"MocDidDeletePackage";
 
 // Database Attribute names
 NSString *const kOCRSequenceNumberAttributeName                             = @"sequence_number";

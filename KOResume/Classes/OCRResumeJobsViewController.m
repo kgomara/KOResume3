@@ -445,7 +445,7 @@
     DLog();
     
     // Insert a new Jobs entity into the managedObjectContext
-    Jobs *job = (Jobs *)[NSEntityDescription insertNewObjectForEntityForName: @"Jobs" /* kOCRJobsEntity */
+    Jobs *job = (Jobs *)[NSEntityDescription insertNewObjectForEntityForName: kOCRJobsEntity
                                                       inManagedObjectContext: [kAppDelegate managedObjectContext]];
     
     // Set the name to the value the user provided in the prompt

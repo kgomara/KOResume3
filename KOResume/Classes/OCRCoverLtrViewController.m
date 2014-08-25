@@ -123,6 +123,11 @@
                                              selector: @selector(keyboardWillBeHidden:)
                                                  name: UIKeyboardWillHideNotification
                                                object: nil];
+
+    [[NSNotificationCenter defaultCenter] addObserver: self
+                                             selector: @selector(packageWasDeleted:)
+                                                 name: kOCRMocDidDeletePackageNotification
+                                               object: nil];
 }
 
 
@@ -218,6 +223,26 @@
     
     // ...by default, the user cannot edit the text, make it un-editable until the user taps the edit button
     [self.coverLtrFld setEditable:NO];
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Update internal state of the view controller when a package has been deleted.
+ 
+ Invoked by notification posted by OCRPackagesViewController when it performs a package deletion.
+ 
+ @param aNotification   The NSNotification object associated with the event.
+ */
+- (void)packageWasDeleted: (NSNotification *)aNotification
+{
+    DLog();
+    
+    if ( ![(Packages *)self.selectedManagedObject cover_ltr] ||
+          [self.selectedManagedObject isDeleted])
+    {
+        self.selectedManagedObject = nil;
+    }
 }
 
 #pragma mark - OCRDetailViewProtocol delegates
@@ -354,6 +379,9 @@
     // Update editing flag
     self.editing = isEditingMode;
     
+    // Hide the noSelectedView
+    [self.noSelectionView setHidden:YES];
+    
     // ...enable/disable resume fields
     [self setFieldsEditable: isEditingMode];
     
@@ -479,7 +507,7 @@
  
  Invoked by notification whhen the underlying data objects may have changed.
  
- @param aNote the NSNotification describing the changes.
+ @param aNote       the NSNotification describing the changes.
  */
 - (void)reloadFetchedResults: (NSNotification*)aNote
 {
