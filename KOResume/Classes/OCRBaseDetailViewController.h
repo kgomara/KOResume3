@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "OCRDetailViewProtocol.h"
 #import "Packages.h"
-#import "OCRPackagesViewController.h"
+#import "OCRPackagesTableViewController.h"
 
 /**
  This class defines common properties and methods for detail view controllers.

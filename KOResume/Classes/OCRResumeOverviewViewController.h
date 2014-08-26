@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "OCRPackagesViewController.h"
+#import "OCRPackagesTableViewController.h"
 #import "OCRBaseDetailViewController.h"
 
 @interface OCRResumeOverviewViewController : OCRBaseDetailViewController    <UITextFieldDelegate, UIScrollViewDelegate>

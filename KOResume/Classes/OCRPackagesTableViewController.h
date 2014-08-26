@@ -1,18 +1,18 @@
 //
-//  OCRPackagesViewController.h
+//  OCRPackagesTableViewController.h
 //  KOResume
 //
-//  Created by Kevin O'Mara on 6/5/11.
-//  Copyright (c) 2011-2014 O'Mara Consulting Associates. All rights reserved.
+//  Created by Kevin O'Mara on 8/24/14.
+//  Copyright (c) 2014 O'Mara Consulting Associates. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
-#import <OCAEditableCollectionViewFLowLayout/OCAEditableCollectionViewFlowLayout.h>
+
 #import "OCRPackagesCell.h"
 #import <CoreData/CoreData.h>
 
 /**
- SubstitutableDetailViewController is a protocol that detail view controllers must adopt. 
+ SubstitutableDetailViewController is a protocol that detail view controllers must adopt.
  
  It defines methods to hide or show
  the bar button item controlling the popover.
@@ -39,8 +39,9 @@
 
 @end
 
-@interface OCRPackagesViewController : UICollectionViewController <NSFetchedResultsControllerDelegate, UISplitViewControllerDelegate,
-                                                                   OCAEditableCollectionViewDataSource, OCAEditableCollectionViewDelegateFlowLayout>
+@interface OCRPackagesTableViewController : UITableViewController   <NSFetchedResultsControllerDelegate, UISplitViewControllerDelegate,
+                                                                     UITableViewDataSource, UITableViewDelegate>
+
 
 /**
  The managed object context used throughout KOResume.

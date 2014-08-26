@@ -1,46 +1,51 @@
 //
-//  OCRPackagesViewController.m
+//  OCRPackagesTableViewController.m
 //  KOResume
 //
-//  Created by Kevin O'Mara on 6/5/11.
-//  Copyright (c) 2011-2014 O'Mara Consulting Associates. All rights reserved.
+//  Created by Kevin O'Mara on 8/24/14.
+//  Copyright (c) 2014 O'Mara Consulting Associates. All rights reserved.
 //
 
-#import "OCRPackagesViewController.h"
+#import "OCRPackagesTableViewController.h"
 #import "OCRBaseDetailViewController.h"
 #import "OCRAppDelegate.h"
 #import "OCRCoverLtrViewController.h"
 #import "Packages.h"
 #import "Resumes.h"
 #import <CoreData/CoreData.h>
-//#import "InfoViewController.h"
+#import "OCRTableViewHeaderCell.h"
 
 /**
  Manage Packages objects.
  
- It uses a UICollectionView to display the list of Packages, and dispatches OCRCoverLtrViewController or OCRResumeViewController.
+ It uses a UITableView to display the list of Packages, and dispatches OCRCoverLtrViewController or OCRResumeViewController.
  
- Credits:
- 
- Akiehl Kahn's "Springboard-like layout with Collection Views" - http://mobile.tutsplus.com/tutorials/iphone/uicollectionview-layouts/
- 
- Stan Chang, Khin Boon's "LXReorderableCollectionViewFlowLayout" https://github.com/lxcid/LXReorderableCollectionViewFlowLayout
  */
 
 #define k_OKButtonIndex     1
 
-@interface OCRPackagesViewController ()
+@interface OCRPackagesTableViewController ()
 {
 @private
     /**
-     Array to keep track of changes made to collectionView section.
+     Reference to the edit button to facilitate swapping buttons between display and edit modes.
      */
-    NSMutableArray *__sectionChanges;
+    UIBarButtonItem     *editBtn;
     
     /**
-     Array to keep track of changes made to collectionView objects.
+     Reference to the save button to facilitate swapping buttons between display and edit modes.
      */
-    NSMutableArray *__itemChanges;
+    UIBarButtonItem     *saveBtn;
+    
+    /**
+     Reference to the cancel button to facilitate swapping buttons between display and edit modes.
+     */
+    UIBarButtonItem     *cancelBtn;
+    
+    /**
+     Reference to the button available in table edit mode that allows the user to add a package.
+     */
+    UIButton            *addBtn;
 }
 
 /**
@@ -58,9 +63,14 @@
  */
 @property (nonatomic, strong) NSFetchedResultsController    *fetchedResultsController;
 
+/**
+ A boolean flag to indicate whether the user is editing information or simply viewing.
+ */
+@property (nonatomic, assign, getter=isEditing) BOOL editing;
+
 @end
 
-@implementation OCRPackagesViewController
+@implementation OCRPackagesTableViewController
 
 /**
  Flag to indicate the UI is in editing state.
@@ -68,68 +78,6 @@
 BOOL isEditModeActive;
 
 #pragma mark - View lifecycle
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Prepares the receiver for service after it has been loaded from an Interface Builder archive, or nib file.
- 
- The nib-loading infrastructure sends an awakeFromNib message to each object recreated from a nib archive,
- but only after all the objects in the archive have been loaded and initialized. When an object receives an
- awakeFromNib message, it is guaranteed to have all its outlet and action connections already established.
- You must call the super implementation of awakeFromNib to give parent classes the opportunity to perform any
- additional initialization they require. Although the default implementation of this method does nothing,
- many UIKit classes provide non-empty implementations. You may call the super implementation at any point
- during your own awakeFromNib method.
- 
- Note - During Interface Builder’s test mode, this message is also sent to objects instantiated from loaded
- Interface Builder plug-ins. Because plug-ins link against the framework containing the object definition code,
- Interface Builder is able to call their awakeFromNib method when present. The same is not true for custom
- objects that you create for your Xcode projects. Interface Builder knows only about the defined outlets and
- actions of those objects; it does not have access to the actual code for them.
- 
- During the instantiation process, each object in the archive is unarchived and then initialized with the method
- befitting its type. Objects that conform to the NSCoding protocol (including all subclasses of UIView and
- UIViewController) are initialized using their initWithCoder: method. All objects that do not conform to the
- NSCoding protocol are initialized using their init method. After all objects have been instantiated and
- initialized, the nib-loading code reestablishes the outlet and action connections for all of those objects.
- It then calls the awakeFromNib method of the objects. For more detailed information about the steps followed
- during the nib-loading process, see “Nib Files” in Resource Programming Guide.
- 
- Important - Because the order in which objects are instantiated from an archive is not guaranteed, your
- initialization methods should not send messages to other objects in the hierarchy. Messages to other objects
- can be sent safely from within an awakeFromNib method.
- 
- Typically, you implement awakeFromNib for objects that require additional set up that cannot be done at
- design time. For example, you might use this method to customize the default configuration of any controls
- to match user preferences or the values in other controls. You might also use it to restore individual controls
- to some previous state of your application.
- */
-- (void)awakeFromNib
-{
-    DLog();
-    
-    // Allocate our custom collectionView layout
-    OCAEditableCollectionViewFlowLayout *layout = [[OCAEditableCollectionViewFlowLayout alloc] init];
-    // ...set some parameters to control its behavior
-    layout.minimumInteritemSpacing  = 6;
-    layout.minimumLineSpacing       = 6;
-    layout.scrollDirection          = UICollectionViewScrollDirectionVertical;
-    layout.sectionInset             = UIEdgeInsetsMake(5, 5, 5, 5);
-#warning TODO throws Assertion failure in -[_UIFlowLayoutSection computeLayoutInRect:forSection:invalidating:]
-    layout.estimatedItemSize        = CGSizeMake(kOCRPackagesCellWidth, kOCRPackagesCellHeight);
-    
-    // Set our layout on the collectionView
-    self.collectionView.collectionViewLayout = layout;
-    // ...and set the collectionView into paging mode
-    self.collectionView.pagingEnabled = YES;
-    
-    // Set the clearsSelectionOnViewWillAppear property to keep selected cells
-    self.clearsSelectionOnViewWillAppear    = NO;
-    // ...and set the content size of our view
-    self.preferredContentSize               = CGSizeMake(320.0, 600.0);
-    
-    [super awakeFromNib];
-}
 
 //----------------------------------------------------------------------------------------------------------
 /**
@@ -156,11 +104,27 @@ BOOL isEditModeActive;
     self.navigationItem.title   = title;
 #endif
     
+    // Initialize estimate row height to support dynamic text sizing
+    self.tableView.estimatedRowHeight = kOCRPackagesCellHeight;
+    
+    // Set up button items
+    editBtn     = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemEdit
+                                                                target: self
+                                                                action: @selector(didPressEditButton)];
+    saveBtn     = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemSave
+                                                                target: self
+                                                                action: @selector(didPressSaveButton)];
+    cancelBtn   = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel
+                                                                target: self
+                                                                action: @selector(didPressCancelButton)];
+    
+    // Set editing off
+    self.editing = NO;
     // Set up the defaults in the Navigation Bar
     [self configureDefaultNavBar];
     
     // Set tintColor on the collection view
-    [self.collectionView setTintColor: [UIColor redColor]];
+    [self.tableView setTintColor: [UIColor redColor]];
 }
 
 //----------------------------------------------------------------------------------------------------------
@@ -177,7 +141,7 @@ BOOL isEditModeActive;
  messages that occur, see “Responding to Display-Related Notifications”.
  
  Note
- If a view controller is presented by a view controller inside of a popover, this method is not invoked on the 
+ If a view controller is presented by a view controller inside of a popover, this method is not invoked on the
  presenting view controller after the presented controller is dismissed.
  
  @param animated        If YES, the view is being added to the window using an animation.
@@ -211,10 +175,12 @@ BOOL isEditModeActive;
                                                object: nil];
     
     // Loop through all the packages writing their debugDescription to the log - useful when debugging
-//    for (Packages *aPackage in [self.fetchedResultsController fetchedObjects])
-//    {
-//        DLog(@"%@", [aPackage debugDescription]);
-//    }
+    //    for (Packages *aPackage in [self.fetchedResultsController fetchedObjects])
+    //    {
+    //        DLog(@"%@", [aPackage debugDescription]);
+    //    }
+    
+    [self setFieldsEditable: NO];
     
     // Reload the fetched results
     [self reloadFetchedResults: nil];
@@ -270,20 +236,39 @@ BOOL isEditModeActive;
 
 //----------------------------------------------------------------------------------------------------------
 /**
+ Enables or disables all the UI text fields for editing.
+ 
+ As a resume app, a major Use Case is the user sharing his/her experience by passing the iOS device around.
+ To avoid accidently changing information, the app defaults to non-editable and there is an explicit Edit
+ button when the user wants to change information. This method sets the enabled state as appropriate and also
+ changes the background color to make "edit mode" more visually distinct.
+ 
+ @param editable    A BOOL that determines whether the fields should be enabled for editing - or not.
+ */
+- (void)setFieldsEditable: (BOOL)editable
+{
+    DLog();
+    
+    [self.tableView reloadRowsAtIndexPaths:[self.tableView indexPathsForVisibleRows]
+                          withRowAnimation:UITableViewRowAnimationNone];
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+/**
  Configure the default items for the navigation bar.
  */
 - (void)configureDefaultNavBar
 {
     DLog();
     
-    // Initialize the buttons
-    UIBarButtonItem *addButton  = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemAdd
-                                                                                target: self
-                                                                                action: @selector(promptForPackageName)];
-    
-    // Set into the nav bar.
-    self.navigationItem.rightBarButtonItem = addButton;
+    // Set up the nav bar.
+    self.navigationItem.rightBarButtonItems = @[editBtn];
+
+    // Set table editing off
+    [self.tableView setEditing: NO];
 }
+
 
 #pragma mark - UITextKit handlers
 
@@ -298,7 +283,7 @@ BOOL isEditModeActive;
     DLog();
     
     // Reload the collection view, which in turn causes the collectionView cells to update their fonts
-    [self.collectionView reloadData];
+    [self.tableView reloadData];
 }
 
 
@@ -334,7 +319,7 @@ BOOL isEditModeActive;
     nuResume.created_date           = [NSDate date];
     // ...and set its sequence_number to 1 (there can be only 1)
     nuResume.sequence_numberValue   = 1;
-
+    
     // Set the relationship between the Package and Resume objects
     nuPackage.resume                = nuResume;
     
@@ -343,7 +328,162 @@ BOOL isEditModeActive;
     // ...when the save completes, reload the data
     [self reloadFetchedResults: nil];
     // ...and collectionView
-    [self.collectionView reloadData];
+    [self.tableView reloadData];
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Resequence the Jobs and Education objects to reflect the order the user has arranged them.
+ */
+- (void)resequenceTables
+{
+    DLog();
+    
+    // The education array is in the order (including deletes) the user wants
+    // ...loop through the array by index, resetting the education object's sequence_number attribute
+//    int i = 0;
+//    for (Education *education in _educationArray) {
+//        if (education.isDeleted)
+//        {
+//            // No need to update the sequence number of deleted objects
+//        }
+//        else
+//        {
+//            // Set the sequence number on this education object and increment the counter
+//            [education setSequence_numberValue: i++];
+//        }
+//    }
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Invoked when the user taps the Edit button.
+ 
+ * Setup the navigation bar for editing.
+ * Enable editable fields.
+ * Start an undo group on the NSManagedObjectContext.
+ 
+ */
+- (void)didPressEditButton
+{
+    DLog();
+    
+    // Turn on editing in the UI
+    [self setUIWithEditing: YES];
+    
+    // Start an undo group...it will either be commited in didPressSaveButton or
+    //    undone in didPressCancelButton
+    [[[kAppDelegate managedObjectContext] undoManager] beginUndoGrouping];
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Invoked when the user taps the Save button.
+ 
+ * Save the changes to the NSManagedObjectContext.
+ * Cleanup the undo group on the NSManagedObjectContext.
+ * Reset the navigation bar to its default state.
+ 
+ */
+- (void)didPressSaveButton
+{
+    DLog();
+    
+    // Reset the sequence_number of the Job and Education items in case they were re-ordered during the edit
+    [self resequenceTables];
+    
+    // ...end the undo group
+    [[[kAppDelegate managedObjectContext] undoManager] endUndoGrouping];
+    [kAppDelegate saveContextAndWait: [kAppDelegate managedObjectContext]];
+    
+    // Cleanup the undoManager
+    [[[kAppDelegate managedObjectContext] undoManager] removeAllActionsWithTarget: self];
+    // ...and turn off editing in the UI
+    [self setUIWithEditing: NO];
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Invoked when the user taps the Cancel button.
+ 
+ * End the undo group on the NSManagedObjectContext.
+ * If the undoManager has changes it canUndo, undo them.
+ * Cleanup the undoManager.
+ * Reset the UI to its default state.
+ 
+ */
+- (void)didPressCancelButton
+{
+    DLog();
+    
+    // Undo any changes the user has made
+    [[[kAppDelegate managedObjectContext] undoManager] setActionName:kOCRUndoActionName];
+    [[[kAppDelegate managedObjectContext] undoManager] endUndoGrouping];
+    
+    if ([[[kAppDelegate managedObjectContext] undoManager] canUndo])
+    {
+        // Changes were made - discard them
+        [[[kAppDelegate managedObjectContext] undoManager] undoNestedGroup];
+    }
+    
+    // Cleanup the undoManager
+    [[[kAppDelegate managedObjectContext] undoManager] removeAllActionsWithTarget: self];
+    
+    // Re-sort the tables as editing may have moved their order in the tableView
+//    [self sortTables];
+    [self.tableView reloadData];
+    // ...and turn off editing in the UI
+    [self setUIWithEditing: NO];
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Set the UI for for editing enabled or disabled.
+ 
+ Called when the user presses the Edit, Save, or Cancel buttons.
+ 
+ @param isEditingMode   YES if we are going into edit mode, NO otherwise.
+ */
+- (void)setUIWithEditing: (BOOL)isEditingMode
+{
+    DLog();
+    
+    // Update editing flag
+    self.editing = isEditingMode;
+    
+    // ...the add buttons (hidden is the boolean opposite of isEditingMode)
+    [addBtn    setHidden: !isEditingMode];
+    
+    // ...enable/disable table editing
+    [self.tableView setEditing: isEditingMode
+                      animated: YES];
+    // ...enable/disable resume fields
+    [self setFieldsEditable: isEditingMode];
+    
+    if (isEditingMode)
+    {
+        // Set up the navigation items and save/cancel buttons
+#warning TODO refactor to use size classes
+        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
+        {
+            self.navigationItem.rightBarButtonItems = @[saveBtn, cancelBtn];
+        }
+        else
+        {
+            self.navigationItem.leftBarButtonItem  = cancelBtn;
+            self.navigationItem.rightBarButtonItem = saveBtn;
+        }
+    }
+    else
+    {
+        // Reset the nav bar defaults
+        [self configureDefaultNavBar];
+    }
 }
 
 
@@ -444,16 +584,10 @@ BOOL isEditModeActive;
     }
 }
 
-#pragma mark - UICollectionView data source
+#pragma mark - Table view data source methods
 
 //----------------------------------------------------------------------------------------------------------
-/**
- Return the number of sections in the collection view.
- 
- @param collectionView  The collection view object.
- @return                The number of sections
- */
-- (NSInteger)numberOfSectionsInCollectionView: (UICollectionView *)collectionView
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     /*
      We are hardcoding to 1 here because we want a single section containing all the packages.
@@ -461,61 +595,74 @@ BOOL isEditModeActive;
     return 1;
 }
 
-
 //----------------------------------------------------------------------------------------------------------
-/**
- Return the number of items in a section of the collection view.
- 
- @param collectionView  The collection view object
- @param section         The section for which the number of items is needed.
- @return                The number of items in the section
- */
-- (NSInteger)collectionView: (UICollectionView *)collectionView
-     numberOfItemsInSection: (NSInteger)section
-{
-    DLog(@"section=%@", @([[self.fetchedResultsController sections] count]));
-    
-    /*
-     In our case, we only want a single section - our fetchedResultsController is set up to retrieve everything
-     in one section, and we just return the number of objects in section[0]
-     */
-    id <NSFetchedResultsSectionInfo> sectionInfo = (self.fetchedResultsController.sections)[0];
-    NSUInteger rows = [sectionInfo numberOfObjects];
-    DLog(@"rows=%@", @(rows));
-
-    return rows;
-}
-
-
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Return a collection view cell configured for the indexPath.
- 
- @param collectionView  The collection view object.
- @param indexPath       The indexPath for the cell needed.
- @return                A configured cell.
- */
-- (UICollectionViewCell *)collectionView: (UICollectionView *)collectionView
-                  cellForItemAtIndexPath: (NSIndexPath *)indexPath
+- (NSInteger)tableView:(UITableView *)tableView
+ numberOfRowsInSection:(NSInteger)section
 {
     DLog();
     
-    OCRPackagesCell *cell = (OCRPackagesCell *)[collectionView dequeueReusableCellWithReuseIdentifier: kOCRPackagesCellID
-                                                                                         forIndexPath: indexPath];
-    // Set OCACollectionViewFlowLayoutCell properties required for deletion
-    cell.deleteDelegate = (OCAEditableCollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
+    /*
+     In our case, we only have a single section (our fetchedResultsController is set up to retrieve everything
+     in one section), so we just return the number of objects in section[0]
+     */
+    id <NSFetchedResultsSectionInfo> sectionInfo = (self.fetchedResultsController.sections)[0];
     
-	// Configure the cell.
+    DLog(@"rows=%d", [sectionInfo numberOfObjects]);
+    
+    return [sectionInfo numberOfObjects];
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Asks the data source to verify that the given row is editable.
+ 
+ @param tableView       The table-view object requesting this information.
+ @param indexPath       An index path locating a row in tableView.
+ @return                YES to allow editing, NO otherwise,
+ */
+- (BOOL)    tableView: (UITableView *)tableView
+canEditRowAtIndexPath: (NSIndexPath *)indexPath
+{
+    DLog();
+    
+    // If we are in edit mode allow swipe to delete
+    return self.editing;
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Asks the data source for a cell to insert in a particular location of the table view.
+ 
+ The returned UITableViewCell object is frequently one that the application reuses for performance reasons.
+ You should fetch a previously created cell object that is marked for reuse by sending a
+ dequeueReusableCellWithIdentifier: message to tableView. Various attributes of a table cell are set automatically
+ based on whether the cell is a separator and on information the data source provides, such as for accessory views
+ and editing controls.
+ 
+ @param tableView       A table-view object requesting the cell.
+ @param indexPath       An index path locating a row in tableView.
+ @return                An object inheriting from UITableViewCell that the table view can use for the specified row.
+ An assertion is raised if you return nil.
+ */
+- (UITableViewCell *)tableView:(UITableView *)tableView
+         cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    OCRPackagesCell *cell = [tableView dequeueReusableCellWithIdentifier: kOCRPackagesCellID
+                                                            forIndexPath: indexPath];
+    
+    // Configure the cell.
     [self configureCell: cell
             atIndexPath: indexPath];
     
     return cell;
 }
 
+
 //----------------------------------------------------------------------------------------------------------
 /**
- Helper method to configure a cell when asked by the collection view.
+ Helper method to configure a cell when asked by the table view.
  
  @param cell            The cell to configure.
  @param indexPath       The indexPath for the cell needed.
@@ -536,261 +683,208 @@ BOOL isEditModeActive;
     cell.tag                = indexPath.row;
     cell.coverLtrButton.tag = indexPath.row;
     cell.resumeButton.tag   = indexPath.row;
-
+    
     cell.title.text = aPackage.name;
     
-    // Set the title of the resume button
+    // Set the touchUpInside target of the cover letter button
+    [cell.coverLtrButton addTarget: self
+                            action: @selector(didPressCoverLtrButton:)
+                  forControlEvents: UIControlEventTouchUpInside];
+    
+    // Set the title and touchUpInside target of the resume button
     [cell.resumeButton setTitle: aPackage.resume.name
                        forState: UIControlStateNormal];
+    [cell.resumeButton addTarget: self
+                          action: @selector(didPressResumeButton:)
+                forControlEvents: UIControlEventTouchUpInside];
 
+    // Make the cell not selectable
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    // ...with no accessory indicator
+    cell.accessoryType  = UITableViewCellAccessoryNone;
 }
 
 
-#pragma mark - UICollectionView delegates
+//----------------------------------------------------------------------------------------------------------
+/**
+ Asks the data source to commit the insertion or deletion of a specified row in the receiver.
+ 
+ When users tap the insertion (green plus) control or Delete button associated with a UITableViewCell object
+ in the table view, the table view sends this message to the data source, asking it to commit the change. (If
+ the user taps the deletion (red minus) control, the table view then displays the Delete button to get
+ confirmation.) The data source commits the insertion or deletion by invoking the UITableView methods
+ insertRowsAtIndexPaths:withRowAnimation: or deleteRowsAtIndexPaths:withRowAnimation:, as appropriate.
+ 
+ To enable the swipe-to-delete feature of table views (wherein a user swipes horizontally across a row to
+ display a Delete button), you must implement this method.
+ 
+ You should not call setEditing:animated: within an implementation of this method. If for some reason you must,
+ invoke it after a delay by using the performSelector:withObject:afterDelay: method.
+ 
+ @param tableView       The table-view object requesting the insertion or deletion.
+ @param editingStyle    The cell editing style corresponding to a insertion or deletion requested for the row
+ specified by indexPath. Possible editing styles are UITableViewCellEditingStyleInsert
+ or UITableViewCellEditingStyleDelete.
+ @param indexPath       An index path locating the row in tableView.
+ */
+- (void)    tableView:(UITableView *)tableView
+   commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
+    forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (editingStyle == UITableViewCellEditingStyleDelete)
+    {
+        // Delete the managed object at the given index path.
+        Packages *packageToDelete = [self.fetchedResultsController objectAtIndexPath: indexPath];
+        [self.managedObjectContext deleteObject: packageToDelete];
+        // ...and the row from the data source
+        [tableView deleteRowsAtIndexPaths:@[indexPath]
+                         withRowAnimation:UITableViewRowAnimationFade];
+        // ...and reload the table
+        [tableView reloadData];
+    }
+    else if (editingStyle == UITableViewCellEditingStyleInsert)
+    {
+        ALog(@"Unexpected editingStyle=%d", (int)editingStyle);
+    }
+    else
+    {
+        ALog(@"Unexpected editingStyle=%d", (int)editingStyle);
+    }
+}
+
+
 
 //----------------------------------------------------------------------------------------------------------
 /**
- Asks the delegate if the specified item should be selected.
+ Tells the data source to move a row at a specific location in the table view to another location.
  
- The collection view calls this method when the user tries to select an item in the collection view. It does 
- not call this method when you programmatically set the selection.
+ The UITableView object sends this message to the data source when the user presses the reorder control in fromRow.
  
- If you do not implement this method, the default return value is YES.
- 
- @param collectionView  The collection view object that is asking whether the selection should change.
- @param indexPath       The index path of the cell to be selected.
- @return                YES if the item should be selected or NO if it should not.
+ @param tableView       The table-view object requesting this action.
+ @param fromIndexPath   An index path locating the row to be moved in tableView.
+ @param toIndexPath     An index path locating the row in tableView that is the destination of the move.
  */
-- (BOOL)        collectionView: (UICollectionView *)collectionView
-   shouldSelectItemAtIndexPath: (NSIndexPath *)indexPath
+- (void)    tableView:(UITableView *)tableView
+   moveRowAtIndexPath:(NSIndexPath *)fromIndexPath
+          toIndexPath:(NSIndexPath *)toIndexPath
 {
     DLog();
     
-    return isEditModeActive ? NO : YES;
+#warning TODO consider putting packages in a local array - see OCRResumeEducationViewController
+    
 }
 
-#pragma mark - OCAEditableCollectionViewDelegateFlowLayout methods
 
+#pragma mark - Table view delegate methods
 
 //----------------------------------------------------------------------------------------------------------
 /**
- Inform the delegate editing of the collection view layout has begun.
+ Tells the delegate that the specified row is now selected.
  
- @param collectionView          The collection view object displaying the flow layout.
- @param collectionViewLayout    The layout object where editing has begun.
+ The delegate handles selections in this method. One of the things it can do is exclusively assign the check-mark
+ image (UITableViewCellAccessoryCheckmark) to one row in a section (radio-list style). This method isn’t called
+ when the editing property of the table is set to YES (that is, the table view is in editing mode). See "Managing
+ Selections" in Table View Programming Guide for iOS for further information (and code examples) related to this method.
+ 
+ @param tableView       A table-view object informing the delegate about the new row selection.
+ @param indexPath       An index path locating the new selected row in tableView.
  */
-- (void) didBeginEditingForCollectionView: (UICollectionView *)collectionView
-                                   layout: (UICollectionViewLayout*)collectionViewLayout
+- (void)        tableView: (UITableView *)tableView
+  didSelectRowAtIndexPath: (NSIndexPath *)indexPath
 {
     DLog();
     
-    // Set the flag indicating we are in edit mode
-    isEditModeActive = YES;
+    // We display all the content of an Education object in its cell, and edit in place. Selection not necessary.
+    
+    // Clear the selection highlight
+    [tableView deselectRowAtIndexPath: indexPath
+                             animated: YES];
 }
 
 
 //----------------------------------------------------------------------------------------------------------
 /**
- Inform the delegate editing of the collection view layout has ended.
+ Asks the delegate for the height to use for the header of a particular section.
  
- @param collectionView          The collection view object displaying the flow layout.
- @param collectionViewLayout    The layout object where editing has ended.
+ This method allows the delegate to specify section headers with varying heights.
+ 
+ @param tableView       The table-view object requesting this information.
+ @param section         An index number identifying a section of tableView .
+ @return               A nonnegative floating-point value that specifies the height (in points) of the header
+ for section.
  */
-- (void) didEndEditingForCollectionView: (UICollectionView *)collectionView
-                                 layout: (UICollectionViewLayout*)collectionViewLayout
+- (CGFloat)     tableView: (UITableView *)tableView
+ heightForHeaderInSection: (NSInteger)section
 {
     DLog();
     
-    // Unset the flag indicating we are in edit mode
-    isEditModeActive = NO;
-
-    // Resequence the Packages in case the order was changed in the UI
-    [self resequencePackages];
-    
-    // Save the context
-    [kAppDelegate saveContext: [kAppDelegate managedObjectContext]];
-    [self reloadFetchedResults:nil];
-    [self.collectionView reloadData];
+    // The height of the header constant
+    return kOCRHeaderCellHeight;
 }
 
-
-//----------------------------------------------------------------------------------------------------------
-- (void)            collectionView: (UICollectionView *)collectionView
-                            layout: (UICollectionViewLayout *)collectionViewLayout
-  willBeginDraggingItemAtIndexPath: (NSIndexPath *)indexPath
-{
-    DLog(@"will begin drag");
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-- (void)            collectionView: (UICollectionView *)collectionView
-                            layout: (UICollectionViewLayout *)collectionViewLayout
-   didBeginDraggingItemAtIndexPath: (NSIndexPath *)indexPath
-{
-    DLog(@"did begin drag");
-    
-    [self performSelector: @selector(invalidateLayout:)
-               withObject: collectionViewLayout
-               afterDelay: 0.1f];
-}
-
-//----------------------------------------------------------------------------------------------------------
-- (void)invalidateLayout: (UICollectionViewLayout *)collectionViewLayout
-{
-    [self.collectionViewLayout invalidateLayout];
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-- (void)        collectionView:(UICollectionView *)collectionView
-                        layout:(UICollectionViewLayout *)collectionViewLayout
-willEndDraggingItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    DLog(@"will end drag");
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-- (void)        collectionView:(UICollectionView *)collectionView
-                        layout:(UICollectionViewLayout *)collectionViewLayout
- didEndDraggingItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    DLog(@"did end drag");
-    
-    [self performSelector: @selector(invalidateLayout:)
-               withObject: collectionViewLayout
-               afterDelay: 0.1f];
-}
 
 //----------------------------------------------------------------------------------------------------------
 /**
- Ask the delegate if editing is allowed by this collectionview and layout.
+ Asks the delegate for a view object to display in the header of the specified section of the table view.
  
- @param collectionView          The collection view object displaying the flow layout.
- @param collectionViewLayout    The layout object where editing will occur.
- @return                        YES if editing is allowed, NO otherwise.
- */
-- (BOOL)shouldEnableEditingForCollectionView: (UICollectionView *)collectionView
-                                      layout: (UICollectionViewLayout *)collectionViewLayout
-{
-    return YES;
-}
-
-#pragma mark - OCAEditableCollectionViewDataSource methods
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Ask the delegate if the cell at indexPath can be moved.
-
- @param collectionView          The collection view object displaying the flow layout.
- @param indexPath               The index path of the item.
- @return                        YES if the cell can be moved, NO if not.
-*/
-- (BOOL)collectionView: (UICollectionView *)collectionView
-canMoveItemAtIndexPath: (NSIndexPath *)indexPath
-{
-    return YES;
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Ask the delegate if the cell at fromIndexPath can be moved to toIndexPath.
+ The returned object can be a UILabel or UIImageView object, as well as a custom view. This method only works
+ correctly when tableView:heightForHeaderInSection: is also implemented.
  
- @param collectionView          The collection view object displaying the flow layout.
- @param fromIndexPath           The index path the item will be move from.
- @param toIndexPath             The destination index path of the item.
- @return                        YES if the cell can be moved, NO if not.
+ @param tableView       The table-view object asking for the view object.
+ @param section         An index number identifying a section of tableView .
+ @return               A view object to be displayed in the header of section .
  */
-- (BOOL)collectionView: (UICollectionView *)collectionView
-       itemAtIndexPath: (NSIndexPath *)fromIndexPath
-    canMoveToIndexPath: (NSIndexPath *)toIndexPath
+- (UIView *)    tableView: (UITableView *)tableView
+   viewForHeaderInSection: (NSInteger)section
 {
     DLog();
     
-    // All moves are acceptable
-    return YES;
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Inform the delegate the cell at indexPath has moved.
- 
- @param collectionView          The collection view object displaying the flow layout.
- @param fromIndexPath           The index path the item was moved from.
- @param toIndexPath             The destination index path of the item.
- */
-- (void)collectionView: (UICollectionView *)collectionView
-       itemAtIndexPath: (NSIndexPath *)fromIndexPath
-    didMoveToIndexPath: (NSIndexPath *)toIndexPath;
-{
-    DLog();
-    
-    // This UI has been updated, now update the underlying data structures.
-    [self moveItemAtIndexPath: fromIndexPath
-                  toIndexPath: toIndexPath];
-}
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Ask the delegate if the cell at indexPath can be deleted.
- 
- @param collectionView          The collection view object displaying the flow layout.
- @param indexPath               The index path of the cell to delete.
- @return                        YES if the cell can be deleted, NO if not.
- */
-- (BOOL)    collectionView: (UICollectionView *)collectionView
-  canDeleteItemAtIndexPath: (NSIndexPath *)indexPath
-{
-    DLog();
-    
-    // All cells can be deleted
-    return YES;
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Inform the delegate the cell at indexPath is about to be deleted.
- 
- @param collectionView          The collection view object displaying the flow layout.
- @param indexPath               The index path of the cell about to be deleted.
- */
-- (void)    collectionView: (UICollectionView *)collectionView
- willDeleteItemAtIndexPath: (NSIndexPath *)indexPath
-{
-    DLog();
-    
-    // Get the package that is that is about to be deleted from the collectionView
-    Packages *packageToDelete   = [self.fetchedResultsController objectAtIndexPath: indexPath];
-    // ...and the managed object context
-    NSManagedObjectContext *moc = [self.fetchedResultsController managedObjectContext];
-#warning TODO determine if we really need to delete the object here - or controller:didChange... or at all
-    // ...and delete it from the data model
-    [moc deleteObject: packageToDelete];
-    
+    OCRTableViewHeaderCell *headerView = [tableView dequeueReusableCellWithIdentifier: kOCRHeaderCell];
     /*
-     Here we save the context and wait for the operation to complete. If we invoked the asynchronous saveContext
-     method it would return immediately and the collectionView throws an assertion error because it
-     is out of sync with the data model.
+     There is a bug in UIKit (see https://devforums.apple.com/message/882042#882042) when using UITableViewCell
+     as the view for section headers. This has been a common practice throughout the iOS programming community.
+     
+     I designed section header views in IB as prototype table view cells - specifically OCRTableViewHeaderCell,
+     which subclasses UITableViewCell. This provides the benefit of using dequeueReusableCellWithIdentifier:
+     to get a view for each section header.
+     
+     Unfortunately this resulted in "no index path for table cell being reused" errors in the log output when
+     inserting new rows. Consequently the content (UILabel and UIButton) disappeared. For whatever reason,
+     UITableView gets confused if the section header views are UITableViewCells (or subclasses) instead of
+     just regular UIViews.
+     
+     What finally solved it was making the header view just a subclass of UIView instead of UITableViewCell. I
+     still use the prototype cell in IB to lay out the section header view, I simply create a "wrapperView" and
+     add the OCRTableViewHeaderCell as a subview.
      */
-//    [kAppDelegate saveContextAndWait: moc];
-    // Save all the changes to the context, and wait for the operation to complete...
-    [kAppDelegate saveContextAndWait: [kAppDelegate managedObjectContext]];
-    // ...when the save completes, reload the data
-    [self reloadFetchedResults: nil];
-    // ...and collectionView
-    [self.collectionView reloadData];
-}
-
-- (void)    collectionView:(UICollectionView *)collectionView
-  didDeleteItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    DLog();
+    UIView *wrapperView = [[UIView alloc] initWithFrame: [headerView frame]];
+    [wrapperView addSubview:headerView];
+#warning TODO add constraints to pin edges to tableView
     
-    [self postDeleteNotification];
+    // Set the section dynamic text font, text color, and background color
+    [headerView.sectionLabel setFont:            [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline]];
+    [headerView.sectionLabel setTextColor:       [UIColor blackColor]];
+    [headerView.sectionLabel setBackgroundColor: [UIColor clearColor]];
+    
+    // Set the tag of the addButton to the section the header represents
+    [headerView.addButton setTag:section];
+    
+    // Hide or show the addButton depending on whether we are in editing mode
+    if (self.isEditing)
+    {
+        [headerView.addButton setHidden: NO];
+    }
+    else
+    {
+        [headerView.addButton setHidden: YES];
+    }
+    
+    // Finally, set the text content and save a reference to the add button so they can be
+    // shown or hidden whenever the user turns editing mode on or off
+    headerView.sectionLabel.text    = NSLocalizedString(@"Packages", nil);
+    addBtn                          = headerView.addButton;
+    
+    return wrapperView;
 }
 
 
@@ -800,14 +894,14 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
 /**
  Asks the delegate whether the first view controller should be hidden for the specified orientation.
  
- The split view controller calls this method only for the first child view controller in its array. The second 
+ The split view controller calls this method only for the first child view controller in its array. The second
  view controller always remains visible regardless of the orientation.
-
+ 
  @param svc         The split view controller that owns the first view controller.
  @param vc          The first view controller in the array of view controllers.
  @param orientation The orientation being considered.
- @return            YES if the view controller should be hidden in the specified orientation or NO if it should 
-                    be visible.
+ @return            YES if the view controller should be hidden in the specified orientation or NO if it should
+ be visible.
  */
 - (BOOL)splitViewController: (UISplitViewController *)svc
    shouldHideViewController: (UIViewController *)vc
@@ -825,17 +919,17 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
 /**
  Tells the delegate that the specified view controller is about to be hidden.
  
- When the split view controller rotates from a landscape to portrait orientation, it normally hides one of its 
- view controllers. When that happens, it calls this method to coordinate the addition of a button to the toolbar 
- (or navigation bar) of the remaining custom view controller. If you want the soon-to-be hidden view controller 
- to be displayed in a popover, you must implement this method and use it to add the specified button to your 
+ When the split view controller rotates from a landscape to portrait orientation, it normally hides one of its
+ view controllers. When that happens, it calls this method to coordinate the addition of a button to the toolbar
+ (or navigation bar) of the remaining custom view controller. If you want the soon-to-be hidden view controller
+ to be displayed in a popover, you must implement this method and use it to add the specified button to your
  interface.
-
+ 
  @param svc                 The split view controller that owns the specified view controller.
  @param aViewController     The view controller being hidden.
  @param barButtonItem       A button you can add to your toolbar.
- @param aPopoverController  The popover controller that uses taps in barButtonItem to display the specified 
-                            view controller.
+ @param aPopoverController  The popover controller that uses taps in barButtonItem to display the specified
+ view controller.
  */
 - (void)splitViewController: (UISplitViewController*)svc
      willHideViewController: (UIViewController *)aViewController
@@ -850,7 +944,7 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
     self.rootPopoverButtonItem      = barButtonItem;
     
     /*
-     The detail view may be the cover letter - a simple UIViewController, or the resume - a UITabBarController containing several 
+     The detail view may be the cover letter - a simple UIViewController, or the resume - a UITabBarController containing several
      aspects of the resume. Figure out which one we have and tell any and all subordinate objects to showRootPopoverButtonItem
      */
     // Let's guess we are doing a resume segue, in which case we have a UITabBarController
@@ -884,12 +978,12 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
 /**
  Tells the delegate that the specified view controller is about to be shown again.
  
- When the view controller rotates from a portrait to landscape orientation, it shows its hidden view controller 
- once more. If you added the specified button to your toolbar to facilitate the display of the hidden view 
+ When the view controller rotates from a portrait to landscape orientation, it shows its hidden view controller
+ once more. If you added the specified button to your toolbar to facilitate the display of the hidden view
  controller in a popover, you must implement this method and use it to remove that button.
  
  Nil out references to the popover controller and the popover button, and tell the detail view controller to hide the button.
-
+ 
  @param svc                 The split view controller that owns the specified view controller.
  @param aViewController     The view controller being hidden.
  @param button              The button used to display the view controller while it was hidden.
@@ -945,52 +1039,24 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
     NSArray *packages = [self.fetchedResultsController fetchedObjects];
     
     // Get the number of sections in order to construct an indexPath
-    NSInteger sectionCount = [self.collectionView numberOfSections];
+    NSInteger sectionCount = [self.tableView numberOfSections];
     
     // Start our sequence numbers at 1
     int i = 1;
     for (NSInteger section = 0; section < sectionCount; section++)
     {
-        NSInteger itemCount = [self.collectionView numberOfItemsInSection: section];
+        NSInteger itemCount = [self.tableView numberOfRowsInSection: section];
         for (NSInteger item = 0; item < itemCount; item++)
         {
             // Construct an NSIndexPath given the section and row
             NSIndexPath *indexPath          = [NSIndexPath indexPathForItem: item
                                                                   inSection: section];
             // ...and get the cooresponding cell from the collection view
-            OCRPackagesCell *packagesCell   = (OCRPackagesCell *)[self.collectionView cellForItemAtIndexPath: indexPath];
+            OCRPackagesCell *packagesCell   = (OCRPackagesCell *)[self.tableView cellForRowAtIndexPath: indexPath];
             Packages *aPackage              = packages[packagesCell.tag];
             [aPackage setSequence_number: @(i++)];
         }
     }
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Helper method called when a cell has moved to move the cooresponding package.
- 
- After the user re-orders the cells representing packages, call this method to re-order the packages in the
- package array and resequence them.
- 
- @param indexPath       The starting NSIndexPath of the cell.
- @param newIndexPath    The destination of the move.
- */
-- (void)moveItemAtIndexPath: (NSIndexPath *)indexPath
-                toIndexPath: (NSIndexPath *)newIndexPath
-{
-    DLog();
-    
-    NSMutableArray *packages = [[self.fetchedResultsController fetchedObjects] mutableCopy];
-    
-    // Grab the item we're moving.
-    NSManagedObject *movedPackage = [[self fetchedResultsController] objectAtIndexPath: indexPath];
-    
-    // Remove the object we're moving from the array.
-    [packages removeObject: movedPackage];
-    // Now re-insert it at the destination.
-    [packages insertObject: movedPackage
-                   atIndex: newIndexPath.row];
 }
 
 
@@ -1000,18 +1066,18 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
 /**
  Notifies the view controller that a segue is about to be performed.
  
- The default implementation of this method does nothing. Your view controller overrides this method when it 
- needs to pass relevant data to the new view controller. The segue object describes the transition and includes 
+ The default implementation of this method does nothing. Your view controller overrides this method when it
+ needs to pass relevant data to the new view controller. The segue object describes the transition and includes
  references to both view controllers involved in the segue.
  
- Because segues can be triggered from multiple sources, you can use the information in the segue and sender 
- parameters to disambiguate between different logical paths in your app. For example, if the segue originated 
- from a table view, the sender parameter would identify the table view cell that the user tapped. You could use 
+ Because segues can be triggered from multiple sources, you can use the information in the segue and sender
+ parameters to disambiguate between different logical paths in your app. For example, if the segue originated
+ from a table view, the sender parameter would identify the table view cell that the user tapped. You could use
  that information to set the data on the destination view controller.
-
+ 
  @param segue   The segue object containing information about the view controllers involved in the segue.
- @param sender  The object that initiated the segue. You might use this parameter to perform different actions 
-                based on which control (or other object) initiated the segue.
+ @param sender  The object that initiated the segue. You might use this parameter to perform different actions
+ based on which control (or other object) initiated the segue.
  */
 - (void)prepareForSegue: (UIStoryboardSegue *)segue
                  sender: (id)sender
@@ -1019,7 +1085,7 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
     DLog();
     /*
      See the comment in - configureCell:atIndexPath: to understand how we are using sender.tag with fetchedResultsController
-
+     
      The sender is one of the buttons in a UICollectionViewCell (not the cell itself). To construct the indexPath
      we use the tag on the UIButton, which is set in configureCell:atIndexPath:
      */
@@ -1029,7 +1095,7 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
     {
         Packages *aPackage = [self.fetchedResultsController objectAtIndexPath: indexPath];
         /*
-         We want to pass a few data object references to the cover letter controller (discussed in more detail below) - so we 
+         We want to pass a few data object references to the cover letter controller (discussed in more detail below) - so we
          first get a reference to the cover letter controller, which is embedded in a UINavigationController.
          */
         OCRBaseDetailViewController *cvrLtrController = [(UINavigationController *)[segue destinationViewController] viewControllers][0];
@@ -1055,7 +1121,7 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
          
          I also created a macro (see GlobalMacros.h):
          
-            #define kAppDelegate    (OCRAppDelegate *)[[UIApplication sharedApplication] delegate]      // Note it DOES NOT end with a ';'
+         #define kAppDelegate    (OCRAppDelegate *)[[UIApplication sharedApplication] delegate]      // Note it DOES NOT end with a ';'
          
          Thus, in other source files [kAppDelegate managedObjectContext] returns a reference to our managedObjectContext.
          */
@@ -1079,13 +1145,13 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
             {
                 // ...if so, have the detail view show it
                 [detailViewController showRootPopoverButtonItem: _rootPopoverButtonItem
-                                             withController: _packagesPopoverController];
+                                                 withController: _packagesPopoverController];
             }
             [detailViewController setSelectedManagedObject: aPackage.resume];
             [detailViewController setBackButtonTitle: NSLocalizedString(@"Packages", nil)];
             [detailViewController setFetchedResultsController: self.fetchedResultsController];
         }
-
+        
         if (self.packagesPopoverController)
         {
             [self.packagesPopoverController dismissPopoverAnimated: YES];
@@ -1137,21 +1203,175 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
     _fetchedResultsController.delegate = self;
     
     // ...and start fetching results
-	NSError *error = nil;
-	if (![self.fetchedResultsController performFetch:&error])
+    NSError *error = nil;
+    if (![self.fetchedResultsController performFetch:&error])
     {
-	     /*
-          This is a case where something serious has gone wrong. Let the user know and try to give them some options that might actually help.
-          I'm providing my direct contact information in the hope I can help the user and avoid a bad review.
-          */
-	    ELog(error, @"Unresolved error");
-	    [OCAUtilities showErrorWithMessage: NSLocalizedString(@"Could not read the database. Try quitting the app. If that fails, try deleting KOResume and restoring from iCloud or iTunes backup. Please contact the developer by emailing kevin@omaraconsultingassoc.com", nil)];
-	}
+        /*
+         This is a case where something serious has gone wrong. Let the user know and try to give them some options that might actually help.
+         I'm providing my direct contact information in the hope I can help the user and avoid a bad review.
+         */
+        ELog(error, @"Unresolved error");
+        [OCAUtilities showErrorWithMessage: NSLocalizedString(@"Could not read the database. Try quitting the app. If that fails, try deleting KOResume and restoring from iCloud or iTunes backup. Please contact the developer by emailing kevin@omaraconsultingassoc.com", nil)];
+    }
     DLog(@"results=%@", self.fetchedResultsController.sections[0]);
     
     return _fetchedResultsController;
 }    
 
+
+
+#pragma mark - Fetched Results Controller delegate methods
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Notifies the receiver that the fetched results controller is about to start processing of one or more changes
+ due to an add, remove, move, or update.
+ 
+ This method is invoked before all invocations of controller:didChangeObject:atIndexPath:forChangeType:newIndexPath:
+ and controller:didChangeSection:atIndex:forChangeType: have been sent for a given change event (such as the
+ controller receiving a NSManagedObjectContextDidSaveNotification notification).
+ 
+ @param controller      The fetched results controller that sent the message.
+ */
+- (void)controllerWillChangeContent: (NSFetchedResultsController *)controller
+{
+    DLog();
+    
+    // The fetch controller is about to start sending change notifications, so prepare the table view for updates.
+    [self.tableView beginUpdates];
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Notifies the receiver that a fetched object has been changed due to an add, remove, move, or update.
+ 
+ The fetched results controller reports changes to its section before changes to the fetch result objects.
+ Changes are reported with the following heuristics:
+ * On add and remove operations, only the added/removed object is reported.
+ * It’s assumed that all objects that come after the affected object are also moved, but these moves are
+ not reported.
+ * A move is reported when the changed attribute on the object is one of the sort descriptors used in the
+ fetch request.
+ An update of the object is assumed in this case, but no separate update message is sent to the delegate.
+ * An update is reported when an object’s state changes, but the changed attributes aren’t part of the sort keys.
+ 
+ This method may be invoked many times during an update event (for example, if you are importing data on a background
+ thread and adding them to the context in a batch). You should consider carefully whether you want to update the
+ table view on receipt of each message.
+ 
+ @param controller      The fetched results controller that sent the message.
+ @param anObject        The object in controller’s fetched results that changed.
+ @param indexPath       The index path of the changed object (this value is nil for insertions).
+ @param type            The type of change. For valid values see “NSFetchedResultsChangeType”.
+ @param newIndexPath    The destination path for the object for insertions or moves (this value is nil for a deletion).
+ */
+- (void)controller: (NSFetchedResultsController *)controller
+   didChangeObject: (id)anObject
+       atIndexPath: (NSIndexPath *)indexPath
+     forChangeType: (NSFetchedResultsChangeType)type
+      newIndexPath: (NSIndexPath *)newIndexPath
+{
+    DLog();
+    
+    // Use the type to determine the operation to perform
+    switch(type)
+    {
+//        case NSFetchedResultsChangeInsert:
+//            // Insert a row
+//            [self.tableView insertRowsAtIndexPaths: @[newIndexPath]
+//                                  withRowAnimation: UITableViewRowAnimationFade];
+//            break;
+//            
+//        case NSFetchedResultsChangeDelete:
+//            // Delete a row
+//            [self.tableView deleteRowsAtIndexPaths: @[indexPath]
+//                                  withRowAnimation: UITableViewRowAnimationFade];
+//            break;
+//            
+//        case NSFetchedResultsChangeUpdate:
+//            // Underlying contents have changed, re-configure the cell
+//            [self.tableView reloadRowsAtIndexPaths:@[newIndexPath]
+//                                  withRowAnimation:UITableViewRowAnimationFade];
+//            break;
+//            
+//        case NSFetchedResultsChangeMove:
+//            // On a move, delete the rows where they were...
+//            [self.tableView deleteRowsAtIndexPaths: @[indexPath]
+//                                  withRowAnimation: UITableViewRowAnimationFade];
+//            // ...and reload the section to insert new rows and ensure titles are updated appropriately.
+//            [self.tableView reloadSections: [NSIndexSet indexSetWithIndex: newIndexPath.section]
+//                          withRowAnimation: UITableViewRowAnimationFade];
+//            break;
+    }
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Notifies the receiver of the addition or removal of a section.
+ 
+ The fetched results controller reports changes to its section before changes to the fetched result objects.
+ 
+ This method may be invoked many times during an update event (for example, if you are importing data on a
+ background thread and adding them to the context in a batch). You should consider carefully whether you want
+ to update the table view on receipt of each message.
+ 
+ @param controller      The fetched results controller that sent the message.
+ @param sectionInfo     The section that changed.
+ @param sectionIndex    The index of the changed section.
+ @param type            The type of change (insert or delete). Valid values are NSFetchedResultsChangeInsert
+ and NSFetchedResultsChangeDelete.
+ */
+- (void)controller: (NSFetchedResultsController *)controller
+  didChangeSection: (id <NSFetchedResultsSectionInfo>)sectionInfo
+           atIndex: (NSUInteger)sectionIndex
+     forChangeType: (NSFetchedResultsChangeType)type
+{
+    DLog();
+    
+    // Use the type to determine the operation to perform
+//    switch(type)
+//    {
+//        case NSFetchedResultsChangeInsert:
+//            [_tableView insertSections: [NSIndexSet indexSetWithIndex: sectionIndex]
+//                      withRowAnimation: UITableViewRowAnimationFade];
+//            break;
+//            
+//        case NSFetchedResultsChangeDelete:
+//            [_tableView deleteSections: [NSIndexSet indexSetWithIndex: sectionIndex]
+//                      withRowAnimation: UITableViewRowAnimationFade];
+//            break;
+//            
+//        case NSFetchedResultsChangeMove:
+//            ALog(@"Did not expect NSFetchedResultsChangeMove");
+//            break;
+//            
+//        case NSFetchedResultsChangeUpdate:
+//            ALog(@"Did not expect NSFetchedResultsChangeUpdate");
+//            break;
+//    }
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Notifies the receiver that the fetched results controller has completed processing of one or more changes
+ due to an add, remove, move, or update.
+ 
+ This method is invoked after all invocations of controller:didChangeObject:atIndexPath:forChangeType:newIndexPath:
+ and controller:didChangeSection:atIndex:forChangeType: have been sent for a given change event (such as the
+ controller receiving a NSManagedObjectContextDidSaveNotification notification).
+ 
+ @param controller  The fetched results controller that sent the message.
+ */
+- (void)controllerDidChangeContent: (NSFetchedResultsController *)controller
+{
+    DLog();
+    
+    // The fetch controller has sent all current change notifications, so tell the table view to process all updates.
+    [self.tableView endUpdates];
+}
 
 
 //----------------------------------------------------------------------------------------------------------
@@ -1165,7 +1385,7 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
 - (void)reloadFetchedResults: (NSNotification*)note
 {
     DLog();
-
+    
     /*
      Because the app delegate now loads the NSPersistentStore into the NSPersistentStoreCoordinator asynchronously
      the NSManagedObjectContext is set up before any persistent stores are registered we need to fetch again
@@ -1187,226 +1407,8 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
     }
 }
 
-#pragma mark - Fetched results controller delegate
-
-- (void)controllerWillChangeContent: (NSFetchedResultsController *)controller
-{
-    DLog();
-    
-    // Init the section and object change arrays
-    __sectionChanges    = [[NSMutableArray alloc] initWithCapacity:3];
-    __itemChanges     = [[NSMutableArray alloc] initWithCapacity:3];
-
-}
 
 //----------------------------------------------------------------------------------------------------------
-/**
- The fetched results controller can "batch" updates to improve performance and preserve battery life.
- 
- See http://ashfurrow.com/blog/uicollectionview-example for a tutorial on how this processs works.
- 
- @param controller      the NSFetchResultsController
- @param sectionInfo     the sectionInfo for the changed section
- @param sectionIndex    the index of the changed section
- @param type            the NSFetchedResultsChangeType of the change
- */
-- (void)controller: (NSFetchedResultsController *)controller
-  didChangeSection: (id <NSFetchedResultsSectionInfo>)sectionInfo
-           atIndex: (NSUInteger)sectionIndex
-     forChangeType: (NSFetchedResultsChangeType)type
-{
-    DLog();
-    
-    // Create a dictionary for the change
-    NSMutableDictionary *change = [NSMutableDictionary new];
-    // ...set an object in the dictionary with a key of type and value of sectionIndex
-    change[@(type)] = @[@(sectionIndex)];
-    // ...and add it to the sectionChanges dictionary
-    [__sectionChanges addObject: change];
-}
-
-
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Notifies the receiver that a fetched object has been changed due to an add, remove, move, or update.
- 
- The fetched results controller reports changes to its section before changes to the fetch result objects.
- 
- Changes are reported with the following heuristics:
- * On add and remove operations, only the added/removed object is reported.
-   It’s assumed that all objects that come after the affected object are also moved, but these moves are not reported.
- * A move is reported when the changed attribute on the object is one of the sort descriptors used in the fetch request.
-   An update of the object is assumed in this case, but no separate update message is sent to the delegate.
- * An update is reported when an object’s state changes, but the changed attributes aren’t part of the sort keys.
- 
- This method may be invoked many times during an update event (for example, if you are importing data on a background 
- thread and adding them to the context in a batch). You should consider carefully whether you want to update the table 
- view on receipt of each message.
- 
- @param controller      The fetched results controller that sent the message.
- @param anObject        The object in controller’s fetched results that changed.
- @param indexPath       The index path of the changed object (this value is nil for insertions).
- @param type            The type of change. For valid values see “NSFetchedResultsChangeType”.
- @param newIndexPath    The destination path for the object for insertions or moves (this value is nil for a deletion).
- */
-- (void)controller: (NSFetchedResultsController *)controller
-   didChangeObject: (id)anObject
-       atIndexPath: (NSIndexPath *)indexPath
-     forChangeType: (NSFetchedResultsChangeType)type
-      newIndexPath: (NSIndexPath *)newIndexPath
-{
-    DLog(@"change type=%d", type);
-    
-    NSMutableDictionary *change = [NSMutableDictionary new];
-    switch(type)
-    {
-        case NSFetchedResultsChangeInsert:
-            change[@(type)] = newIndexPath;
-            break;
-            
-        case NSFetchedResultsChangeDelete:
-            change[@(type)] = indexPath;
-            break;
-            
-        case NSFetchedResultsChangeUpdate:
-            change[@(type)] = indexPath;
-            break;
-            
-        case NSFetchedResultsChangeMove:
-            change[@(type)] = @[indexPath, newIndexPath];
-            break;
-    }
-    
-    [__itemChanges addObject:change];
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-/*
- Notifies the receiver that the fetched results controller has completed processing of one or more changes 
- due to an add, remove, move, or update.
- 
- This method is invoked after all invocations of controller:didChangeObject:atIndexPath:forChangeType:newIndexPath: 
- and controller:didChangeSection:atIndex:forChangeType: have been sent for a given change event (such as the 
- controller receiving a NSManagedObjectContextDidSaveNotification notification).
- 
- @param controller      The fetched results controller that sent the message.
- */
-- (void)controllerDidChangeContent: (NSFetchedResultsController *)controller
-{
-    DLog();
-    
-    /*
-     sectionChanges is an array of NSDictionary objects used to batch changes to sections in the fetch results.
-     
-     In the case of Packages, there is only 1 section so there will never be changes. Implemented for the
-     sake of completeness.
-     */
-    // Check to see if there are section changes
-    
-    __block BOOL objectWasDeleted = NO;
-    if ([__sectionChanges count] > 0)
-    {
-        // ...yes, we have changes to make
-        [self.collectionView performBatchUpdates: ^{
-            /*
-             performBatchUpdates animates multiple insert, delete, reload, and move operations as a group.
-             
-             You can use this method in cases where you want to make multiple changes to the collection view in 
-             one single animated operation, as opposed to in several separate animations. You might use this method 
-             to insert, delete, reload or move cells or use it to change the layout parameters associated with one 
-             or more cells. Use the blocked passed in the updates parameter to specify all of the operations you 
-             want to perform.
-             */
-            for (NSDictionary *change in __sectionChanges) {
-                // For each change dictionary, iterate through the changes
-                [change enumerateKeysAndObjectsUsingBlock: ^(NSNumber *key, id obj, BOOL *stop) {
-                    // ...get the type
-                    NSFetchedResultsChangeType type = [key unsignedIntegerValue];
-                    // ...and perform the insert, delete, or update operation on the collection view
-                    switch (type) {
-                        case NSFetchedResultsChangeInsert:
-                            [self.collectionView insertSections: [NSIndexSet indexSetWithIndex: [obj unsignedIntegerValue]]];
-                            break;
-                            
-                        case NSFetchedResultsChangeDelete:
-                            [self.collectionView deleteSections: [NSIndexSet indexSetWithIndex: [obj unsignedIntegerValue]]];
-                            objectWasDeleted = YES;
-                            DLog(@"set deleted flag in section");
-                            break;
-                            
-                        case NSFetchedResultsChangeUpdate:
-                            [self.collectionView reloadSections: [NSIndexSet indexSetWithIndex: [obj unsignedIntegerValue]]];
-                            break;
-                            
-                        case NSFetchedResultsChangeMove:
-                            [self.collectionView deleteSections: [NSIndexSet indexSetWithIndex: [obj unsignedIntegerValue]]];
-                            [self.collectionView insertSections: [NSIndexSet indexSetWithIndex: [obj unsignedIntegerValue]]];
-                            break;
-                    }
-                }];
-            }
-        } completion:nil];
-    }
-    
-    /*
-     objectChanges is an array of NSDictionary objects used to batch changes to objects in the collection view
-     */
-    // Check to see if there are object changes -- but sectionChanges, if any, have all been applied
-    if ([__itemChanges count] > 0 && [__sectionChanges count] == 0)
-    {
-        // ...yes, we have changes to make
-        [self.collectionView performBatchUpdates: ^{
-            /*
-             see the performBatchUpdates comment above
-             */
-            for (NSDictionary *change in __itemChanges)
-            {
-                // For each change dictionary, iterate through the changes
-                [change enumerateKeysAndObjectsUsingBlock: ^(NSNumber *key, id obj, BOOL *stop) {
-                    // ...get the type
-                    NSFetchedResultsChangeType type = [key unsignedIntegerValue];
-                    // ...and perform the insert, delete, update, or move operation on the collection view
-                    switch (type)
-                    {
-                        case NSFetchedResultsChangeInsert:
-                            [self.collectionView insertItemsAtIndexPaths: @[obj]];
-                            break;
-                            
-                        case NSFetchedResultsChangeDelete:
-                            [self.collectionView deleteItemsAtIndexPaths: @[obj]];
-                            objectWasDeleted = YES;
-                            DLog(@"set deleted flag in object");
-                            break;
-                            
-                        case NSFetchedResultsChangeUpdate:
-                            [self.collectionView reloadItemsAtIndexPaths: @[obj]];
-                            break;
-                            
-                        case NSFetchedResultsChangeMove:
-                            [self.collectionView moveItemAtIndexPath: obj[0]
-                                                         toIndexPath: obj[1]];
-                            break;
-                    }
-                }];
-            }
-        } completion:nil];
-    }
-    
-    // We processed all the changes, nil the arrays
-    __sectionChanges    = nil;
-    __itemChanges       = nil;
-    
-    DLog(@"deleted flag = %@", objectWasDeleted? @"YES" : @"NO");
-    // Check to see if a delete has occured
-    if (objectWasDeleted)
-    {
-        // If so, notify all the listners of the delete
-        [self postDeleteNotification];
-    }
-}
-
 - (void)postDeleteNotification
 {
     DLog();
@@ -1416,7 +1418,7 @@ canMoveItemAtIndexPath: (NSIndexPath *)indexPath
                                                                      userInfo: nil];
     
     [[NSNotificationCenter defaultCenter] postNotification: deleteNotification];
-   
+    
 }
 
 

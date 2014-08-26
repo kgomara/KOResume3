@@ -11,18 +11,17 @@
  */
 
 #import <UIKit/UIKit.h>
-#import <OCAEditableCollectionViewFlowLayout/OCAEditableCollectionViewFlowLayoutCell.h>
 
 extern CGFloat const kOCRPackagesCellWidth;
 extern CGFloat const kOCRPackagesCellHeight;
 extern CGFloat const kOCRPackagesCellWidthPadding;
 
-@interface OCRPackagesCell : OCAEditableCollectionViewFlowLayoutCell
+@interface OCRPackagesCell : UITableViewCell
 
 /**
  IBOutlet to the title lable.
  */
-@property (nonatomic, weak)     IBOutlet UILabel    *title;
+@property (weak, nonatomic)     IBOutlet UILabel    *title;
 
 /**
  IBOutlet to the button that shows the cover letter in the detail view.

@@ -7,12 +7,12 @@
 //
 
 #import "OCRAppDelegate.h"
-#import "OCRPackagesViewController.h"
+#import "OCRPackagesTableViewController.h"
 #import "OCRCoverLtrViewController.h"
 
 @interface OCRAppDelegate ()
 
-@property (nonatomic, strong) OCRPackagesViewController *masterViewController;
+@property (nonatomic, strong) OCRPackagesTableViewController *masterViewController;
 
 @property (nonatomic, strong) OCRCoverLtrViewController *detailViewController;
 
@@ -56,7 +56,7 @@
     // Get the nav controller containing the OCRPackagesViewController
     UINavigationController *navigationController    = [splitViewController.viewControllers firstObject];
     // ...and maintain a reference to it.
-    self.masterViewController   = (OCRPackagesViewController *)navigationController.topViewController;
+    self.masterViewController   = (OCRPackagesTableViewController *)navigationController.topViewController;
     
     // Similarly, get the UINavigation controller in which the OCRCoverLtrViewController is embedded
     navigationController        = [splitViewController.viewControllers lastObject];
