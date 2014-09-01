@@ -832,6 +832,46 @@
 
 //----------------------------------------------------------------------------------------------------------
 /**
+ Tells the data source to return the number of rows in a given section of a table view.
+ 
+ @param tableView       The table-view object requesting this information.
+ @param section         An index number identifying a section in tableView.
+ @return                The number of rows in section.
+ */
+- (NSInteger)tableView: (UITableView *)tableView
+ numberOfRowsInSection: (NSInteger)section
+{
+    DLog(@"section=%ld", (long)section);
+    
+    /*
+     From a style perspective, I prefer that methods "leave" at the end, so I tend to instantiate a variable
+     to return whatever the method returns, set its value where appropriate, and "fall thru" to the end of
+     the method.
+     There is nothing wrong with sprinkling return statements throughout the method - e.g., return [_jobArray count];
+     it's just my preference.
+     */
+    NSInteger rowsInSection;
+    
+    switch (section)
+    {
+        case k_JobsSection:
+            rowsInSection = [_jobArray count];
+            break;
+        case k_EducationSection:
+            rowsInSection = [_educationArray count];
+            break;
+        default:
+            ALog(@"Unexpected section = %ld", (long)section);
+            rowsInSection = 0;
+            break;
+    }
+    
+    return rowsInSection;
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+/**
  Asks the data source to verify that the given row is editable.
  
  @param tableView       The table-view object requesting this information.
@@ -1083,46 +1123,6 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
         [_educationArray insertObject: movedEducation
                               atIndex: toRow];
     }
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Tells the data source to return the number of rows in a given section of a table view.
- 
- @param tableView       The table-view object requesting this information.
- @param section         An index number identifying a section in tableView.
- @return                The number of rows in section.
- */
-- (NSInteger)tableView: (UITableView *)tableView
- numberOfRowsInSection: (NSInteger)section
-{
-    DLog(@"section=%ld", (long)section);
-    
-    /*
-     From a style perspective, I prefer that methods "leave" at the end, so I tend to instantiate a variable
-     to return whatever the method returns, set its value where appropriate, and "fall thru" to the end of
-     the method.
-     There is nothing wrong with sprinkling return statements throughout the method - e.g., return [_jobArray count];
-     it's just my preference.
-     */
-    NSInteger rowsInSection;
-    
-	switch (section)
-    {
-		case k_JobsSection:
-			rowsInSection = [_jobArray count];
-			break;
-		case k_EducationSection:
-			rowsInSection = [_educationArray count];
-			break;
-		default:
-			ALog(@"Unexpected section = %ld", (long)section);
-			rowsInSection = 0;
-			break;
-	}
-    
-    return rowsInSection;
 }
 
 

@@ -33,6 +33,8 @@ extern CGFloat const kOCRPackagesCellWidthPadding;
  */
 @property (nonatomic, weak)     IBOutlet UIButton   *resumeButton;
 
+@property (nonatomic, weak)     IBOutlet NSLayoutConstraint *rightEdgeConstraint;
+
 /**
  Helper method to get the UIFont of the title field.
  
@@ -46,5 +48,6 @@ extern CGFloat const kOCRPackagesCellWidthPadding;
  Used as part of the support for dynamic font handling.
  */
 + (NSString *)detailFont;
+
 
 @end

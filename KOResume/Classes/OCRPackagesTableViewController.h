@@ -48,4 +48,6 @@
  */
 @property (nonatomic, strong) NSManagedObjectContext        *managedObjectContext;
 
+- (IBAction)didPressAddPackageButton: (id)sender;
+
 @end

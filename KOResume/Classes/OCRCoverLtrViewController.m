@@ -220,6 +220,16 @@
     
     // Set the buttons.
     self.navigationItem.rightBarButtonItems = @[editBtn];
+    if (self.selectedManagedObject && !self.selectedManagedObject.isDeleted)
+    {
+        // We have an object to work with - allow editing
+        [editBtn setEnabled:YES];
+    }
+    else
+    {
+        // The object we were given has been deleted - can't edit "nothing"
+        [editBtn setEnabled:NO];
+    }
     
     // ...by default, the user cannot edit the text, make it un-editable until the user taps the edit button
     [self.coverLtrFld setEditable:NO];

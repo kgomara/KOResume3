@@ -55,6 +55,37 @@ CGFloat const kOCRPackagesCellWidthPadding  =  20.0f;
     
     [super awakeFromNib];
     
+    /*
+     From http://spin.atomicobject.com/2014/03/05/uiscrollview-autolayout-ios/
+     
+     I feel this is a work-around to a poor implementation of autolayout with scrollview - perhaps Apple
+     will come up with a better Storyboard/IB paradigm in a later Beta of Xcode 6.
+     
+     Bascially, the above post points out that the "content view" (contained in our scrollView) needs to
+     be pinned to the scrollView's superview - which cannot be done in IB.
+     
+     The constant 16 is another work-around, as the UIScrollview really, really wants to have some kind
+     of inset.
+     */
+//    NSLayoutConstraint *leftConstraint = [NSLayoutConstraint constraintWithItem:self.contentView
+//                                                                      attribute:NSLayoutAttributeLeading
+//                                                                      relatedBy:NSLayoutRelationEqual
+//                                                                         toItem:self.view
+//                                                                      attribute:NSLayoutAttributeLeading
+//                                                                     multiplier:1.0
+//                                                                       constant:0];
+//    [self.view addConstraint:leftConstraint];
+//    
+//    NSLayoutConstraint *rightConstraint = [NSLayoutConstraint constraintWithItem:self.contentView
+//                                                                       attribute:NSLayoutAttributeTrailing
+//                                                                       relatedBy:NSLayoutRelationEqual
+//                                                                          toItem:self.view
+//                                                                       attribute:NSLayoutAttributeTrailing
+//                                                                      multiplier:1.0
+//                                                                        constant:0];
+//    [self.view addConstraint:rightConstraint];
+
+    
 //    // Register for notifications that the user changed text size preference for dynamic type
 //    [[NSNotificationCenter defaultCenter] addObserver: self
 //                                             selector: @selector(preferredContentSizeChanged:)
@@ -104,17 +135,17 @@ CGFloat const kOCRPackagesCellWidthPadding  =  20.0f;
  
  @param highlighted YES to show the cell in its highlighted state, NO to show it "normal"
  */
-- (void)setHighlighted: (BOOL)highlighted
-{
-    DLog(@"highlighted=%@", highlighted ? @"YES" : @"NO");
-    
-    // Set the highlighted property on the cell
-    [super setHighlighted: highlighted];
-    
-
-    // Update the UI to manifest the highlight effect
-    [self setBackgroundColor: highlighted ? [UIColor redColor] : [UIColor darkGrayColor]];
-}
+//- (void)setHighlighted: (BOOL)highlighted
+//{
+//    DLog(@"highlighted=%@", highlighted ? @"YES" : @"NO");
+//    
+//    // Set the highlighted property on the cell
+//    [super setHighlighted: highlighted];
+//    
+//
+//    // Update the UI to manifest the highlight effect
+//    [self setBackgroundColor: highlighted ? [UIColor redColor] : [UIColor darkGrayColor]];
+//}
 
 
 //----------------------------------------------------------------------------------------------------------

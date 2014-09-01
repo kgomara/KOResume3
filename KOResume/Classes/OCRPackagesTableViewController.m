@@ -28,24 +28,24 @@
 {
 @private
     /**
-     Reference to the edit button to facilitate swapping buttons between display and edit modes.
-     */
-    UIBarButtonItem     *editBtn;
-    
-    /**
-     Reference to the save button to facilitate swapping buttons between display and edit modes.
-     */
-    UIBarButtonItem     *saveBtn;
-    
-    /**
      Reference to the cancel button to facilitate swapping buttons between display and edit modes.
      */
-    UIBarButtonItem     *cancelBtn;
+    UIBarButtonItem         *cancelBtn;
     
     /**
      Reference to the button available in table edit mode that allows the user to add a package.
      */
-    UIButton            *addBtn;
+    UIButton                *packageAddBtn;
+
+    /**
+     A boolean flag to indicate whether the user is editing information or simply viewing.
+     */
+    BOOL                    isEditing;
+    
+    /**
+     A boolean flag to indicate if any package was deleted.
+     */
+    BOOL                    packageDeleted;
 }
 
 /**
@@ -63,19 +63,10 @@
  */
 @property (nonatomic, strong) NSFetchedResultsController    *fetchedResultsController;
 
-/**
- A boolean flag to indicate whether the user is editing information or simply viewing.
- */
-@property (nonatomic, assign, getter=isEditing) BOOL editing;
-
 @end
 
-@implementation OCRPackagesTableViewController
 
-/**
- Flag to indicate the UI is in editing state.
- */
-BOOL isEditModeActive;
+@implementation OCRPackagesTableViewController
 
 #pragma mark - View lifecycle
 
@@ -104,27 +95,19 @@ BOOL isEditModeActive;
     self.navigationItem.title   = title;
 #endif
     
-    // Initialize estimate row height to support dynamic text sizing
+    // Initialize estimated row height to support dynamic text sizing
     self.tableView.estimatedRowHeight = kOCRPackagesCellHeight;
     
     // Set up button items
-    editBtn     = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemEdit
-                                                                target: self
-                                                                action: @selector(didPressEditButton)];
-    saveBtn     = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemSave
-                                                                target: self
-                                                                action: @selector(didPressSaveButton)];
     cancelBtn   = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel
                                                                 target: self
                                                                 action: @selector(didPressCancelButton)];
     
-    // Set editing off
-    self.editing = NO;
     // Set up the defaults in the Navigation Bar
     [self configureDefaultNavBar];
     
-    // Set tintColor on the collection view
-    [self.tableView setTintColor: [UIColor redColor]];
+    // Set editing off
+    isEditing = NO;
 }
 
 //----------------------------------------------------------------------------------------------------------
@@ -153,8 +136,11 @@ BOOL isEditModeActive;
     [super viewWillAppear: animated];
     
     [self.navigationItem setHidesBackButton: NO];
-    self.fetchedResultsController.delegate = self;
-    
+
+    [self.tableView setContentOffset:CGPointZero];
+    [self configureDefaultNavBar];
+    [self configureFieldsForEditing: isEditing];
+
     // Observe the app delegate telling us when it's finished asynchronously adding the store coordinator
     [[NSNotificationCenter defaultCenter] addObserver: self
                                              selector: @selector(reloadFetchedResults:)
@@ -175,15 +161,10 @@ BOOL isEditModeActive;
                                                object: nil];
     
     // Loop through all the packages writing their debugDescription to the log - useful when debugging
-    //    for (Packages *aPackage in [self.fetchedResultsController fetchedObjects])
-    //    {
-    //        DLog(@"%@", [aPackage debugDescription]);
-    //    }
-    
-    [self setFieldsEditable: NO];
-    
-    // Reload the fetched results
-    [self reloadFetchedResults: nil];
+    for (Packages *aPackage in [self.fetchedResultsController fetchedObjects])
+    {
+        DLog(@"%@\tisDeleted=%@", [aPackage debugDescription], aPackage.isDeleted? @"YES" : @"NO");
+    }
 }
 
 
@@ -240,17 +221,16 @@ BOOL isEditModeActive;
  
  As a resume app, a major Use Case is the user sharing his/her experience by passing the iOS device around.
  To avoid accidently changing information, the app defaults to non-editable and there is an explicit Edit
- button when the user wants to change information. This method sets the enabled state as appropriate and also
- changes the background color to make "edit mode" more visually distinct.
+ button when the user wants to change information.
  
  @param editable    A BOOL that determines whether the fields should be enabled for editing - or not.
  */
-- (void)setFieldsEditable: (BOOL)editable
+- (void)configureFieldsForEditing: (BOOL)editable
 {
     DLog();
     
-    [self.tableView reloadRowsAtIndexPaths:[self.tableView indexPathsForVisibleRows]
-                          withRowAnimation:UITableViewRowAnimationNone];
+    // Set the add button hidden state to the opposite of editable
+    [packageAddBtn setHidden: !editable];
 }
 
 
@@ -263,10 +243,8 @@ BOOL isEditModeActive;
     DLog();
     
     // Set up the nav bar.
-    self.navigationItem.rightBarButtonItems = @[editBtn];
-
-    // Set table editing off
-    [self.tableView setEditing: NO];
+    self.navigationItem.rightBarButtonItem  = self.editButtonItem;
+    self.navigationItem.leftBarButtonItem   = nil;
 }
 
 
@@ -282,12 +260,23 @@ BOOL isEditModeActive;
 {
     DLog();
     
-    // Reload the collection view, which in turn causes the collectionView cells to update their fonts
+    // Reload the table view, which in turn causes the tableView cells to update their fonts
     [self.tableView reloadData];
 }
 
 
 #pragma mark - UI handlers
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Invoked when the user taps the '+' button in the section header
+ */
+- (IBAction)didPressAddPackageButton:(id)sender
+{
+    DLog();
+    
+    [self promptForPackageName];
+}
 
 //----------------------------------------------------------------------------------------------------------
 /**
@@ -323,88 +312,89 @@ BOOL isEditModeActive;
     // Set the relationship between the Package and Resume objects
     nuPackage.resume                = nuResume;
     
-    // Save all the changes to the context, and wait for the operation to complete...
-    [kAppDelegate saveContextAndWait: [kAppDelegate managedObjectContext]];
-    // ...when the save completes, reload the data
-    [self reloadFetchedResults: nil];
-    // ...and collectionView
-    [self.tableView reloadData];
+    // Save the context so the adds are pushed to the persistent store
+    [kAppDelegate saveContextAndWait:[kAppDelegate managedObjectContext]];
+    // ...and reload the fetchedResults to bring them into memory
+    [self reloadFetchedResults:nil];
+    
+    // Construct an indexPath
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow: [[self.fetchedResultsController fetchedObjects] count] - 1
+                                                inSection: 0];
+    
+    /*
+     Insert rows in the receiver at the locations identified by an array of index paths, with an option to
+     animate the insertion.
+     
+     UITableView calls the relevant delegate and data source methods immediately afterwards to get the cells
+     and other content for visible cells.
+     */
+    // Animate the insertion of the new row
+    [self.tableView beginUpdates];
+    [self.tableView insertRowsAtIndexPaths: @[indexPath]
+                          withRowAnimation: UITableViewRowAnimationFade];
+    [self.tableView endUpdates];
+    // ...and scroll the tableView to the row of the added object
+    [self.tableView scrollToRowAtIndexPath: indexPath
+                          atScrollPosition: UITableViewScrollPositionTop
+                                  animated: YES];
 }
 
 
 //----------------------------------------------------------------------------------------------------------
 /**
- Resequence the Jobs and Education objects to reflect the order the user has arranged them.
+ Sets whether the view controller shows an editable view.
+ 
+ Subclasses that use an edit-done button must override this method to change their view to an editable state 
+ if editing is YES and a non-editable state if it is NO. This method should invoke super’s implementation 
+ before updating its view.
+ 
+ @param editing     If YES, the view controller should display an editable view; otherwise, NO. If YES and one 
+                    of the custom views of the navigationItem property is set to the value returned by the 
+                    editButtonItem method, the associated navigation controller displays a Done button;     
+                    otherwise, an Edit button.
+ @param animate     If YES, animates the transition; otherwise, does not.
  */
-- (void)resequenceTables
+- (void)setEditing: (BOOL)editing
+          animated: (BOOL)animated
 {
-    DLog();
+    DLog(@"editing=%@", editing? @"YES" : @"NO");
+    [super setEditing: editing
+             animated: animated];
     
-    // The education array is in the order (including deletes) the user wants
-    // ...loop through the array by index, resetting the education object's sequence_number attribute
-//    int i = 0;
-//    for (Education *education in _educationArray) {
-//        if (education.isDeleted)
-//        {
-//            // No need to update the sequence number of deleted objects
-//        }
-//        else
-//        {
-//            // Set the sequence number on this education object and increment the counter
-//            [education setSequence_numberValue: i++];
-//        }
-//    }
+    // Configure the UI to represent the editing state we are entering
+    [self configureUIForEditing: editing];
+    
+    if (editing)
+    {
+        // Start an undo group...it will either be commited here when the User presses Done, or
+        //    undone in didPressCancelButton
+        [[[kAppDelegate managedObjectContext] undoManager] beginUndoGrouping];
+        
+        // Set the global flag to indicate no packages have been deleted
+        packageDeleted = NO;
+    }
+    else
+    {
+        // The user pressed "Done"
+
+        // End the undo group
+        [[[kAppDelegate managedObjectContext] undoManager] endUndoGrouping];
+        // ...save changes to the database
+        [kAppDelegate saveContextAndWait: [kAppDelegate managedObjectContext]];
+        // ...cleanup the undoManager
+        [[[kAppDelegate managedObjectContext] undoManager] removeAllActionsWithTarget: self];
+        
+        // Set up the default navBar
+        [self configureDefaultNavBar];
+        
+        if (packageDeleted)
+        {
+            [self postDeleteNotification];
+            packageDeleted = NO;
+        }
+    }
+    
 }
-
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Invoked when the user taps the Edit button.
- 
- * Setup the navigation bar for editing.
- * Enable editable fields.
- * Start an undo group on the NSManagedObjectContext.
- 
- */
-- (void)didPressEditButton
-{
-    DLog();
-    
-    // Turn on editing in the UI
-    [self setUIWithEditing: YES];
-    
-    // Start an undo group...it will either be commited in didPressSaveButton or
-    //    undone in didPressCancelButton
-    [[[kAppDelegate managedObjectContext] undoManager] beginUndoGrouping];
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Invoked when the user taps the Save button.
- 
- * Save the changes to the NSManagedObjectContext.
- * Cleanup the undo group on the NSManagedObjectContext.
- * Reset the navigation bar to its default state.
- 
- */
-- (void)didPressSaveButton
-{
-    DLog();
-    
-    // Reset the sequence_number of the Job and Education items in case they were re-ordered during the edit
-    [self resequenceTables];
-    
-    // ...end the undo group
-    [[[kAppDelegate managedObjectContext] undoManager] endUndoGrouping];
-    [kAppDelegate saveContextAndWait: [kAppDelegate managedObjectContext]];
-    
-    // Cleanup the undoManager
-    [[[kAppDelegate managedObjectContext] undoManager] removeAllActionsWithTarget: self];
-    // ...and turn off editing in the UI
-    [self setUIWithEditing: NO];
-}
-
 
 //----------------------------------------------------------------------------------------------------------
 /**
@@ -413,7 +403,7 @@ BOOL isEditModeActive;
  * End the undo group on the NSManagedObjectContext.
  * If the undoManager has changes it canUndo, undo them.
  * Cleanup the undoManager.
- * Reset the UI to its default state.
+ * Reset the UI to its non-editing state.
  
  */
 - (void)didPressCancelButton
@@ -432,12 +422,21 @@ BOOL isEditModeActive;
     
     // Cleanup the undoManager
     [[[kAppDelegate managedObjectContext] undoManager] removeAllActionsWithTarget: self];
+    // ...and reload the fetchedResults to bring them into memory
+    [self reloadFetchedResults:nil];
     
-    // Re-sort the tables as editing may have moved their order in the tableView
-//    [self sortTables];
+    /*
+     This may look odd - one usually sees a call to super in a method with the same name. But we need to inform 
+     the tableView that we are no longer editing the table.
+     */
+    [super setEditing: NO
+             animated: NO];
+    // Load the tableView from the (unchanged) packages
     [self.tableView reloadData];
-    // ...and turn off editing in the UI
-    [self setUIWithEditing: NO];
+    // ...turn off editing in the UI
+    [self configureUIForEditing: NO];
+    // ...and set up the default navBar
+    [self configureDefaultNavBar];
 }
 
 
@@ -449,42 +448,27 @@ BOOL isEditModeActive;
  
  @param isEditingMode   YES if we are going into edit mode, NO otherwise.
  */
-- (void)setUIWithEditing: (BOOL)isEditingMode
+- (void)configureUIForEditing: (BOOL)editing
 {
     DLog();
     
     // Update editing flag
-    self.editing = isEditingMode;
+    isEditing = editing;
     
-    // ...the add buttons (hidden is the boolean opposite of isEditingMode)
-    [addBtn    setHidden: !isEditingMode];
-    
-    // ...enable/disable table editing
-    [self.tableView setEditing: isEditingMode
-                      animated: YES];
     // ...enable/disable resume fields
-    [self setFieldsEditable: isEditingMode];
+    [self configureFieldsForEditing: editing];
     
-    if (isEditingMode)
+    if (editing)
     {
         // Set up the navigation items and save/cancel buttons
-#warning TODO refactor to use size classes
-        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
-        {
-            self.navigationItem.rightBarButtonItems = @[saveBtn, cancelBtn];
-        }
-        else
-        {
-            self.navigationItem.leftBarButtonItem  = cancelBtn;
-            self.navigationItem.rightBarButtonItem = saveBtn;
-        }
+            self.navigationItem.leftBarButtonItem = cancelBtn;
     }
     else
     {
         // Reset the nav bar defaults
         [self configureDefaultNavBar];
     }
-}
+ }
 
 
 //----------------------------------------------------------------------------------------------------------
@@ -547,7 +531,7 @@ BOOL isEditModeActive;
     DLog(@"sender = %@", @([(UIButton *)sender tag]));
     
     // Check to see if we're in editMode
-    if (isEditModeActive)
+    if (isEditing)
     {
         // If we are in edit mode, ignore the tap
     }
@@ -572,7 +556,7 @@ BOOL isEditModeActive;
     DLog(@"sender = %@", @([(UIButton *)sender tag]));
     
     // Check to see if we're in editMode
-    if (isEditModeActive)
+    if (isEditing)
     {
         // If we are in edit mode, ignore the tap
     }
@@ -587,47 +571,35 @@ BOOL isEditModeActive;
 #pragma mark - Table view data source methods
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Asks the data source to return the number of sections in the table view.
+ 
+ @param tableView       An object representing the table view requesting this information.
+ @return                The number of sections in tableView. The default value is 1.
+ */
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     /*
      We are hardcoding to 1 here because we want a single section containing all the packages.
      */
-    return 1;
-}
-
-//----------------------------------------------------------------------------------------------------------
-- (NSInteger)tableView:(UITableView *)tableView
- numberOfRowsInSection:(NSInteger)section
-{
-    DLog();
-    
-    /*
-     In our case, we only have a single section (our fetchedResultsController is set up to retrieve everything
-     in one section), so we just return the number of objects in section[0]
-     */
-    id <NSFetchedResultsSectionInfo> sectionInfo = (self.fetchedResultsController.sections)[0];
-    
-    DLog(@"rows=%d", [sectionInfo numberOfObjects]);
-    
-    return [sectionInfo numberOfObjects];
+    return [[self.fetchedResultsController sections] count];
 }
 
 
 //----------------------------------------------------------------------------------------------------------
 /**
- Asks the data source to verify that the given row is editable.
+ Tells the data source to return the number of rows in a given section of a table view.
  
  @param tableView       The table-view object requesting this information.
- @param indexPath       An index path locating a row in tableView.
- @return                YES to allow editing, NO otherwise,
+ @param section         An index number identifying a section in tableView.
+ @return                The number of rows in section.
  */
-- (BOOL)    tableView: (UITableView *)tableView
-canEditRowAtIndexPath: (NSIndexPath *)indexPath
+- (NSInteger)tableView:(UITableView *)tableView
+ numberOfRowsInSection:(NSInteger)section
 {
     DLog();
     
-    // If we are in edit mode allow swipe to delete
-    return self.editing;
+    return [[[self.fetchedResultsController sections] objectAtIndex:section] numberOfObjects];
 }
 
 
@@ -673,8 +645,7 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
 {
     DLog(@"%@", indexPath.debugDescription);
     
-    id <NSFetchedResultsSectionInfo> sectionInfo    = (self.fetchedResultsController.sections)[indexPath.section];
-    Packages *aPackage                              = (Packages *) (sectionInfo.objects)[indexPath.row];
+    Packages *aPackage  = [self.fetchedResultsController objectAtIndexPath:indexPath];
     /*
      Set the tag for the cell and its buttons to the row of the Packages object.
      The tag property is often used to carry identifying information for later use. In our case, we'll use it in the
@@ -734,17 +705,23 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
     if (editingStyle == UITableViewCellEditingStyleDelete)
     {
         // Delete the managed object at the given index path.
-        Packages *packageToDelete = [self.fetchedResultsController objectAtIndexPath: indexPath];
-        [self.managedObjectContext deleteObject: packageToDelete];
-        // ...and the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath]
-                         withRowAnimation:UITableViewRowAnimationFade];
-        // ...and reload the table
-        [tableView reloadData];
-    }
-    else if (editingStyle == UITableViewCellEditingStyleInsert)
-    {
-        ALog(@"Unexpected editingStyle=%d", (int)editingStyle);
+        NSManagedObjectContext *context = [self.fetchedResultsController managedObjectContext];
+        Packages *objectToDelete        = [self.fetchedResultsController objectAtIndexPath: indexPath];
+        [context deleteObject: objectToDelete];
+        
+        // Save the context so the delete is pushed to the persistent store
+        [kAppDelegate saveContextAndWait:[kAppDelegate managedObjectContext]];
+        // ...and reload the fetchedResults to bring them into memory
+        [self reloadFetchedResults: nil];
+        
+        // Delete the row from the table view
+        [self.tableView beginUpdates];
+        [tableView deleteRowsAtIndexPaths: @[indexPath]
+                         withRowAnimation: UITableViewRowAnimationFade];
+        [self.tableView endUpdates];
+        
+        // Set the global flag to indicate at least one package is deleted
+        packageDeleted = YES;
     }
     else
     {
@@ -770,8 +747,24 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
 {
     DLog();
     
-#warning TODO consider putting packages in a local array - see OCRResumeEducationViewController
+    NSMutableArray *packages = [[self.fetchedResultsController fetchedObjects] mutableCopy];
     
+    // Grab the item we're moving.
+    Packages *movingPackage = [[self fetchedResultsController] objectAtIndexPath: fromIndexPath];
+    
+    // Remove the object we're moving from the array.
+    [packages removeObject: movingPackage];
+    // Now re-insert it at the destination.
+    [packages insertObject: movingPackage
+                   atIndex: [toIndexPath row]];
+    
+    // All of the objects are now in their correct order. Update each
+    // object's sequence_number field by iterating through the array.
+    int i = 0;
+    for (Packages *package in packages)
+    {
+        [package setSequence_numberValue: i++];
+    }
 }
 
 
@@ -839,7 +832,7 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
 {
     DLog();
     
-    OCRTableViewHeaderCell *headerView = [tableView dequeueReusableCellWithIdentifier: kOCRHeaderCell];
+    OCRTableViewHeaderCell *headerCell = [tableView dequeueReusableCellWithIdentifier: kOCRHeaderCell];
     /*
      There is a bug in UIKit (see https://devforums.apple.com/message/882042#882042) when using UITableViewCell
      as the view for section headers. This has been a common practice throughout the iOS programming community.
@@ -857,32 +850,21 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
      still use the prototype cell in IB to lay out the section header view, I simply create a "wrapperView" and
      add the OCRTableViewHeaderCell as a subview.
      */
-    UIView *wrapperView = [[UIView alloc] initWithFrame: [headerView frame]];
-    [wrapperView addSubview:headerView];
-#warning TODO add constraints to pin edges to tableView
+    UIView *wrapperView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 320, headerCell.frame.size.height)];
+    [wrapperView addSubview:headerCell];
     
     // Set the section dynamic text font, text color, and background color
-    [headerView.sectionLabel setFont:            [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline]];
-    [headerView.sectionLabel setTextColor:       [UIColor blackColor]];
-    [headerView.sectionLabel setBackgroundColor: [UIColor clearColor]];
+    [headerCell.sectionLabel setFont:            [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline]];
+    [headerCell.sectionLabel setTextColor:       [UIColor blackColor]];
+    [headerCell.sectionLabel setBackgroundColor: [UIColor clearColor]];
     
-    // Set the tag of the addButton to the section the header represents
-    [headerView.addButton setTag:section];
-    
-    // Hide or show the addButton depending on whether we are in editing mode
-    if (self.isEditing)
-    {
-        [headerView.addButton setHidden: NO];
-    }
-    else
-    {
-        [headerView.addButton setHidden: YES];
-    }
-    
-    // Finally, set the text content and save a reference to the add button so they can be
+    // Set the text content and save a reference to the add button so they can be
     // shown or hidden whenever the user turns editing mode on or off
-    headerView.sectionLabel.text    = NSLocalizedString(@"Packages", nil);
-    addBtn                          = headerView.addButton;
+    headerCell.sectionLabel.text    = NSLocalizedString(@"Packages", nil);
+    packageAddBtn                   = headerCell.addButton;
+
+    // Hide or show the addButton depending on whether we are in editing mode
+    [packageAddBtn setHidden: !isEditing];
     
     return wrapperView;
 }
@@ -1019,44 +1001,6 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
     }
     self.packagesPopoverController  = nil;
     self.rootPopoverButtonItem      = nil;
-}
-
-
-#pragma mark - Private methods
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Loop through the cells in the collection view and update their sequence_number.
- 
- When and add, move, or delete operation completes call this method to update the sequence_number in the
- database.
- */
-- (void)resequencePackages
-{
-    DLog();
-    
-    // Get the array of packages as they are after the add, move, or delete
-    NSArray *packages = [self.fetchedResultsController fetchedObjects];
-    
-    // Get the number of sections in order to construct an indexPath
-    NSInteger sectionCount = [self.tableView numberOfSections];
-    
-    // Start our sequence numbers at 1
-    int i = 1;
-    for (NSInteger section = 0; section < sectionCount; section++)
-    {
-        NSInteger itemCount = [self.tableView numberOfRowsInSection: section];
-        for (NSInteger item = 0; item < itemCount; item++)
-        {
-            // Construct an NSIndexPath given the section and row
-            NSIndexPath *indexPath          = [NSIndexPath indexPathForItem: item
-                                                                  inSection: section];
-            // ...and get the cooresponding cell from the collection view
-            OCRPackagesCell *packagesCell   = (OCRPackagesCell *)[self.tableView cellForRowAtIndexPath: indexPath];
-            Packages *aPackage              = packages[packagesCell.tag];
-            [aPackage setSequence_number: @(i++)];
-        }
-    }
 }
 
 
@@ -1198,7 +1142,7 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
     self.fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest: fetchRequest
                                                                         managedObjectContext: [kAppDelegate managedObjectContext]
                                                                           sectionNameKeyPath: nil
-                                                                                   cacheName: @"Root"];
+                                                                                   cacheName: nil];
     // Set the delegate to self
     _fetchedResultsController.delegate = self;
     
@@ -1213,165 +1157,9 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
         ELog(error, @"Unresolved error");
         [OCAUtilities showErrorWithMessage: NSLocalizedString(@"Could not read the database. Try quitting the app. If that fails, try deleting KOResume and restoring from iCloud or iTunes backup. Please contact the developer by emailing kevin@omaraconsultingassoc.com", nil)];
     }
-    DLog(@"results=%@", self.fetchedResultsController.sections[0]);
     
     return _fetchedResultsController;
 }    
-
-
-
-#pragma mark - Fetched Results Controller delegate methods
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Notifies the receiver that the fetched results controller is about to start processing of one or more changes
- due to an add, remove, move, or update.
- 
- This method is invoked before all invocations of controller:didChangeObject:atIndexPath:forChangeType:newIndexPath:
- and controller:didChangeSection:atIndex:forChangeType: have been sent for a given change event (such as the
- controller receiving a NSManagedObjectContextDidSaveNotification notification).
- 
- @param controller      The fetched results controller that sent the message.
- */
-- (void)controllerWillChangeContent: (NSFetchedResultsController *)controller
-{
-    DLog();
-    
-    // The fetch controller is about to start sending change notifications, so prepare the table view for updates.
-    [self.tableView beginUpdates];
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Notifies the receiver that a fetched object has been changed due to an add, remove, move, or update.
- 
- The fetched results controller reports changes to its section before changes to the fetch result objects.
- Changes are reported with the following heuristics:
- * On add and remove operations, only the added/removed object is reported.
- * It’s assumed that all objects that come after the affected object are also moved, but these moves are
- not reported.
- * A move is reported when the changed attribute on the object is one of the sort descriptors used in the
- fetch request.
- An update of the object is assumed in this case, but no separate update message is sent to the delegate.
- * An update is reported when an object’s state changes, but the changed attributes aren’t part of the sort keys.
- 
- This method may be invoked many times during an update event (for example, if you are importing data on a background
- thread and adding them to the context in a batch). You should consider carefully whether you want to update the
- table view on receipt of each message.
- 
- @param controller      The fetched results controller that sent the message.
- @param anObject        The object in controller’s fetched results that changed.
- @param indexPath       The index path of the changed object (this value is nil for insertions).
- @param type            The type of change. For valid values see “NSFetchedResultsChangeType”.
- @param newIndexPath    The destination path for the object for insertions or moves (this value is nil for a deletion).
- */
-- (void)controller: (NSFetchedResultsController *)controller
-   didChangeObject: (id)anObject
-       atIndexPath: (NSIndexPath *)indexPath
-     forChangeType: (NSFetchedResultsChangeType)type
-      newIndexPath: (NSIndexPath *)newIndexPath
-{
-    DLog();
-    
-    // Use the type to determine the operation to perform
-    switch(type)
-    {
-//        case NSFetchedResultsChangeInsert:
-//            // Insert a row
-//            [self.tableView insertRowsAtIndexPaths: @[newIndexPath]
-//                                  withRowAnimation: UITableViewRowAnimationFade];
-//            break;
-//            
-//        case NSFetchedResultsChangeDelete:
-//            // Delete a row
-//            [self.tableView deleteRowsAtIndexPaths: @[indexPath]
-//                                  withRowAnimation: UITableViewRowAnimationFade];
-//            break;
-//            
-//        case NSFetchedResultsChangeUpdate:
-//            // Underlying contents have changed, re-configure the cell
-//            [self.tableView reloadRowsAtIndexPaths:@[newIndexPath]
-//                                  withRowAnimation:UITableViewRowAnimationFade];
-//            break;
-//            
-//        case NSFetchedResultsChangeMove:
-//            // On a move, delete the rows where they were...
-//            [self.tableView deleteRowsAtIndexPaths: @[indexPath]
-//                                  withRowAnimation: UITableViewRowAnimationFade];
-//            // ...and reload the section to insert new rows and ensure titles are updated appropriately.
-//            [self.tableView reloadSections: [NSIndexSet indexSetWithIndex: newIndexPath.section]
-//                          withRowAnimation: UITableViewRowAnimationFade];
-//            break;
-    }
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Notifies the receiver of the addition or removal of a section.
- 
- The fetched results controller reports changes to its section before changes to the fetched result objects.
- 
- This method may be invoked many times during an update event (for example, if you are importing data on a
- background thread and adding them to the context in a batch). You should consider carefully whether you want
- to update the table view on receipt of each message.
- 
- @param controller      The fetched results controller that sent the message.
- @param sectionInfo     The section that changed.
- @param sectionIndex    The index of the changed section.
- @param type            The type of change (insert or delete). Valid values are NSFetchedResultsChangeInsert
- and NSFetchedResultsChangeDelete.
- */
-- (void)controller: (NSFetchedResultsController *)controller
-  didChangeSection: (id <NSFetchedResultsSectionInfo>)sectionInfo
-           atIndex: (NSUInteger)sectionIndex
-     forChangeType: (NSFetchedResultsChangeType)type
-{
-    DLog();
-    
-    // Use the type to determine the operation to perform
-//    switch(type)
-//    {
-//        case NSFetchedResultsChangeInsert:
-//            [_tableView insertSections: [NSIndexSet indexSetWithIndex: sectionIndex]
-//                      withRowAnimation: UITableViewRowAnimationFade];
-//            break;
-//            
-//        case NSFetchedResultsChangeDelete:
-//            [_tableView deleteSections: [NSIndexSet indexSetWithIndex: sectionIndex]
-//                      withRowAnimation: UITableViewRowAnimationFade];
-//            break;
-//            
-//        case NSFetchedResultsChangeMove:
-//            ALog(@"Did not expect NSFetchedResultsChangeMove");
-//            break;
-//            
-//        case NSFetchedResultsChangeUpdate:
-//            ALog(@"Did not expect NSFetchedResultsChangeUpdate");
-//            break;
-//    }
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Notifies the receiver that the fetched results controller has completed processing of one or more changes
- due to an add, remove, move, or update.
- 
- This method is invoked after all invocations of controller:didChangeObject:atIndexPath:forChangeType:newIndexPath:
- and controller:didChangeSection:atIndex:forChangeType: have been sent for a given change event (such as the
- controller receiving a NSManagedObjectContextDidSaveNotification notification).
- 
- @param controller  The fetched results controller that sent the message.
- */
-- (void)controllerDidChangeContent: (NSFetchedResultsController *)controller
-{
-    DLog();
-    
-    // The fetch controller has sent all current change notifications, so tell the table view to process all updates.
-    [self.tableView endUpdates];
-}
 
 
 //----------------------------------------------------------------------------------------------------------
@@ -1409,12 +1197,18 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
 
 
 //----------------------------------------------------------------------------------------------------------
+/**
+ Post a notification informing listeners that a package has been deleted.
+ 
+ Listeners should register for this notication and take appropriate action to ensure orphaned child objects are not
+ updated inadvertently.
+ */
 - (void)postDeleteNotification
 {
     DLog();
     // Post a notification to inform interested objects - i.e., the view controllers that a package has been deleted
     NSNotification *deleteNotification = [NSNotification notificationWithName: kOCRMocDidDeletePackageNotification
-                                                                       object: self
+                                                                       object: nil
                                                                      userInfo: nil];
     
     [[NSNotificationCenter defaultCenter] postNotification: deleteNotification];

@@ -186,7 +186,7 @@
     [self.scrollView setContentOffset:CGPointZero];
     [self configureDefaultNavBar];
     [self configureView];
-    [self setFieldsEditable: self.editing];
+    [self configureFieldsForEditing: self.editing];
     
     // Register for keyboard notifications
     [[NSNotificationCenter defaultCenter] addObserver: self
@@ -207,15 +207,6 @@
     /*
      This class inherits viewWillDisappear from the base class, which calls removeObserver
      */
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    
-    DLog(@"scrollview=%@", self.scrollView.debugDescription);
-    DLog(@"  contentView=%@", self.contentView.debugDescription);
-    DLog(@"  resumeSummary=%@", self.resumeSummary);
 }
 
 
@@ -310,7 +301,7 @@
  
  @param editable    A BOOL that determines whether the fields should be enabled for editing - or not.
  */
-- (void)setFieldsEditable: (BOOL)editable
+- (void)configureFieldsForEditing: (BOOL)editable
 {
     DLog();
     
@@ -435,7 +426,7 @@
     DLog();
     
     // Turn on editing in the UI
-    [self setUIForEditing: YES];
+    [self configureUIForEditing: YES];
     
     // Start an undo group...it will either be commited in didPressSaveButton or
     //    undone in didPressCancelButton
@@ -480,7 +471,7 @@
     [[[kAppDelegate managedObjectContext] undoManager] removeAllActionsWithTarget: self];
     
     // ...and turn off editing in the UI
-    [self setUIForEditing: NO];
+    [self configureUIForEditing: NO];
     [self resetView];
 }
 
@@ -516,7 +507,7 @@
     [self loadViewFromSelectedObject];
     
     // Turn off editing in the UI
-    [self setUIForEditing: NO];
+    [self configureUIForEditing: NO];
     [self resetView];
 }
 
@@ -529,7 +520,7 @@
  
  @param isEditingMode   YES if we are going into edit mode, NO otherwise.
  */
-- (void)setUIForEditing: (BOOL)isEditingMode
+- (void)configureUIForEditing: (BOOL)isEditingMode
 {
     DLog();
     
@@ -537,7 +528,7 @@
     self.editing = isEditingMode;
     
     // ...enable/disable resume fields
-    [self setFieldsEditable: isEditingMode];
+    [self configureFieldsForEditing: isEditingMode];
     
     if (isEditingMode)
     {
