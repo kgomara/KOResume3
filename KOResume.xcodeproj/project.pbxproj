@@ -101,8 +101,6 @@
 		D6C6F15A18B27AD3003A8C92 /* KOResume.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D6C6F15718B27AD3003A8C92 /* KOResume.xcdatamodeld */; };
 		D6C8D2DF18F1D3E200E76376 /* OCRJobsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6C8D2DE18F1D3E200E76376 /* OCRJobsViewController.m */; };
 		D6C8D2E018F1D3E200E76376 /* OCRJobsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6C8D2DE18F1D3E200E76376 /* OCRJobsViewController.m */; };
-		D6CB2584199DB72E0042FC33 /* dsym_upload.sh in Resources */ = {isa = PBXBuildFile; fileRef = D6CB2582199DB72E0042FC33 /* dsym_upload.sh */; };
-		D6CB2585199DB72E0042FC33 /* libCrittercism_v4_3_4.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D6CB2583199DB72E0042FC33 /* libCrittercism_v4_3_4.a */; };
 		D6CB27CD194D419C009E8D50 /* OCREducationTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D6CB27CC194D419C009E8D50 /* OCREducationTableViewCell.m */; };
 		D6CB27CE194D419C009E8D50 /* OCREducationTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D6CB27CC194D419C009E8D50 /* OCREducationTableViewCell.m */; };
 		D6D571B11793366000034AF3 /* OCRCoreDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D571B0179335FF00034AF3 /* OCRCoreDataController.m */; };
@@ -118,6 +116,8 @@
 		D6D572181793A78600034AF3 /* _Packages.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D5720E1793A78600034AF3 /* _Packages.m */; };
 		D6D572191793A78600034AF3 /* _Resumes.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D572101793A78600034AF3 /* _Resumes.m */; };
 		D6D5721A1793A78600034AF3 /* _Resumes.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D572101793A78600034AF3 /* _Resumes.m */; };
+		D6D8AE0519B5617E003B1B61 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6D8AE0419B5617D003B1B61 /* Crashlytics.framework */; };
+		D6D8AE0619B5617E003B1B61 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6D8AE0419B5617D003B1B61 /* Crashlytics.framework */; };
 		KIYDQKWBMRKIEYEVRWSLKUDQ /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = HYXIFWTDXJPPRRMDCEPMDTJH /* QuartzCore.framework */; };
 		KNPONLATPTEBRUFEBXNXFHCQ /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = THBDITSPYVFDWQYYBDCIDIXG /* libz.dylib */; };
 /* End PBXBuildFile section */
@@ -252,11 +252,6 @@
 		D6C7AA5D1870BEED00C72A52 /* OCAEditableCollectionViewFlowLayout.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OCAEditableCollectionViewFlowLayout.xcodeproj; path = OCAEditableCollectionViewFlowLayout/OCAEditableCollectionViewFlowLayout.xcodeproj; sourceTree = SOURCE_ROOT; };
 		D6C8D2DD18F1D3E200E76376 /* OCRJobsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRJobsViewController.h; path = Classes/OCRJobsViewController.h; sourceTree = "<group>"; };
 		D6C8D2DE18F1D3E200E76376 /* OCRJobsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRJobsViewController.m; path = Classes/OCRJobsViewController.m; sourceTree = "<group>"; };
-		D6CB257F199DB72E0042FC33 /* CRFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CRFilter.h; sourceTree = "<group>"; };
-		D6CB2580199DB72E0042FC33 /* Crittercism.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Crittercism.h; sourceTree = "<group>"; };
-		D6CB2581199DB72E0042FC33 /* CrittercismDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CrittercismDelegate.h; sourceTree = "<group>"; };
-		D6CB2582199DB72E0042FC33 /* dsym_upload.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = dsym_upload.sh; sourceTree = "<group>"; };
-		D6CB2583199DB72E0042FC33 /* libCrittercism_v4_3_4.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libCrittercism_v4_3_4.a; sourceTree = "<group>"; };
 		D6CB27CB194D419C009E8D50 /* OCREducationTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCREducationTableViewCell.h; path = Classes/OCREducationTableViewCell.h; sourceTree = "<group>"; };
 		D6CB27CC194D419C009E8D50 /* OCREducationTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCREducationTableViewCell.m; path = Classes/OCREducationTableViewCell.m; sourceTree = "<group>"; };
 		D6CB27D3194E4079009E8D50 /* OCRCellTextFieldDelegateProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OCRCellTextFieldDelegateProtocol.h; path = Classes/OCRCellTextFieldDelegateProtocol.h; sourceTree = "<group>"; };
@@ -283,6 +278,7 @@
 		D6D5720E1793A78600034AF3 /* _Packages.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = _Packages.m; path = Classes/DataModel/_Packages.m; sourceTree = "<group>"; };
 		D6D5720F1793A78600034AF3 /* _Resumes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = _Resumes.h; path = Classes/DataModel/_Resumes.h; sourceTree = "<group>"; };
 		D6D572101793A78600034AF3 /* _Resumes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = _Resumes.m; path = Classes/DataModel/_Resumes.m; sourceTree = "<group>"; };
+		D6D8AE0419B5617D003B1B61 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		D6DD3EAA19AC344C00A50E9E /* koresume.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = koresume.entitlements; sourceTree = "<group>"; };
 		HYXIFWTDXJPPRRMDCEPMDTJH /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		THBDITSPYVFDWQYYBDCIDIXG /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
@@ -297,12 +293,12 @@
 				D6ABF9A9187A066900AECF28 /* libOCAUtilities.a in Frameworks */,
 				D6ABF9A8187A066100AECF28 /* libOCAEditableCollectionViewFlowLayout.a in Frameworks */,
 				D63D82BF179311350065F0A9 /* CoreGraphics.framework in Frameworks */,
-				D6CB2585199DB72E0042FC33 /* libCrittercism_v4_3_4.a in Frameworks */,
 				D63D82C3179311350065F0A9 /* CoreData.framework in Frameworks */,
 				D63D82C1179311350065F0A9 /* UIKit.framework in Frameworks */,
 				D63D82BD179311350065F0A9 /* Foundation.framework in Frameworks */,
 				KIYDQKWBMRKIEYEVRWSLKUDQ /* QuartzCore.framework in Frameworks */,
 				KNPONLATPTEBRUFEBXNXFHCQ /* libz.dylib in Frameworks */,
+				D6D8AE0519B5617E003B1B61 /* Crashlytics.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -311,6 +307,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D63D82E7179311350065F0A9 /* XCTest.framework in Frameworks */,
+				D6D8AE0619B5617E003B1B61 /* Crashlytics.framework in Frameworks */,
 				D63D82EA179311350065F0A9 /* CoreData.framework in Frameworks */,
 				D63D82E9179311350065F0A9 /* UIKit.framework in Frameworks */,
 				D63D82E8179311350065F0A9 /* Foundation.framework in Frameworks */,
@@ -360,6 +357,7 @@
 		D63D82BB179311350065F0A9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D6D8AE0419B5617D003B1B61 /* Crashlytics.framework */,
 				D6C3FC42199F0F71000457F4 /* SystemConfiguration.framework */,
 				D63D82BC179311350065F0A9 /* Foundation.framework */,
 				D63D82BE179311350065F0A9 /* CoreGraphics.framework */,
@@ -452,7 +450,6 @@
 		D6C7AA5C1870BEB500C72A52 /* SubProjects */ = {
 			isa = PBXGroup;
 			children = (
-				D6CB257E199DB72E0042FC33 /* CrittercismSDK */,
 				D6B4734118F7B00F004E9D84 /* SVWebViewController */,
 				D6BFCF4118748D8F0088D928 /* OCAUtilities.xcodeproj */,
 				D6C7AA5D1870BEED00C72A52 /* OCAEditableCollectionViewFlowLayout.xcodeproj */,
@@ -467,18 +464,6 @@
 				D6C7AA651870BEED00C72A52 /* OCAEditableCollectionViewFlowLayoutTests.xctest */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		D6CB257E199DB72E0042FC33 /* CrittercismSDK */ = {
-			isa = PBXGroup;
-			children = (
-				D6CB257F199DB72E0042FC33 /* CRFilter.h */,
-				D6CB2580199DB72E0042FC33 /* Crittercism.h */,
-				D6CB2581199DB72E0042FC33 /* CrittercismDelegate.h */,
-				D6CB2582199DB72E0042FC33 /* dsym_upload.sh */,
-				D6CB2583199DB72E0042FC33 /* libCrittercism_v4_3_4.a */,
-			);
-			path = CrittercismSDK;
 			sourceTree = "<group>";
 		};
 		D6D571C01793585000034AF3 /* Classes */ = {
@@ -685,7 +670,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D6CB2584199DB72E0042FC33 /* dsym_upload.sh in Resources */,
 				D63D82D5179311350065F0A9 /* Main_iPad.storyboard in Resources */,
 				D6B4734F18F7B00F004E9D84 /* SVWebViewController.strings in Resources */,
 				D6B4735318F7B00F004E9D84 /* SVWebViewController.bundle in Resources */,
@@ -721,7 +705,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "APP_ID=\"53ecd54583fb796006000007\"\nAPI_KEY=\"fCEL0nfW7kMazSbWkqgaw7dMXpLU5mq4\"\nsource \"${SRCROOT}\"/CrittercismSDK/dsym_upload.sh";
+			shellScript = "./Crashlytics.framework/run 968d85136f3c0349a40d5a6e4c9d57de317e3977 0d4e5cbbe98e72aba54e7b7197be428783b55f8015bd4176b9eaa489946a4037";
 		};
 		D6988A3418839DC200DEC402 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1000,7 +984,11 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				FRAMEWORK_SEARCH_PATHS = "\"/Applications/Spark Inspector.app/Contents/Resources/Frameworks\"";
+				FRAMEWORK_SEARCH_PATHS = (
+					/Applications/Spark,
+					Inspector.app/Contents/Resources/Frameworks,
+					"$(PROJECT_DIR)",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KOResume/KOResume-Prefix.pch";
 				GENERATE_PKGINFO_FILE = NO;
@@ -1023,6 +1011,10 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KOResume/KOResume-Prefix.pch";
 				GENERATE_PKGINFO_FILE = NO;
@@ -1045,6 +1037,7 @@
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 					"$(SYSTEM_APPS_DIR)/Xcode5-DP3.app/Contents/Developer/Library/Frameworks",
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KOResume/KOResume-Prefix.pch";
@@ -1067,6 +1060,7 @@
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 					"$(SYSTEM_APPS_DIR)/Xcode5-DP3.app/Contents/Developer/Library/Frameworks",
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KOResume/KOResume-Prefix.pch";

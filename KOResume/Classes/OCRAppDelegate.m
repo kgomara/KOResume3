@@ -9,6 +9,7 @@
 #import "OCRAppDelegate.h"
 #import "OCRPackagesTableViewController.h"
 #import "OCRCoverLtrViewController.h"
+#import <Crashlytics/Crashlytics.h>
 
 @interface OCRAppDelegate ()
 
@@ -39,8 +40,9 @@
     // Set the overall tint color
     self.window.tintColor = [UIColor redColor];     // window is nil!!!!!
     
-    // Start Crittercism
-    [Crittercism enableWithAppID: kPrivateCrittercismAppID];
+    // Start Crashylytics
+    [Crashlytics startWithAPIKey:@"968d85136f3c0349a40d5a6e4c9d57de317e3977"];
+//    [[Crashlytics sharedInstance] crash];
     
     // Initialize the coreDataController class.
     _managedObjectContext = self.coreDataController.managedObjectContext;

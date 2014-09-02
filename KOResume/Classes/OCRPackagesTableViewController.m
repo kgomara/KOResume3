@@ -89,7 +89,7 @@
     NSString *title = NSLocalizedString(@"Packages", nil);
 #ifdef DEBUG
     // Include the version in the title for debug builds
-    NSString *version           = [[NSBundle mainBundle] infoDictionary][@"CFBundleVersion"];
+    NSString *version           = [[NSBundle mainBundle] infoDictionary] [@"CFBundleVersion"];
     self.navigationItem.title   = [NSString stringWithFormat: @"%@-%@", title, version];
 #else
     self.navigationItem.title   = title;
@@ -161,10 +161,10 @@
                                                object: nil];
     
     // Loop through all the packages writing their debugDescription to the log - useful when debugging
-    for (Packages *aPackage in [self.fetchedResultsController fetchedObjects])
-    {
-        DLog(@"%@\tisDeleted=%@", [aPackage debugDescription], aPackage.isDeleted? @"YES" : @"NO");
-    }
+//    for (Packages *aPackage in [self.fetchedResultsController fetchedObjects])
+//    {
+//        DLog(@"%@", [aPackage debugDescription]);
+//    }
 }
 
 
@@ -243,6 +243,10 @@
     DLog();
     
     // Set up the nav bar.
+    /*
+     The editButtonItem is part of the UITableView "built-ins". It toggles state from Edit to Done - provided
+     you implement the setEditing:animated method and call super.
+     */
     self.navigationItem.rightBarButtonItem  = self.editButtonItem;
     self.navigationItem.leftBarButtonItem   = nil;
 }
@@ -275,7 +279,15 @@
 {
     DLog();
     
-    [self promptForPackageName];
+#warning TODO - convert to alert controller
+    UIAlertView *packageNameAlert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Enter Package Name", nil)
+                                                               message: nil
+                                                              delegate: self
+                                                     cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
+                                                     otherButtonTitles: NSLocalizedString(@"OK", nil), nil];
+    packageNameAlert.alertViewStyle = UIAlertViewStylePlainTextInput;
+    
+    [packageNameAlert show];
 }
 
 //----------------------------------------------------------------------------------------------------------
@@ -317,10 +329,10 @@
     // ...and reload the fetchedResults to bring them into memory
     [self reloadFetchedResults:nil];
     
-    // Construct an indexPath
+    // Update the tableView with the new object
+    // Construct an indexPath to insert the new object at the end
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow: [[self.fetchedResultsController fetchedObjects] count] - 1
                                                 inSection: 0];
-    
     /*
      Insert rows in the receiver at the locations identified by an array of index paths, with an option to
      animate the insertion.
@@ -375,9 +387,7 @@
     }
     else
     {
-        // The user pressed "Done"
-
-        // End the undo group
+        // The user pressed "Done", end the undo group
         [[[kAppDelegate managedObjectContext] undoManager] endUndoGrouping];
         // ...save changes to the database
         [kAppDelegate saveContextAndWait: [kAppDelegate managedObjectContext]];
@@ -387,13 +397,15 @@
         // Set up the default navBar
         [self configureDefaultNavBar];
         
+        // Check to see if an object has been deleted
         if (packageDeleted)
         {
+            // ...notify any listeners if so
             [self postDeleteNotification];
+            // ...and clear the global flag
             packageDeleted = NO;
         }
     }
-    
 }
 
 //----------------------------------------------------------------------------------------------------------
@@ -430,7 +442,7 @@
      the tableView that we are no longer editing the table.
      */
     [super setEditing: NO
-             animated: NO];
+             animated: YES];
     // Load the tableView from the (unchanged) packages
     [self.tableView reloadData];
     // ...turn off editing in the UI
@@ -460,8 +472,9 @@
     
     if (editing)
     {
-        // Set up the navigation items and save/cancel buttons
-            self.navigationItem.leftBarButtonItem = cancelBtn;
+        // Set up the navigation items and cancel buttons - the Edit button
+        //  state is managed by the table view
+        self.navigationItem.leftBarButtonItem = cancelBtn;
     }
     else
     {
@@ -470,25 +483,7 @@
     }
  }
 
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Prompt the user to enter a name for the new Package object
- */
-- (void)promptForPackageName
-{
-    DLog();
-    
-    UIAlertView *packageNameAlert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Enter Package Name", nil)
-                                                               message: nil
-                                                              delegate: self
-                                                     cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
-                                                     otherButtonTitles: NSLocalizedString(@"OK", nil), nil];
-    packageNameAlert.alertViewStyle = UIAlertViewStylePlainTextInput;
-    
-    [packageNameAlert show];
-}
-
+#pragma mark - Alert handling
 
 //----------------------------------------------------------------------------------------------------------
 /**
@@ -534,6 +529,12 @@
     if (isEditing)
     {
         // If we are in edit mode, ignore the tap
+        /*
+         When possible, I construct if statements as positives. Just a style preference - if you read aloud, it
+         is "if is editing" rather than "if not is editing". Many would argue that having an empty true clause is
+         just silly. I prefer the way it reads for better understanding, and rely on the compiler to generate
+         optimized code.
+         */
     }
     else
     {
@@ -579,9 +580,7 @@
  */
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    /*
-     We are hardcoding to 1 here because we want a single section containing all the packages.
-     */
+    // Get the section count from the fetchedResultsController
     return [[self.fetchedResultsController sections] count];
 }
 
@@ -599,6 +598,7 @@
 {
     DLog();
     
+    // Get the number of objects for the section from the fetchedResultsController
     return [[[self.fetchedResultsController sections] objectAtIndex:section] numberOfObjects];
 }
 
@@ -655,7 +655,7 @@
     cell.coverLtrButton.tag = indexPath.row;
     cell.resumeButton.tag   = indexPath.row;
     
-    cell.title.text = aPackage.name;
+    cell.title.text         = aPackage.name;
     
     // Set the touchUpInside target of the cover letter button
     [cell.coverLtrButton addTarget: self
@@ -754,12 +754,12 @@
     
     // Remove the object we're moving from the array.
     [packages removeObject: movingPackage];
-    // Now re-insert it at the destination.
+    // ...re-insert it at the destination.
     [packages insertObject: movingPackage
                    atIndex: [toIndexPath row]];
     
-    // All of the objects are now in their correct order. Update each
-    // object's sequence_number field by iterating through the array.
+    // All of the objects are now in their correct order.
+    // Update each object's sequence_number field by iterating through the array.
     int i = 0;
     for (Packages *package in packages)
     {
@@ -772,26 +772,26 @@
 
 //----------------------------------------------------------------------------------------------------------
 /**
- Tells the delegate that the specified row is now selected.
+ Tells the delegate that a specified row is about to be selected.
  
- The delegate handles selections in this method. One of the things it can do is exclusively assign the check-mark
- image (UITableViewCellAccessoryCheckmark) to one row in a section (radio-list style). This method isn’t called
- when the editing property of the table is set to YES (that is, the table view is in editing mode). See "Managing
- Selections" in Table View Programming Guide for iOS for further information (and code examples) related to this method.
- 
+ This method is not called until users touch a row and then lift their finger; the row isn't selected until 
+ then, although it is highlighted on touch-down. You can use UITableViewCellSelectionStyleNone to disable the 
+ appearance of the cell highlight on touch-down. This method isn’t called when the table view is in editing 
+ mode (that is, the editing property of the table view is set to YES) unless the table view allows selection 
+ during editing (that is, the allowsSelectionDuringEditing property of the table view is set to YES).
+
  @param tableView       A table-view object informing the delegate about the new row selection.
- @param indexPath       An index path locating the new selected row in tableView.
+ @param indexPath       An index path locating the new  in tableView.
+ @return                An index-path object that confirms or alters the selected row. Return an NSIndexPath
+                        object other than indexPath if you want another cell to be selected. Return nil if you 
+                        don't want the row selected.
  */
-- (void)        tableView: (UITableView *)tableView
-  didSelectRowAtIndexPath: (NSIndexPath *)indexPath
+- (NSIndexPath *) tableView: (UITableView *)tableView
+   willSelectRowAtIndexPath: (NSIndexPath *)indexPath
 {
     DLog();
     
-    // We display all the content of an Education object in its cell, and edit in place. Selection not necessary.
-    
-    // Clear the selection highlight
-    [tableView deselectRowAtIndexPath: indexPath
-                             animated: YES];
+    return nil;
 }
 
 

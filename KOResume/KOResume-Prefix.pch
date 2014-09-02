@@ -8,7 +8,6 @@
 #import <OCAUtilities/OCAUtilities.h>
 #import "OCRGlobalConstants.h"
 #import "OCRGlobalMacros.h"
-#import "Crittercism.h"
 #import "OCRPrivateKeys.h"
 
 #ifdef __OBJC__
