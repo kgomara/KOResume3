@@ -11,7 +11,7 @@
 @implementation OCRPackagesCell
 
 CGFloat const kOCRPackagesCellWidth         = 150.0f;
-CGFloat const kOCRPackagesCellHeight        = 152.0f;
+CGFloat const kOCRPackagesCellHeight        = 135.0f;
 CGFloat const kOCRPackagesCellWidthPadding  =  20.0f;
 
 //----------------------------------------------------------------------------------------------------------
@@ -86,14 +86,14 @@ CGFloat const kOCRPackagesCellWidthPadding  =  20.0f;
 //    [self.view addConstraint:rightConstraint];
 
     
-//    // Register for notifications that the user changed text size preference for dynamic type
-//    [[NSNotificationCenter defaultCenter] addObserver: self
-//                                             selector: @selector(preferredContentSizeChanged:)
-//                                                 name: UIContentSizeCategoryDidChangeNotification
-//                                               object: nil];
-//
-//    // ...and retrieve the current settings to set the actual font size of the UI elements in the cell
-//    [self calculateAndSetFonts];
+    // Register for notifications that the user changed text size preference for dynamic type
+    [[NSNotificationCenter defaultCenter] addObserver: self
+                                             selector: @selector(preferredContentSizeChanged:)
+                                                 name: UIContentSizeCategoryDidChangeNotification
+                                               object: nil];
+
+    // ...and retrieve the current settings to set the actual font size of the UI elements in the cell
+    [self calculateAndSetFonts];
 }
 
 
@@ -119,10 +119,10 @@ CGFloat const kOCRPackagesCellWidthPadding  =  20.0f;
  When not using ARC, your implementation of dealloc must invoke the superclass’s implementation as its last 
  instruction.
  */
-//- (void)dealloc
-//{
-//    [[NSNotificationCenter defaultCenter] removeObserver:self];
-//}
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 
 
 //----------------------------------------------------------------------------------------------------------
@@ -154,39 +154,39 @@ CGFloat const kOCRPackagesCellWidthPadding  =  20.0f;
  
  @param aNotification the notifcation object.
  */
-//- (void)preferredContentSizeChanged: (NSNotification *)aNotification
-//{
-//    DLog();
-//    
-//    // The user changed their preference for dynamic type size. Update the font size of the UI elements in the cell
-//    [self calculateAndSetFonts];
-//}
+- (void)preferredContentSizeChanged: (NSNotification *)aNotification
+{
+    DLog();
+    
+    // The user changed their preference for dynamic type size. Update the font size of the UI elements in the cell
+    [self calculateAndSetFonts];
+}
 
 //----------------------------------------------------------------------------------------------------------
 /**
  Set the Dynamic Text style currently in effect on the cell's UI elements.
  */
-//- (void) calculateAndSetFonts
-//{
-//    DLog();
-//    
-//    static const CGFloat cellTitleTextScaleFactor = 1.0f;
-//    static const CGFloat cellBodyTextScaleFactor  = 1.0f;
-//    
-//    NSString *cellTitleTextStyle    = [self.title OCATextStyle];
-//    UIFont *cellTitleFont           = [UIFont OCAPreferredFontWithTextStyle: cellTitleTextStyle
-//                                                                      scale: cellTitleTextScaleFactor];
-//    
-//    NSString *cellBodyTextStyle = [self.coverLtrButton.titleLabel OCATextStyle];
-//    UIFont *cellBodyFont        = [UIFont OCAPreferredFontWithTextStyle: cellBodyTextStyle
-//                                                                  scale: cellBodyTextScaleFactor];
-//    
-//    self.title.font                     = cellTitleFont;
-//    self.coverLtrButton.titleLabel.font = cellBodyFont;
-//    self.resumeButton.titleLabel.font   = cellBodyFont;
-//        
-//    [self invalidateIntrinsicContentSize];
-//}
+- (void) calculateAndSetFonts
+{
+    DLog();
+    
+    static const CGFloat cellTitleTextScaleFactor = 1.0f;
+    static const CGFloat cellBodyTextScaleFactor  = 1.0f;
+    
+    NSString *cellTitleTextStyle    = [self.title OCATextStyle];
+    UIFont *cellTitleFont           = [UIFont OCAPreferredFontWithTextStyle: cellTitleTextStyle
+                                                                      scale: cellTitleTextScaleFactor];
+    
+    NSString *cellBodyTextStyle = [self.coverLtrButton.titleLabel OCATextStyle];
+    UIFont *cellBodyFont        = [UIFont OCAPreferredFontWithTextStyle: cellBodyTextStyle
+                                                                  scale: cellBodyTextScaleFactor];
+    
+    self.title.font                     = cellTitleFont;
+    self.coverLtrButton.titleLabel.font = cellBodyFont;
+    self.resumeButton.titleLabel.font   = cellBodyFont;
+        
+    [self invalidateIntrinsicContentSize];
+}
 
 //----------------------------------------------------------------------------------------------------------
 /**
@@ -194,10 +194,10 @@ CGFloat const kOCRPackagesCellWidthPadding  =  20.0f;
  
  @return the UIFontTextStyle of the title.
  */
-//+ (NSString *)titleFont
-//{
-//    return UIFontTextStyleHeadline;
-//}
++ (NSString *)titleFont
+{
+    return UIFontTextStyleHeadline;
+}
 
 //----------------------------------------------------------------------------------------------------------
 /**
@@ -205,9 +205,9 @@ CGFloat const kOCRPackagesCellWidthPadding  =  20.0f;
  
  @return the UIFontTextStyle of the title.
  */
-//+ (NSString *)detailFont
-//{
-//    return UIFontTextStyleBody;
-//}
++ (NSString *)detailFont
+{
+    return UIFontTextStyleBody;
+}
 
 @end

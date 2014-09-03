@@ -18,8 +18,7 @@
 /**
  Manage Packages objects.
  
- It uses a UITableView to display the list of Packages, and dispatches OCRCoverLtrViewController or OCRResumeViewController.
- 
+ It uses a UITableView to display the list of Packages, and dispatches OCRCoverLtrViewController or OCRResumeOverViewController.
  */
 
 #define k_OKButtonIndex     1
@@ -96,7 +95,12 @@
 #endif
     
     // Initialize estimated row height to support dynamic text sizing
-    self.tableView.estimatedRowHeight = kOCRPackagesCellHeight;
+    self.tableView.estimatedRowHeight           = kOCRPackagesCellHeight;
+    // ...and section header height
+    self.tableView.estimatedSectionHeaderHeight = kOCRHeaderCellHeight;
+    
+    // Disable multi-selection show swipe to delete works.
+    self.tableView.allowsMultipleSelectionDuringEditing = NO;
     
     // Set up button items
     cancelBtn   = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel
@@ -279,15 +283,31 @@
 {
     DLog();
     
-#warning TODO - convert to alert controller
-    UIAlertView *packageNameAlert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Enter Package Name", nil)
-                                                               message: nil
-                                                              delegate: self
-                                                     cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
-                                                     otherButtonTitles: NSLocalizedString(@"OK", nil), nil];
-    packageNameAlert.alertViewStyle = UIAlertViewStylePlainTextInput;
+    // Set up a UIAlertController to get the user's input
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Enter Package Name", nil)
+                                                                   message:nil
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    // Add a text field to the alert
+    [alert addTextFieldWithConfigurationHandler: ^(UITextField *textField) {
+        textField.placeholder = NSLocalizedString(@"Package Name", nil);
+    }];
     
-    [packageNameAlert show];
+    // ...add a cancel action
+    [alert addAction: [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil)
+                                                 style:UIAlertActionStyleDefault
+                                               handler:nil]];
+    // ...and an OK action
+    [alert addAction: [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil)
+                                               style:UIAlertActionStyleDefault
+                                             handler:^(UIAlertAction *action) {
+                                                 // Get the Package name from the alert and pass it to addPackage
+                                                 [self addPackage: ((UITextField *) alert.textFields[0]).text];
+                                             }]];
+
+    // ...and present the alert to the user
+    [self presentViewController: alert
+                       animated: YES
+                     completion:nil];
 }
 
 //----------------------------------------------------------------------------------------------------------
@@ -483,35 +503,6 @@
     }
  }
 
-#pragma mark - Alert handling
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Sent to the delegate when the user clicks a button on an alert view.
- 
- The receiver is automatically dismissed after this method is invoked.
- 
- @param alertView       The alert view containing the button.
- @param buttonIndex     The index of the button that was clicked. The button indices start at 0.
- */
-- (void)    alertView:(UIAlertView *)alertView
- clickedButtonAtIndex: (NSInteger)buttonIndex
-{
-    DLog();
-    
-    // Check whether the user entered a Package name or cancelled
-    if (buttonIndex == k_OKButtonIndex)
-    {
-        // OK - get the Package name from the alertView and pass it to addPackage
-        [self addPackage: [[alertView textFieldAtIndex: 0] text]];
-    }
-    else
-    {
-        // Cancel - reset the UI to "normal" state
-        [self configureDefaultNavBar];
-    }
-}
-
 #pragma mark - OCRPackagesCellDelegate methods
 
 //----------------------------------------------------------------------------------------------------------
@@ -600,6 +591,24 @@
     
     // Get the number of objects for the section from the fetchedResultsController
     return [[[self.fetchedResultsController sections] objectAtIndex:section] numberOfObjects];
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Asks the data source to verify that the given row is editable.
+ 
+ @param tableView       The table-view object requesting this information.
+ @param indexPath       An index path locating a row in tableView.
+ @return                YES to allow editing, NO otherwise,
+ */
+- (BOOL)    tableView: (UITableView *)tableView
+canEditRowAtIndexPath: (NSIndexPath *)indexPath
+{
+    DLog();
+    
+    // If we are in edit mode allow swipe to delete
+    return self.editing;
 }
 
 
@@ -702,6 +711,8 @@
    commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
     forRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    DLog();
+    
     if (editingStyle == UITableViewCellEditingStyleDelete)
     {
         // Delete the managed object at the given index path.

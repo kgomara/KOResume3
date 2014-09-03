@@ -9,3 +9,4 @@
 
 #define kPrivateOCRUbiquityID       @""
 #define kPrivateCrittercismAppID    @"53ecd54583fb796006000007"
+#define kCrashlyticsGitHubToken     @"eb4111d681588aeadc045913bf38cc46941f2779"

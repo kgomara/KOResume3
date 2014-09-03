@@ -35,19 +35,19 @@ extern CGFloat const kOCRPackagesCellWidthPadding;
 
 @property (nonatomic, weak)     IBOutlet NSLayoutConstraint *rightEdgeConstraint;
 
-/**
- Helper method to get the UIFont of the title field.
- 
- Used as part of the support for dynamic font handling.
- */
-+ (NSString *)titleFont;
-
-/**
- Helper method to get the UIFont of the detail field.
- 
- Used as part of the support for dynamic font handling.
- */
-+ (NSString *)detailFont;
+///**
+// Helper method to get the UIFont of the title field.
+// 
+// Used as part of the support for dynamic font handling.
+// */
+//+ (NSString *)titleFont;
+//
+///**
+// Helper method to get the UIFont of the detail field.
+// 
+// Used as part of the support for dynamic font handling.
+// */
+//+ (NSString *)detailFont;
 
 
 @end
