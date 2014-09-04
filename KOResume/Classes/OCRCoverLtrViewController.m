@@ -26,20 +26,21 @@
     /**
      Reference to the save button to facilitate swapping buttons between display and edit modes
      */
-    UIBarButtonItem     *saveBtn;
+    UIBarButtonItem     *doneBtn;
     
     /**
      Reference to the cancel button to facilitate swapping buttons between display and edit modes
      */
     UIBarButtonItem     *cancelBtn;
+    
+    /**
+     A boolean flag to indicate whether the user is editing information or simply viewing.
+     */
+    BOOL                isEditing;
 }
 
-/**
- A boolean flag to indicate whether the user is editing information or simply viewing.
- */
-@property (nonatomic, assign, getter=isEditing) BOOL editing;
-
 @end
+
 
 @implementation OCRCoverLtrViewController
 
@@ -69,17 +70,17 @@
                                                                 target: self
                                                                 action: @selector(didPressEditButton)];
     
-    saveBtn     = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemSave
+    doneBtn     = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemDone
                                                                 target: self
-                                                                action: @selector(didPressSaveButton)];
+                                                                action: @selector(didPressDoneButton)];
     
     cancelBtn   = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel
                                                                 target: self
                                                                 action: @selector(didPressCancelButton)];
     
     // Set editing off
-    self.editing = NO;
-    [self setUIForEditing: NO];
+    isEditing = NO;
+    [self configureUIForEditing: NO];
 }
 
 
@@ -124,6 +125,13 @@
                                                  name: UIKeyboardWillHideNotification
                                                object: nil];
 
+    // ...add an observer for Dynamic Text size changes
+    [[NSNotificationCenter defaultCenter] addObserver: self
+                                             selector: @selector(userTextSizeDidChange:)
+                                                 name: UIContentSizeCategoryDidChangeNotification
+                                               object: nil];
+    
+    // ...and an observer for package object deletion
     [[NSNotificationCenter defaultCenter] addObserver: self
                                              selector: @selector(packageWasDeleted:)
                                                  name: kOCRMocDidDeletePackageNotification
@@ -154,9 +162,6 @@
      removeObserver is handled in super class
      */
     
-    self.scrollView             = nil;
-    self.coverLtrFld            = nil;
-    
     [super viewWillDisappear: animated];
 }
 
@@ -172,11 +177,22 @@
     // Load the cover letter into the view
     if ([(Packages *)self.selectedManagedObject cover_ltr])
     {
+        // We have a selected object with data
         [_noSelectionView setHidden:YES];
         _coverLtrFld.text	= [(Packages *)self.selectedManagedObject cover_ltr];
     }
     else
     {
+        if (self.selectedManagedObject)
+        {
+            // We have a selected object, but no data
+            _noSelectionLabel.text = NSLocalizedString(@"Press Edit to enter text.", nil);
+        }
+        else
+        {
+            // Nothing is selected
+            _noSelectionLabel.text = NSLocalizedString(@"Nothing selected.", nil);
+        }
         [_noSelectionView setHidden:NO];
         [self.view bringSubviewToFront:_noSelectionView];
         _coverLtrFld.text	= @"";
@@ -203,7 +219,7 @@
     [_coverLtrFld        setEditable: editable];
     
     // Set the background color for the text view on the editable param
-    UIColor *backgroundColor = editable? [UIColor colorWithRed:1 green:0 blue:0 alpha:0.2f] /* [UIColor whiteColor] */ : [UIColor clearColor];
+    UIColor *backgroundColor = editable? [UIColor colorWithRed:1 green:0 blue:0 alpha:0.1f] /* [UIColor whiteColor] */ : [UIColor clearColor];
     
     // ...and set the background color
     [_coverLtrFld        setBackgroundColor: backgroundColor];
@@ -255,6 +271,23 @@
     }
 }
 
+#pragma mark - UITextKit handlers
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Called when the user changes the size of dynamic text.
+ 
+ @param aNotification   The notification sent with the UIContentSizeCategoryDidChangeNotification notification
+ */
+- (void)userTextSizeDidChange: (NSNotification *)aNotification
+{
+    DLog();
+    
+    // Reload the table view, which in turn causes the tableView cells to update their fonts
+    _coverLtrFld.font = [UIFont preferredFontForTextStyle: UIFontTextStyleBody];
+}
+
+
 #pragma mark - OCRDetailViewProtocol delegates
 
 //----------------------------------------------------------------------------------------------------------
@@ -297,7 +330,7 @@
     DLog();
     
     // Turn on editing in the UI
-    [self setUIForEditing: YES];
+    [self configureUIForEditing: YES];
     
     // Start an undo group...it will either be commited in didPressSaveButton or
     //    undone in didPressCancelButton
@@ -310,14 +343,14 @@
 
 //----------------------------------------------------------------------------------------------------------
 /**
- Invoked when the user taps the Save button.
+ Invoked when the user taps the Done button.
  
  * Save the changes to the NSManagedObjectContext.
  * Cleanup the undo group on the NSManagedObjectContext.
  * Reset the navigation bar to its default state.
  
  */
-- (void)didPressSaveButton
+- (void)didPressDoneButton
 {
     DLog();
     
@@ -327,14 +360,14 @@
     // ...end the undo group
     [[[kAppDelegate managedObjectContext] undoManager] endUndoGrouping];
     
-    // ...commit the changes
+    // ...save changes to the database
     [kAppDelegate saveContext: [self.fetchedResultsController managedObjectContext]];
     
-    // Cleanup the undoManager
+    // ...cleanup the undoManager
     [[[kAppDelegate managedObjectContext] undoManager] removeAllActionsWithTarget:self];
     
     // ...and reset the UI defaults
-    [self setUIForEditing: NO];
+    [self configureUIForEditing: NO];
     [self resetView];
 }
 
@@ -359,6 +392,7 @@
     
     if ([[[kAppDelegate managedObjectContext] undoManager] canUndo])
     {
+        // Changes were made - discard them
         [[[kAppDelegate managedObjectContext] undoManager] undoNestedGroup];
     }
     
@@ -369,7 +403,7 @@
     [self loadViewFromSelectedObject];
     
     // ...and reset the UI defaults
-    [self setUIForEditing: NO];
+    [self configureUIForEditing: NO];
     [self resetView];
 }
 
@@ -378,16 +412,16 @@
 /**
  Set the UI for for editing enabled or disabled.
  
- Called when the user presses the Edit, Save, or Cancel buttons.
+ Called when the user presses the Edit, Done, or Cancel buttons.
  
  @param isEditingMode   YES if we are going into edit mode, NO otherwise.
  */
-- (void)setUIForEditing: (BOOL)isEditingMode
+- (void)configureUIForEditing: (BOOL)isEditingMode
 {
     DLog();
     
     // Update editing flag
-    self.editing = isEditingMode;
+    isEditing = isEditingMode;
     
     // Hide the noSelectedView
     [self.noSelectionView setHidden:YES];
@@ -398,7 +432,7 @@
     if (isEditingMode)
     {
         // Set up the navigation items and save/cancel buttons
-        self.navigationItem.rightBarButtonItems = @[saveBtn, cancelBtn];
+        self.navigationItem.rightBarButtonItems = @[doneBtn, cancelBtn];
     }
     else
     {

@@ -884,6 +884,7 @@
                     <navigationItem key="navigationItem" id="g10-EI-NNn"/>
                     <connections>
                         <outlet property="coverLtrFld" destination="Mnf-31-eRP" id="p6o-ru-YR8"/>
+                        <outlet property="noSelectionLabel" destination="0Ia-Mn-ROz" id="4wa-yO-wII"/>
                         <outlet property="noSelectionView" destination="1QW-s3-6FX" id="gHz-nE-3h0"/>
                     </connections>
                 </viewController>

@@ -31,4 +31,9 @@
  */
 @property (weak, nonatomic) IBOutlet UIView                 *noSelectionView;
 
+/**
+ IBOutlet to the no selection label
+ */
+@property (weak, nonatomic) IBOutlet UILabel                *noSelectionLabel;
+
 @end

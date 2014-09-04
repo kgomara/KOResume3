@@ -107,9 +107,6 @@
                                                                 target: self
                                                                 action: @selector(didPressCancelButton)];
     
-    // Set up the defaults in the Navigation Bar
-    [self configureDefaultNavBar];
-    
     // Set editing off
     isEditing = NO;
 }
@@ -142,7 +139,9 @@
     [self.navigationItem setHidesBackButton: NO];
 
     [self.tableView setContentOffset:CGPointZero];
+    // Set up the defaults in the Navigation Bar
     [self configureDefaultNavBar];
+    // ...and configure the UI for editing
     [self configureFieldsForEditing: isEditing];
 
     // Observe the app delegate telling us when it's finished asynchronously adding the store coordinator
@@ -476,7 +475,7 @@
 /**
  Set the UI for for editing enabled or disabled.
  
- Called when the user presses the Edit, Save, or Cancel buttons.
+ Called when the user presses the Edit, Done, or Cancel buttons.
  
  @param isEditingMode   YES if we are going into edit mode, NO otherwise.
  */

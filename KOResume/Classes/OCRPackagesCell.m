@@ -127,7 +127,7 @@ CGFloat const kOCRPackagesCellWidthPadding  =  20.0f;
 
 //----------------------------------------------------------------------------------------------------------
 /**
- Called to change the cell's highlighted property.
+ Called to change the cell's highlighted property. Currently, not used.
  
  In our cell prototype we created a view inset of a few pixels and set its background to white.
  Our highlight visual effect is acheived by changing the background color of the cell, which is
