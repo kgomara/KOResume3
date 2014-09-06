@@ -50,7 +50,7 @@
     {
         ALog(@"Could not get managedObjectContext");
         NSString *msg = NSLocalizedString(@"Failed to open database.", nil);
-        [OCAUtilities showErrorWithMessage: msg];
+        [kAppDelegate showErrorWithMessage: msg];
     }
     
     // Setup Master-Detail controller paradigm
@@ -192,7 +192,7 @@
             {
                 ELog(error, @"Failed to save data");
                 NSString* msg = NSLocalizedString( @"Failed to save data.", nil);
-                [OCAUtilities showErrorWithMessage: msg];
+                [kAppDelegate showErrorWithMessage: msg];
             }
         }
         else
@@ -217,13 +217,44 @@
     {
         ELog(error, @"Failed to save data");
         NSString* msg = NSLocalizedString( @"Failed to save data.", nil);
-        [OCAUtilities showErrorWithMessage: msg];
+        [kAppDelegate showErrorWithMessage: msg];
     }
     else
     {
         DLog(@"Save successful");
     }
 }
+
+// =========================================================================================================
+#pragma mark - Public class methods
+// =========================================================================================================
+
+//----------------------------------------------------------------------------------------------------------
+- (void)showAlertWithMessageAndType: (NSString*)theMessage
+                          alertType: (NSString*)theType
+{
+    UIAlertView* alert = [[UIAlertView alloc] initWithTitle: theType
+                                                    message: theMessage
+                                                   delegate: nil
+                                          cancelButtonTitle: NSLocalizedString(@"OK", @"OK")
+                                          otherButtonTitles: nil];
+    [alert show];
+}
+
+//----------------------------------------------------------------------------------------------------------
+- (void)showErrorWithMessage: (NSString*)theMessage
+{
+    [self showAlertWithMessageAndType: theMessage
+                            alertType: NSLocalizedString( @"Error", @"Error")];
+}
+
+//----------------------------------------------------------------------------------------------------------
+- (void)showWarningWithMessage: (NSString*)theMessage
+{
+    [self showAlertWithMessageAndType: theMessage
+                            alertType: NSLocalizedString(@"Warning", @"Warning")];
+}
+
 
 
 @end

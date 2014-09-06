@@ -21,21 +21,17 @@
      */
     UIBarButtonItem     *backBtn;
     
-    /**
-     Reference to the edit button to facilitate swapping buttons between display and edit modes.
-     */
-    UIBarButtonItem     *editBtn;
-    
-    /**
-     Reference to the save button to facilitate swapping buttons between display and edit modes.
-     */
-    UIBarButtonItem     *saveBtn;
-    
+
     /**
      Reference to the cancel button to facilitate swapping buttons between display and edit modes.
      */
     UIBarButtonItem     *cancelBtn;
     
+    /**
+     A boolean flag to indicate whether the user is editing information or simply viewing.
+     */
+    BOOL                isEditing;
+
     /**
      Reference to the date formatter object.
      */
@@ -45,27 +41,18 @@
      Reference to the active UITextField
      */
     UITextField         *activeField;
+    
+    /**
+     Convenience reference to the managed object instance we are managing.
+     
+     OCRBaseDetailViewController, of which this is a subclass, declares a selectedManagedObject. We make this
+     type-correct reference merely for convenience.
+     */
+    Resumes             *selectedResume;
 }
 
-/**
- Array used to keep the Resume's job objects sorted by sequence_number.
- */
-@property (nonatomic, strong)   NSMutableArray      *jobArray;
-
-/**
- Convenience reference to the managed object instance we are managing.
- 
- OCRBaseDetailViewController, of which this is a subclass, declares a selectedManagedObject. We make this
- type-correct reference merely for convenience.
- */
-@property (nonatomic, strong)   Resumes             *selectedResume;
-
-/**
- A boolean flag to indicate whether the user is editing information or simply viewing.
- */
-@property (nonatomic, assign, getter=isEditing) BOOL editing;
-
 @end
+
 
 @implementation OCRResumeOverviewViewController
 
@@ -93,44 +80,34 @@
      will come up with a better Storyboard/IB paradigm in a later Beta of Xcode 6.
      
      Bascially, the above post points out that the "content view" (contained in our scrollView) needs to
-     be pinned to the scrollView's superview - which cannot be done in IB. 
-     
-     The constant 16 is another work-around, as the UIScrollview really, really wants to have some kind 
-     of inset.
+     be pinned to the scrollView's superview (self.view) - which cannot be done in IB. 
      */
-    NSLayoutConstraint *leftConstraint = [NSLayoutConstraint constraintWithItem:self.contentView
-                                                                      attribute:NSLayoutAttributeLeading
-                                                                      relatedBy:NSLayoutRelationEqual
-                                                                         toItem:self.view
-                                                                      attribute:NSLayoutAttributeLeading
-                                                                     multiplier:1.0
-                                                                       constant:0];
+    NSLayoutConstraint *leftConstraint = [NSLayoutConstraint constraintWithItem: self.contentView
+                                                                      attribute: NSLayoutAttributeLeading
+                                                                      relatedBy: NSLayoutRelationEqual
+                                                                         toItem: self.view
+                                                                      attribute: NSLayoutAttributeLeading
+                                                                     multiplier: 1.0
+                                                                       constant: 0];
     [self.view addConstraint:leftConstraint];
     
-    NSLayoutConstraint *rightConstraint = [NSLayoutConstraint constraintWithItem:self.contentView
-                                                                       attribute:NSLayoutAttributeTrailing
-                                                                       relatedBy:NSLayoutRelationEqual
-                                                                          toItem:self.view
-                                                                       attribute:NSLayoutAttributeTrailing
-                                                                      multiplier:1.0
-                                                                        constant:0];
+    NSLayoutConstraint *rightConstraint = [NSLayoutConstraint constraintWithItem: self.contentView
+                                                                       attribute: NSLayoutAttributeTrailing
+                                                                       relatedBy: NSLayoutRelationEqual
+                                                                          toItem: self.view
+                                                                       attribute: NSLayoutAttributeTrailing
+                                                                      multiplier: 1.0
+                                                                        constant: 0];
     [self.view addConstraint:rightConstraint];
     
     // For convenience, make a type-correct reference to the Resume we're working on
-    self.selectedResume = (Resumes *)self.selectedManagedObject;
+    selectedResume = (Resumes *)self.selectedManagedObject;
     
     // Set the default button title
-    self.backButtonTitle        = NSLocalizedString(@"Resume", nil);
+    self.backButtonTitle = NSLocalizedString(@"Resume", nil);
     
     // Set up button items
     backBtn     = self.navigationItem.leftBarButtonItem;
-    editBtn     = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemEdit
-                                                                target: self
-                                                                action: @selector(didPressEditButton)];
-    
-    saveBtn     = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemSave
-                                                                target: self
-                                                                action: @selector(didPressSaveButton)];
     
     cancelBtn   = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel
                                                                 target: self
@@ -149,10 +126,7 @@
     [self configureDefaultNavBar];
     
     // Set editing off
-    self.editing = NO;
-    
-    // Sort the job table by sequence_number
-    [self sortTables];
+    isEditing = NO;
 }
 
 
@@ -181,14 +155,18 @@
     
     [super viewWillAppear: animated];
     
-//    self.fetchedResultsController.delegate = self;
-    
     [self.scrollView setContentOffset:CGPointZero];
-    [self configureDefaultNavBar];
+
+    // Configure the view
     [self configureView];
-    [self configureFieldsForEditing: self.editing];
     
-    // Register for keyboard notifications
+    // Observe the app delegate telling us when it's finished asynchronously adding the store coordinator
+    [[NSNotificationCenter defaultCenter] addObserver: self
+                                             selector: @selector(reloadFetchedResults:)
+                                                 name: kOCRApplicationDidAddPersistentStoreCoordinatorNotification
+                                               object: nil];
+    
+    // ...and an observer for keyboard notifications
     [[NSNotificationCenter defaultCenter] addObserver: self
                                              selector: @selector(keyboardWillShow:)
                                                  name: UIKeyboardWillShowNotification
@@ -204,26 +182,20 @@
                                              selector: @selector(userTextSizeDidChange:)
                                                  name: UIContentSizeCategoryDidChangeNotification
                                                object: nil];
-    /*
-     This class inherits viewWillDisappear from the base class, which calls removeObserver
-     */
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Sort the job and education arrays into sequence_number order.
- */
-- (void)sortTables
-{
-    DLog();
     
-    // Sort jobs in the order they should appear in the table
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey: kOCRSequenceNumberAttributeName
-                                                                   ascending: YES];
-    NSArray *sortDescriptors    = @[sortDescriptor];
-    self.jobArray               = [NSMutableArray arrayWithArray: [_selectedResume.job sortedArrayUsingDescriptors: sortDescriptors]];
+    // ...and an observer for package object deletion
+    [[NSNotificationCenter defaultCenter] addObserver: self
+                                             selector: @selector(packageWasDeleted:)
+                                                 name: kOCRMocDidDeletePackageNotification
+                                               object: nil];
 }
+
+/*
+ Notice there is no viewWillDisappear.
+ 
+ This class inherits viewWillDisappear from the base class, which calls removeObserver and saves the context; hence
+ we have no need to implement the method in this class. Similarly, we don't implement didReceiveMemoryWarning.
+ */
 
 
 //----------------------------------------------------------------------------------------------------------
@@ -234,15 +206,25 @@
 {
     DLog();
     
-    [_resumeName setText: _selectedResume.name
+    [_resumeName setText: selectedResume.name
            orPlaceHolder: NSLocalizedString(@"Resume name", nil)];
     
-    // The jobsArray is always in sequence_number order
+    // Get the jobs sorted by sequence_number
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey: kOCRSequenceNumberAttributeName
+                                                                   ascending: YES];
+    NSArray *sortDescriptors    = @[sortDescriptor];
+    NSArray *jobsArray          = [NSMutableArray arrayWithArray: [selectedResume.job sortedArrayUsingDescriptors: sortDescriptors]];
+
+    /*
+     Note there is a difference between iPhone and iPad - or more correctly, between horizontal size compact and regular. In Interface 
+     Builder, this Scene has "uninstalled" the currentJobTitle, currentJobName, and atLabel for the size class W:Compact H:Regular. Even
+     though we assign text to these fields, they do not appear in Compact width (which includes iPhone landscape).
+     */
     // Check to see if there is at least 1 Job...
-    if ([_jobArray count] > 0)
+    if ([jobsArray count] > 0)
     {
         // ...if so, get the first one,
-        Jobs *currentJob        = _jobArray[0];
+        Jobs *currentJob        = jobsArray[0];
         // ...use it to populate the current job information in the summaryView,
         _currentJobTitle.text   = currentJob.title;
         _currentJobName.text    = currentJob.name;
@@ -265,19 +247,25 @@
      empty fields.
      */
     // For each of the tableHeaderView's text fields, set either it's text or placeholder property
-    [_resumeStreet1 setText: _selectedResume.street1
+    [_resumeStreet1 setText: selectedResume.street1
               orPlaceHolder: NSLocalizedString(@"Street address", nil)];
-    [_resumeCity setText: _selectedResume.city
+    
+    [_resumeCity setText: selectedResume.city
            orPlaceHolder: NSLocalizedString(@"City", nil)];
-    [_resumeState setText: _selectedResume.state
+    
+    [_resumeState setText: selectedResume.state
             orPlaceHolder: NSLocalizedString(@"ST", nil)];
-    [_resumePostalCode setText: _selectedResume.postal_code
+    
+    [_resumePostalCode setText: selectedResume.postal_code
                  orPlaceHolder: NSLocalizedString(@"Zip code", nil)];
-    [_resumeHomePhone setText: _selectedResume.home_phone
+    
+    [_resumeHomePhone setText: selectedResume.home_phone
                 orPlaceHolder: NSLocalizedString(@"Home phone", nil)];
-    [_resumeMobilePhone setText: _selectedResume.mobile_phone
+    
+    [_resumeMobilePhone setText: selectedResume.mobile_phone
                   orPlaceHolder: NSLocalizedString(@"Mobile phone", nil)];
-    [_resumeEmail setText: _selectedResume.email
+    
+    [_resumeEmail setText: selectedResume.email
             orPlaceHolder: NSLocalizedString(@"Email address", nil)];
     
     /*
@@ -285,7 +273,7 @@
      above is not a concern here.
      */
     // resumeSummary is a UITextView
-    _resumeSummary.text = _selectedResume.summary;
+    _resumeSummary.text = selectedResume.summary;
     [_resumeSummary scrollRangeToVisible: NSMakeRange(0, 0)];
 }
 
@@ -317,7 +305,7 @@
     [_resumeSummary     setEditable: editable];     // resumeSummary is a UITextView
     
     // Set the background color for the fields based on the editable param
-    UIColor *backgroundColor = editable? [UIColor colorWithRed:1 green:0 blue:0 alpha:0.2f] /* [UIColor whiteColor] */ : [UIColor clearColor];
+    UIColor *backgroundColor = editable? [self.view.tintColor colorWithAlphaComponent:0.1f] : [UIColor clearColor];
     
     // ...and set the background color
     [_resumeName        setBackgroundColor: backgroundColor];
@@ -340,11 +328,27 @@
 {
     DLog();
     
-    // Set the title
-    self.navigationItem.title = NSLocalizedString(@"Resume", nil);
+    NSString *title = NSLocalizedString(@"Resume", nil);
     
-    // Set up the navigation items and save/cancel buttons
-    self.navigationItem.rightBarButtonItems = @[editBtn];
+    /*
+     In iOS8 Apple has bridged much of the gap between iPhone and iPad. However some differences persist.
+     */
+    if (self.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+    {
+        /*
+         Our view controller is embedded in a UITabBarController that owns the navigation bar. So to update
+         the title and buttons we must reference the navigation items in our tabBarController.
+         */
+        // Set the title
+        self.tabBarController.navigationItem.title = title;
+        // ...and edit button
+        self.tabBarController.navigationItem.rightBarButtonItems = @[self.editButtonItem];
+    }
+    else
+    {
+        self.navigationItem.title = title;
+        self.navigationItem.rightBarButtonItems = @[self.editButtonItem];
+    }
 }
 
 
@@ -360,6 +364,29 @@
     
     // Use the information in the selected managed object to update the UI fields
     [self loadViewFromSelectedObject];
+
+    // ...and configure the fields for the current editing state
+    [self configureFieldsForEditing: isEditing];
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Update internal state of the view controller when a package has been deleted.
+ 
+ Invoked by notification posted by OCRPackagesViewController when it performs a package deletion.
+ 
+ @param aNotification   The NSNotification object associated with the event.
+ */
+- (void)packageWasDeleted: (NSNotification *)aNotification
+{
+    DLog();
+    
+    if ( ![(Packages *)self.selectedManagedObject cover_ltr] ||
+        [self.selectedManagedObject isDeleted])
+    {
+        self.selectedManagedObject = nil;
+    }
 }
 
 
@@ -385,10 +412,13 @@
      apply the new content size because UIFont instances are immutable.
      */
     _resumeName.Font        = [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline];
-        // These UI elements only exist on iPad
-        _currentJobTitle.font   = [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline];
-        _atLabel.font           = [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline];
-        _currentJobName.font    = [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline];
+    /*
+     These UI elements only exist on iPad - or more correctly stated, in not in horizontally Compact size.
+     We use Size Class in Interface Builder and uncheck installed for the W:Compact H:Any size class
+     */
+    _currentJobTitle.font   = [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline];
+    _atLabel.font           = [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline];
+    _currentJobName.font    = [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline];
 
     _resumeStreet1.font     = [UIFont preferredFontForTextStyle: UIFontTextStyleBody];
     _resumeCity.font        = [UIFont preferredFontForTextStyle: UIFontTextStyleBody];
@@ -400,13 +430,6 @@
     _mbLabel.font           = [UIFont preferredFontForTextStyle: UIFontTextStyleBody];
     _resumeEmail.font       = [UIFont preferredFontForTextStyle: UIFontTextStyleBody];
     _resumeSummary.font     = [UIFont preferredFontForTextStyle: UIFontTextStyleBody];
-    
-    /*
-     Reloading the table will cause the datasource methods to be called. The table controller will call
-     tableView:cellForRowAtIndexPath: which applies the new fonts and tableView:heightForRowAtIndexPath: calculates
-     row heights given the new text size. Note this approach requires fonts to be set in cellForRowAtIndexPath:
-     and not in an init method.
-     */
 }
 
 
@@ -414,67 +437,64 @@
 
 //----------------------------------------------------------------------------------------------------------
 /**
- Invoked when the user taps the Edit button.
+ Sets whether the view controller shows an editable view.
  
- * Setup the navigation bar for editing.
- * Enable editable fields.
- * Start an undo group on the NSManagedObjectContext.
+ Subclasses that use an edit-done button must override this method to change their view to an editable state
+ if editing is YES and a non-editable state if it is NO. This method should invoke super’s implementation
+ before updating its view.
  
+ @param editing     If YES, the view controller should display an editable view; otherwise, NO. If YES and one
+ of the custom views of the navigationItem property is set to the value returned by the
+ editButtonItem method, the associated navigation controller displays a Done button;
+ otherwise, an Edit button.
+ @param animate     If YES, animates the transition; otherwise, does not.
  */
-- (void)didPressEditButton
+- (void)setEditing: (BOOL)editing
+          animated: (BOOL)animated
 {
-    DLog();
+    DLog(@"editing=%@", editing? @"YES" : @"NO");
+    [super setEditing: editing
+             animated: animated];
     
-    // Turn on editing in the UI
-    [self configureUIForEditing: YES];
+    // Configure the UI to represent the editing state we are entering
+    [self configureUIForEditing: editing];
     
-    // Start an undo group...it will either be commited in didPressSaveButton or
-    //    undone in didPressCancelButton
-    [[[kAppDelegate managedObjectContext] undoManager] beginUndoGrouping];
-    
-    // ...and bring the keyboard onscreen with the cursor in resume name
-    [_resumeName becomeFirstResponder];
+    if (editing)
+    {
+        // Start an undo group...it will either be commited here when the User presses Done, or
+        //    undone in didPressCancelButton
+        [[[kAppDelegate managedObjectContext] undoManager] beginUndoGrouping];
+        
+        // ...and bring the keyboard onscreen with the cursor in resume name
+        [_resumeName becomeFirstResponder];
+    }
+    else
+    {
+        // The user pressed "Done", save the changes
+        selectedResume.name           = _resumeName.text;
+        selectedResume.street1        = _resumeStreet1.text;
+        selectedResume.city           = _resumeCity.text;
+        selectedResume.state          = _resumeState.text;
+        selectedResume.postal_code    = _resumePostalCode.text;
+        selectedResume.home_phone     = _resumeHomePhone.text;
+        selectedResume.mobile_phone   = _resumeMobilePhone.text;
+        selectedResume.email          = _resumeEmail.text;
+        selectedResume.summary        = _resumeSummary.text;
+        
+        // ...end the undo group
+        [[[kAppDelegate managedObjectContext] undoManager] endUndoGrouping];
+        
+        // ...save changes to the database
+        [kAppDelegate saveContextAndWait: [kAppDelegate managedObjectContext]];
+        
+        // ...cleanup the undoManager
+        [[[kAppDelegate managedObjectContext] undoManager] removeAllActionsWithTarget: self];
+        
+        // ...and turn off editing in the UI
+        [self configureUIForEditing: NO];
+        [self resetView];
+    }
 }
-
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Invoked when the user taps the Save button.
- 
- * Save the changes to the NSManagedObjectContext.
- * Cleanup the undo group on the NSManagedObjectContext.
- * Reset the navigation bar to its default state.
- 
- */
-- (void)didPressSaveButton
-{
-    DLog();
-    
-    // Save the changes
-    _selectedResume.name           = _resumeName.text;
-    _selectedResume.street1        = _resumeStreet1.text;
-    _selectedResume.city           = _resumeCity.text;
-    _selectedResume.state          = _resumeState.text;
-    _selectedResume.postal_code    = _resumePostalCode.text;
-    _selectedResume.home_phone     = _resumeHomePhone.text;
-    _selectedResume.mobile_phone   = _resumeMobilePhone.text;
-    _selectedResume.email          = _resumeEmail.text;
-    _selectedResume.summary        = _resumeSummary.text;
-    
-    // ...end the undo group
-    [[[kAppDelegate managedObjectContext] undoManager] endUndoGrouping];
-
-    // ...commit the changes
-    [kAppDelegate saveContextAndWait: [kAppDelegate managedObjectContext]];
-    
-    // Cleanup the undoManager
-    [[[kAppDelegate managedObjectContext] undoManager] removeAllActionsWithTarget: self];
-    
-    // ...and turn off editing in the UI
-    [self configureUIForEditing: NO];
-    [self resetView];
-}
-
 
 //----------------------------------------------------------------------------------------------------------
 /**
@@ -503,10 +523,20 @@
     // Cleanup the undoManager
     [[[kAppDelegate managedObjectContext] undoManager] removeAllActionsWithTarget: self];
     
+    
+    // ...and reload the fetchedResults to bring them into memory
+    [self reloadFetchedResults: nil];
+
     // ...re-load the view with the data from the (unchanged) resume
     [self loadViewFromSelectedObject];
     
-    // Turn off editing in the UI
+    /*
+     This may look odd - one usually sees a call to super in a method with the same name. But we need to inform
+     the tableView that we are no longer editing the table.
+     */
+    [super setEditing: NO
+             animated: YES];
+    // ...turn off editing in the UI
     [self configureUIForEditing: NO];
     [self resetView];
 }
@@ -525,15 +555,29 @@
     DLog();
     
     // Update editing flag
-    self.editing = isEditingMode;
+    isEditing = isEditingMode;
     
     // ...enable/disable resume fields
     [self configureFieldsForEditing: isEditingMode];
     
     if (isEditingMode)
     {
-        // Set up the navigation items and save/cancel buttons
-        self.navigationItem.rightBarButtonItems = @[saveBtn, cancelBtn];
+        /*
+         In iOS8 Apple has bridged much of the gap between iPhone and iPad. However some differences persist.
+         */
+        if (self.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+        {
+            /*
+             Our view controller is embedded in a UITabBarController that owns the navigation bar. So to update
+             the title and buttons we must reference the navigation items in our tabBarController.
+             */
+            // Set the edit button
+            self.tabBarController.navigationItem.rightBarButtonItems = @[self.editButtonItem, cancelBtn];
+        }
+        else
+        {
+            self.navigationItem.rightBarButtonItems = @[self.editButtonItem, cancelBtn];
+        }
     }
     else
     {
@@ -727,10 +771,10 @@
     
     [super reloadFetchedResults: aNote];
     
-    if (self.selectedResume.isDeleted)
+    if (selectedResume.isDeleted)
     {
         // Need to display a message
-        [OCAUtilities showWarningWithMessage:@"resume delete"];
+        [kAppDelegate showWarningWithMessage:@"resume delete"];
     }
     else
     {

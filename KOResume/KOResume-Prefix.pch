@@ -5,14 +5,12 @@
 //
 
 #import <Availability.h>
-#import <OCAUtilities/OCAUtilities.h>
 #import "OCRGlobalConstants.h"
 #import "OCRGlobalMacros.h"
-#import "OCRPrivateKeys.h"
+#import "UITextField+KOResume.h"
+#import "NSString+KOResume.h"
 
-#ifdef __OBJC__
-    #import <UIKit/UIKit.h>
-    #import <Foundation/Foundation.h>
-    #import <CoreData/CoreData.h>
-#endif
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+#import <CoreData/CoreData.h>
 

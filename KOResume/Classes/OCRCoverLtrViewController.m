@@ -154,16 +154,16 @@
  
  @param animated        If YES, the disappearance of the view is being animated.
  */
-- (void)viewWillDisappear: (BOOL)animated
-{
-    DLog();
-    
-    /*
-     removeObserver is handled in super class
-     */
-    
-    [super viewWillDisappear: animated];
-}
+//- (void)viewWillDisappear: (BOOL)animated
+//{
+//    DLog();
+//    
+//    /*
+//     removeObserver is handled in super class
+//     */
+//    
+//    [super viewWillDisappear: animated];
+//}
 
 
 //----------------------------------------------------------------------------------------------------------
@@ -219,7 +219,7 @@
     [_coverLtrFld        setEditable: editable];
     
     // Set the background color for the text view on the editable param
-    UIColor *backgroundColor = editable? [UIColor colorWithRed:1 green:0 blue:0 alpha:0.1f] /* [UIColor whiteColor] */ : [UIColor clearColor];
+    UIColor *backgroundColor = editable? [self.view.tintColor colorWithAlphaComponent:0.1f] : [UIColor clearColor];
     
     // ...and set the background color
     [_coverLtrFld        setBackgroundColor: backgroundColor];

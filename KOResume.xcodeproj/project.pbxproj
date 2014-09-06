@@ -53,8 +53,6 @@
 		D66D87D01991D55900644D39 /* OCRResumeOverviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D66D87CF1991D55900644D39 /* OCRResumeOverviewViewController.m */; };
 		D66D87D11991D55900644D39 /* OCRResumeOverviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D66D87CF1991D55900644D39 /* OCRResumeOverviewViewController.m */; };
 		D67C0F16199707F20053C04C /* OCRResumeEducationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D67C0F15199707F20053C04C /* OCRResumeEducationViewController.m */; };
-		D6ABF9A8187A066100AECF28 /* libOCAEditableCollectionViewFlowLayout.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D6C7AA631870BEED00C72A52 /* libOCAEditableCollectionViewFlowLayout.a */; };
-		D6ABF9A9187A066900AECF28 /* libOCAUtilities.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D6BFCF4818748D8F0088D928 /* libOCAUtilities.a */; };
 		D6AC3D3E179A3F21001D8D75 /* OCRPackagesCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D6AC3D3D179A3F21001D8D75 /* OCRPackagesCell.m */; };
 		D6AC3D3F179A3F21001D8D75 /* OCRPackagesCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D6AC3D3D179A3F21001D8D75 /* OCRPackagesCell.m */; };
 		D6B016B51793C16900B86B8D /* KOResume.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = D6B016B41793C16900B86B8D /* KOResume.sqlite */; };
@@ -85,6 +83,10 @@
 		D6B4864D17964882009E6A14 /* Resumes.m in Sources */ = {isa = PBXBuildFile; fileRef = D6D571FE1793991400034AF3 /* Resumes.m */; };
 		D6BA20EE17B881E90068F4D9 /* OCRCoverLtrViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6BA20ED17B881E90068F4D9 /* OCRCoverLtrViewController.m */; };
 		D6BA20EF17B881E90068F4D9 /* OCRCoverLtrViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6BA20ED17B881E90068F4D9 /* OCRCoverLtrViewController.m */; };
+		D6BC469419BA2A3700B9C33F /* UITextField+KOResume.m in Sources */ = {isa = PBXBuildFile; fileRef = D6BC469319BA2A3700B9C33F /* UITextField+KOResume.m */; };
+		D6BC469719BA2D5D00B9C33F /* NSString+KOResume.m in Sources */ = {isa = PBXBuildFile; fileRef = D6BC469619BA2D5D00B9C33F /* NSString+KOResume.m */; };
+		D6BC469819BA2D5D00B9C33F /* NSString+KOResume.m in Sources */ = {isa = PBXBuildFile; fileRef = D6BC469619BA2D5D00B9C33F /* NSString+KOResume.m */; };
+		D6BC469919BA2D6C00B9C33F /* UITextField+KOResume.m in Sources */ = {isa = PBXBuildFile; fileRef = D6BC469319BA2A3700B9C33F /* UITextField+KOResume.m */; };
 		D6BE16D819AAF05100147081 /* OCRPackagesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6BE16D719AAF05100147081 /* OCRPackagesTableViewController.m */; };
 		D6BE16D919AAF05100147081 /* OCRPackagesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6BE16D719AAF05100147081 /* OCRPackagesTableViewController.m */; };
 		D6C3FC43199F0F71000457F4 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6C3FC42199F0F71000457F4 /* SystemConfiguration.framework */; };
@@ -129,48 +131,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = D63D82B8179311350065F0A9;
 			remoteInfo = KOResume;
-		};
-		D6BFCF4718748D8F0088D928 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D6BFCF4118748D8F0088D928 /* OCAUtilities.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D6BF165F18726E9D00DFF918;
-			remoteInfo = OCAUtilities;
-		};
-		D6BFCF4918748D8F0088D928 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D6BFCF4118748D8F0088D928 /* OCAUtilities.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D6BF166F18726E9D00DFF918;
-			remoteInfo = OCAUtilitiesTests;
-		};
-		D6BFCF4D18748EEB0088D928 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D6BFCF4118748D8F0088D928 /* OCAUtilities.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = D6BF165E18726E9D00DFF918;
-			remoteInfo = OCAUtilities;
-		};
-		D6C7AA621870BEED00C72A52 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D6C7AA5D1870BEED00C72A52 /* OCAEditableCollectionViewFlowLayout.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D6C7AA17186F5DC500C72A52;
-			remoteInfo = OCAEditableCollectionViewFlowLayout;
-		};
-		D6C7AA641870BEED00C72A52 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D6C7AA5D1870BEED00C72A52 /* OCAEditableCollectionViewFlowLayout.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D6C7AA27186F5DC500C72A52;
-			remoteInfo = OCAEditableCollectionViewFlowLayoutTests;
-		};
-		D6C7AA661870BFA700C72A52 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D6C7AA5D1870BEED00C72A52 /* OCAEditableCollectionViewFlowLayout.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = D6C7AA16186F5DC500C72A52;
-			remoteInfo = OCAEditableCollectionViewFlowLayout;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -231,11 +191,14 @@
 		D6B4734E18F7B00F004E9D84 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/SVWebViewController.strings"; sourceTree = "<group>"; };
 		D6BA20EC17B881E90068F4D9 /* OCRCoverLtrViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRCoverLtrViewController.h; path = Classes/OCRCoverLtrViewController.h; sourceTree = "<group>"; };
 		D6BA20ED17B881E90068F4D9 /* OCRCoverLtrViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRCoverLtrViewController.m; path = Classes/OCRCoverLtrViewController.m; sourceTree = "<group>"; };
+		D6BC469219BA2A3700B9C33F /* UITextField+KOResume.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextField+KOResume.h"; sourceTree = "<group>"; };
+		D6BC469319BA2A3700B9C33F /* UITextField+KOResume.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextField+KOResume.m"; sourceTree = "<group>"; };
+		D6BC469519BA2D5D00B9C33F /* NSString+KOResume.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+KOResume.h"; sourceTree = "<group>"; };
+		D6BC469619BA2D5D00B9C33F /* NSString+KOResume.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+KOResume.m"; sourceTree = "<group>"; };
 		D6BE16D019A97BBF00147081 /* OCRGlobalConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCRGlobalConstants.h; sourceTree = "<group>"; };
 		D6BE16D119A98AA200147081 /* OCRPrivateKeys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCRPrivateKeys.h; sourceTree = "<group>"; };
 		D6BE16D619AAF05100147081 /* OCRPackagesTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRPackagesTableViewController.h; path = Classes/OCRPackagesTableViewController.h; sourceTree = "<group>"; };
 		D6BE16D719AAF05100147081 /* OCRPackagesTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRPackagesTableViewController.m; path = Classes/OCRPackagesTableViewController.m; sourceTree = "<group>"; };
-		D6BFCF4118748D8F0088D928 /* OCAUtilities.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OCAUtilities.xcodeproj; path = OCAUtilities/OCAUtilities/OCAUtilities.xcodeproj; sourceTree = SOURCE_ROOT; };
 		D6C3FC42199F0F71000457F4 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		D6C619FD18FD021100D5BB5D /* OCRDateTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRDateTableViewController.h; path = Classes/OCRDateTableViewController.h; sourceTree = "<group>"; };
 		D6C619FE18FD021100D5BB5D /* OCRDateTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRDateTableViewController.m; path = Classes/OCRDateTableViewController.m; sourceTree = "<group>"; };
@@ -249,7 +212,6 @@
 		D6C61B38189DF1F6003E996B /* OCRResumeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRResumeViewController.m; path = Classes/OCRResumeViewController.m; sourceTree = "<group>"; };
 		D6C6F14D18AFD58B003A8C92 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		D6C6F15818B27AD3003A8C92 /* KOResume.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = KOResume.xcdatamodel; sourceTree = "<group>"; };
-		D6C7AA5D1870BEED00C72A52 /* OCAEditableCollectionViewFlowLayout.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OCAEditableCollectionViewFlowLayout.xcodeproj; path = OCAEditableCollectionViewFlowLayout/OCAEditableCollectionViewFlowLayout.xcodeproj; sourceTree = SOURCE_ROOT; };
 		D6C8D2DD18F1D3E200E76376 /* OCRJobsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRJobsViewController.h; path = Classes/OCRJobsViewController.h; sourceTree = "<group>"; };
 		D6C8D2DE18F1D3E200E76376 /* OCRJobsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRJobsViewController.m; path = Classes/OCRJobsViewController.m; sourceTree = "<group>"; };
 		D6CB27CB194D419C009E8D50 /* OCREducationTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCREducationTableViewCell.h; path = Classes/OCREducationTableViewCell.h; sourceTree = "<group>"; };
@@ -290,8 +252,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D6C3FC43199F0F71000457F4 /* SystemConfiguration.framework in Frameworks */,
-				D6ABF9A9187A066900AECF28 /* libOCAUtilities.a in Frameworks */,
-				D6ABF9A8187A066100AECF28 /* libOCAEditableCollectionViewFlowLayout.a in Frameworks */,
 				D63D82BF179311350065F0A9 /* CoreGraphics.framework in Frameworks */,
 				D63D82C3179311350065F0A9 /* CoreData.framework in Frameworks */,
 				D63D82C1179311350065F0A9 /* UIKit.framework in Frameworks */,
@@ -394,6 +354,10 @@
 				D63D82C7179311350065F0A9 /* InfoPlist.strings */,
 				D63D82CA179311350065F0A9 /* main.m */,
 				D63D82CC179311350065F0A9 /* KOResume-Prefix.pch */,
+				D6BC469219BA2A3700B9C33F /* UITextField+KOResume.h */,
+				D6BC469319BA2A3700B9C33F /* UITextField+KOResume.m */,
+				D6BC469519BA2D5D00B9C33F /* NSString+KOResume.h */,
+				D6BC469619BA2D5D00B9C33F /* NSString+KOResume.m */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -438,32 +402,12 @@
 			path = SVWebViewController;
 			sourceTree = "<group>";
 		};
-		D6BFCF4218748D8F0088D928 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				D6BFCF4818748D8F0088D928 /* libOCAUtilities.a */,
-				D6BFCF4A18748D8F0088D928 /* OCAUtilitiesTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		D6C7AA5C1870BEB500C72A52 /* SubProjects */ = {
 			isa = PBXGroup;
 			children = (
 				D6B4734118F7B00F004E9D84 /* SVWebViewController */,
-				D6BFCF4118748D8F0088D928 /* OCAUtilities.xcodeproj */,
-				D6C7AA5D1870BEED00C72A52 /* OCAEditableCollectionViewFlowLayout.xcodeproj */,
 			);
 			name = SubProjects;
-			sourceTree = "<group>";
-		};
-		D6C7AA5E1870BEED00C72A52 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				D6C7AA631870BEED00C72A52 /* libOCAEditableCollectionViewFlowLayout.a */,
-				D6C7AA651870BEED00C72A52 /* OCAEditableCollectionViewFlowLayoutTests.xctest */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		D6D571C01793585000034AF3 /* Classes */ = {
@@ -546,8 +490,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				D6BFCF4E18748EEB0088D928 /* PBXTargetDependency */,
-				D6C7AA671870BFA700C72A52 /* PBXTargetDependency */,
 			);
 			name = KOResume;
 			productName = KOResume;
@@ -614,16 +556,6 @@
 			mainGroup = D63D82B0179311350065F0A9;
 			productRefGroup = D63D82BA179311350065F0A9 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = D6C7AA5E1870BEED00C72A52 /* Products */;
-					ProjectRef = D6C7AA5D1870BEED00C72A52 /* OCAEditableCollectionViewFlowLayout.xcodeproj */;
-				},
-				{
-					ProductGroup = D6BFCF4218748D8F0088D928 /* Products */;
-					ProjectRef = D6BFCF4118748D8F0088D928 /* OCAUtilities.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				D63D82B8179311350065F0A9 /* KOResume */,
@@ -633,37 +565,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		D6BFCF4818748D8F0088D928 /* libOCAUtilities.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libOCAUtilities.a;
-			remoteRef = D6BFCF4718748D8F0088D928 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D6BFCF4A18748D8F0088D928 /* OCAUtilitiesTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = OCAUtilitiesTests.xctest;
-			remoteRef = D6BFCF4918748D8F0088D928 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D6C7AA631870BEED00C72A52 /* libOCAEditableCollectionViewFlowLayout.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libOCAEditableCollectionViewFlowLayout.a;
-			remoteRef = D6C7AA621870BEED00C72A52 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D6C7AA651870BEED00C72A52 /* OCAEditableCollectionViewFlowLayoutTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = OCAEditableCollectionViewFlowLayoutTests.xctest;
-			remoteRef = D6C7AA641870BEED00C72A52 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		D63D82B7179311350065F0A9 /* Resources */ = {
@@ -718,7 +619,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#appledoc Xcode script\n# Start constants\ncompany=\"OMaraConsultingAssociates\";\ncompanyID=\"com.omaraconsultingassoc\";\ncompanyURL=\"http://omaraconsultingassoc.com\";\ntarget=\"iphoneos\";\n#target=\"macosx\";\noutputPath=\"/tmp/appledoc\";\n# End constants\n/usr/local/bin/appledoc \\\n--project-name \"${PROJECT_NAME}\" \\\n--project-company \"${company}\" \\\n--company-id \"${companyID}\" \\\n--docset-atom-filename \"${company}.atom\" \\\n--docset-feed-url \"${companyURL}/${company}/%DOCSETATOMFILENAME\" \\\n--docset-package-url \"${companyURL}/${company}/%DOCSETPACKAGEFILENAME\" \\\n--docset-fallback-url \"${companyURL}/${company}\" \\\n--output \"${outputPath}\" \\\n--publish-docset \\\n--docset-platform-family \"${target}\" \\\n--logformat xcode \\\n--keep-intermediate-files \\\n--no-repeat-first-par \\\n--no-warn-invalid-crossref \\\n--ignore \"OCAUtilities\" \\\n--ignore \"OCAEditableCollectionViewFlowLayout\" \\\n--exit-threshold 2 \\\n--index-desc \"${PROJECT_DIR}/README.md\" \\\n\"${PROJECT_DIR}\"\necho \"Build successful, copying to project folder \"\necho ${PROJECT_DIR}/Documentation\nrsync -rv ${outputPath}/html ${PROJECT_DIR}/Documentation\n";
+			shellScript = "#appledoc Xcode script\n# Start constants\ncompany=\"OMaraConsultingAssociates\";\ncompanyID=\"com.omaraconsultingassoc\";\ncompanyURL=\"http://omaraconsultingassoc.com\";\ntarget=\"iphoneos\";\n#target=\"macosx\";\noutputPath=\"/tmp/appledoc\";\n# End constants\n/usr/local/bin/appledoc \\\n--project-name \"${PROJECT_NAME}\" \\\n--project-company \"${company}\" \\\n--company-id \"${companyID}\" \\\n--docset-atom-filename \"${company}.atom\" \\\n--docset-feed-url \"${companyURL}/${company}/%DOCSETATOMFILENAME\" \\\n--docset-package-url \"${companyURL}/${company}/%DOCSETPACKAGEFILENAME\" \\\n--docset-fallback-url \"${companyURL}/${company}\" \\\n--output \"${outputPath}\" \\\n--publish-docset \\\n--docset-platform-family \"${target}\" \\\n--logformat xcode \\\n--keep-intermediate-files \\\n--no-repeat-first-par \\\n--no-warn-invalid-crossref \\\n--exit-threshold 2 \\\n--index-desc \"${PROJECT_DIR}/README.md\" \\\n\"${PROJECT_DIR}\"\necho \"Build successful, copying to project folder \"\necho ${PROJECT_DIR}/Documentation\nrsync -rv ${outputPath}/html ${PROJECT_DIR}/Documentation\n";
 		};
 		D6D571FC17937CA300034AF3 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -742,6 +643,8 @@
 			files = (
 				D6D571B71793395F00034AF3 /* OCRGlobalConstants.m in Sources */,
 				D63D82CB179311350065F0A9 /* main.m in Sources */,
+				D6BC469719BA2D5D00B9C33F /* NSString+KOResume.m in Sources */,
+				D6BC469419BA2A3700B9C33F /* UITextField+KOResume.m in Sources */,
 				D6C619FF18FD021100D5BB5D /* OCRDateTableViewController.m in Sources */,
 				D6B4864817964875009E6A14 /* Education.m in Sources */,
 				D6C61A0B18FD071900D5BB5D /* OCRDatePickerTableViewCell.m in Sources */,
@@ -787,11 +690,13 @@
 				D6D572121793A78600034AF3 /* _Accomplishments.m in Sources */,
 				D6B408131798EA5100C567FF /* OCRCoreDataController.m in Sources */,
 				D6C61A0018FD021100D5BB5D /* OCRDateTableViewController.m in Sources */,
+				D6BC469819BA2D5D00B9C33F /* NSString+KOResume.m in Sources */,
 				D6BA20EF17B881E90068F4D9 /* OCRCoverLtrViewController.m in Sources */,
 				D6C61A1018FD072F00D5BB5D /* OCRDateClearTableViewCell.m in Sources */,
 				D6D572161793A78600034AF3 /* _Jobs.m in Sources */,
 				D6B408141798EA5B00C567FF /* main.m in Sources */,
 				D6B4864517964864009E6A14 /* Packages.m in Sources */,
+				D6BC469919BA2D6C00B9C33F /* UITextField+KOResume.m in Sources */,
 				D6D5721A1793A78600034AF3 /* _Resumes.m in Sources */,
 				D6D572181793A78600034AF3 /* _Packages.m in Sources */,
 				D6D572141793A78600034AF3 /* _Education.m in Sources */,
@@ -819,16 +724,6 @@
 			isa = PBXTargetDependency;
 			target = D63D82B8179311350065F0A9 /* KOResume */;
 			targetProxy = D63D82EB179311350065F0A9 /* PBXContainerItemProxy */;
-		};
-		D6BFCF4E18748EEB0088D928 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = OCAUtilities;
-			targetProxy = D6BFCF4D18748EEB0088D928 /* PBXContainerItemProxy */;
-		};
-		D6C7AA671870BFA700C72A52 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = OCAEditableCollectionViewFlowLayout;
-			targetProxy = D6C7AA661870BFA700C72A52 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -897,9 +792,10 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"/Applications/Spark Inspector.app/Contents/Resources/Frameworks\"";
+				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -923,7 +819,7 @@
 					"$(SOURCE_ROOT)/include",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PUBLIC_HEADERS_FOLDER_PATH = "";
 				SDKROOT = iphoneos;
@@ -949,7 +845,8 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -984,19 +881,12 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				FRAMEWORK_SEARCH_PATHS = (
-					/Applications/Spark,
-					Inspector.app/Contents/Resources/Frameworks,
-					"$(PROJECT_DIR)",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KOResume/KOResume-Prefix.pch";
 				GENERATE_PKGINFO_FILE = NO;
 				INFOPLIST_FILE = "KOResume/KOResume-Info.plist";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/KOResume/CrittercismSDK",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = koresume;
 				PROVISIONING_PROFILE = "";
@@ -1009,8 +899,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1019,10 +909,7 @@
 				GCC_PREFIX_HEADER = "KOResume/KOResume-Prefix.pch";
 				GENERATE_PKGINFO_FILE = NO;
 				INFOPLIST_FILE = "KOResume/KOResume-Info.plist";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/KOResume/CrittercismSDK",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = koresume;
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;

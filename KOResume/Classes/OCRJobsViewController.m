@@ -882,7 +882,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     if (fromIndexPath.section != toIndexPath.section)
     {
         // Cannot move between sections
-        [OCAUtilities showErrorWithMessage: NSLocalizedString(@"Sorry, move not allowed.", nil)];
+        [kAppDelegate showErrorWithMessage: NSLocalizedString(@"Sorry, move not allowed.", nil)];
         [self.tableView reloadData];
         return;
     }
@@ -1267,7 +1267,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
         textField.tag == kJobEndDateFieldTag)
     {
         // We are in a date field. Dismiss the keyboard, if any.
-        [OCAUtilities dismissKeyboard];
+//        [kAppDelegate dismissKeyboard];
         [textField resignFirstResponder];
         if (!self.selectedJob.start_date)
         {
@@ -1361,7 +1361,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
      We use the tag field to find the next field, and if there is one we set it as firstResponder.
      */
     // Get the value of the next field's tag
-	int nextTag = [textField tag] + 1;
+	int nextTag = (int)[textField tag] + 1;
     // ...and attempt to get it using the viewWithTag method
 	UIResponder *nextResponder = [textField.superview viewWithTag: nextTag];
 	

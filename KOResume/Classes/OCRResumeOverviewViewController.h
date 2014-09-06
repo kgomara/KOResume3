@@ -97,8 +97,4 @@
  */
 @property (weak, nonatomic) IBOutlet UIView                 *contentView;
 
-/**
- IBOutlet to the bottom constraint of the contentView.
- */
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint     *contentViewBottomConstraint;
 @end

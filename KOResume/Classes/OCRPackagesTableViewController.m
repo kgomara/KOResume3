@@ -136,11 +136,12 @@
     
     [super viewWillAppear: animated];
     
-    [self.navigationItem setHidesBackButton: NO];
+//    [self.navigationItem setHidesBackButton: NO];
 
     [self.tableView setContentOffset:CGPointZero];
     // Set up the defaults in the Navigation Bar
     [self configureDefaultNavBar];
+    
     // ...and configure the UI for editing
     [self configureFieldsForEditing: isEditing];
 
@@ -408,8 +409,10 @@
     {
         // The user pressed "Done", end the undo group
         [[[kAppDelegate managedObjectContext] undoManager] endUndoGrouping];
+        
         // ...save changes to the database
         [kAppDelegate saveContextAndWait: [kAppDelegate managedObjectContext]];
+        
         // ...cleanup the undoManager
         [[[kAppDelegate managedObjectContext] undoManager] removeAllActionsWithTarget: self];
         
@@ -426,6 +429,7 @@
         }
     }
 }
+
 
 //----------------------------------------------------------------------------------------------------------
 /**
@@ -453,8 +457,9 @@
     
     // Cleanup the undoManager
     [[[kAppDelegate managedObjectContext] undoManager] removeAllActionsWithTarget: self];
+    
     // ...and reload the fetchedResults to bring them into memory
-    [self reloadFetchedResults:nil];
+    [self reloadFetchedResults: nil];
     
     /*
      This may look odd - one usually sees a call to super in a method with the same name. But we need to inform 
@@ -479,17 +484,17 @@
  
  @param isEditingMode   YES if we are going into edit mode, NO otherwise.
  */
-- (void)configureUIForEditing: (BOOL)editing
+- (void)configureUIForEditing: (BOOL)isEditingMode
 {
     DLog();
     
     // Update editing flag
-    isEditing = editing;
+    isEditing = isEditingMode;
     
     // ...enable/disable resume fields
-    [self configureFieldsForEditing: editing];
+    [self configureFieldsForEditing: isEditingMode];
     
-    if (editing)
+    if (isEditingMode)
     {
         // Set up the navigation items and cancel buttons - the Edit button
         //  state is managed by the table view
@@ -1165,7 +1170,7 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
          I'm providing my direct contact information in the hope I can help the user and avoid a bad review.
          */
         ELog(error, @"Unresolved error");
-        [OCAUtilities showErrorWithMessage: NSLocalizedString(@"Could not read the database. Try quitting the app. If that fails, try deleting KOResume and restoring from iCloud or iTunes backup. Please contact the developer by emailing kevin@omaraconsultingassoc.com", nil)];
+        [kAppDelegate showErrorWithMessage: NSLocalizedString(@"Could not read the database. Try quitting the app. If that fails, try deleting KOResume and restoring from iCloud or iTunes backup. Please contact the developer by emailing kevin@omaraconsultingassoc.com", nil)];
     }
     
     return _fetchedResultsController;
@@ -1196,7 +1201,7 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
     {
         ELog(error, @"Fetch failed!");
         NSString* msg = NSLocalizedString( @"Failed to reload data after syncing with iCloud.", nil);
-        [OCAUtilities showErrorWithMessage: msg];
+        [kAppDelegate showErrorWithMessage: msg];
     }
     else
     {

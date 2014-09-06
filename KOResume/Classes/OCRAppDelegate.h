@@ -50,4 +50,28 @@
  */
 - (void)saveContextAndWait: (NSManagedObjectContext *)moc;
 
+/**
+ Display an alert message to the user
+ @param theMessage The message to display
+ @param theType Alert type to display (typically, Information, Warning, Error)
+ */
+//----------------------------------------------------------------------------------------------------------
+- (void)showAlertWithMessageAndType:(NSString*)theMessage
+                          alertType:(NSString*)theType;
+
+/**
+ Display an alert message to the user indicating Error
+ @param theMessage The message to display
+ */
+//----------------------------------------------------------------------------------------------------------
+- (void)showErrorWithMessage:(NSString*)theMessage;
+
+/**
+ Display an alert message for the user indicating Warning
+ @param theMessage The message to display
+ */
+//----------------------------------------------------------------------------------------------------------
+- (void)showWarningWithMessage:(NSString*)theMessage;
+
+
 @end

@@ -30,7 +30,7 @@
     /**
      Reference to the save button to facilitate swapping buttons between display and edit modes.
      */
-    UIBarButtonItem     *saveBtn;
+    UIBarButtonItem     *doneBtn;
     
     /**
      Reference to the cancel button to facilitate swapping buttons between display and edit modes.
@@ -52,11 +52,6 @@
  Array used to keep the Resume's education objects sorted by sequence_number.
  */
 @property (nonatomic, strong)   NSMutableArray      *educationArray;
-
-/**
- Variable used to store the new entity name entered when the user adds a job or education object.
- */
-@property (nonatomic, strong)   NSString            *nuEntityName;
 
 /**
  Convenience reference to the managed object instance we are managing.
@@ -112,7 +107,7 @@
     editBtn     = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemEdit
                                                                 target: self
                                                                 action: @selector(didPressEditButton)];
-    saveBtn     = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemSave
+    doneBtn     = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemSave
                                                                 target: self
                                                                 action: @selector(didPressSaveButton)];
     cancelBtn   = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel
@@ -412,16 +407,7 @@
     if (isEditingMode)
     {
         // Set up the navigation items and save/cancel buttons
-#warning TODO refactor to use size classes
-        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
-        {
-            self.navigationItem.rightBarButtonItems = @[saveBtn, cancelBtn];
-        }
-        else
-        {
-            self.navigationItem.leftBarButtonItem  = cancelBtn;
-            self.navigationItem.rightBarButtonItem = saveBtn;
-        }
+        [self.tabBarController.navigationItem setRightBarButtonItems: @[doneBtn, cancelBtn]];
     }
     else
     {
@@ -494,7 +480,7 @@
 /**
  Add a Jobs entity for this resume.
  */
-- (void)addEducation
+- (void)addEducation: (NSString *)educationName
 {
     DLog();
     
@@ -502,7 +488,7 @@
     Education *education = (Education *)[NSEntityDescription insertNewObjectForEntityForName: @"Education" /* kOCREducationEntity */
                                                                       inManagedObjectContext: [kAppDelegate managedObjectContext]];
     // Set the name to the value the user provided in the prompt
-    education.name            = _nuEntityName;
+    education.name            = educationName;
     // ...the created timestamp to now
     education.created_date    = [NSDate date];
     // ...and the resume link to this resume
@@ -571,11 +557,8 @@
     
     if (buttonIndex == k_OKButtonIndex)
     {
-        // OK button was pressed, get the user's input
-#warning TODO refactor to pass entity name as parameter
-        self.nuEntityName = [[alertView textFieldAtIndex: 0] text];
-        // Use the tag to determine which entity is being added
-        [self addEducation];
+        // OK button was pressed, get the user's input from the alert and pass it to addEducation
+        [self addEducation: [[alertView textFieldAtIndex: 0] text]];
     }
     else
     {
@@ -665,7 +648,7 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
     DLog();
     
     // Determine the background color for the fields based on whether or not we are editing
-    UIColor *backgroundColor = self.editing? self.view.tintColor : [UIColor whiteColor];
+    UIColor *backgroundColor = self.editing? [self.view.tintColor colorWithAlphaComponent:0.1f] : [UIColor whiteColor];
     
     // Get an Education cell
     OCREducationTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier: kOCREducationTableCell];
@@ -781,7 +764,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     if (fromIndexPath.section != toIndexPath.section)
     {
         // Cannot move between sections
-        [OCAUtilities showErrorWithMessage: NSLocalizedString(@"Sorry, move not allowed.", nil)];
+        [kAppDelegate showErrorWithMessage: NSLocalizedString(@"Sorry, move not allowed.", nil)];
         [self.tableView reloadData];
         return;
     }
@@ -1319,7 +1302,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     if (self.selectedResume.isDeleted)
     {
         // Need to display a message
-        [OCAUtilities showWarningWithMessage:@"resume delete"];
+        [kAppDelegate showWarningWithMessage:@"resume delete"];
     }
     else
     {

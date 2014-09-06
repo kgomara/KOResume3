@@ -194,7 +194,7 @@ static CGFloat pickerCellRowHeight;
     UITableViewCell *cell;
     
     // Calculate the row of the clear button, which is always last.
-    int clearButtonRow = [self.tableView numberOfRowsInSection:0] - 1;
+    int clearButtonRow = (int)[self.tableView numberOfRowsInSection:0] - 1;
     
     // The start date is always the first row
     if (indexPath.row == 0)
@@ -377,7 +377,7 @@ static CGFloat pickerCellRowHeight;
      start with whether or not the date picker is shown.
      */
     // Calculate the row of the clear button, which is always last.
-    int clearButtonRow = [self.tableView numberOfRowsInSection:0] - 1;
+    int clearButtonRow = (int)[self.tableView numberOfRowsInSection:0] - 1;
     
     // First check to see if the date picker is on screen and user tapped row above it
     if (self.datePickerIsShown && (self.datePickerIndexPath.row - 1 == indexPath.row))

@@ -30,7 +30,7 @@
     /**
      Reference to the save button to facilitate swapping buttons between display and edit modes.
      */
-    UIBarButtonItem     *saveBtn;
+    UIBarButtonItem     *doneBtn;
     
     /**
      Reference to the cancel button to facilitate swapping buttons between display and edit modes.
@@ -47,11 +47,6 @@
  Array used to keep the Resume's job objects sorted by sequence_number.
  */
 @property (nonatomic, strong)   NSMutableArray      *jobArray;
-
-/**
- Variable used to store the new entity name entered when the user adds a job or education object.
- */
-@property (nonatomic, strong)   NSString            *nuEntityName;
 
 /**
  Convenience reference to the managed object instance we are managing.
@@ -102,7 +97,7 @@
     editBtn     = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemEdit
                                                                 target: self
                                                                 action: @selector(didPressEditButton)];
-    saveBtn     = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemSave
+    doneBtn     = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemSave
                                                                 target: self
                                                                 action: @selector(didPressSaveButton)];
     cancelBtn   = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel
@@ -216,19 +211,15 @@
 {
     DLog();
     
+    /*
+     Our view controller is embedded in a UITabBarController that owns the navigation bar. So to update
+     the title and buttons we must reference the navigation items in our tabBarController.
+     */
     // Set the title
-    self.navigationItem.title = NSLocalizedString(@"Resume", nil);
+    self.tabBarController.navigationItem.title = NSLocalizedString(@"Resume", nil);
     
-    // Set up the navigation items and save/cancel buttons
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
-    {
-        self.navigationItem.rightBarButtonItems = @[editBtn];
-    }
-    else
-    {
-        self.navigationItem.leftBarButtonItem  = backBtn;
-        self.navigationItem.rightBarButtonItem = editBtn;
-    }
+    // Set up the edit button
+    self.tabBarController.navigationItem.rightBarButtonItems = @[editBtn];
     
     // Set table editing off
     [self.tableView setEditing: NO];
@@ -391,16 +382,7 @@
     if (isEditingMode)
     {
         // Set up the navigation items and save/cancel buttons
-#warning TODO refactor to use size classes
-        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
-        {
-            self.navigationItem.rightBarButtonItems = @[saveBtn, cancelBtn];
-        }
-        else
-        {
-            self.navigationItem.leftBarButtonItem  = cancelBtn;
-            self.navigationItem.rightBarButtonItem = saveBtn;
-        }
+        [self.tabBarController.navigationItem setRightBarButtonItems: @[doneBtn, cancelBtn]];
     }
     else
     {
@@ -440,7 +422,7 @@
 /**
  Add a Jobs entity for this resume.
  */
-- (void)addJob
+- (void)addJob: (NSString *)jobName
 {
     DLog();
     
@@ -449,7 +431,7 @@
                                                       inManagedObjectContext: [kAppDelegate managedObjectContext]];
     
     // Set the name to the value the user provided in the prompt
-    job.name            = _nuEntityName;
+    job.name            = jobName;
     // ...the created timestamp to now
     job.created_date    = [NSDate date];
     // ...and the resume link to the resume we are managing
@@ -518,11 +500,8 @@
     
     if (buttonIndex == k_OKButtonIndex)
     {
-        // OK button was pressed, get the user's input
-#warning TODO refactor to pass entity name as parameter
-        self.nuEntityName = [[alertView textFieldAtIndex: 0] text];
-        // Use the tag to determine which entity is being added
-        [self addJob];
+        // OK button was pressed, get the user's input from the alert and pass it to addJob
+        [self addJob: [[alertView textFieldAtIndex: 0] text]];
     }
     else
     {
@@ -688,7 +667,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     if (fromIndexPath.section != toIndexPath.section)
     {
         // Cannot move between sections
-        [OCAUtilities showErrorWithMessage: NSLocalizedString(@"Sorry, move not allowed.", nil)];
+        [kAppDelegate showErrorWithMessage: NSLocalizedString(@"Sorry, move not allowed.", nil)];
         [self.tableView reloadData];
         return;
     }
@@ -1078,7 +1057,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     if (self.selectedResume.isDeleted)
     {
         // Need to display a message
-        [OCAUtilities showWarningWithMessage:@"resume delete"];
+        [kAppDelegate showWarningWithMessage:@"resume delete"];
     }
     else
     {

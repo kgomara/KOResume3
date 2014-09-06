@@ -238,7 +238,7 @@
     {
         ELog(error, @"Fetch failed!");
         NSString* msg = NSLocalizedString(@"Failed to reload data.", nil);
-        [OCAUtilities showErrorWithMessage: msg];
+        [kAppDelegate showErrorWithMessage: msg];
     }
     /*
      Subclasses should override and invoke super on this method to reload views as necessary. For example:
