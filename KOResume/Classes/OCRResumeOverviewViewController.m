@@ -166,7 +166,7 @@
                                                  name: kOCRApplicationDidAddPersistentStoreCoordinatorNotification
                                                object: nil];
     
-    // ...and an observer for keyboard notifications
+    // ...add an observer for keyboard notifications
     [[NSNotificationCenter defaultCenter] addObserver: self
                                              selector: @selector(keyboardWillShow:)
                                                  name: UIKeyboardWillShowNotification
@@ -485,7 +485,7 @@
         [[[kAppDelegate managedObjectContext] undoManager] endUndoGrouping];
         
         // ...save changes to the database
-        [kAppDelegate saveContextAndWait: [kAppDelegate managedObjectContext]];
+        [kAppDelegate saveContextAndWait];
         
         // ...cleanup the undoManager
         [[[kAppDelegate managedObjectContext] undoManager] removeAllActionsWithTarget: self];
@@ -774,7 +774,8 @@
     if (selectedResume.isDeleted)
     {
         // Need to display a message
-        [kAppDelegate showWarningWithMessage:@"resume delete"];
+        [kAppDelegate showWarningWithMessage: @"Resume deleted."
+                                      target: self];
     }
     else
     {

@@ -138,7 +138,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver: self];
     
     // ...and save any changes
-    [kAppDelegate saveContext: [kAppDelegate managedObjectContext]];
+    [kAppDelegate saveContext];
 
     [super viewWillDisappear: animated];
 }
@@ -238,7 +238,8 @@
     {
         ELog(error, @"Fetch failed!");
         NSString* msg = NSLocalizedString(@"Failed to reload data.", nil);
-        [kAppDelegate showErrorWithMessage: msg];
+        [kAppDelegate showErrorWithMessage: msg
+                                    target: self];
     }
     /*
      Subclasses should override and invoke super on this method to reload views as necessary. For example:

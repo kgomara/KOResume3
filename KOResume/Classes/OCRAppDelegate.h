@@ -38,7 +38,7 @@
  
  @param moc the managed object context to save.
  */
-- (void)saveContext: (NSManagedObjectContext *)moc;
+- (void)saveContext;
 
 /**
  Save any changes made to the NSManagedObjectContext and return when the operation completes.
@@ -48,30 +48,39 @@
  
  @param moc the managed object context to save.
  */
-- (void)saveContextAndWait: (NSManagedObjectContext *)moc;
+- (void)saveContextAndWait;
 
 /**
- Display an alert message to the user
- @param theMessage The message to display
- @param theType Alert type to display (typically, Information, Warning, Error)
+ Display an alert message to the user.
+ 
+ @param aMessage    The message to display.
+ @param aType       Alert type to display (typically, Information, Warning, Error).
+ @param aTarget     Target viewController for the alert.
  */
 //----------------------------------------------------------------------------------------------------------
-- (void)showAlertWithMessageAndType:(NSString*)theMessage
-                          alertType:(NSString*)theType;
+- (void)showAlertWithMessageAndType: (NSString*)theMessage
+                          alertType: (NSString*)theType
+                             target: (UIViewController *)aTarget;
 
 /**
- Display an alert message to the user indicating Error
- @param theMessage The message to display
- */
+ Display an alert message to the user indicating Error.
+ 
+ @param theMessage The message to display.
+ @param aTarget     Target viewController for the alert.
+*/
 //----------------------------------------------------------------------------------------------------------
-- (void)showErrorWithMessage:(NSString*)theMessage;
+- (void)showErrorWithMessage:(NSString*)theMessage
+                      target: (UIViewController *)aTarget;
 
 /**
- Display an alert message for the user indicating Warning
- @param theMessage The message to display
+ Display an alert message for the user indicating Warning.
+ 
+ @param theMessage The message to display.
+ @param aTarget     Target viewController for the alert.
  */
 //----------------------------------------------------------------------------------------------------------
-- (void)showWarningWithMessage:(NSString*)theMessage;
+- (void)showWarningWithMessage:(NSString*)theMessage
+                        target: (UIViewController *)aTarget;
 
 
 @end

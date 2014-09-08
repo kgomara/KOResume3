@@ -34,7 +34,7 @@
     /**
      Reference to the button available in table edit mode that allows the user to add a package.
      */
-    UIButton                *packageAddBtn;
+    UIButton                *addPackageBtn;
 
     /**
      A boolean flag to indicate whether the user is editing information or simply viewing.
@@ -99,14 +99,14 @@
     // ...and section header height
     self.tableView.estimatedSectionHeaderHeight = kOCRHeaderCellHeight;
     
-    // Disable multi-selection show swipe to delete works.
-    self.tableView.allowsMultipleSelectionDuringEditing = NO;
-    
     // Set up button items
     cancelBtn   = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel
                                                                 target: self
                                                                 action: @selector(didPressCancelButton)];
     
+    // Set up the defaults in the Navigation Bar
+    [self configureDefaultNavBar];
+
     // Set editing off
     isEditing = NO;
 }
@@ -136,15 +136,8 @@
     
     [super viewWillAppear: animated];
     
-//    [self.navigationItem setHidesBackButton: NO];
-
     [self.tableView setContentOffset:CGPointZero];
-    // Set up the defaults in the Navigation Bar
-    [self configureDefaultNavBar];
     
-    // ...and configure the UI for editing
-    [self configureFieldsForEditing: isEditing];
-
     // Observe the app delegate telling us when it's finished asynchronously adding the store coordinator
     [[NSNotificationCenter defaultCenter] addObserver: self
                                              selector: @selector(reloadFetchedResults:)
@@ -165,6 +158,7 @@
                                                object: nil];
     
     // Loop through all the packages writing their debugDescription to the log - useful when debugging
+    // ...uncomment when needed
 //    for (Packages *aPackage in [self.fetchedResultsController fetchedObjects])
 //    {
 //        DLog(@"%@", [aPackage debugDescription]);
@@ -193,7 +187,7 @@
     
     [super viewWillDisappear: animated];
     
-    [kAppDelegate saveContext: _managedObjectContext];
+    [kAppDelegate saveContext];
     
     // Remove ourself from observing notifications
     [[NSNotificationCenter defaultCenter] removeObserver: self];
@@ -219,23 +213,10 @@
 }
 
 
-//----------------------------------------------------------------------------------------------------------
-/**
- Enables or disables all the UI text fields for editing.
- 
- As a resume app, a major Use Case is the user sharing his/her experience by passing the iOS device around.
- To avoid accidently changing information, the app defaults to non-editable and there is an explicit Edit
- button when the user wants to change information.
- 
- @param editable    A BOOL that determines whether the fields should be enabled for editing - or not.
+/*
+ There is no configureFieldsForEditing, as OCRPackagesTableViewController only has table cells. All the
+ configuring is handled in configureUIForEditing (and of course, configureDefaultNavBar)
  */
-- (void)configureFieldsForEditing: (BOOL)editable
-{
-    DLog();
-    
-    // Set the add button hidden state to the opposite of editable
-    [packageAddBtn setHidden: !editable];
-}
 
 
 //----------------------------------------------------------------------------------------------------------
@@ -279,36 +260,43 @@
 /**
  Invoked when the user taps the '+' button in the section header
  */
-- (IBAction)didPressAddPackageButton:(id)sender
+- (IBAction)didPressAddPackageButton: (id)sender
 {
     DLog();
     
     // Set up a UIAlertController to get the user's input
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Enter Package Name", nil)
-                                                                   message:nil
-                                                            preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle: NSLocalizedString(@"Enter Package Name", nil)
+                                                                   message: nil
+                                                            preferredStyle: UIAlertControllerStyleAlert];
     // Add a text field to the alert
     [alert addTextFieldWithConfigurationHandler: ^(UITextField *textField) {
         textField.placeholder = NSLocalizedString(@"Package Name", nil);
     }];
     
     // ...add a cancel action
-    [alert addAction: [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil)
-                                                 style:UIAlertActionStyleDefault
-                                               handler:nil]];
-    // ...and an OK action
-    [alert addAction: [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil)
-                                               style:UIAlertActionStyleDefault
-                                             handler:^(UIAlertAction *action) {
+    [alert addAction: [UIAlertAction actionWithTitle: NSLocalizedString(@"Cancel", nil)
+                                               style: UIAlertActionStyleDefault
+                                             handler: nil]];
+    // ...add an OK action
+    /*
+     To understand the purpose of declaring the __weak reference to self, see:
+     https://developer.apple.com/library/ios/documentation/cocoa/conceptual/ProgrammingWithObjectiveC/WorkingwithBlocks/WorkingwithBlocks.html#//apple_ref/doc/uid/TP40011210-CH8-SW16
+     */
+    __weak OCRPackagesTableViewController *weakSelf = self;
+    [alert addAction: [UIAlertAction actionWithTitle: NSLocalizedString(@"OK", nil)
+                                               style: UIAlertActionStyleDefault
+                                             handler: ^(UIAlertAction *action) {
+                                                 __strong OCRPackagesTableViewController *strongSelf = weakSelf;
                                                  // Get the Package name from the alert and pass it to addPackage
-                                                 [self addPackage: ((UITextField *) alert.textFields[0]).text];
+                                                 [strongSelf addPackage: ((UITextField *) alert.textFields[0]).text];
                                              }]];
-
+    
     // ...and present the alert to the user
     [self presentViewController: alert
                        animated: YES
-                     completion:nil];
+                     completion: nil];
 }
+
 
 //----------------------------------------------------------------------------------------------------------
 /**
@@ -316,7 +304,7 @@
  
  @param aPackage    The name of the Package to add.
  */
-- (void)addPackage: (NSString *)aPackage
+- (void)addPackage: (NSString *)packageName
 {
     DLog();
     
@@ -324,7 +312,7 @@
     Packages *nuPackage = (Packages *)[NSEntityDescription insertNewObjectForEntityForName: kOCRPackagesEntity
                                                                     inManagedObjectContext: [kAppDelegate managedObjectContext]];
     // Set the name of the Package (provided by the user)
-    nuPackage.name                  = aPackage;
+    nuPackage.name                  = packageName;
     // ...the created_date to "now"
     nuPackage.created_date          = [NSDate date];
     // ...and set its sequence_number to be the last Package
@@ -345,9 +333,9 @@
     nuPackage.resume                = nuResume;
     
     // Save the context so the adds are pushed to the persistent store
-    [kAppDelegate saveContextAndWait:[kAppDelegate managedObjectContext]];
+    [kAppDelegate saveContextAndWait];
     // ...and reload the fetchedResults to bring them into memory
-    [self reloadFetchedResults:nil];
+    [self reloadFetchedResults: nil];
     
     // Update the tableView with the new object
     // Construct an indexPath to insert the new object at the end
@@ -367,7 +355,7 @@
     [self.tableView endUpdates];
     // ...and scroll the tableView to the row of the added object
     [self.tableView scrollToRowAtIndexPath: indexPath
-                          atScrollPosition: UITableViewScrollPositionTop
+                          atScrollPosition: UITableViewScrollPositionBottom
                                   animated: YES];
 }
 
@@ -411,7 +399,7 @@
         [[[kAppDelegate managedObjectContext] undoManager] endUndoGrouping];
         
         // ...save changes to the database
-        [kAppDelegate saveContextAndWait: [kAppDelegate managedObjectContext]];
+        [kAppDelegate saveContextAndWait];
         
         // ...cleanup the undoManager
         [[[kAppDelegate managedObjectContext] undoManager] removeAllActionsWithTarget: self];
@@ -467,6 +455,7 @@
      */
     [super setEditing: NO
              animated: YES];
+    
     // Load the tableView from the (unchanged) packages
     [self.tableView reloadData];
     // ...turn off editing in the UI
@@ -491,8 +480,8 @@
     // Update editing flag
     isEditing = isEditingMode;
     
-    // ...enable/disable resume fields
-    [self configureFieldsForEditing: isEditingMode];
+    // Set the add button hidden state to the opposite of editable
+    [addPackageBtn setHidden: !isEditingMode];
     
     if (isEditingMode)
     {
@@ -591,8 +580,6 @@
 - (NSInteger)tableView:(UITableView *)tableView
  numberOfRowsInSection:(NSInteger)section
 {
-    DLog();
-    
     // Get the number of objects for the section from the fetchedResultsController
     return [[[self.fetchedResultsController sections] objectAtIndex:section] numberOfObjects];
 }
@@ -609,9 +596,7 @@
 - (BOOL)    tableView: (UITableView *)tableView
 canEditRowAtIndexPath: (NSIndexPath *)indexPath
 {
-    DLog();
-    
-    // If we are in edit mode allow swipe to delete
+    // Yes if we are in edit mode
     return self.editing;
 }
 
@@ -656,7 +641,7 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
 - (void)configureCell: (OCRPackagesCell *)cell
           atIndexPath: (NSIndexPath *)indexPath
 {
-    DLog(@"%@", indexPath.debugDescription);
+    DLog();
     
     Packages *aPackage  = [self.fetchedResultsController objectAtIndexPath:indexPath];
     /*
@@ -721,11 +706,11 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
     {
         // Delete the managed object at the given index path.
         NSManagedObjectContext *context = [self.fetchedResultsController managedObjectContext];
-        Packages *objectToDelete        = [self.fetchedResultsController objectAtIndexPath: indexPath];
-        [context deleteObject: objectToDelete];
+        Packages *packageToDelete       = [self.fetchedResultsController objectAtIndexPath: indexPath];
+        [context deleteObject: packageToDelete];
         
         // Save the context so the delete is pushed to the persistent store
-        [kAppDelegate saveContextAndWait:[kAppDelegate managedObjectContext]];
+        [kAppDelegate saveContextAndWait];
         // ...and reload the fetchedResults to bring them into memory
         [self reloadFetchedResults: nil];
         
@@ -762,6 +747,18 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
 {
     DLog();
     
+    /*
+     We only have one section, so moving between sections can never happen, code is here for safety
+     */
+    if (fromIndexPath.section != toIndexPath.section)
+    {
+        // Cannot move between sections
+        [kAppDelegate showWarningWithMessage: NSLocalizedString(@"Move between sections is not supported.", nil)
+                                      target: self];
+        [self.tableView reloadData];
+        return;
+    }
+    
     NSMutableArray *packages = [[self.fetchedResultsController fetchedObjects] mutableCopy];
     
     // Grab the item we're moving.
@@ -795,6 +792,8 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
  mode (that is, the editing property of the table view is set to YES) unless the table view allows selection 
  during editing (that is, the allowsSelectionDuringEditing property of the table view is set to YES).
 
+ We do not want to allow swipe to delete, so we return nil.
+ 
  @param tableView       A table-view object informing the delegate about the new row selection.
  @param indexPath       An index path locating the new  in tableView.
  @return                An index-path object that confirms or alters the selected row. Return an NSIndexPath
@@ -876,10 +875,10 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
     // Set the text content and save a reference to the add button so they can be
     // shown or hidden whenever the user turns editing mode on or off
     headerCell.sectionLabel.text    = NSLocalizedString(@"Packages", nil);
-    packageAddBtn                   = headerCell.addButton;
+    addPackageBtn                   = headerCell.addButton;
 
     // Hide or show the addButton depending on whether we are in editing mode
-    [packageAddBtn setHidden: !isEditing];
+    [addPackageBtn setHidden: !isEditing];
     
     return wrapperView;
 }
@@ -1019,6 +1018,43 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
 }
 
 
+/**
+ Asks the delegate to adjust the primary view controller and to incorporate the secondary view controller into the collapsed interface.
+ 
+ This method is your opportunity to perform any necessary tasks related to the transition to a collapsed interface. After this
+ method returns, the split view controller removes the secondary view controller from its viewControllers array, leaving the
+ primary view controller as its only child. In your implementation of this method, you might prepare the primary view controller
+ for display in a compact environment or you might attempt to incorporate the secondary view controller’s content into the newly
+ collapsed interface.
+ 
+ Returning NO tells the split view controller to use its default behavior to try and incorporate the secondary view controller 
+ into the collapsed interface. When you return NO, the split view controller calls the collapseSecondaryViewController:forSplitViewController: 
+ method of the primary view controller, giving it a chance to do something with the secondary view controller’s content. Most view
+ controllers do nothing by default but the UINavigationController class responds by pushing the secondary view controller onto its
+ navigation stack.
+ 
+ Returning YES from this method tells the split view controller not to apply any default behavior. You might return YES in cases
+ where you do not want the secondary view controller’s content incorporated into the resulting interface.
+
+ @param splitViewController     The split view controller whose interface is collapsing.
+ @param secondaryViewController The secondary view controller of the split view interface.
+ @param primaryViewController   The primary view controller of the split view interface. If you implement the
+                                primaryViewControllerForCollapsingSplitViewController: method in your delegate, this object is the 
+                                one returned by that method.
+ @return                        NO to let the split view controller try and incorporate the secondary view controller’s content 
+                                into the collapsed interface or YES to indicate that you do not want the split view controller to
+                                do anything with the secondary view controller.
+ */
+- (BOOL)splitViewController:(UISplitViewController *)splitViewController
+collapseSecondaryViewController:(UIViewController *)secondaryViewController
+  ontoPrimaryViewController:(UIViewController *)primaryViewController
+{
+    DLog();
+    
+    return YES;
+}
+
+
 #pragma mark - Seque handling
 
 //----------------------------------------------------------------------------------------------------------
@@ -1118,7 +1154,7 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
     }
 }
 
-#pragma mark - Fetched results controller
+#pragma mark - Fetched Results Controller
 
 //----------------------------------------------------------------------------------------------------------
 /**
@@ -1170,7 +1206,8 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
          I'm providing my direct contact information in the hope I can help the user and avoid a bad review.
          */
         ELog(error, @"Unresolved error");
-        [kAppDelegate showErrorWithMessage: NSLocalizedString(@"Could not read the database. Try quitting the app. If that fails, try deleting KOResume and restoring from iCloud or iTunes backup. Please contact the developer by emailing kevin@omaraconsultingassoc.com", nil)];
+        [kAppDelegate showErrorWithMessage: NSLocalizedString(@"Could not read the database. Try quitting the app. If that fails, try deleting KOResume and restoring from iCloud or iTunes backup. Please contact the developer by emailing kevin@omaraconsultingassoc.com", nil)
+                                    target: self];
     }
     
     return _fetchedResultsController;
@@ -1200,8 +1237,9 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
     if (![[self fetchedResultsController] performFetch: &error])
     {
         ELog(error, @"Fetch failed!");
-        NSString* msg = NSLocalizedString( @"Failed to reload data after syncing with iCloud.", nil);
-        [kAppDelegate showErrorWithMessage: msg];
+        NSString* msg = NSLocalizedString( @"Failed to reload data.", nil);
+        [kAppDelegate showWarningWithMessage: msg
+                                      target: self];
     }
     else
     {

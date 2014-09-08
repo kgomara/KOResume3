@@ -1,5 +1,5 @@
 //
-//  OCRResumeJobsViewController.h
+//  OCRResumeJobsTableViewController.h
 //  KOResume
 //
 //  Created by Kevin O'Mara on 8/7/14.
@@ -8,7 +8,7 @@
 
 #import "OCRBaseDetailTableViewController.h"
 
-@interface OCRResumeJobsViewController : OCRBaseDetailTableViewController
+@interface OCRResumeJobsTableViewController : OCRBaseDetailTableViewController   <NSFetchedResultsControllerDelegate>
 
 /**
  IBOutlet to the tableView.

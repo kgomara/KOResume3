@@ -33,7 +33,7 @@
 
 /* Begin PBXBuildFile section */
 		D61163C919947FEF001A24B4 /* OCRBaseDetailTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D61163C819947FEF001A24B4 /* OCRBaseDetailTableViewController.m */; };
-		D61163CD199481D2001A24B4 /* OCRResumeJobsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D61163CC199481D2001A24B4 /* OCRResumeJobsViewController.m */; };
+		D61163CD199481D2001A24B4 /* OCRResumeJobsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D61163CC199481D2001A24B4 /* OCRResumeJobsTableViewController.m */; };
 		D63D82BD179311350065F0A9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D63D82BC179311350065F0A9 /* Foundation.framework */; };
 		D63D82BF179311350065F0A9 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D63D82BE179311350065F0A9 /* CoreGraphics.framework */; };
 		D63D82C1179311350065F0A9 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D63D82C0179311350065F0A9 /* UIKit.framework */; };
@@ -147,8 +147,8 @@
 		D61163C219947D5F001A24B4 /* OCRDetailViewProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRDetailViewProtocol.h; path = Classes/OCRDetailViewProtocol.h; sourceTree = "<group>"; };
 		D61163C719947FEF001A24B4 /* OCRBaseDetailTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRBaseDetailTableViewController.h; path = Classes/OCRBaseDetailTableViewController.h; sourceTree = "<group>"; };
 		D61163C819947FEF001A24B4 /* OCRBaseDetailTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRBaseDetailTableViewController.m; path = Classes/OCRBaseDetailTableViewController.m; sourceTree = "<group>"; };
-		D61163CB199481D2001A24B4 /* OCRResumeJobsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRResumeJobsViewController.h; path = Classes/OCRResumeJobsViewController.h; sourceTree = "<group>"; };
-		D61163CC199481D2001A24B4 /* OCRResumeJobsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRResumeJobsViewController.m; path = Classes/OCRResumeJobsViewController.m; sourceTree = "<group>"; };
+		D61163CB199481D2001A24B4 /* OCRResumeJobsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRResumeJobsTableViewController.h; path = Classes/OCRResumeJobsTableViewController.h; sourceTree = "<group>"; };
+		D61163CC199481D2001A24B4 /* OCRResumeJobsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRResumeJobsTableViewController.m; path = Classes/OCRResumeJobsTableViewController.m; sourceTree = "<group>"; };
 		D63D82B9179311350065F0A9 /* koresume.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = koresume.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D63D82BC179311350065F0A9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D63D82BE179311350065F0A9 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -282,8 +282,8 @@
 			children = (
 				D6CB27CB194D419C009E8D50 /* OCREducationTableViewCell.h */,
 				D6CB27CC194D419C009E8D50 /* OCREducationTableViewCell.m */,
-				D61163CB199481D2001A24B4 /* OCRResumeJobsViewController.h */,
-				D61163CC199481D2001A24B4 /* OCRResumeJobsViewController.m */,
+				D61163CB199481D2001A24B4 /* OCRResumeJobsTableViewController.h */,
+				D61163CC199481D2001A24B4 /* OCRResumeJobsTableViewController.m */,
 				D66D87CE1991D55900644D39 /* OCRResumeOverviewViewController.h */,
 				D66D87CF1991D55900644D39 /* OCRResumeOverviewViewController.m */,
 				D6C61B37189DF1F6003E996B /* OCRResumeViewController.h */,
@@ -521,7 +521,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = OCR;
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0600;
 				ORGANIZATIONNAME = "O'Mara Consulting Associates";
 				TargetAttributes = {
 					D63D82B8179311350065F0A9 = {
@@ -669,7 +669,7 @@
 				D6AC3D3E179A3F21001D8D75 /* OCRPackagesCell.m in Sources */,
 				D66D87D01991D55900644D39 /* OCRResumeOverviewViewController.m in Sources */,
 				D67C0F16199707F20053C04C /* OCRResumeEducationViewController.m in Sources */,
-				D61163CD199481D2001A24B4 /* OCRResumeJobsViewController.m in Sources */,
+				D61163CD199481D2001A24B4 /* OCRResumeJobsTableViewController.m in Sources */,
 				D6B4735118F7B00F004E9D84 /* SVModalWebViewController.m in Sources */,
 				D6C8D2DF18F1D3E200E76376 /* OCRJobsViewController.m in Sources */,
 				D6D572191793A78600034AF3 /* _Resumes.m in Sources */,
@@ -819,7 +819,7 @@
 					"$(SOURCE_ROOT)/include",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				ONLY_ACTIVE_ARCH = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-ObjC";
 				PUBLIC_HEADERS_FOLDER_PATH = "";
 				SDKROOT = iphoneos;

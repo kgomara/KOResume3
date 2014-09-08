@@ -336,7 +336,7 @@
     
     // ...end the undo group
     [[[kAppDelegate managedObjectContext] undoManager] endUndoGrouping];
-    [kAppDelegate saveContextAndWait: [kAppDelegate managedObjectContext]];
+    [kAppDelegate saveContextAndWait];
     
     // Cleanup the undoManager
     [[[kAppDelegate managedObjectContext] undoManager] removeAllActionsWithTarget: self];
@@ -764,7 +764,8 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     if (fromIndexPath.section != toIndexPath.section)
     {
         // Cannot move between sections
-        [kAppDelegate showErrorWithMessage: NSLocalizedString(@"Sorry, move not allowed.", nil)];
+        [kAppDelegate showWarningWithMessage: NSLocalizedString(@"Sorry, move not allowed.", nil)
+                                      target: self];
         [self.tableView reloadData];
         return;
     }
@@ -1302,7 +1303,8 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     if (self.selectedResume.isDeleted)
     {
         // Need to display a message
-        [kAppDelegate showWarningWithMessage:@"resume delete"];
+        [kAppDelegate showWarningWithMessage:@"Resume deleted."
+                                      target: self];
     }
     else
     {

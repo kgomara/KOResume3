@@ -49,8 +49,12 @@
     if (!_managedObjectContext)
     {
         ALog(@"Could not get managedObjectContext");
-        NSString *msg = NSLocalizedString(@"Failed to open database.", nil);
-        [kAppDelegate showErrorWithMessage: msg];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", nil)
+                                                        message: NSLocalizedString(@"Failed to open database.", nil)
+                                                       delegate: self
+                                              cancelButtonTitle: NSLocalizedString(@"OK", nil)
+                                              otherButtonTitles: nil];
+        [alert show];
     }
     
     // Setup Master-Detail controller paradigm
@@ -153,7 +157,7 @@
      */
     DLog();
     
-    [self saveContext: _managedObjectContext];
+    [self saveContext];
 }
 
 #pragma mark - Memory management
@@ -175,24 +179,28 @@
 
 
 //----------------------------------------------------------------------------------------------------------
-- (void)saveContext: (NSManagedObjectContext *)moc
+- (void)saveContext
 {
     DLog();
     
     // Save changes to application's managed object context
-    [moc performBlock:^{
-        if ([moc hasChanges])
+    [self.managedObjectContext performBlock:^{
+        if ([self.managedObjectContext hasChanges])
         {
             NSError *error = nil;
-            if ([moc save: &error])
+            if ([self.managedObjectContext save: &error])
             {
                 DLog(@"Save successful");
             }
             else
             {
                 ELog(error, @"Failed to save data");
-                NSString* msg = NSLocalizedString( @"Failed to save data.", nil);
-                [kAppDelegate showErrorWithMessage: msg];
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", nil)
+                                                                message: NSLocalizedString(@"Failed to save data.", nil)
+                                                               delegate: self
+                                                      cancelButtonTitle: NSLocalizedString(@"OK", nil)
+                                                      otherButtonTitles: nil];
+                [alert show];
             }
         }
         else
@@ -204,20 +212,24 @@
 
 
 //----------------------------------------------------------------------------------------------------------
-- (void)saveContextAndWait: (NSManagedObjectContext *)moc
+- (void)saveContextAndWait
 {
     DLog();
     
     // Save changes to application's managed object context.
     __block NSError *error = nil;
-    [moc performBlockAndWait:^{
-        [moc save: &error];
+    [self.managedObjectContext performBlockAndWait:^{
+        [self.managedObjectContext save: &error];
     }];
     if (error)
     {
         ELog(error, @"Failed to save data");
-        NSString* msg = NSLocalizedString( @"Failed to save data.", nil);
-        [kAppDelegate showErrorWithMessage: msg];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", nil)
+                                                        message: NSLocalizedString(@"Failed to save data.", nil)
+                                                       delegate: self
+                                              cancelButtonTitle: NSLocalizedString(@"OK", nil)
+                                              otherButtonTitles: nil];
+        [alert show];
     }
     else
     {
@@ -230,29 +242,41 @@
 // =========================================================================================================
 
 //----------------------------------------------------------------------------------------------------------
-- (void)showAlertWithMessageAndType: (NSString*)theMessage
-                          alertType: (NSString*)theType
+- (void)showAlertWithMessageAndType: (NSString*)aMessage
+                          alertType: (NSString*)aType
+                             target: (UIViewController *)aTarget
 {
-    UIAlertView* alert = [[UIAlertView alloc] initWithTitle: theType
-                                                    message: theMessage
-                                                   delegate: nil
-                                          cancelButtonTitle: NSLocalizedString(@"OK", @"OK")
-                                          otherButtonTitles: nil];
-    [alert show];
+    // Set up a UIAlertController
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle: aType
+                                                                   message: aMessage
+                                                            preferredStyle: UIAlertControllerStyleAlert];
+    // ...add an OK action
+    [alert addAction: [UIAlertAction actionWithTitle: NSLocalizedString(@"OK", nil)
+                                               style: UIAlertActionStyleDefault
+                                             handler: nil]];
+    
+    // ...and present the alert to the user
+    [aTarget presentViewController: alert
+                          animated: YES
+                        completion: nil];
 }
 
 //----------------------------------------------------------------------------------------------------------
-- (void)showErrorWithMessage: (NSString*)theMessage
+- (void)showErrorWithMessage: (NSString*)aMessage
+                      target: (UIViewController *)aTarget
 {
-    [self showAlertWithMessageAndType: theMessage
-                            alertType: NSLocalizedString( @"Error", @"Error")];
+    [self showAlertWithMessageAndType: aMessage
+                            alertType: NSLocalizedString( @"Error", @"Error")
+                               target: aTarget];
 }
 
 //----------------------------------------------------------------------------------------------------------
-- (void)showWarningWithMessage: (NSString*)theMessage
+- (void)showWarningWithMessage: (NSString*)aMessage
+                        target: (UIViewController *)aTarget
 {
-    [self showAlertWithMessageAndType: theMessage
-                            alertType: NSLocalizedString(@"Warning", @"Warning")];
+    [self showAlertWithMessageAndType: aMessage
+                            alertType: NSLocalizedString(@"Warning", @"Warning")
+                               target: aTarget];
 }
 
 

@@ -361,7 +361,7 @@
     [[[kAppDelegate managedObjectContext] undoManager] endUndoGrouping];
     
     // ...save changes to the database
-    [kAppDelegate saveContext: [self.fetchedResultsController managedObjectContext]];
+    [kAppDelegate saveContext];
     
     // ...cleanup the undoManager
     [[[kAppDelegate managedObjectContext] undoManager] removeAllActionsWithTarget:self];

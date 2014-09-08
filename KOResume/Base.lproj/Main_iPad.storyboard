@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6206.8" systemVersion="13E28" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="H1p-Uh-vWS">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6206.9" systemVersion="13E28" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="H1p-Uh-vWS">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7026.1"/>
         <capability name="Constraints with attributes relative to the layout margin" minToolsVersion="6.0"/>
@@ -642,15 +642,56 @@
             </objects>
             <point key="canvasLocation" x="3834" y="-767"/>
         </scene>
-        <!--Resume Jobs View Controller-->
+        <!--Resume Jobs Table View Controller-->
         <scene sceneID="wLi-5s-jm8">
             <objects>
-                <tableViewController id="Fal-NL-fMF" customClass="OCRResumeJobsViewController" sceneMemberID="viewController">
+                <tableViewController id="Fal-NL-fMF" customClass="OCRResumeJobsTableViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="XO4-8p-CZC">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="OCRHeaderCell" id="FKT-Bs-WYY" customClass="OCRTableViewHeaderCell">
+                                <rect key="frame" x="0.0" y="55" width="663" height="44"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <tableViewCellContentView key="contentView" autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="FKT-Bs-WYY" id="xNE-18-pfe">
+                                    <rect key="frame" x="0.0" y="0.0" width="663" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Packages" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wFi-3E-eJo">
+                                            <rect key="frame" x="28" y="11" width="76" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xbk-7d-Bvr">
+                                            <rect key="frame" x="112" y="7" width="29" height="29"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="29" id="bEg-5K-uGa"/>
+                                                <constraint firstAttribute="width" constant="29" id="t2c-mU-9iX"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                            <state key="normal" title="Button" image="addButton">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="didPressAddJobButton:" destination="Fal-NL-fMF" eventType="touchUpInside" id="BNe-UU-2z6"/>
+                                            </connections>
+                                        </button>
+                                    </subviews>
+                                    <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                    <constraints>
+                                        <constraint firstItem="wFi-3E-eJo" firstAttribute="leading" secondItem="xNE-18-pfe" secondAttribute="leadingMargin" constant="20" id="6vc-sg-p8J"/>
+                                        <constraint firstAttribute="centerY" secondItem="wFi-3E-eJo" secondAttribute="centerY" id="OEb-ya-CE1"/>
+                                        <constraint firstItem="xbk-7d-Bvr" firstAttribute="leading" secondItem="wFi-3E-eJo" secondAttribute="trailing" constant="8" symbolic="YES" id="gp6-Hj-bRG"/>
+                                        <constraint firstAttribute="centerY" secondItem="xbk-7d-Bvr" secondAttribute="centerY" id="yql-RI-d0q"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="addButton" destination="xbk-7d-Bvr" id="wyh-qF-d6H"/>
+                                    <outlet property="sectionLabel" destination="wFi-3E-eJo" id="HKI-50-cSl"/>
+                                </connections>
+                            </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="Zdr-5C-Ts4">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Zdr-5C-Ts4" id="UBp-tF-qSz">

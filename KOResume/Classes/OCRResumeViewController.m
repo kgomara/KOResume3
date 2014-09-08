@@ -485,7 +485,7 @@
     
     // ...end the undo group
     [[[kAppDelegate managedObjectContext] undoManager] endUndoGrouping];
-    [kAppDelegate saveContextAndWait: [kAppDelegate managedObjectContext]];
+    [kAppDelegate saveContextAndWait];
     
     // Cleanup the undoManager
     [[[kAppDelegate managedObjectContext] undoManager] removeAllActionsWithTarget: self];
