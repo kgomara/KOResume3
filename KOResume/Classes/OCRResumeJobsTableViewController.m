@@ -129,6 +129,7 @@
 }
 
 
+//----------------------------------------------------------------------------------------------------------
 /*
  Notice there is no viewWillDisappear.
  
@@ -165,6 +166,7 @@
 {
     DLog();
     
+    // Set the title
     NSString *title = NSLocalizedString(@"Resume", nil);
     
     /*
@@ -242,7 +244,7 @@
 /**
  Invoked when the user taps the '+' button in the section header
  */
-- (IBAction)didPressAddJobButton: (id)sender
+- (IBAction)didPressAddButton: (id)sender
 {
     DLog();
     
@@ -269,7 +271,7 @@
                                                style: UIAlertActionStyleDefault
                                              handler: ^(UIAlertAction *action) {
                                                  __strong OCRResumeJobsTableViewController *strongSelf = weakself;
-                                                 // Get the Package name from the alert and pass it to addPackage
+                                                 // Get the Job name from the alert and pass it to addJob
                                                  [strongSelf addJob: ((UITextField *) alert.textFields[0]).text];
                                              }]];
     
@@ -296,7 +298,7 @@
     job.name                    = jobName;
     // ...the created timestamp to now
     job.created_date            = [NSDate date];
-    // ...and the resume link to the resume we are managing
+    // ...the resume link to the resume we are managing
     job.resume                  = selectedResume;
     // ...and set its sequence_number to be the last Package
     job.sequence_numberValue    = [[self.jobsFetchedResultsController fetchedObjects] count] + 1;
@@ -307,7 +309,7 @@
     [self reloadFetchedResults: nil];
     
     // Update the tableView with the new object
-    // Construct an indexPath to insert the new object at the beginning
+    // Construct an indexPath to insert the new object at the end
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow: [[self.jobsFetchedResultsController fetchedObjects] count] - 1
                                                 inSection: 0];
     
@@ -335,13 +337,13 @@
  Sets whether the view controller shows an editable view.
  
  Subclasses that use an edit-done button must override this method to change their view to an editable state
- if editing is YES and a non-editable state if it is NO. This method should invoke super’s implementation
+ if editing is YES and a non-editable state if it is NO. This method should invoke super’s implementation
  before updating its view.
  
  @param editing     If YES, the view controller should display an editable view; otherwise, NO. If YES and one
- of the custom views of the navigationItem property is set to the value returned by the
- editButtonItem method, the associated navigation controller displays a Done button;
- otherwise, an Edit button.
+                    of the custom views of the navigationItem property is set to the value returned by the
+                    editButtonItem method, the associated navigation controller displays a Done button;
+                    otherwise, an Edit button.
  @param animate     If YES, animates the transition; otherwise, does not.
  */
 - (void)setEditing: (BOOL)editing
@@ -428,7 +430,7 @@
 /**
  Set the UI for for editing enabled or disabled.
  
- Called when the user presses the Edit, Save, or Cancel buttons.
+ Called when the user presses the Edit, Done, or Cancel buttons.
  
  @param isEditingMode   YES if we are going into edit mode, NO otherwise.
  */
@@ -501,7 +503,7 @@
  numberOfRowsInSection: (NSInteger)section
 {
     // Get the number of objects for the section from the jobsFetchedResultsController
-    return [[[self.jobsFetchedResultsController sections] objectAtIndex:section] numberOfObjects];
+    return [[[self.jobsFetchedResultsController sections] objectAtIndex: section] numberOfObjects];
 }
 
 
@@ -534,7 +536,7 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
  @param tableView       A table-view object requesting the cell.
  @param indexPath       An index path locating a row in tableView.
  @return                An object inheriting from UITableViewCell that the table view can use for the specified row.
- An assertion is raised if you return nil.
+                        An assertion is raised if you return nil.
  */
 - (UITableViewCell *)tableView: (UITableView *)tableView
          cellForRowAtIndexPath: (NSIndexPath *)indexPath
@@ -554,6 +556,7 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
  
  @param cell        A cell to configure.
  @param indexPath   The indexPath of the section and row the cell represents.
+ @return            A configured table view cell.
  */
 - (UITableViewCell *)tableView: (UITableView *)tableView
           jobsCellForIndexPath: (NSIndexPath *)indexPath
@@ -563,8 +566,8 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
     // Get a Subtitle cell
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: kOCRSubtitleTableCell];
     
-    // ...and the Job the cell will represent
-    Jobs *job = [self.jobsFetchedResultsController objectAtIndexPath:indexPath];
+    // ...and the Job object the cell will represent
+    Jobs *job = [self.jobsFetchedResultsController objectAtIndexPath: indexPath];
     
     // ...set the title text content and dynamic text font
     cell.textLabel.text         = job.name;
@@ -653,7 +656,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     if (fromIndexPath.section != toIndexPath.section)
     {
         // Cannot move between sections
-        [kAppDelegate showWarningWithMessage: NSLocalizedString(@"Sorry, move not allowed.", nil)
+        [kAppDelegate showWarningWithMessage: NSLocalizedString(@"Sorry, move between sections not allowed.", nil)
                                       target: self];
         [self.tableView reloadData];
         return;
@@ -662,7 +665,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     NSMutableArray *jobs = [[self.jobsFetchedResultsController fetchedObjects] mutableCopy];
     
     // Grab the item we're moving.
-    Jobs *movingJob = [[self jobsFetchedResultsController] objectAtIndexPath: fromIndexPath];
+    Jobs *movingJob = [self.jobsFetchedResultsController objectAtIndexPath: fromIndexPath];
     
     // Remove the object we're moving from the array.
     [jobs removeObject: movingJob];
@@ -697,8 +700,8 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
  @param tableView       A table-view object informing the delegate about the new row selection.
  @param indexPath       An index path locating the new  in tableView.
  @return                An index-path object that confirms or alters the selected row. Return an NSIndexPath
- object other than indexPath if you want another cell to be selected. Return nil if you
- don't want the row selected.
+                        object other than indexPath if you want another cell to be selected. Return nil if you
+                        don't want the row selected.
  */
 - (NSIndexPath *) tableView: (UITableView *)tableView
    willSelectRowAtIndexPath: (NSIndexPath *)indexPath

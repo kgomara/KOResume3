@@ -11,8 +11,11 @@
 #import "Resumes.h"
 #import "Education.h"
 #import "OCREducationTableViewCell.h"
+#import "OCRTableViewHeaderCell.h"
 
-#define k_OKButtonIndex     1
+/*
+ Manage the table view (list) of the education objects associated with a Resume object.
+ */
 
 @interface OCRResumeEducationViewController ()
 {
@@ -21,16 +24,6 @@
      Reference to the back button to facilitate swapping buttons between display and edit modes.
      */
     UIBarButtonItem     *backBtn;
-    
-    /**
-     Reference to the edit button to facilitate swapping buttons between display and edit modes.
-     */
-    UIBarButtonItem     *editBtn;
-    
-    /**
-     Reference to the save button to facilitate swapping buttons between display and edit modes.
-     */
-    UIBarButtonItem     *doneBtn;
     
     /**
      Reference to the cancel button to facilitate swapping buttons between display and edit modes.
@@ -43,29 +36,33 @@
     UIButton            *addEducationBtn;
     
     /**
+     A boolean flag to indicate whether the user is editing information or simply viewing.
+     */
+    BOOL                isEditing;
+    
+    /**
+     Reference to the active UITextField
+     */
+    UITextField         *activeField;
+    
+    /**
+     Convenience reference to the managed object instance we are managing.
+     
+     OCRBaseDetailViewController, of which this is a subclass, declares a selectedManagedObject. We make this
+     type-correct reference merely for convenience.
+     */
+    Resumes             *selectedResume;
+
+    /**
      Reference to the date formatter object.
      */
     NSDateFormatter     *dateFormatter;
 }
 
 /**
- Array used to keep the Resume's education objects sorted by sequence_number.
+ Reference to the fetchResultsController.
  */
-@property (nonatomic, strong)   NSMutableArray      *educationArray;
-
-/**
- Convenience reference to the managed object instance we are managing.
- 
- OCRBaseDetailViewController, of which this is a subclass, declares a selectedManagedObject. We make this
- type-correct reference merely for convenience.
- */
-@property (nonatomic, strong)   Resumes             *selectedResume;
-
-/**
- A boolean flag to indicate whether the user is editing information or simply viewing.
- */
-@property (nonatomic, assign, getter=isEditing) BOOL editing;
-
+@property (nonatomic, strong) NSFetchedResultsController    *eduFetchedResultsController;
 
 
 @end
@@ -92,24 +89,12 @@
     [super viewDidLoad];
     
     // For convenience, make a type-correct reference to the Resume we're working on
-    self.selectedResume = (Resumes *)self.selectedManagedObject;
-    
-    self.view.backgroundColor = [UIColor clearColor];
+    selectedResume = (Resumes *)self.selectedManagedObject;
     
     // Initialize estimate row height to support dynamic text sizing
     self.tableView.estimatedRowHeight = kOCREducationTableViewCellDefaultHeight;
     
-    // Set the default button title
-    self.backButtonTitle        = NSLocalizedString(@"Resume", nil);
-    
     // Set up button items
-    backBtn     = self.navigationItem.leftBarButtonItem;
-    editBtn     = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemEdit
-                                                                target: self
-                                                                action: @selector(didPressEditButton)];
-    doneBtn     = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemSave
-                                                                target: self
-                                                                action: @selector(didPressSaveButton)];
     cancelBtn   = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel
                                                                 target: self
                                                                 action: @selector(didPressCancelButton)];
@@ -127,11 +112,7 @@
     [self configureDefaultNavBar];
     
     // Set editing off
-    self.editing = NO;
-//    [self setUIWithEditing: NO];
-    
-    // Sort the job and education tables by sequence_number
-    [self sortTables];
+    isEditing = NO;
 }
 
 
@@ -160,48 +141,21 @@
     
     [super viewWillAppear: animated];
     
-//    self.fetchedResultsController.delegate = self;
-    [self.tableView reloadData];
-    
-    [self configureDefaultNavBar];
-    [self configureView];
-    [self setFieldsEditable: NO];
-    
-    // Register for keyboard notifications
+    // Register package object deletion
     [[NSNotificationCenter defaultCenter] addObserver: self
-                                             selector: @selector(keyboardWillShow:)
-                                                 name: UIKeyboardWillShowNotification
+                                             selector: @selector(packageWasDeleted:)
+                                                 name: kOCRMocDidDeletePackageNotification
                                                object: nil];
-    [[NSNotificationCenter defaultCenter] addObserver: self
-                                             selector: @selector(keyboardWillBeHidden:)
-                                                 name: UIKeyboardWillHideNotification
-                                               object: nil];
-    // ...add an observer for Dynamic Text size changes
-    [[NSNotificationCenter defaultCenter] addObserver: self
-                                             selector: @selector(userTextSizeDidChange:)
-                                                 name: UIContentSizeCategoryDidChangeNotification
-                                               object: nil];
-    /*
-     This class inherits viewWillDisappear from the base class, which calls removeObserver
-     */
 }
 
 
 //----------------------------------------------------------------------------------------------------------
-/**
- Sort the job and education arrays into sequence_number order.
+/*
+ Notice there is no viewWillDisappear.
+ 
+ This class inherits viewWillDisappear from the base class, which calls removeObserver and saves the context; hence
+ we have no need to implement the method in this class. Similarly, we don't implement didReceiveMemoryWarning.
  */
-- (void)sortTables
-{
-    DLog();
-    
-    // Sort jobs in the order they should appear in the table
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey: kOCRSequenceNumberAttributeName
-                                                                   ascending: YES];
-    NSArray *sortDescriptors    = @[sortDescriptor];
-    // ...sort the Education and Certification array
-    self.educationArray = [NSMutableArray arrayWithArray: [_selectedResume.education sortedArrayUsingDescriptors: sortDescriptors]];
-}
 
 
 //----------------------------------------------------------------------------------------------------------
@@ -215,12 +169,12 @@
  
  @param editable    A BOOL that determines whether the fields should be enabled for editing - or not.
  */
-- (void)setFieldsEditable: (BOOL)editable
+- (void)configureFieldsForEditing: (BOOL)editable
 {
     DLog();
     
-    [self.tableView reloadRowsAtIndexPaths:[self.tableView indexPathsForVisibleRows]
-                          withRowAnimation:UITableViewRowAnimationNone];
+    [self.tableView reloadRowsAtIndexPaths: [self.tableView indexPathsForVisibleRows]
+                          withRowAnimation: UITableViewRowAnimationNone];
 }
 
 
@@ -233,17 +187,26 @@
     DLog();
     
     // Set the title
-    self.navigationItem.title = NSLocalizedString(@"Resume", nil);
+    NSString *title = NSLocalizedString(@"Resume", nil);
     
-    // Set up the navigation items and save/cancel buttons
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
+    /*
+     In iOS8 Apple has bridged much of the gap between iPhone and iPad. However some differences persist.
+     */
+    if (self.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
     {
-        self.navigationItem.rightBarButtonItems = @[editBtn];
+        /*
+         Our view controller is embedded in a UITabBarController that owns the navigation bar. So to update
+         the title and buttons we must reference the navigation items in our tabBarController.
+         */
+        // Set the title
+        self.tabBarController.navigationItem.title = title;
+        // ...and edit button
+        self.tabBarController.navigationItem.rightBarButtonItems = @[self.editButtonItem];
     }
     else
     {
-        self.navigationItem.leftBarButtonItem  = backBtn;
-        self.navigationItem.rightBarButtonItem = editBtn;
+        self.navigationItem.title               = title;
+        self.navigationItem.rightBarButtonItems = @[self.editButtonItem];
     }
     
     // Set table editing off
@@ -264,84 +227,166 @@
 {
     DLog();
     
-    // Use the information in the selected managed object to update the UI fields
-//    [self loadViewFromSelectedObject];
+    // As a simple UITableView, there is nothing to do. Implemented because the OCRDetailViewProtocol requires it.
 }
 
 
 #pragma mark - UITextKit handlers
 
-//----------------------------------------------------------------------------------------------------------
-/**
- Handle the notification that the user changed the dynamic text size.
- 
- This method is invoked by notification when the user changes the text size. We apply a new UIFont instance
- to each label, text field, and text view that uses dynamic font styles.
- 
- @param aNotification   The NSNotification associated with the event.
+/*
+ In iOS8, UITableView handles dynamic text - provided you use autolayout. If you have custom cells, be sure
+ to set their estimated size (typically in viewDidLoad:), see OCRPackagesTableViewController.
  */
-- (void)userTextSizeDidChange: (NSNotification *)aNotification
-{
-    DLog();
-    
-    /*
-     Reloading the table will cause the datasource methods to be called. The table controller will call
-     tableView:cellForRowAtIndexPath: which applies the new fonts and tableView:heightForRowAtIndexPath: calculates
-     row heights given the new text size. Note this approach requires fonts to be set in cellForRowAtIndexPath:
-     and not in an init method.
-     */
-    [self.tableView reloadData];
-}
 
 
 #pragma mark - UI handlers
 
 //----------------------------------------------------------------------------------------------------------
-/**
- Invoked when the user taps the Edit button.
+/*
+ API documentation is in .h file.
  
- * Setup the navigation bar for editing.
- * Enable editable fields.
- * Start an undo group on the NSManagedObjectContext.
+ This is a "public" method (as are the IBOutlet properties).  In Xcode 5 you can declare IB items in either
+ the .m or .h files. I can make an argument for either location. From a C language perspective, they should
+ be declared in the .h as they are used externally from the class - i.e., in the XIBs. But IMO good object
+ architecture would hide this "implementation detail" from users of the class - declaring them in the .h file
+ makes them accessible to any compilation unit, and that isn't really want I want.
  
+ That said, the general consensus seems to favor declaring them in the .h, so that's what we do here.
  */
-- (void)didPressEditButton
+- (IBAction)didPressAddButton: (id)sender
 {
     DLog();
     
-    // Turn on editing in the UI
-    [self setUIWithEditing: YES];
+    // Set up a UIAlertController to get the user's input
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle: NSLocalizedString(@"Enter Education Name", nil)
+                                                                   message: nil
+                                                            preferredStyle: UIAlertControllerStyleAlert];
+    // Add a text field to the alert
+    [alert addTextFieldWithConfigurationHandler: ^(UITextField *textField) {
+        textField.placeholder = NSLocalizedString(@"Education/Certification Name", nil);
+    }];
     
-    // Start an undo group...it will either be commited in didPressSaveButton or
-    //    undone in didPressCancelButton
-    [[[kAppDelegate managedObjectContext] undoManager] beginUndoGrouping];
+    // ...add a cancel action
+    [alert addAction: [UIAlertAction actionWithTitle: NSLocalizedString(@"Cancel", nil)
+                                               style: UIAlertActionStyleDefault
+                                             handler: nil]];
+    // ...and an OK action
+    /*
+     To understand the purpose of declaring the __weak reference to self, see:
+     https://developer.apple.com/library/ios/documentation/cocoa/conceptual/ProgrammingWithObjectiveC/WorkingwithBlocks/WorkingwithBlocks.html#//apple_ref/doc/uid/TP40011210-CH8-SW16
+     */
+    __weak OCRResumeEducationViewController *weakself = self;
+    [alert addAction: [UIAlertAction actionWithTitle: NSLocalizedString(@"OK", nil)
+                                               style: UIAlertActionStyleDefault
+                                             handler: ^(UIAlertAction *action) {
+                                                 __strong OCRResumeEducationViewController *strongSelf = weakself;
+                                                 // Get the Education name from the alert and pass it to addEducation
+                                                 [strongSelf addEducation: ((UITextField *) alert.textFields[0]).text];
+                                             }]];
+    
+    // ...and present the alert to the user
+    [self presentViewController: alert
+                       animated: YES
+                     completion: nil];
 }
 
 
 //----------------------------------------------------------------------------------------------------------
 /**
- Invoked when the user taps the Save button.
- 
- * Save the changes to the NSManagedObjectContext.
- * Cleanup the undo group on the NSManagedObjectContext.
- * Reset the navigation bar to its default state.
- 
+ Add a Jobs entity for this resume.
  */
-- (void)didPressSaveButton
+- (void)addEducation: (NSString *)educationName
 {
     DLog();
     
-    // Reset the sequence_number of the Job and Education items in case they were re-ordered during the edit
-    [self resequenceTables];
+    // Insert a new Education entity into the managedObjectContext
+    Education *education = (Education *)[NSEntityDescription insertNewObjectForEntityForName: kOCREducationEntity
+                                                                      inManagedObjectContext: [kAppDelegate managedObjectContext]];
+    // Set the name to the value the user provided in the prompt
+    education.name                  = educationName;
+    // ...the created timestamp to now
+    education.created_date          = [NSDate date];
+    // ...the resume link to this resume
+    education.resume                = selectedResume;
+    // ...and set its sequence_number to be the last Package
+    education.sequence_numberValue  = [[self.eduFetchedResultsController fetchedObjects] count] + 1;
     
-    // ...end the undo group
-    [[[kAppDelegate managedObjectContext] undoManager] endUndoGrouping];
+    // Save the context so the adds are pushed to the persistent store
     [kAppDelegate saveContextAndWait];
+    // ...and reload the fetchedResults to bring them into memory
+    [self reloadFetchedResults: nil];
     
-    // Cleanup the undoManager
-    [[[kAppDelegate managedObjectContext] undoManager] removeAllActionsWithTarget: self];
-    // ...and turn off editing in the UI
-    [self setUIWithEditing: NO];
+    // Update the tableView with the new object
+    // Construct an indexPath to insert the new object at the end
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow: [[self.eduFetchedResultsController fetchedObjects] count] - 1
+                                                inSection: 0];
+    
+    /*
+     Insert rows in the receiver at the locations identified by an array of index paths, with an option to
+     animate the insertion.
+     
+     UITableView calls the relevant delegate and data source methods immediately afterwards to get the cells
+     and other content for visible cells.
+     */
+    // Animate the insertion of the new row
+    [self.tableView beginUpdates];
+    [self.tableView insertRowsAtIndexPaths: @[indexPath]
+                          withRowAnimation: UITableViewRowAnimationFade];
+    [self.tableView endUpdates];
+    // ...and scroll the tableView back to the top to ensure the user can see the result of adding the Job
+    [self.tableView scrollToRowAtIndexPath: indexPath
+                          atScrollPosition: UITableViewScrollPositionBottom
+                                  animated: YES];
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Sets whether the view controller shows an editable view.
+ 
+ Subclasses that use an edit-done button must override this method to change their view to an editable state
+ if editing is YES and a non-editable state if it is NO. This method should invoke super’s implementation
+ before updating its view.
+ 
+ @param editing     If YES, the view controller should display an editable view; otherwise, NO. If YES and one
+                    of the custom views of the navigationItem property is set to the value returned by the
+                    editButtonItem method, the associated navigation controller displays a Done button;
+                    otherwise, an Edit button.
+ @param animate     If YES, animates the transition; otherwise, does not.
+ */
+- (void)setEditing: (BOOL)editing
+          animated: (BOOL)animated
+{
+    DLog(@"editing=%@", editing? @"YES" : @"NO");
+    [super setEditing: editing
+             animated: animated];
+    
+    // Configure the UI to represent the editing state we are entering
+    [self configureUIForEditing: editing];
+    
+    if (editing)
+    {
+        // Start an undo group...it will either be commited here when the User presses Done, or
+        //    undone in didPressCancelButton
+        [[[kAppDelegate managedObjectContext] undoManager] beginUndoGrouping];
+    }
+    else
+    {
+        // The user pressed "Done", end the undo group
+        [[[kAppDelegate managedObjectContext] undoManager] endUndoGrouping];
+        
+        // ...save changes to the database
+        [kAppDelegate saveContextAndWait];
+        
+        // ...cleanup the undoManager
+        [[[kAppDelegate managedObjectContext] undoManager] removeAllActionsWithTarget: self];
+        
+        // Reload the fetched results
+        [self reloadFetchedResults: nil];
+        
+        // Set up the default navBar
+        [self configureDefaultNavBar];
+    }
 }
 
 
@@ -372,11 +417,20 @@
     // Cleanup the undoManager
     [[[kAppDelegate managedObjectContext] undoManager] removeAllActionsWithTarget: self];
     
-    // Re-sort the tables as editing may have moved their order in the tableView
-    [self sortTables];
+    // ...and reload the fetchedResults to bring them into memory
+    [self reloadFetchedResults: nil];
+    
+    /*
+     This may look odd - one usually sees a call to super in a method with the same name. But we need to inform
+     the tableView that we are no longer editing the table.
+     */
+    [super setEditing: NO
+             animated: YES];
+    
+    // Load the tableView from the (unchanged) packages
     [self.tableView reloadData];
     // ...and turn off editing in the UI
-    [self setUIWithEditing: NO];
+    [self configureUIForEditing: NO];
 }
 
 
@@ -384,185 +438,46 @@
 /**
  Set the UI for for editing enabled or disabled.
  
- Called when the user presses the Edit, Save, or Cancel buttons.
+ Called when the user presses the Edit, Done, or Cancel buttons.
  
  @param isEditingMode   YES if we are going into edit mode, NO otherwise.
  */
-- (void)setUIWithEditing: (BOOL)isEditingMode
+- (void)configureUIForEditing: (BOOL)isEditingMode
 {
     DLog();
     
     // Update editing flag
-    self.editing = isEditingMode;
+    isEditing = isEditingMode;
     
-    // ...the add buttons (hidden is the boolean opposite of isEditingMode)
+    // Set the add button hidden state (hidden should be the boolean opposite of isEditingMode)
     [addEducationBtn    setHidden: !isEditingMode];
     
-    // ...enable/disable table editing
-    [self.tableView setEditing: isEditingMode
-                      animated: YES];
     // ...enable/disable resume fields
-    [self setFieldsEditable: isEditingMode];
+    [self configureFieldsForEditing: isEditingMode];
     
     if (isEditingMode)
     {
-        // Set up the navigation items and save/cancel buttons
-        [self.tabBarController.navigationItem setRightBarButtonItems: @[doneBtn, cancelBtn]];
+        /*
+         In iOS8 Apple has bridged much of the gap between iPhone and iPad. However some differences persist.
+         In this case, embedding in a tabBarController is slightly different.
+         */
+        if (self.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+        {
+            /*
+             Our view controller is embedded in a UITabBarController that owns the navigation bar. So to update
+             the title and buttons we must reference the navigation items in our tabBarController.
+             */
+            // Set the edit button
+            self.tabBarController.navigationItem.rightBarButtonItems = @[self.editButtonItem, cancelBtn];
+        }
+        else
+        {
+            self.navigationItem.rightBarButtonItems = @[self.editButtonItem, cancelBtn];
+        }
     }
     else
     {
         // Reset the nav bar defaults
-        [self configureDefaultNavBar];
-    }
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-/*
- API documentation is in .h file.
- 
- This is a "public" method (as are the IBOutlet properties).  In Xcode 5 you can declare IB items in either
- the .m or .h files. I can make an argument for either location. From a C language perspective, they should
- be declared in the .h as they are used externally from the class - i.e., in the XIBs. But IMO good object
- architecture would hide this "implementation detail" from users of the class - declaring them in the .h file
- makes them accessible to any compilation unit, and that isn't really want I want.
- 
- That said, the general consensus seems to favor declaring them in the .h, so that's what we do here.
- */
-- (IBAction)didPressAddButton: (id)sender
-{
-    DLog();
-    
-//    // Use the tag of the sender UIButton to prompt for the appropriate entity name.
-//    switch ([(UIButton *)sender tag])
-//    {
-//        case k_JobsSection:
-//            [self promptForJobName];
-//            break;
-//            
-//        case k_EducationSection:
-//            [self promptForEducationName];
-//            break;
-//            
-//        default:
-//            ALog(@"unexpected tag=%@", @([(UIButton *)sender tag]));
-//            break;
-//    }
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Resequence the Jobs and Education objects to reflect the order the user has arranged them.
- */
-- (void)resequenceTables
-{
-    DLog();
-    
-    // The education array is in the order (including deletes) the user wants
-    // ...loop through the array by index, resetting the education object's sequence_number attribute
-    int i = 0;
-    for (Education *education in _educationArray) {
-        if (education.isDeleted)
-        {
-            // No need to update the sequence number of deleted objects
-        }
-        else
-        {
-            // Set the sequence number on this education object and increment the counter
-            [education setSequence_numberValue: i++];
-        }
-    }
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Add a Jobs entity for this resume.
- */
-- (void)addEducation: (NSString *)educationName
-{
-    DLog();
-    
-    // Insert a new Education entity into the managedObjectContext
-    Education *education = (Education *)[NSEntityDescription insertNewObjectForEntityForName: @"Education" /* kOCREducationEntity */
-                                                                      inManagedObjectContext: [kAppDelegate managedObjectContext]];
-    // Set the name to the value the user provided in the prompt
-    education.name            = educationName;
-    // ...the created timestamp to now
-    education.created_date    = [NSDate date];
-    // ...and the resume link to this resume
-    education.resume          = _selectedResume;
-    
-    // Insert the newly created entity into the array in the first (zero-ith) position
-    [_educationArray insertObject: education
-                          atIndex: 0];
-    // ...and resequence the Jobs and Education objects
-    [self resequenceTables];
-    
-    // Construct an indexPath
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow: 0
-                                                inSection: 0];
-    
-    /*
-     Insert rows in the receiver at the locations identified by an array of index paths, with an option to
-     animate the insertion.
-     
-     UITableView calls the relevant delegate and data source methods immediately afterwards to get the cells
-     and other content for visible cells.
-     */
-    // Animate the insertion of the new row
-    [self.tableView insertRowsAtIndexPaths: @[indexPath]
-                          withRowAnimation: UITableViewRowAnimationFade];
-    // ...and scroll the tableView back to the top to ensure the user can see the result of adding the Job
-    [self.tableView scrollToRowAtIndexPath: indexPath
-                          atScrollPosition: UITableViewScrollPositionTop
-                                  animated: YES];
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Prompts the user to enter a name for the new Education entity.
- */
-- (void)promptForEducationName
-{
-    DLog();
-    
-    // Display an alert to get the Education name. Note the cancel button is available.
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Enter Institution Name", @"A University or Certificate issuing organization")
-                                                    message: nil
-                                                   delegate: self
-                                          cancelButtonTitle: NSLocalizedString(@"Cancel", nil)
-                                          otherButtonTitles: NSLocalizedString(@"OK", nil), nil];
-    alert.alertViewStyle   = UIAlertViewStylePlainTextInput;
-    
-    [alert show];
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Sent to the delegate when the user clicks a button on an alert view.
- 
- The receiver is automatically dismissed after this method is invoked.
- 
- @param alertView       The alert view containing the button.
- @param buttonIndex     The index of the button that was clicked. The button indices start at 0.
- */
-- (void)    alertView: (UIAlertView *)alertView
- clickedButtonAtIndex: (NSInteger)buttonIndex
-{
-    DLog();
-    
-    if (buttonIndex == k_OKButtonIndex)
-    {
-        // OK button was pressed, get the user's input from the alert and pass it to addEducation
-        [self addEducation: [[alertView textFieldAtIndex: 0] text]];
-    }
-    else
-    {
-        // User cancelled
         [self configureDefaultNavBar];
     }
 }
@@ -579,10 +494,24 @@
  */
 - (NSInteger)numberOfSectionsInTableView: (UITableView *)tableView
 {
-    DLog();
-    
-    // We have one section in our table
-    return 1;
+    // Get the section count from the eduFetchedResultsController
+    return [[self.eduFetchedResultsController sections] count];
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Tells the data source to return the number of rows in a given section of a table view.
+ 
+ @param tableView       The table-view object requesting this information.
+ @param section         An index number identifying a section in tableView.
+ @return                The number of rows in section.
+ */
+- (NSInteger)tableView: (UITableView *)tableView
+ numberOfRowsInSection: (NSInteger)section
+{
+    // Get the number of objects for the section from the eduFetchedResultsController
+    return [[[self.eduFetchedResultsController sections] objectAtIndex: section] numberOfObjects];
 }
 
 
@@ -597,9 +526,7 @@
 - (BOOL)    tableView: (UITableView *)tableView
 canEditRowAtIndexPath: (NSIndexPath *)indexPath
 {
-    DLog();
-    
-    // If we are in edit mode allow swipe to delete
+    // Yes if we are in edit mode
     return self.editing;
 }
 
@@ -624,12 +551,9 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
 {
     DLog();
     
-    // Declare a cell to use
-    UITableViewCell *cell;
-    
     // Configure an education cell
-    cell = [self            tableView: tableView
-            educationCellForIndexPath: indexPath];
+    UITableViewCell *cell = [self            tableView: tableView
+                             educationCellForIndexPath: indexPath];
     
     return cell;
 }
@@ -648,41 +572,45 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
     DLog();
     
     // Determine the background color for the fields based on whether or not we are editing
-    UIColor *backgroundColor = self.editing? [self.view.tintColor colorWithAlphaComponent:0.1f] : [UIColor whiteColor];
+    UIColor *backgroundColor = isEditing? [self.view.tintColor colorWithAlphaComponent:0.1f] : [UIColor whiteColor];
     
     // Get an Education cell
     OCREducationTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier: kOCREducationTableCell];
     
+    
+    // ...and the Education object the cell will represent
+    Education *education = [self.eduFetchedResultsController objectAtIndexPath: indexPath];
+    
     // Set the title text content, dynamic font, enable state, and backgroundColor
-    cell.title.text                 = [_educationArray[indexPath.row] title];
+    cell.title.text                 = [education title];
     cell.title.font                 = [UIFont preferredFontForTextStyle: UIFontTextStyleSubheadline];
-    cell.title.enabled              = self.editing;
+    cell.title.enabled              = isEditing;
     cell.title.backgroundColor      = backgroundColor;
     cell.title.delegate             = self;
     
     // ...same for degree/certification
-    cell.name.text                  = [_educationArray[indexPath.row] name];
+    cell.name.text                  = [education name];
     cell.name.font                  = [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline];
     cell.name.enabled               = self.editing;
     cell.name.backgroundColor       = backgroundColor;
     cell.name.delegate              = self;
     
     // ...earnedDate
-    cell.earnedDate.text            = [dateFormatter stringFromDate: [_educationArray[indexPath.row] earned_date]];
+    cell.earnedDate.text            = [dateFormatter stringFromDate: [education earned_date]];
     cell.earnedDate.font            = [UIFont preferredFontForTextStyle: UIFontTextStyleSubheadline];
     cell.earnedDate.enabled         = self.editing;
     cell.earnedDate.backgroundColor = backgroundColor;
     cell.earnedDate.delegate        = self;
     
     // ...city
-    cell.city.text                  = [_educationArray[indexPath.row] city];
+    cell.city.text                  = [education city];
     cell.city.font                  = [UIFont preferredFontForTextStyle: UIFontTextStyleSubheadline];
     cell.city.enabled               = self.editing;
     cell.city.backgroundColor       = backgroundColor;
     cell.city.delegate              = self;
     
     // ...and state
-    cell.state.text                 = [(Education *)_educationArray[indexPath.row] state];
+    cell.state.text                 = [education state];
     cell.state.font                 = [UIFont preferredFontForTextStyle: UIFontTextStyleSubheadline];
     cell.state.enabled              = self.editing;
     cell.state.backgroundColor      = backgroundColor;
@@ -692,8 +620,6 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     // ...with no accessory indicator
     cell.accessoryType  = UITableViewCellAccessoryNone;
-    
-    DLog(@"cell size=%f,%f", cell.frame.size.width, cell.frame.size.height);
     
     return cell;
 }
@@ -729,14 +655,20 @@ commitEditingStyle: (UITableViewCellEditingStyle)editingStyle
     if (editingStyle == UITableViewCellEditingStyleDelete)
     {
         // Delete the managed object at the given index path.
-        NSManagedObject *jobToDelete = _educationArray[indexPath.row];
-        [[kAppDelegate managedObjectContext] deleteObject: jobToDelete];
-        [_educationArray removeObjectAtIndex: indexPath.row];
-        // ...delete the object from the tableView
+        NSManagedObjectContext *context = [self.eduFetchedResultsController managedObjectContext];
+        Education *educationToDelete    = [self.eduFetchedResultsController objectAtIndexPath: indexPath];
+        [context deleteObject: educationToDelete];
+        
+        // Save the context so the delete is pushed to the persistent store
+        [kAppDelegate saveContextAndWait];
+        // ...and reload the fetchedResults to bring them into memory
+        [self reloadFetchedResults: nil];
+        
+        // Delete the row from the table view
+        [self.tableView beginUpdates];
         [tableView deleteRowsAtIndexPaths: @[indexPath]
                          withRowAnimation: UITableViewRowAnimationFade];
-        // ...and reload the table
-        [tableView reloadData];
+        [self.tableView endUpdates];
     }
     else
     {
@@ -761,48 +693,67 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
 {
     DLog();
     
+    /*
+     We only have one section, so moving between sections can never happen, code is here for safety
+     */
     if (fromIndexPath.section != toIndexPath.section)
     {
         // Cannot move between sections
-        [kAppDelegate showWarningWithMessage: NSLocalizedString(@"Sorry, move not allowed.", nil)
+        [kAppDelegate showWarningWithMessage: NSLocalizedString(@"Sorry, move between sections not allowed.", nil)
                                       target: self];
         [self.tableView reloadData];
         return;
     }
     
-    // Get the from and to Rows of the table
-    NSUInteger fromRow  = [fromIndexPath row];
-    NSUInteger toRow    = [toIndexPath row];
+    NSMutableArray *educations = [[self.eduFetchedResultsController fetchedObjects] mutableCopy];
     
-    // Get the Education at the fromRow
-    Education *movedEducation = _educationArray[fromRow];
-    // ...remove it from that "order"
-    [_educationArray removeObjectAtIndex: fromRow];
-    // ...and insert it where the user wants
-    [_educationArray insertObject: movedEducation
-                          atIndex: toRow];
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Tells the data source to return the number of rows in a given section of a table view.
- 
- @param tableView       The table-view object requesting this information.
- @param section         An index number identifying a section in tableView.
- @return                The number of rows in section.
- */
-- (NSInteger)tableView: (UITableView *)tableView
- numberOfRowsInSection: (NSInteger)section
-{
-    DLog(@"section=%ld", (long)section);
+    // Grab the item we're moving.
+    Education *movingEducation = [self.eduFetchedResultsController objectAtIndexPath: fromIndexPath];
     
-    // We only have one section, so just return the count of the objects in jobArray
-    return [_educationArray count];
+    // Remove the object we're moving from the array.
+    [educations removeObject: movingEducation];
+    // ...re-insert it at the destination.
+    [educations insertObject: movingEducation
+                     atIndex: [toIndexPath row]];
+    
+    // All of the objects are now in their correct order.
+    // Update each object's sequence_number field by iterating through the array.
+    int i = 1;
+    for (Education *education in educations)
+    {
+        [education setSequence_numberValue: i++];
+    }
 }
 
 
 #pragma mark - Table view delegate methods
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Tells the delegate that a specified row is about to be selected.
+ 
+ This method is not called until users touch a row and then lift their finger; the row isn't selected until
+ then, although it is highlighted on touch-down. You can use UITableViewCellSelectionStyleNone to disable the
+ appearance of the cell highlight on touch-down. This method isn’t called when the table view is in editing
+ mode (that is, the editing property of the table view is set to YES) unless the table view allows selection
+ during editing (that is, the allowsSelectionDuringEditing property of the table view is set to YES).
+ 
+ We do not want to allow swipe to delete, so we return nil.
+ 
+ @param tableView       A table-view object informing the delegate about the new row selection.
+ @param indexPath       An index path locating the new  in tableView.
+ @return                An index-path object that confirms or alters the selected row. Return an NSIndexPath
+                        object other than indexPath if you want another cell to be selected. Return nil if you
+                        don't want the row selected.
+ */
+- (NSIndexPath *) tableView: (UITableView *)tableView
+   willSelectRowAtIndexPath: (NSIndexPath *)indexPath
+{
+    DLog();
+    
+    return nil;
+}
+
 
 //----------------------------------------------------------------------------------------------------------
 /**
@@ -828,127 +779,80 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
                              animated: YES];
 }
 
-
 //----------------------------------------------------------------------------------------------------------
 /**
- Asks the delegate for the height to use for a row in a specified location.
+ Asks the delegate for the height to use for the header of a particular section.
  
- The method allows the delegate to specify rows with varying heights. If this method is implemented, the value
- it returns overrides the value specified for the rowHeight property of UITableView for the given row.
- 
- There are performance implications to using tableView:heightForRowAtIndexPath: instead of the rowHeight property.
- Every time a table view is displayed, it calls tableView:heightForRowAtIndexPath: on the delegate for each of its
- rows, which can result in a significant performance problem with table views having a large number of rows
- (approximately 1000 or more). See also tableView:estimatedHeightForRowAtIndexPath:.
- 
+ This method allows the delegate to specify section headers with varying heights.
  
  @param tableView       The table-view object requesting this information.
- @param indexPath       An index path that locates a row in tableView.
- @return                A nonnegative floating-point value that specifies the height (in points) that row should be.
+ @param section         An index number identifying a section of tableView .
+ @return               A nonnegative floating-point value that specifies the height (in points) of the header
+ for section.
  */
-//- (CGFloat)     tableView: (UITableView *)tableView
-//  heightForRowAtIndexPath: (NSIndexPath *)indexPath
-//{
-//    DLog();
-//    
-//    /*
-//     To support Dynamic Text, we need to calculate the size required by the text at run time given the
-//     user's preferred dynamic text size.
-//     
-//     We use boundingRectWithSize:options:attributes:context on a text string to determine the height required to show
-//     the content as completely as possible.
-//     
-//     Using this information we determine the height of the title and detail labels in the cell, return their total
-//     plus padding.
-//     
-//     We use CGRectIntegral here to ensure the rect is actually large enough. Here's the "help" for CGRectIntegral:
-//     Returns the smallest rectangle that results from converting the source rectangle values to integers.
-//     
-//     Returns a rectangle with the smallest integer values for its origin and size that contains the source rectangle.
-//     That is, given a rectangle with fractional origin or size values, CGRectIntegral rounds the rectangle’s origin
-//     downward and its size upward to the nearest whole integers, such that the result contains the original rectangle.
-//     */
-//#warning TODO use the iOS estimated size construct
-//    return 160;
-//    
-//    // Declare a test string for use in the calculations. We are only concerned about height here, so any text (that has a descender character) will work for our calculation
-//    NSString *stringToSize  = @"Sample String";
-//    // maxTextSize establishes bounds for the largest rect we can allow
-//    CGSize maxTextSize = CGSizeMake( CGRectGetWidth(CGRectIntegral(tableView.bounds)), CGRectGetHeight(CGRectIntegral(tableView.bounds)));
-//    
-//    // First, determine the size required by the the name string, given the user's dynamic text size preference.
-//    // ...get the bounding rect using UIFontTextStyleSubheadline
-//    CGRect subHeadRect        = [stringToSize boundingRectWithSize: maxTextSize
-//                                                           options: NSStringDrawingUsesLineFragmentOrigin
-//                                                        attributes: @{NSFontAttributeName: [UIFont preferredFontForTextStyle: UIFontTextStyleSubheadline]}
-//                                                           context: nil];
-//    // ...and the bounding rect using UIFontTextStyleHeadline
-//    CGRect headRect       = [stringToSize boundingRectWithSize: maxTextSize
-//                                                       options: NSStringDrawingUsesLineFragmentOrigin
-//                                                    attributes: @{NSFontAttributeName: [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline]}
-//                                                       context: nil];
-//#warning TODO - this calculation is way wrong! I think it is getting the textsize, not the textfield
-//    // Return the larger of 44 or the sum of the heights plus constraints between text fields
-//    CGFloat result = MAX(44.0f, CGRectGetHeight( CGRectIntegral( subHeadRect))*3 + CGRectGetHeight( CGRectIntegral( headRect)) + 40);
-//    DLog(@"result=%f", result);
-//    
-//    return result;
-//}
-
-#pragma mark - Keyboard handlers
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Invoked when the keyboard is about to show
- 
- Scroll the content to ensure the active field is visible
- 
- @param aNotification   the NSNotification containing information about the keyboard
- */
-- (void)keyboardWillShow: (NSNotification*)aNotification
+- (CGFloat)     tableView: (UITableView *)tableView
+ heightForHeaderInSection: (NSInteger)section
 {
     DLog();
-#warning TODO refactor
     
-    // Get the size of the keyboard
-    NSDictionary *info = [aNotification userInfo];
-    CGSize kbSize = [info[UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-    // ...and adjust the contentInset for its height
-    //    UIEdgeInsets contentInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height, 0.0);
-    
-    //    self.coverLtrFld.contentInset           = contentInsets;
-    //    self.coverLtrFld.scrollIndicatorInsets  = contentInsets;
-    
-    // If active text field is hidden by keyboard, scroll it so it's visible
-    CGRect aRect = self.view.frame;
-    aRect.size.height -= kbSize.height;
-    //    if (!CGRectContainsPoint(aRect, self.coverLtrFld.frame.origin)) {
-    //        // calculate the contentOffset for the scroller
-    //        CGPoint scrollPoint = CGPointMake(0.0, self.coverLtrFld.frame.origin.y - kbSize.height);
-    //        [self.coverLtrFld setContentOffset: scrollPoint
-    //                                  animated: YES];
-    //    }
+    // The height of the header constant
+    return kOCRHeaderCellHeight;
 }
 
 
 //----------------------------------------------------------------------------------------------------------
 /**
- Invoked when the keyboard is about to be hidden
+ Asks the delegate for a view object to display in the header of the specified section of the table view.
  
- Reset the contentInsets to "zero"
+ The returned object can be a UILabel or UIImageView object, as well as a custom view. This method only works
+ correctly when tableView:heightForHeaderInSection: is also implemented.
  
- @param aNotification   the NSNotification containing information about the keyboard
+ @param tableView       The table-view object asking for the view object.
+ @param section         An index number identifying a section of tableView .
+ @return               A view object to be displayed in the header of section .
  */
-- (void)keyboardWillBeHidden: (NSNotification*)aNotification
+- (UIView *)    tableView: (UITableView *)tableView
+   viewForHeaderInSection: (NSInteger)section
 {
     DLog();
-#warning TODO refactor
     
-    //    UIEdgeInsets contentInsets = UIEdgeInsetsZero;
+    OCRTableViewHeaderCell *headerCell = [tableView dequeueReusableCellWithIdentifier: kOCRHeaderCell];
+    /*
+     There is a bug in UIKit (see https://devforums.apple.com/message/882042#882042) when using UITableViewCell
+     as the view for section headers. This has been a common practice throughout the iOS programming community.
+     
+     I designed section header views in IB as prototype table view cells - specifically OCRTableViewHeaderCell,
+     which subclasses UITableViewCell. This provides the benefit of using dequeueReusableCellWithIdentifier:
+     to get a view for each section header.
+     
+     Unfortunately this resulted in "no index path for table cell being reused" errors in the log output when
+     inserting new rows. Consequently the content (UILabel and UIButton) disappeared. For whatever reason,
+     UITableView gets confused if the section header views are UITableViewCells (or subclasses) instead of
+     just regular UIViews.
+     
+     What finally solved it was making the header view just a subclass of UIView instead of UITableViewCell. I
+     still use the prototype cell in IB to lay out the section header view, I simply create a "wrapperView" and
+     add the OCRTableViewHeaderCell as a subview.
+     */
+    UIView *wrapperView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 320, headerCell.frame.size.height)];
+    [wrapperView addSubview:headerCell];
     
-    //    self.coverLtrFld.contentInset          = contentInsets;
-    //    self.coverLtrFld.scrollIndicatorInsets = contentInsets;
+    // Set the section dynamic text font, text color, and background color
+    [headerCell.sectionLabel setFont:            [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline]];
+    [headerCell.sectionLabel setTextColor:       [UIColor blackColor]];
+    [headerCell.sectionLabel setBackgroundColor: [UIColor clearColor]];
+    
+    // Set the text content and save a reference to the add button so they can be
+    // shown or hidden whenever the user turns editing mode on or off
+    headerCell.sectionLabel.text    = NSLocalizedString(@"Education/Certification", nil);
+    addEducationBtn                 = headerCell.addButton;
+    
+    // Hide or show the addButton depending on whether we are in editing mode
+    [addEducationBtn setHidden: !isEditing];
+    
+    return wrapperView;
 }
+
 
 #pragma mark - UITextView delegate methods
 
@@ -988,6 +892,8 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
 - (void)textViewDidEndEditing: (UITextView *)textView
 {
     DLog();
+    
+    activeField = nil;
 }
 
 
@@ -1019,7 +925,15 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     
     if (nextResponder)
     {
-        [nextResponder becomeFirstResponder];
+        if (nextTag == kEarnedDateFieldTag)
+        {
+            // Bring up data picker
+            DLog(@"implement date picker!");
+        }
+        else
+        {
+            [nextResponder becomeFirstResponder];
+        }
     }
     else
     {
@@ -1030,18 +944,23 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
 }
 
 //----------------------------------------------------------------------------------------------------------
-- (void)textFieldDidBeginEditing:(UITextField*)textField
+/**
+ Tells the delegate that editing began for the specified text field.
+ 
+ This method notifies the delegate that the specified text field just became the first responder. You can use 
+ this method to update your delegate’s state information. For example, you might use this method to show overlay 
+ views that should be visible while editing.
+ 
+ Implementation of this method by the delegate is optional.
+ 
+ @param textField       The text field for which an editing session began.
+ */
+- (void)textFieldDidBeginEditing: (UITextField*)textField
 {
     DLog();
     
-    UITableViewCell* cell = [self parentCellFor:textField];
-    if (cell)
-    {
-        NSIndexPath* indexPath = [self.tableView indexPathForCell:cell];
-        [self.tableView scrollToRowAtIndexPath: indexPath
-                              atScrollPosition: UITableViewScrollPositionMiddle
-                                      animated: YES];
-    }
+    // Save a reference to the textField we are editing
+    activeField = textField;
 }
 
 //----------------------------------------------------------------------------------------------------------
@@ -1058,14 +977,17 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
 {
     DLog();
     
-    UITableViewCell* cell = [self parentCellFor:textField];
+    // Clear the reference to the text field that was being edited
+    activeField = nil;
+
+    UITableViewCell* cell = [self parentCellForView: textField];
     if (cell)
     {
         NSIndexPath* indexPath = [self.tableView indexPathForCell: cell];
-        [self doUpdateTextField:textField
-                   forTableCell:cell];
-        [self.tableView reloadRowsAtIndexPaths: @[ indexPath ]
-                              withRowAnimation: UITableViewRowAnimationNone];
+        DLog(@"indexPath=%@", indexPath);
+        [self doUpdateTextField: textField
+                   forTableCell: cell
+                    atIndexPath: indexPath];
     }
 }
 
@@ -1081,12 +1003,11 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
  */
 - (void)doUpdateTextField: (UITextField *)textField
              forTableCell: (UITableViewCell *)cell
+              atIndexPath: (NSIndexPath *)indexPath
 {
     DLog();
     
-    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
-    
-    Education *education = _educationArray[indexPath.row];
+    Education *education = [self.eduFetchedResultsController objectAtIndexPath: indexPath];
     
     if (textField.tag == kTitleFieldTag)
     {
@@ -1108,181 +1029,101 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     {
         education.state         = textField.text;
     }
-    
-    [self.tableView reloadRowsAtIndexPaths: @[indexPath]
-                          withRowAnimation: UITableViewRowAnimationFade];
 }
 
 
 //----------------------------------------------------------------------------------------------------------
-#warning TODO needs commenting
-- (UITableViewCell*)parentCellFor: (UIView*)view
+/**
+ Search the UIView hierarchy to find the UITableViewCell that is the parent of the view.
+ 
+ This is a recursive method, searching through the superviews of the view. Eventually either a UITableViewCell
+ is found, or the top of the superview chain is reached and the method returns nil.
+ 
+ @param view        The UIView for whom the caller would like the parent UITableViewCell.
+ @return            The UITableViewCell that is the parent of view, or nil if none is found.
+ */
+- (UITableViewCell *)parentCellForView: (UIView*)view
 {
     DLog();
     
+    // If there is no view,
     if (!view)
     {
+        // ...search failed, return nil
         return nil;
     }
     
-    if ([view isMemberOfClass:[OCREducationTableViewCell class]])
+    // Check if we have OCREducationTableViewCell class
+    if ([view isKindOfClass:[UITableViewCell class]])
     {
+        // ...yes, return it
         return (UITableViewCell*)view;
     }
-    return [self parentCellFor: view.superview];
+    // else, call ourself with the view's superview and continue the search
+    return [self parentCellForView: view.superview];
 }
 
-#pragma mark - Fetched Results Controller delegate methods
+#pragma mark - Fetched Results Controller
 
 //----------------------------------------------------------------------------------------------------------
 /**
- Notifies the receiver that the fetched results controller is about to start processing of one or more changes
- due to an add, remove, move, or update.
+ Singleton method to retrieve the eduFetchedResultsController, instantiating it if necessary.
  
- This method is invoked before all invocations of controller:didChangeObject:atIndexPath:forChangeType:newIndexPath:
- and controller:didChangeSection:atIndex:forChangeType: have been sent for a given change event (such as the
- controller receiving a NSManagedObjectContextDidSaveNotification notification).
- 
- @param controller      The fetched results controller that sent the message.
+ @return    An initialized NSFetchedResultsController.
  */
-- (void)controllerWillChangeContent: (NSFetchedResultsController *)controller
+- (NSFetchedResultsController *)eduFetchedResultsController
 {
     DLog();
     
-    // The fetch controller is about to start sending change notifications, so prepare the table view for updates.
-    [self.tableView beginUpdates];
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Notifies the receiver that a fetched object has been changed due to an add, remove, move, or update.
- 
- The fetched results controller reports changes to its section before changes to the fetch result objects.
- Changes are reported with the following heuristics:
- * On add and remove operations, only the added/removed object is reported.
- * It’s assumed that all objects that come after the affected object are also moved, but these moves are
- not reported.
- * A move is reported when the changed attribute on the object is one of the sort descriptors used in the
- fetch request.
- An update of the object is assumed in this case, but no separate update message is sent to the delegate.
- * An update is reported when an object’s state changes, but the changed attributes aren’t part of the sort keys.
- 
- This method may be invoked many times during an update event (for example, if you are importing data on a background
- thread and adding them to the context in a batch). You should consider carefully whether you want to update the
- table view on receipt of each message.
- 
- @param controller      The fetched results controller that sent the message.
- @param anObject        The object in controller’s fetched results that changed.
- @param indexPath       The index path of the changed object (this value is nil for insertions).
- @param type            The type of change. For valid values see “NSFetchedResultsChangeType”.
- @param newIndexPath    The destination path for the object for insertions or moves (this value is nil for a deletion).
- */
-- (void)controller: (NSFetchedResultsController *)controller
-   didChangeObject: (id)anObject
-       atIndexPath: (NSIndexPath *)indexPath
-     forChangeType: (NSFetchedResultsChangeType)type
-      newIndexPath: (NSIndexPath *)newIndexPath
-{
-    DLog();
-    
-    // Use the type to determine the operation to perform
-    switch(type)
+    if (_eduFetchedResultsController != nil)
     {
-        case NSFetchedResultsChangeInsert:
-            // Insert a row
-            [_tableView insertRowsAtIndexPaths: @[newIndexPath]
-                              withRowAnimation: UITableViewRowAnimationFade];
-            break;
-            
-        case NSFetchedResultsChangeDelete:
-            // Delete a row
-            [_tableView deleteRowsAtIndexPaths: @[indexPath]
-                              withRowAnimation: UITableViewRowAnimationFade];
-            break;
-            
-        case NSFetchedResultsChangeUpdate:
-            // Underlying contents have changed, re-configure the cell
-            [self.tableView reloadRowsAtIndexPaths:@[newIndexPath]
-                                  withRowAnimation:UITableViewRowAnimationFade];
-            break;
-            
-        case NSFetchedResultsChangeMove:
-            // On a move, delete the rows where they were...
-            [_tableView deleteRowsAtIndexPaths: @[indexPath]
-                              withRowAnimation: UITableViewRowAnimationFade];
-            // ...and reload the section to insert new rows and ensure titles are updated appropriately.
-            [_tableView reloadSections: [NSIndexSet indexSetWithIndex: newIndexPath.section]
-                      withRowAnimation: UITableViewRowAnimationFade];
-            break;
+        return _eduFetchedResultsController;
     }
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Notifies the receiver of the addition or removal of a section.
- 
- The fetched results controller reports changes to its section before changes to the fetched result objects.
- 
- This method may be invoked many times during an update event (for example, if you are importing data on a
- background thread and adding them to the context in a batch). You should consider carefully whether you want
- to update the table view on receipt of each message.
- 
- @param controller      The fetched results controller that sent the message.
- @param sectionInfo     The section that changed.
- @param sectionIndex    The index of the changed section.
- @param type            The type of change (insert or delete). Valid values are NSFetchedResultsChangeInsert
- and NSFetchedResultsChangeDelete.
- */
-- (void)controller: (NSFetchedResultsController *)controller
-  didChangeSection: (id <NSFetchedResultsSectionInfo>)sectionInfo
-           atIndex: (NSUInteger)sectionIndex
-     forChangeType: (NSFetchedResultsChangeType)type
-{
-    DLog();
     
-    // Use the type to determine the operation to perform
-    switch(type)
+    // Create the fetch request for the entity
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity  = [NSEntityDescription entityForName: kOCREducationEntity
+                                               inManagedObjectContext: [kAppDelegate managedObjectContext]];
+    [fetchRequest setEntity:entity];
+    
+    // Set the batch size to a suitable number
+    [fetchRequest setFetchBatchSize: 25];
+    
+    // Sort by package sequence_number
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey: kOCRSequenceNumberAttributeName
+                                                                   ascending: YES];
+    NSArray *sortDescriptors = @[sortDescriptor];
+    [fetchRequest setSortDescriptors: sortDescriptors];
+    
+    // Create predicate to select the jobs for the selected resume
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"resume == %@", selectedResume];
+    [fetchRequest setPredicate: predicate];
+    
+    // Alloc and initialize the controller
+    /*
+     By setting sectionNameKeyPath to nil, we are stating we want everything in a single section
+     */
+    self.eduFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest: fetchRequest
+                                                                            managedObjectContext: [kAppDelegate managedObjectContext]
+                                                                              sectionNameKeyPath: nil
+                                                                                       cacheName: nil];
+    // Set the delegate to self
+    _eduFetchedResultsController.delegate = self;
+    
+    // ...and start fetching results
+    NSError *error = nil;
+    if (![self.eduFetchedResultsController performFetch:&error])
     {
-        case NSFetchedResultsChangeInsert:
-            [_tableView insertSections: [NSIndexSet indexSetWithIndex: sectionIndex]
-                      withRowAnimation: UITableViewRowAnimationFade];
-            break;
-            
-        case NSFetchedResultsChangeDelete:
-            [_tableView deleteSections: [NSIndexSet indexSetWithIndex: sectionIndex]
-                      withRowAnimation: UITableViewRowAnimationFade];
-            break;
-            
-        case NSFetchedResultsChangeMove:
-            ALog(@"Did not expect NSFetchedResultsChangeMove");
-            break;
-            
-        case NSFetchedResultsChangeUpdate:
-            ALog(@"Did not expect NSFetchedResultsChangeUpdate");
-            break;
+        /*
+         This is a case where something serious has gone wrong. Let the user know and try to give them some options that might actually help.
+         I'm providing my direct contact information in the hope I can help the user and avoid a bad review.
+         */
+        ELog(error, @"Unresolved error");
+        [kAppDelegate showErrorWithMessage: NSLocalizedString(@"Could not read the database. Try quitting the app. If that fails, try deleting KOResume and restoring from iCloud or iTunes backup. Please contact the developer by emailing kevin@omaraconsultingassoc.com", nil)
+                                    target: self];
     }
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Notifies the receiver that the fetched results controller has completed processing of one or more changes
- due to an add, remove, move, or update.
- 
- This method is invoked after all invocations of controller:didChangeObject:atIndexPath:forChangeType:newIndexPath:
- and controller:didChangeSection:atIndex:forChangeType: have been sent for a given change event (such as the
- controller receiving a NSManagedObjectContextDidSaveNotification notification).
- 
- @param controller  The fetched results controller that sent the message.
- */
-- (void)controllerDidChangeContent: (NSFetchedResultsController *)controller
-{
-    DLog();
     
-    // The fetch controller has sent all current change notifications, so tell the table view to process all updates.
-    [_tableView endUpdates];
+    return _eduFetchedResultsController;
 }
 
 
@@ -1298,17 +1139,26 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
 {
     DLog();
     
-    [super reloadFetchedResults: aNote];
+    NSError *error = nil;
     
-    if (self.selectedResume.isDeleted)
+    if (![self.eduFetchedResultsController performFetch: &error])
     {
-        // Need to display a message
-        [kAppDelegate showWarningWithMessage:@"Resume deleted."
-                                      target: self];
+        ELog(error, @"Fetch failed!");
+        NSString* msg = NSLocalizedString( @"Failed to reload data after syncing with iCloud.", nil);
+        [kAppDelegate showErrorWithMessage: msg
+                                    target: self];
     }
     else
     {
-        [_tableView reloadData];
+        // Get the fetchedObjects re-loaded
+        [self.eduFetchedResultsController fetchedObjects];
+    }
+    
+    if (selectedResume.isDeleted)
+    {
+        // Need to display a message
+        [kAppDelegate showWarningWithMessage: @"Resume deleted."
+                                      target: self];
     }
 }
 

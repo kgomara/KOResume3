@@ -8,8 +8,8 @@
 
 #import "OCRBaseDetailTableViewController.h"
 
-@interface OCRResumeEducationViewController : OCRBaseDetailTableViewController <UITextFieldDelegate, UITableViewDataSource,
-                                                                                UITableViewDelegate>
+@interface OCRResumeEducationViewController : OCRBaseDetailTableViewController <UITextFieldDelegate, NSFetchedResultsControllerDelegate,
+                                                                                UITableViewDataSource, UITableViewDelegate>
 
 /**
  IBOutlet to the tableView.

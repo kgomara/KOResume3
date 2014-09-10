@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6206.9" systemVersion="13E28" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="H1p-Uh-vWS">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="H1p-Uh-vWS">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7026.1"/>
-        <capability name="Constraints with attributes relative to the layout margin" minToolsVersion="6.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--Packages Table View Controller-->
@@ -675,7 +675,7 @@
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                             </state>
                                             <connections>
-                                                <action selector="didPressAddJobButton:" destination="Fal-NL-fMF" eventType="touchUpInside" id="BNe-UU-2z6"/>
+                                                <action selector="didPressAddButton:" destination="Fal-NL-fMF" eventType="touchUpInside" id="cwl-hf-fGf"/>
                                             </connections>
                                         </button>
                                     </subviews>
@@ -763,10 +763,52 @@
             <objects>
                 <tableViewController id="DdG-4k-gPc" customClass="OCRResumeEducationViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="hGR-Kh-QYC">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="64" width="600" height="487"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="OCRHeaderCell" id="cR3-pX-FOQ" customClass="OCRTableViewHeaderCell">
+                                <rect key="frame" x="0.0" y="55" width="663" height="44"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <tableViewCellContentView key="contentView" autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="cR3-pX-FOQ" id="5nl-6r-1cS">
+                                    <rect key="frame" x="0.0" y="0.0" width="663" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Packages" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nbd-iZ-TYw">
+                                            <rect key="frame" x="28" y="11" width="76" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1iM-7C-SYm">
+                                            <rect key="frame" x="112" y="7" width="29" height="29"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="29" id="PLQ-TX-TJn"/>
+                                                <constraint firstAttribute="width" constant="29" id="id8-fx-k2Y"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                            <state key="normal" title="Button" image="addButton">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="didPressAddButton:" destination="DdG-4k-gPc" eventType="touchUpInside" id="2Gu-aO-ff9"/>
+                                                <action selector="didPressAddButton:" destination="Fal-NL-fMF" eventType="touchUpInside" id="ofr-rn-msL"/>
+                                            </connections>
+                                        </button>
+                                    </subviews>
+                                    <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                    <constraints>
+                                        <constraint firstItem="nbd-iZ-TYw" firstAttribute="leading" secondItem="5nl-6r-1cS" secondAttribute="leadingMargin" constant="20" id="SCu-De-3e3"/>
+                                        <constraint firstAttribute="centerY" secondItem="1iM-7C-SYm" secondAttribute="centerY" id="rix-At-jqK"/>
+                                        <constraint firstItem="1iM-7C-SYm" firstAttribute="leading" secondItem="nbd-iZ-TYw" secondAttribute="trailing" constant="8" symbolic="YES" id="sRp-Pf-uLZ"/>
+                                        <constraint firstAttribute="centerY" secondItem="nbd-iZ-TYw" secondAttribute="centerY" id="v4d-zl-uZv"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="addButton" destination="1iM-7C-SYm" id="wqL-py-J5U"/>
+                                    <outlet property="sectionLabel" destination="nbd-iZ-TYw" id="Oft-hQ-gwX"/>
+                                </connections>
+                            </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="OCREducationTableCell" rowHeight="160" id="eYe-co-7bk" customClass="OCREducationTableViewCell">
                                 <rect key="frame" x="0.0" y="143" width="663" height="161"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -852,6 +894,7 @@
                             <outlet property="delegate" destination="DdG-4k-gPc" id="ct9-um-FqY"/>
                         </connections>
                     </tableView>
+                    <extendedEdge key="edgesForExtendedLayout"/>
                     <navigationItem key="navigationItem" id="0SU-VR-ddG"/>
                     <connections>
                         <outlet property="tableView" destination="hGR-Kh-QYC" id="B5E-0W-MIF"/>
