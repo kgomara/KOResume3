@@ -12,6 +12,7 @@
 #import "Education.h"
 #import "OCREducationTableViewCell.h"
 #import "OCRTableViewHeaderCell.h"
+#import "OCRDatePickerViewController.h"
 
 /*
  Manage the table view (list) of the education objects associated with a Resume object.
@@ -62,10 +63,17 @@
 /**
  Reference to the fetchResultsController.
  */
-@property (nonatomic, strong) NSFetchedResultsController    *eduFetchedResultsController;
+@property (nonatomic, strong) NSFetchedResultsController        *eduFetchedResultsController;
 
+/**
+ Reference to the date picker view controller.
+ 
+ We keep a reference so we can dismiss it in horizontal compact size, where it is presented as a modal.
+ */
+@property (nonatomic, strong) OCRDatePickerViewController       *datePickerController;
 
 @end
+
 
 @implementation OCRResumeEducationViewController
 
@@ -160,6 +168,49 @@
 
 //----------------------------------------------------------------------------------------------------------
 /**
+ Update the text fields of the view from the selected managed object.
+ */
+- (void)loadViewFromSelectedObject
+{
+    DLog();
+    
+    // Check to see if we still have an object to work in - it may have been deleted in the Packages view
+    if ([(Resumes *)self.selectedManagedObject package])
+    {
+        // We have a selected object with data; hide the noSelectionView
+        [_noSelectionView setHidden:YES];
+        // ...and populate the UI with content from out managedObject
+        [self populateFieldsFromSelectedObject];
+    }
+    else
+    {
+        if (self.selectedManagedObject)
+        {
+            // We have a selected object, but no data
+            _noSelectionLabel.text = NSLocalizedString(@"Press Edit to enter text.", nil);
+        }
+        else
+        {
+            // Nothing is selected
+            _noSelectionLabel.text = NSLocalizedString(@"Nothing selected.", nil);
+        }
+        [_noSelectionView setHidden:NO];
+        [self.view bringSubviewToFront:_noSelectionView];
+    }
+}
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Populate the user interface fields with data from the object we are managing.
+ */
+- (void)populateFieldsFromSelectedObject
+{
+    // As a simple tableView, this will happen when the table is loaded/reloaded
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+/**
  Enables or disables all the UI text fields for editing.
  
  As a resume app, a major Use Case is the user sharing his/her experience by passing the iOS device around.
@@ -214,6 +265,29 @@
     
     // ...and hide the add buttons
     [addEducationBtn setHidden: YES];
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Update internal state of the view controller when a package has been deleted.
+ 
+ Invoked by notification posted by OCRPackagesViewController when it performs a package deletion.
+ 
+ @param aNotification   The NSNotification object associated with the event.
+ */
+- (void)packageWasDeleted: (NSNotification *)aNotification
+{
+    DLog();
+    
+    if ( ![(Resumes *)self.selectedManagedObject package] ||
+        [self.selectedManagedObject isDeleted])
+    {
+        self.selectedManagedObject = nil;
+        [self reloadFetchedResults: nil];
+        [self loadViewFromSelectedObject];
+        [self.tableView reloadData];
+    }
 }
 
 
@@ -893,11 +967,187 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
 {
     DLog();
     
+    // nil activeField - if we have finished editing, there can be no activeField
     activeField = nil;
 }
 
 
 #pragma mark - UITextField delegate methods
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Asks the delegate if editing should begin in the specified text field.
+ 
+ When the user performs an action that would normally initiate an editing session, the text field calls this method 
+ first to see if editing should actually proceed. In most circumstances, you would simply return YES from this method 
+ to allow editing to proceed.
+ 
+ Implementation of this method by the delegate is optional. If it is not present, editing proceeds as if this method 
+ had returned YES.
+ 
+ @param textField       The text field for which editing is about to begin.
+ @return                YES if an editing session should be initiated; otherwise, NO to disallow editing.
+ */
+- (BOOL) textFieldShouldBeginEditing:(UITextField *)textField
+{
+    if (textField.tag == kEarnedDateFieldTag)
+    {
+        // Bring up date picker
+
+        // Save a reference to the textField we are working with
+        activeField = textField;
+
+        // Get the OCRDatePickerViewController from the UIStoryboard
+        UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"Main_iPad"
+                                                             bundle:nil];
+        // ...and instantiate it
+        OCRDatePickerViewController *datePickerController   = [storyBoard instantiateViewControllerWithIdentifier: kOCRDatePickerIdentifier];
+        datePickerController.modalPresentationStyle         = UIModalPresentationPopover;
+
+        // Get the UIPopoverPresentationController using the iOS8 paradigm
+        /*
+         See https://developer.apple.com/library/prerelease/ios/documentation/UIKit/Reference/UIPopoverPresentationController_class/index.html
+         */
+        UIPopoverPresentationController *popoverController = datePickerController.popoverPresentationController;
+        // ...set the textField as the view containing the anchor rectangle for the popover
+        popoverController.sourceView    = textField;
+        // ...and set this object as delegate
+        popoverController.delegate      = self;
+        
+        // Present the view controller.
+        [self presentViewController:datePickerController
+                           animated:YES
+                         completion:nil];
+        
+        if ([textField.text length] > 0)
+        {
+            // If we already have a date, use it
+            [datePickerController.datePicker setDate: [dateFormatter dateFromString: textField.text]];
+        } // otherwise, let the picker use its default
+        
+        // Set the target for UIControlEventValueChanged.
+        [datePickerController.datePicker addTarget: self
+                                            action: @selector(datePickerDidChangeDate:)
+                                  forControlEvents: UIControlEventValueChanged];
+
+        // Set the preferred content size
+        datePickerController.preferredContentSize = CGSizeMake(kOCRDatePickerWidth, kOCRDatePickerHeight);
+        
+        // Return NO to indicate the textField should not begin editing
+        return NO;
+    }
+    else
+    {
+        return YES;
+    }
+}
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Called by the datePicker when the user changes the date.
+ 
+ @param datePicker      The UIDatePicker managing the date change. Use this object to retrieve the date.
+ */
+- (void)datePickerDidChangeDate: (UIDatePicker *)datePicker
+{
+    activeField.text = [dateFormatter stringFromDate: datePicker.date];
+    
+    // Update the source object represented by the activeField
+    // ...First, traverse the view heirarchy to get the parentCell of the textField
+    UITableViewCell* cell = [self parentCellForView: activeField];
+    // ...If we found the cell
+    if (cell)
+    {
+        // ...get the indexPath
+        NSIndexPath* indexPath = [self.tableView indexPathForCell: cell];
+        // ...and update the source object
+        [self updateSourceObjectWithTextField: activeField
+                                 forTableCell: cell
+                                  atIndexPath: indexPath];
+    }
+}
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Asks the delegate for the new presentation style to use.
+ 
+ The presentation controller calls this method when the app is about to change to a horizontally compact environment. 
+ Use this method to indicate that you want the presented view controller to transition to one of the full-screen 
+ presentation styles.
+ 
+ If you do not implement this method or return any style other than UIModalPresentationFullScreen or 
+ UIModalPresentationOverFullScreen, the presentation controller adjusts the presentation style to the 
+ UIModalPresentationFullScreen style.
+ 
+ @param controller      The presentation controller that is managing the size change. Use this object to retrieve the 
+                        view controllers involved in the presentation.
+ @return                The new presentation style, which must be either UIModalPresentationFullScreen or 
+                        UIModalPresentationOverFullScreen.
+ */
+- (UIModalPresentationStyle)adaptivePresentationStyleForPresentationController: (UIPresentationController *)controller
+{
+    return UIModalPresentationFullScreen;
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Asks the delegate for the view controller to display when adapting to the specified presentation style.
+ 
+ When a size class change causes a change to the underlying presentation style, the presentation controller calls 
+ this method to ask for the view controller to display in that new style. This method is your opportunity to 
+ replace the current view controller with one that is better suited for the new presentation style. For example, 
+ you might use this method to insert a navigation controller into your view hierarchy to facilitate pushing new 
+ view controllers more easily in the compact environment. In that instance, you would return a navigation controller
+ whose root view controller is the currently presented view controller. You could also return an entirely different 
+ view controller if you prefer.
+ 
+ If you do not implement this method or your implementation returns nil, the presentation controller uses its existing 
+ presented view controller.
+ 
+ @param controller      The presentation controller that is managing the size class change.
+ @param style           The new presentation style that is about to be employed to display the view controller.
+ @return                The view controller to display in place of the existing presented view controller.
+ */
+- (UIViewController *)presentationController: (UIPresentationController *)controller
+  viewControllerForAdaptivePresentationStyle: (UIModalPresentationStyle)style
+{
+    DLog(@"presentedViewController class=%@", [controller.presentedViewController class]);
+    
+    // Save a reference to the OCRDatePickerViewController so we can dismiss it when the user taps the Done button
+    self.datePickerController = (OCRDatePickerViewController *)controller.presentedViewController;
+    
+    // Instantiate a navigation controller with the OCRDatePickerViewController as root.
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController: controller.presentedViewController];
+    
+    // ...create a done button
+    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemDone
+                                                                                target: self
+                                                                                action: @selector(didPressDoneButton:)];
+    // ...and install it as the right button
+    navController.topViewController.navigationItem.rightBarButtonItem = doneButton;
+    
+    // Set the title
+    navController.topViewController.title = NSLocalizedString( @"Earned Date", nil);
+    
+    return navController;
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Called when the user taps the Done button of a presented OCRDatePickerViewController.
+ 
+ @param sender          The object initiating the dismiss action (the Done UIBarButtonItem).
+ */
+- (void)didPressDoneButton: (id)sender
+{
+    DLog(@"sender=%@", [sender class]);
+    
+    // Tell the datePickerController to dismiss
+    [self.datePickerController dismissViewControllerAnimated: YES
+                                                  completion: nil];
+}
 
 //----------------------------------------------------------------------------------------------------------
 /**
@@ -918,22 +1168,14 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
  */
 - (BOOL)textFieldShouldReturn: (UITextField *)textField
 {
-    DLog();
+    DLog(@"textField=%@", textField.description);
     
     NSInteger nextTag = [textField tag] + 1;
     UIResponder *nextResponder = [textField.superview viewWithTag: nextTag];
     
     if (nextResponder)
     {
-        if (nextTag == kEarnedDateFieldTag)
-        {
-            // Bring up data picker
-            DLog(@"implement date picker!");
-        }
-        else
-        {
-            [nextResponder becomeFirstResponder];
-        }
+        [nextResponder becomeFirstResponder];
     }
     else
     {
@@ -980,15 +1222,24 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     // Clear the reference to the text field that was being edited
     activeField = nil;
 
+    // Update the source object represented by the activeField
+    // ...First, traverse the view heirarchy to get the parentCell of the textField
     UITableViewCell* cell = [self parentCellForView: textField];
+    // ...If we found the cell
     if (cell)
     {
+        // ...get the indexPath
         NSIndexPath* indexPath = [self.tableView indexPathForCell: cell];
-        DLog(@"indexPath=%@", indexPath);
-        [self doUpdateTextField: textField
-                   forTableCell: cell
-                    atIndexPath: indexPath];
+        // ...and update the source object
+        [self updateSourceObjectWithTextField: textField
+                                 forTableCell: cell
+                                  atIndexPath: indexPath];
     }
+    
+    // Invalidate the contentsize as the contents have changed
+    [textField invalidateIntrinsicContentSize];
+    // ...and ask the view to update constraints
+    [self.view setNeedsUpdateConstraints];
 }
 
 
@@ -1001,12 +1252,13 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
  @param textField       The UITextField updated by OCREducationTextViewCell
  @param cell            The OCREducationTextViewCell representing the education object
  */
-- (void)doUpdateTextField: (UITextField *)textField
-             forTableCell: (UITableViewCell *)cell
-              atIndexPath: (NSIndexPath *)indexPath
+- (void)updateSourceObjectWithTextField: (UITextField *)textField
+                           forTableCell: (UITableViewCell *)cell
+                            atIndexPath: (NSIndexPath *)indexPath
 {
     DLog();
     
+    // Get the eduction object represented by the cell at indexPath
     Education *education = [self.eduFetchedResultsController objectAtIndexPath: indexPath];
     
     if (textField.tag == kTitleFieldTag)

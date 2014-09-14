@@ -9,11 +9,23 @@
 #import "OCRBaseDetailTableViewController.h"
 
 @interface OCRResumeEducationViewController : OCRBaseDetailTableViewController <UITextFieldDelegate, NSFetchedResultsControllerDelegate,
-                                                                                UITableViewDataSource, UITableViewDelegate>
+                                                                                UITableViewDataSource, UITableViewDelegate,
+                                                                                UIPopoverPresentationControllerDelegate>
 
 /**
  IBOutlet to the tableView.
  */
-@property (strong, nonatomic) IBOutlet UITableView          *tableView;
+@property (strong, nonatomic) IBOutlet UITableView      *tableView;
+
+/**
+ IBOutlet to the no selection view.
+ */
+@property (strong, nonatomic) IBOutlet UIView           *noSelectionView;
+
+/**
+ IBOutlet to the no selection label.
+ */
+@property (weak, nonatomic)   IBOutlet UILabel          *noSelectionLabel;
+
 
 @end

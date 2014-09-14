@@ -139,6 +139,43 @@
             </objects>
             <point key="canvasLocation" x="-119" y="22"/>
         </scene>
+        <!--Date Picker View Controller-->
+        <scene sceneID="CH2-a2-dc3">
+            <objects>
+                <viewController storyboardIdentifier="OCRDatePickerViewController" id="l7h-Ay-s2K" customClass="OCRDatePickerViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="NZB-Q9-oyd"/>
+                        <viewControllerLayoutGuide type="bottom" id="ffd-w8-vxX"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="cb8-bL-M8m">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="162"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="B5o-uY-KMw">
+                                <rect key="frame" x="16" y="0.0" width="288" height="162"/>
+                                <date key="date" timeIntervalSinceReferenceDate="432096881.111435">
+                                    <!--2014-09-11 02:54:41 +0000-->
+                                </date>
+                            </datePicker>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailingMargin" secondItem="B5o-uY-KMw" secondAttribute="trailing" id="2gx-2W-GtJ"/>
+                            <constraint firstItem="B5o-uY-KMw" firstAttribute="leading" secondItem="cb8-bL-M8m" secondAttribute="leadingMargin" id="GLl-qO-yNf"/>
+                            <constraint firstItem="B5o-uY-KMw" firstAttribute="top" secondItem="cb8-bL-M8m" secondAttribute="topMargin" id="QAK-Ie-RQE"/>
+                            <constraint firstItem="ffd-w8-vxX" firstAttribute="top" secondItem="B5o-uY-KMw" secondAttribute="bottom" id="USO-ta-VNP"/>
+                        </constraints>
+                    </view>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="320" height="162"/>
+                    <connections>
+                        <outlet property="datePicker" destination="B5o-uY-KMw" id="gdW-Ub-bUt"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="kZR-Xt-a3H" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="6083" y="641"/>
+        </scene>
         <!--Date Table View Controller-->
         <scene sceneID="dPP-Gf-NBA">
             <objects>
@@ -186,7 +223,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="215"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <datePicker tag="1" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="cej-bD-tfj">
+                                        <datePicker tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="cej-bD-tfj">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="216"/>
                                             <date key="date" timeIntervalSinceReferenceDate="419235067.546866">
                                                 <!--2014-04-15 06:11:07 +0000-->
@@ -196,6 +233,11 @@
                                             </connections>
                                         </datePicker>
                                     </subviews>
+                                    <constraints>
+                                        <constraint firstItem="cej-bD-tfj" firstAttribute="top" secondItem="ie9-GI-cUB" secondAttribute="top" id="VcD-UW-GeP"/>
+                                        <constraint firstItem="cej-bD-tfj" firstAttribute="leading" secondItem="ie9-GI-cUB" secondAttribute="leading" id="k4r-1l-ahO"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="cej-bD-tfj" secondAttribute="bottom" constant="-9" id="oGc-67-1B5"/>
+                                    </constraints>
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="datePicker" destination="cej-bD-tfj" id="byH-rw-5ob"/>
@@ -852,9 +894,12 @@
                                                 <outlet property="delegate" destination="eYe-co-7bk" id="SHM-ib-ZJ1"/>
                                             </connections>
                                         </textField>
-                                        <textField opaque="NO" clipsSubviews="YES" tag="104" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="ST" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="A0J-KN-swN">
-                                            <rect key="frame" x="79" y="121" width="41" height="30"/>
+                                        <textField opaque="NO" clipsSubviews="YES" tag="104" contentMode="scaleToFill" horizontalCompressionResistancePriority="751" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="ST" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="A0J-KN-swN">
+                                            <rect key="frame" x="79" y="121" width="72" height="30"/>
                                             <color key="backgroundColor" red="0.80000000000000004" green="0.80000000000000004" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" relation="greaterThanOrEqual" priority="750" constant="72" id="cd8-Sm-Yvs"/>
+                                            </constraints>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                             <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters" autocorrectionType="no" returnKeyType="done"/>
                                             <connections>
@@ -897,10 +942,29 @@
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <navigationItem key="navigationItem" id="0SU-VR-ddG"/>
                     <connections>
+                        <outlet property="noSelectionLabel" destination="7mI-DO-KZd" id="AtD-ma-BRk"/>
+                        <outlet property="noSelectionView" destination="29V-hR-bIY" id="kvQ-CZ-FaF"/>
                         <outlet property="tableView" destination="hGR-Kh-QYC" id="B5E-0W-MIF"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="orU-Q1-UZO" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <view hidden="YES" contentMode="scaleToFill" id="29V-hR-bIY" userLabel="No Selection View">
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="536"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Nothing selected." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7mI-DO-KZd">
+                            <rect key="frame" x="235" y="258" width="131" height="20"/>
+                            <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="centerX" secondItem="7mI-DO-KZd" secondAttribute="centerX" id="P1k-55-vW4"/>
+                        <constraint firstAttribute="centerY" secondItem="7mI-DO-KZd" secondAttribute="centerY" id="zBX-Fa-qlf"/>
+                    </constraints>
+                </view>
             </objects>
             <point key="canvasLocation" x="4643" y="641"/>
         </scene>
@@ -919,39 +983,18 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Lfy-sr-PAy" userLabel="Content View">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="536"/>
                                 <subviews>
-                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Mnf-31-eRP">
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Enter cover letter." translatesAutoresizingMaskIntoConstraints="NO" id="Mnf-31-eRP">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="536"/>
                                         <inset key="scrollIndicatorInsets" minX="3" minY="3" maxX="3" maxY="3"/>
-                                        <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textView>
-                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1QW-s3-6FX" userLabel="No Selection View">
-                                        <rect key="frame" x="0.0" y="0.0" width="600" height="536"/>
-                                        <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Nothing selected." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Ia-Mn-ROz">
-                                                <rect key="frame" x="235" y="258" width="131" height="20"/>
-                                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
-                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                        </subviews>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <constraints>
-                                            <constraint firstAttribute="centerY" secondItem="0Ia-Mn-ROz" secondAttribute="centerY" id="Nca-eB-fVw"/>
-                                            <constraint firstAttribute="centerX" secondItem="0Ia-Mn-ROz" secondAttribute="centerX" id="xIR-Vf-WHl"/>
-                                        </constraints>
-                                    </view>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="1QW-s3-6FX" firstAttribute="top" secondItem="Lfy-sr-PAy" secondAttribute="top" id="I7V-KU-Wgv"/>
                                     <constraint firstItem="Mnf-31-eRP" firstAttribute="top" secondItem="Lfy-sr-PAy" secondAttribute="top" id="Ir2-oI-eCc"/>
-                                    <constraint firstItem="1QW-s3-6FX" firstAttribute="leading" secondItem="Lfy-sr-PAy" secondAttribute="leading" id="PTt-HZ-ZSg"/>
-                                    <constraint firstAttribute="trailing" secondItem="1QW-s3-6FX" secondAttribute="trailing" id="aRg-Fi-HFl"/>
                                     <constraint firstAttribute="trailing" secondItem="Mnf-31-eRP" secondAttribute="trailing" id="ch5-hJ-vfB"/>
                                     <constraint firstItem="Mnf-31-eRP" firstAttribute="leading" secondItem="Lfy-sr-PAy" secondAttribute="leading" id="iCq-vh-oTu"/>
                                     <constraint firstAttribute="bottom" secondItem="Mnf-31-eRP" secondAttribute="bottom" id="stK-DJ-N1x"/>
-                                    <constraint firstAttribute="bottom" secondItem="1QW-s3-6FX" secondAttribute="bottom" id="u9n-PO-KyZ"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -968,8 +1011,6 @@
                     <navigationItem key="navigationItem" id="g10-EI-NNn"/>
                     <connections>
                         <outlet property="coverLtrFld" destination="Mnf-31-eRP" id="p6o-ru-YR8"/>
-                        <outlet property="noSelectionLabel" destination="0Ia-Mn-ROz" id="4wa-yO-wII"/>
-                        <outlet property="noSelectionView" destination="1QW-s3-6FX" id="gHz-nE-3h0"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="43f-MU-1zR" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -9,6 +9,7 @@
 #import "OCRCoverLtrViewController.h"
 #import "OCRAppDelegate.h"
 #import "Packages.h"
+#import "OCRNoSelectionView.h"
 
 @interface OCRCoverLtrViewController ()
 {
@@ -38,6 +39,12 @@
      */
     BOOL                isEditing;
 }
+
+/**
+ Reference to the noSelection view, which is displayed when there is no object to manage, or a
+ containing parent object is deleted.
+ */
+@property (strong, nonatomic) OCRNoSelectionView    *noSelectionView;
 
 @end
 
@@ -138,32 +145,13 @@
                                                object: nil];
 }
 
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Notifies the view controller that its view is about to be removed from a view hierarchy.
- 
- This method is called in response to a view being removed from a view hierarchy. This method is called before 
- the view is actually removed and before any animations are configured.
- 
- Subclasses can override this method and use it to commit editing changes, resign the first responder status of 
- the view, or perform other relevant tasks. For example, you might use this method to revert changes to the 
- orientation or style of the status bar that were made in the viewDidDisappear: method when the view was first 
- presented. If you override this method, you must call super at some point in your implementation.
- 
- 
- @param animated        If YES, the disappearance of the view is being animated.
- */
-//- (void)viewWillDisappear: (BOOL)animated
-//{
-//    DLog();
-//    
-//    /*
-//     removeObserver is handled in super class
-//     */
-//    
-//    [super viewWillDisappear: animated];
-//}
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear: animated];
+    
+    DLog(@"no selection w,h=%f, %f", self.noSelectionView.frame.size.width, self.noSelectionView.frame.size.height);
+    DLog(@"subviews=%@", [[self.view subviews] debugDescription]);
+}
 
 
 //----------------------------------------------------------------------------------------------------------
@@ -177,26 +165,45 @@
     // Load the cover letter into the view
     if ([(Packages *)self.selectedManagedObject cover_ltr])
     {
-        // We have a selected object with data
-        [_noSelectionView setHidden:YES];
-        _coverLtrFld.text	= [(Packages *)self.selectedManagedObject cover_ltr];
+        // We have a selected object with data; remove the noSelectionView if present
+        if (self.noSelectionView)
+        {
+            // It is, remove it from the view
+            [self.noSelectionView removeFromSuperview];
+            // ...and nil the reference
+            self.noSelectionView = nil;
+        }
+        // Populate the UI with content from our managedObject
+        [self populateFieldsFromSelectedObject];
     }
     else
     {
+        // Create a OCRNoSelectionView and add it to our view
+        self.noSelectionView = [OCRNoSelectionView addNoSelectionViewToView: self.view];
+        
         if (self.selectedManagedObject)
         {
             // We have a selected object, but no data
-            _noSelectionLabel.text = NSLocalizedString(@"Press Edit to enter text.", nil);
+            self.noSelectionView.messageLabel.text = NSLocalizedString(@"Press Edit to enter text.", nil);
         }
         else
         {
             // Nothing is selected
-            _noSelectionLabel.text = NSLocalizedString(@"Nothing selected.", nil);
+            self.noSelectionView.messageLabel.text = NSLocalizedString(@"Nothing selected.", nil);
         }
-        [_noSelectionView setHidden:NO];
-        [self.view bringSubviewToFront:_noSelectionView];
-        _coverLtrFld.text	= @"";
     }
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Populate the user interface fields with data from the object we are managing.
+ */
+- (void)populateFieldsFromSelectedObject
+{
+    DLog();
+    
+    _coverLtrFld.text	= [(Packages *)self.selectedManagedObject cover_ltr];
 }
 
 
@@ -211,7 +218,7 @@
  
  @param editable    A BOOL that determines whether the fields should be enabled for editing - or not.
  */
-- (void)setFieldsEditable: (BOOL)editable
+- (void)configureFieldsForEditing: (BOOL)editable
 {
     DLog();
     
@@ -423,16 +430,21 @@
     // Update editing flag
     isEditing = isEditingMode;
     
-    // Hide the noSelectedView
-    [self.noSelectionView setHidden:YES];
-    
     // ...enable/disable resume fields
-    [self setFieldsEditable: isEditingMode];
+    [self configureFieldsForEditing: isEditingMode];
     
     if (isEditingMode)
     {
         // Set up the navigation items and save/cancel buttons
         self.navigationItem.rightBarButtonItems = @[doneBtn, cancelBtn];
+        
+        // Check to see if the noSelectedView is present
+        if (self.noSelectionView)
+        {
+            // It is, get rid of it to expose the editable cover letter
+            [self.noSelectionView removeFromSuperview];
+            self.noSelectionView = nil;
+        }
     }
     else
     {

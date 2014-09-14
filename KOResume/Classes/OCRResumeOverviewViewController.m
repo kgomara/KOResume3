@@ -89,7 +89,7 @@
                                                                       attribute: NSLayoutAttributeLeading
                                                                      multiplier: 1.0
                                                                        constant: 0];
-    [self.view addConstraint:leftConstraint];
+    [self.view addConstraint: leftConstraint];
     
     NSLayoutConstraint *rightConstraint = [NSLayoutConstraint constraintWithItem: self.contentView
                                                                        attribute: NSLayoutAttributeTrailing
@@ -98,7 +98,7 @@
                                                                        attribute: NSLayoutAttributeTrailing
                                                                       multiplier: 1.0
                                                                         constant: 0];
-    [self.view addConstraint:rightConstraint];
+    [self.view addConstraint: rightConstraint];
     
     // For convenience, make a type-correct reference to the Resume we're working on
     selectedResume = (Resumes *)self.selectedManagedObject;
@@ -206,6 +206,40 @@
 {
     DLog();
     
+    // Check to see if we still have an object to work in - it may have been deleted in the Packages view
+    if ([(Resumes *)self.selectedManagedObject package])
+    {
+        // We have a selected object with data; hide the noSelectionView
+//        [_noSelectionView setHidden:YES];
+        // ...and populate the UI with content from out managedObject
+        [self populateFieldsFromSelectedObject];
+    }
+    else
+    {
+        if (self.selectedManagedObject)
+        {
+            // We have a selected object, but no data
+//            _noSelectionLabel.text = NSLocalizedString(@"Press Edit to enter text.", nil);
+        }
+        else
+        {
+            // Nothing is selected
+//            _noSelectionLabel.text = NSLocalizedString(@"Nothing selected.", nil);
+        }
+//        [_noSelectionView setHidden:NO];
+//        [self.view bringSubviewToFront:_noSelectionView];
+    }
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Populate the user interface fields with data from the object we are managing.
+ */
+- (void)populateFieldsFromSelectedObject
+{
+    DLog();
+    
     [_resumeName setText: selectedResume.name
            orPlaceHolder: NSLocalizedString(@"Resume name", nil)];
     
@@ -214,9 +248,9 @@
                                                                    ascending: YES];
     NSArray *sortDescriptors    = @[sortDescriptor];
     NSArray *jobsArray          = [NSMutableArray arrayWithArray: [selectedResume.job sortedArrayUsingDescriptors: sortDescriptors]];
-
+    
     /*
-     Note there is a difference between iPhone and iPad - or more correctly, between horizontal size compact and regular. In Interface 
+     Note there is a difference between iPhone and iPad - or more correctly, between horizontal size compact and regular. In Interface
      Builder, this Scene has "uninstalled" the currentJobTitle, currentJobName, and atLabel for the size class W:Compact H:Regular. Even
      though we assign text to these fields, they do not appear in Compact width (which includes iPhone landscape).
      */
@@ -382,7 +416,7 @@
 {
     DLog();
     
-    if ( ![(Packages *)self.selectedManagedObject cover_ltr] ||
+    if ( ![(Resumes *)self.selectedManagedObject package] ||
         [self.selectedManagedObject isDeleted])
     {
         self.selectedManagedObject = nil;
