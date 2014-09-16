@@ -1,5 +1,5 @@
 //
-//  OCRJobsViewController.h
+//  OCRResumeJobsDetailViewController.h
 //  KOResume
 //
 //  Created by Kevin O'Mara on 4/6/14.
@@ -7,19 +7,19 @@
 //
 
 #import "OCRBaseDetailViewController.h"
-#import "OCRDateTableViewController.h"
 
 /**
  @brief Manage a Jobs object.
  */
-@interface OCRJobsViewController : OCRBaseDetailViewController  <UITextViewDelegate, UISplitViewControllerDelegate, OCRDetailViewProtocol, UIScrollViewDelegate,
-                                                                 NSFetchedResultsControllerDelegate, OCRDateTableViewProtocol,
-                                                                 UITableViewDataSource, UITableViewDelegate, UIPopoverControllerDelegate>
+@interface OCRResumeJobsDetailViewController : OCRBaseDetailViewController  <UITextViewDelegate, UISplitViewControllerDelegate, OCRDetailViewProtocol, UIScrollViewDelegate,
+                                                                 NSFetchedResultsControllerDelegate,
+UITableViewDataSource, UITableViewDelegate,
+                                                                             UIPopoverPresentationControllerDelegate>
 
 /**
  IBOutlet to the tableHeaderView.
  */
-@property (weak, nonatomic) IBOutlet UIView *tableHeaderView;
+@property (weak, nonatomic) IBOutlet UIView         *tableHeaderView;
 
 /**
  IBOutlet to the name of the Job.
@@ -65,6 +65,16 @@
  IBOutlet to the infoButton.
  */
 @property (weak, nonatomic) IBOutlet UIButton       *infoButton;
+
+/**
+ IBOutlet to the scroll view.
+ */
+@property (weak, nonatomic) IBOutlet UIScrollView   *scrollView;
+
+/**
+ IBOutler to the content view.
+ */
+@property (weak, nonatomic) IBOutlet UIView         *contentView;
 
 /**
  Handles presses of the addButton (+ image) on the section header views.

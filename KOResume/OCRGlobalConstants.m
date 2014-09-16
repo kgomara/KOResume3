@@ -53,6 +53,7 @@ NSString *const kOCRSubtitleTableCell                                       = @"
 NSString *const kOCRBasicTableCell                                          = @"OCRBasicTableCell";
 NSString *const kOCRJobsTableCell                                           = @"OCRJobsTableCell";
 NSString *const kOCREducationTableCell                                      = @"OCREducationTableCell";
+NSString *const kOCRAccomplishmentTableCell                                 = @"OCRAccomplishmentTableCell";
 NSString *const kOCRDateClearTableCell                                      = @"OCRDateClearTableCell";
 NSString *const kOCRDateHeaderTableCell                                     = @"OCRDateHeaderTableCell";
 NSString *const kOCRDatePickerTableCell                                     = @"OCRDatePickerTableCell";

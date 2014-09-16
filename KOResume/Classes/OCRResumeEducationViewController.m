@@ -283,7 +283,7 @@
     if ( ![(Resumes *)self.selectedManagedObject package] ||
         [self.selectedManagedObject isDeleted])
     {
-        self.selectedManagedObject = nil;
+//        self.selectedManagedObject = nil;
         [self reloadFetchedResults: nil];
         [self loadViewFromSelectedObject];
         [self.tableView reloadData];
@@ -316,16 +316,10 @@
 #pragma mark - UI handlers
 
 //----------------------------------------------------------------------------------------------------------
-/*
- API documentation is in .h file.
+/**
+ Called when the user presses the "+" button in the section header.
  
- This is a "public" method (as are the IBOutlet properties).  In Xcode 5 you can declare IB items in either
- the .m or .h files. I can make an argument for either location. From a C language perspective, they should
- be declared in the .h as they are used externally from the class - i.e., in the XIBs. But IMO good object
- architecture would hide this "implementation detail" from users of the class - declaring them in the .h file
- makes them accessible to any compilation unit, and that isn't really want I want.
- 
- That said, the general consensus seems to favor declaring them in the .h, so that's what we do here.
+ @param sender          The button pressed.
  */
 - (IBAction)didPressAddButton: (id)sender
 {
@@ -823,8 +817,6 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
 - (NSIndexPath *) tableView: (UITableView *)tableView
    willSelectRowAtIndexPath: (NSIndexPath *)indexPath
 {
-    DLog();
-    
     return nil;
 }
 
@@ -844,9 +836,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
 - (void)        tableView: (UITableView *)tableView
   didSelectRowAtIndexPath: (NSIndexPath *)indexPath
 {
-    DLog();
-    
-    // We display all the content of an Education object in its cell, and edit in place. Selection not necessary.
+     // We display all the content of an Education object in its cell, and edit in place. Selection not necessary.
     
     // Clear the selection highlight
     [tableView deselectRowAtIndexPath: indexPath
@@ -1067,6 +1057,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     }
 }
 
+
 //----------------------------------------------------------------------------------------------------------
 /**
  Asks the delegate for the new presentation style to use.
@@ -1148,6 +1139,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     [self.datePickerController dismissViewControllerAnimated: YES
                                                   completion: nil];
 }
+
 
 //----------------------------------------------------------------------------------------------------------
 /**

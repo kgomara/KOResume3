@@ -10,7 +10,7 @@
 #import "OCRAppDelegate.h"
 #import "Resumes.h"
 #import "Jobs.h"
-#import "OCRJobsViewController.h"
+#import "OCRResumeJobsDetailViewController.h"
 #import "OCRTableViewHeaderCell.h"
 
 /*
@@ -685,31 +685,31 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
 
 #pragma mark - Table view delegate methods
 
-//----------------------------------------------------------------------------------------------------------
-/**
- Tells the delegate that a specified row is about to be selected.
- 
- This method is not called until users touch a row and then lift their finger; the row isn't selected until
- then, although it is highlighted on touch-down. You can use UITableViewCellSelectionStyleNone to disable the
- appearance of the cell highlight on touch-down. This method isn’t called when the table view is in editing
- mode (that is, the editing property of the table view is set to YES) unless the table view allows selection
- during editing (that is, the allowsSelectionDuringEditing property of the table view is set to YES).
- 
- We do not want to allow swipe to delete, so we return nil.
- 
- @param tableView       A table-view object informing the delegate about the new row selection.
- @param indexPath       An index path locating the new  in tableView.
- @return                An index-path object that confirms or alters the selected row. Return an NSIndexPath
-                        object other than indexPath if you want another cell to be selected. Return nil if you
-                        don't want the row selected.
- */
-- (NSIndexPath *) tableView: (UITableView *)tableView
-   willSelectRowAtIndexPath: (NSIndexPath *)indexPath
-{
-    DLog();
-    
-    return nil;
-}
+////----------------------------------------------------------------------------------------------------------
+///**
+// Tells the delegate that a specified row is about to be selected.
+// 
+// This method is not called until users touch a row and then lift their finger; the row isn't selected until
+// then, although it is highlighted on touch-down. You can use UITableViewCellSelectionStyleNone to disable the
+// appearance of the cell highlight on touch-down. This method isn’t called when the table view is in editing
+// mode (that is, the editing property of the table view is set to YES) unless the table view allows selection
+// during editing (that is, the allowsSelectionDuringEditing property of the table view is set to YES).
+// 
+// We do not want to allow swipe to delete, so we return nil.
+// 
+// @param tableView       A table-view object informing the delegate about the new row selection.
+// @param indexPath       An index path locating the new  in tableView.
+// @return                An index-path object that confirms or alters the selected row. Return an NSIndexPath
+//                        object other than indexPath if you want another cell to be selected. Return nil if you
+//                        don't want the row selected.
+// */
+//- (NSIndexPath *) tableView: (UITableView *)tableView
+//   willSelectRowAtIndexPath: (NSIndexPath *)indexPath
+//{
+//    DLog();
+//    
+//    return nil;
+//}
 
 
 //----------------------------------------------------------------------------------------------------------
@@ -841,10 +841,9 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     
     if ([[segue identifier] isEqualToString: kOCRJobsSegue])
     {
-        OCRJobsViewController *detailViewController = segue.destinationViewController;
+        OCRResumeJobsDetailViewController *detailViewController = segue.destinationViewController;
         [detailViewController setSelectedManagedObject: (Jobs *)sender];
         [detailViewController setBackButtonTitle: selectedResume.name];
-//        [detailViewController setFetchedResultsController: self.jobsFetchedResultsController];
     }
 }
 

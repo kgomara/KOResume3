@@ -54,6 +54,7 @@ FOUNDATION_EXPORT NSString *const kOCRSubtitleTableCell;
 FOUNDATION_EXPORT NSString *const kOCRBasicTableCell;
 FOUNDATION_EXPORT NSString *const kOCRJobsTableCell;
 FOUNDATION_EXPORT NSString *const kOCREducationTableCell;
+FOUNDATION_EXPORT NSString *const kOCRAccomplishmentTableCell;
 FOUNDATION_EXPORT NSString *const kOCRDateClearTableCell;
 FOUNDATION_EXPORT NSString *const kOCRDateHeaderTableCell;
 FOUNDATION_EXPORT NSString *const kOCRDatePickerTableCell;
