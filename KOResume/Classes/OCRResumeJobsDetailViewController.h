@@ -11,9 +11,9 @@
 /**
  @brief Manage a Jobs object.
  */
-@interface OCRResumeJobsDetailViewController : OCRBaseDetailViewController  <UITextViewDelegate, UISplitViewControllerDelegate, OCRDetailViewProtocol, UIScrollViewDelegate,
-                                                                 NSFetchedResultsControllerDelegate,
-UITableViewDataSource, UITableViewDelegate,
+@interface OCRResumeJobsDetailViewController : OCRBaseDetailViewController  <UITextViewDelegate, UITextFieldDelegate, UISplitViewControllerDelegate,
+                                                                             OCRDetailViewProtocol, UIScrollViewDelegate,
+                                                                             NSFetchedResultsControllerDelegate, UITableViewDataSource, UITableViewDelegate,
                                                                              UIPopoverPresentationControllerDelegate>
 
 /**
@@ -65,6 +65,11 @@ UITableViewDataSource, UITableViewDelegate,
  IBOutlet to the infoButton.
  */
 @property (weak, nonatomic) IBOutlet UIButton       *infoButton;
+
+/**
+ IBOutlet to the job's uri text field.
+ */
+@property (weak, nonatomic) IBOutlet UITextField    *jobUri;
 
 /**
  IBOutlet to the scroll view.

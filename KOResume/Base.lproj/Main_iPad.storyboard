@@ -201,6 +201,48 @@
                                                     <constraint firstAttribute="height" constant="370" id="C2o-fG-8jR" userLabel="Height - (≥370) - Table View"/>
                                                 </constraints>
                                                 <prototypes>
+                                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="OCRHeaderCell" id="9rz-W4-p4X" customClass="OCRTableViewHeaderCell">
+                                                        <rect key="frame" x="0.0" y="306" width="600" height="44"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <tableViewCellContentView key="contentView" autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="9rz-W4-p4X" id="Hyv-OF-sxN">
+                                                            <rect key="frame" x="0.0" y="0.0" width="663" height="43"/>
+                                                            <autoresizingMask key="autoresizingMask"/>
+                                                            <subviews>
+                                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Accomplishments" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1b4-o4-2by">
+                                                                    <rect key="frame" x="28" y="11" width="138" height="21"/>
+                                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5c1-Lb-S9W">
+                                                                    <rect key="frame" x="174" y="7" width="29" height="29"/>
+                                                                    <constraints>
+                                                                        <constraint firstAttribute="height" constant="29" id="Rnt-K5-RcR"/>
+                                                                        <constraint firstAttribute="width" constant="29" id="m7x-wt-zEW"/>
+                                                                    </constraints>
+                                                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                                    <state key="normal" title="Button" image="addButton">
+                                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                                    </state>
+                                                                    <connections>
+                                                                        <action selector="didPressAddButton:" destination="DdG-4k-gPc" eventType="touchUpInside" id="pY4-tb-pke"/>
+                                                                        <action selector="didPressAddButton:" destination="Fal-NL-fMF" eventType="touchUpInside" id="xkQ-IE-SBM"/>
+                                                                    </connections>
+                                                                </button>
+                                                            </subviews>
+                                                            <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="centerY" secondItem="5c1-Lb-S9W" secondAttribute="centerY" id="2WA-Y8-Awn"/>
+                                                                <constraint firstItem="5c1-Lb-S9W" firstAttribute="leading" secondItem="1b4-o4-2by" secondAttribute="trailing" constant="8" symbolic="YES" id="3Uh-Xt-i8E"/>
+                                                                <constraint firstItem="1b4-o4-2by" firstAttribute="leading" secondItem="Hyv-OF-sxN" secondAttribute="leadingMargin" constant="20" id="jDx-cB-Jl5"/>
+                                                                <constraint firstAttribute="centerY" secondItem="1b4-o4-2by" secondAttribute="centerY" id="xyd-QG-Yba"/>
+                                                            </constraints>
+                                                        </tableViewCellContentView>
+                                                        <connections>
+                                                            <outlet property="addButton" destination="5c1-Lb-S9W" id="z69-66-UEb"/>
+                                                            <outlet property="sectionLabel" destination="1b4-o4-2by" id="gah-he-47c"/>
+                                                        </connections>
+                                                    </tableViewCell>
                                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="OCRAccomplishmentTableCell" rowHeight="115" id="eqp-el-55k" userLabel="OCRAccomplishmentTableCell" customClass="OCRAccomplishmentTableViewCell">
                                                         <rect key="frame" x="0.0" y="220" width="600" height="160"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -340,7 +382,7 @@
                                                         </connections>
                                                     </textField>
                                                 </subviews>
-                                                <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <constraints>
                                                     <constraint firstItem="k8t-zH-42E" firstAttribute="top" secondItem="NOC-K4-6gs" secondAttribute="bottom" constant="8" symbolic="YES" id="0wq-3I-MHU"/>
                                                     <constraint firstItem="ZjF-uu-GFZ" firstAttribute="leading" secondItem="k8t-zH-42E" secondAttribute="trailing" constant="3" id="214-C8-Qie"/>
@@ -394,7 +436,7 @@
                                 </constraints>
                             </scrollView>
                         </subviews>
-                        <color key="backgroundColor" red="0.40000000000000002" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="0Hv-oV-5PB" secondAttribute="trailing" id="YOq-ra-iVQ"/>
                             <constraint firstItem="0Hv-oV-5PB" firstAttribute="leading" secondItem="DuS-ID-dD6" secondAttribute="leading" id="gKJ-gp-Iau"/>
@@ -416,6 +458,7 @@
                         <outlet property="jobState" destination="Wzo-So-dvR" id="zpm-U9-QWe"/>
                         <outlet property="jobSummary" destination="sKW-k1-KJH" id="7VV-lN-lny"/>
                         <outlet property="jobTitle" destination="AZJ-qs-wEh" id="NKl-ut-hxX"/>
+                        <outlet property="jobUri" destination="Tdu-SU-uKK" id="E4O-hr-QxP"/>
                         <outlet property="scrollView" destination="0Hv-oV-5PB" id="0ua-93-tkG"/>
                         <outlet property="tableView" destination="S0h-TU-gcf" id="fzT-Fr-cUV"/>
                     </connections>

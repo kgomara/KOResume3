@@ -727,7 +727,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
 - (void)        tableView: (UITableView *)tableView
   didSelectRowAtIndexPath: (NSIndexPath *)indexPath
 {
-    DLog();
+    DLog(@"Job=%@", [[self.jobsFetchedResultsController objectAtIndexPath: indexPath] debugDescription]);
     
     // Segue to the job
     [self performSegueWithIdentifier: kOCRJobsSegue

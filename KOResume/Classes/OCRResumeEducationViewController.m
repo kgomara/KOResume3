@@ -22,11 +22,6 @@
 {
 @private
     /**
-     Reference to the back button to facilitate swapping buttons between display and edit modes.
-     */
-    UIBarButtonItem     *backBtn;
-    
-    /**
      Reference to the cancel button to facilitate swapping buttons between display and edit modes.
      */
     UIBarButtonItem     *cancelBtn;
@@ -645,7 +640,6 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
     // Get an Education cell
     OCREducationTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier: kOCREducationTableCell];
     
-    
     // ...and the Education object the cell will represent
     Education *education = [self.eduFetchedResultsController objectAtIndexPath: indexPath];
     
@@ -1026,10 +1020,8 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
         // Return NO to indicate the textField should not begin editing
         return NO;
     }
-    else
-    {
-        return YES;
-    }
+    
+    return YES;
 }
 
 //----------------------------------------------------------------------------------------------------------
@@ -1143,7 +1135,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
 
 //----------------------------------------------------------------------------------------------------------
 /**
- Asks the delegate if the text field should proc
+ Asks the delegate if the text field should process the pressing of the return button.
  
  The text field calls this method whenever the user taps the return button. You can use this method to implement
  any custom behavior when the button is tapped.
