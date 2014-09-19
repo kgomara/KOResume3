@@ -278,7 +278,7 @@
     if ( ![(Resumes *)self.selectedManagedObject package] ||
         [self.selectedManagedObject isDeleted])
     {
-//        self.selectedManagedObject = nil;
+        self.selectedManagedObject = nil;
         [self reloadFetchedResults: nil];
         [self loadViewFromSelectedObject];
         [self.tableView reloadData];
@@ -435,6 +435,9 @@
     }
     else
     {
+        // Save the changes
+        [self updateSelectedObjectFromUI];
+        
         // The user pressed "Done", end the undo group
         [[[kAppDelegate managedObjectContext] undoManager] endUndoGrouping];
         
@@ -450,6 +453,16 @@
         // Set up the default navBar
         [self configureDefaultNavBar];
     }
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Update the selected object's properties from the view's data fields
+ */
+- (void)updateSelectedObjectFromUI
+{
+
 }
 
 
@@ -792,31 +805,6 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
 
 //----------------------------------------------------------------------------------------------------------
 /**
- Tells the delegate that a specified row is about to be selected.
- 
- This method is not called until users touch a row and then lift their finger; the row isn't selected until
- then, although it is highlighted on touch-down. You can use UITableViewCellSelectionStyleNone to disable the
- appearance of the cell highlight on touch-down. This method isn’t called when the table view is in editing
- mode (that is, the editing property of the table view is set to YES) unless the table view allows selection
- during editing (that is, the allowsSelectionDuringEditing property of the table view is set to YES).
- 
- We do not want to allow swipe to delete, so we return nil.
- 
- @param tableView       A table-view object informing the delegate about the new row selection.
- @param indexPath       An index path locating the new  in tableView.
- @return                An index-path object that confirms or alters the selected row. Return an NSIndexPath
-                        object other than indexPath if you want another cell to be selected. Return nil if you
-                        don't want the row selected.
- */
-- (NSIndexPath *) tableView: (UITableView *)tableView
-   willSelectRowAtIndexPath: (NSIndexPath *)indexPath
-{
-    return nil;
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-/**
  Tells the delegate that the specified row is now selected.
  
  The delegate handles selections in this method. One of the things it can do is exclusively assign the check-mark
@@ -1154,8 +1142,8 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
 {
     DLog(@"textField=%@", textField.description);
     
-    NSInteger nextTag = [textField tag] + 1;
-    UIResponder *nextResponder = [textField.superview viewWithTag: nextTag];
+    NSInteger nextTag           = [textField tag] + 1;
+    UIResponder *nextResponder  = [textField.superview viewWithTag: nextTag];
     
     if (nextResponder)
     {
@@ -1242,7 +1230,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
 {
     DLog();
     
-    // Get the eduction object represented by the cell at indexPath
+    // Get the object represented by the cell at indexPath
     Education *education = [self.eduFetchedResultsController objectAtIndexPath: indexPath];
     
     if (textField.tag == kTitleFieldTag)

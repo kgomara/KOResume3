@@ -17,8 +17,8 @@
 #import "OCRAccomplishmentTableViewCell.h"
 #import "OCRDatePickerViewController.h"
 
-#define kJobStartDateFieldTag           5
-#define kJobEndDateFieldTag             6
+#define kJobStartDateFieldTag           6
+#define kJobEndDateFieldTag             7
 
 #define k_OKButtonIndex                 1
 
@@ -129,11 +129,11 @@
     // For convenience, make a type-correct reference to the Jobs object we're working on
     selectedJob = (Jobs *)self.selectedManagedObject;
     
-    // Set the default button title
-    self.backButtonTitle    = NSLocalizedString(@"Resume", nil);
-    
     // Initialize estimate row height to support dynamic text sizing
     self.tableView.estimatedRowHeight = kOCRAccomplishmentTableViewCellDefaultHeight;
+    
+//    // Set the default button title
+//    self.backButtonTitle    = NSLocalizedString(@"Resume", nil);
     
     // Set up button items
     cancelBtn   = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel
@@ -214,6 +214,7 @@
 }
 
 
+//----------------------------------------------------------------------------------------------------------
 /*
  Notice there is no viewWillDisappear.
  
@@ -224,7 +225,7 @@
 
 //----------------------------------------------------------------------------------------------------------
 /**
- Update the data fields of the view - the resume.
+ Update the text fields of the view from the selected managed object.
  */
 - (void)loadViewFromSelectedObject
 {
@@ -357,6 +358,10 @@
     [_jobStartDate setBackgroundColor: backgroundColor];
     [_jobEndDate   setBackgroundColor: backgroundColor];
     [_jobSummary   setBackgroundColor: backgroundColor];
+    
+    // Reload the accomplishments table so the cells are configured for editing
+    [self.tableView reloadRowsAtIndexPaths: [self.tableView indexPathsForVisibleRows]
+                          withRowAnimation: UITableViewRowAnimationFade];
 }
 
 
@@ -414,7 +419,7 @@
     if ( ![(Resumes *)[(Jobs *)self.selectedManagedObject resume] package] ||
         [self.selectedManagedObject isDeleted])
     {
-//        self.selectedManagedObject = nil;
+        self.selectedManagedObject = nil;
         [self reloadFetchedResults: nil];
         [self loadViewFromSelectedObject];
         [self.tableView reloadData];
@@ -604,21 +609,7 @@
     else
     {
         // Save the changes
-        selectedJob.name           = _jobName.text;
-        selectedJob.title          = _jobTitle.text;
-        selectedJob.uri            = _jobUri.text;
-        selectedJob.city           = _jobCity.text;
-        selectedJob.state          = _jobState.text;
-        selectedJob.start_date     = [dateFormatter dateFromString: _jobStartDate.text];
-        if ([_jobStartDate.text isEqualToString: @"Current"])
-        {
-            selectedJob.end_date   = nil;
-        }
-        else
-        {
-            selectedJob.end_date   = [dateFormatter dateFromString: _jobEndDate.text];
-        }
-        selectedJob.summary        = _jobSummary.text;
+        [self updateSelectedObjectFromUI];
 
         // The user pressed "Done", end the undo group
         [[[kAppDelegate managedObjectContext] undoManager] endUndoGrouping];
@@ -635,6 +626,32 @@
         // Set up the default navBar
         [self configureDefaultNavBar];
     }
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Update the selected object's properties from the view's data fields
+ */
+- (void)updateSelectedObjectFromUI
+{
+    DLog();
+    
+    selectedJob.name           = _jobName.text;
+    selectedJob.title          = _jobTitle.text;
+    selectedJob.uri            = _jobUri.text;
+    selectedJob.city           = _jobCity.text;
+    selectedJob.state          = _jobState.text;
+    selectedJob.start_date     = [dateFormatter dateFromString: _jobStartDate.text];
+    if ([_jobStartDate.text isEqualToString: @"Current"])
+    {
+        selectedJob.end_date   = nil;
+    }
+    else
+    {
+        selectedJob.end_date   = [dateFormatter dateFromString: _jobEndDate.text];
+    }
+    selectedJob.summary        = _jobSummary.text;
 }
 
 
@@ -867,12 +884,9 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
 {
     DLog();
     
-    // Get a Subtitle cell
-    OCRAccomplishmentTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: kOCRAccomplishmentTableCell];
-    
-	// ...and configure it
-    [self configureCell: cell
-            atIndexPath: indexPath];
+	// Configure an accomplishment cell
+    UITableViewCell *cell = [self       tableView: tableView
+                              accCellForIndexPath: indexPath];
     
     return cell;
 }
@@ -880,21 +894,25 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
 
 //----------------------------------------------------------------------------------------------------------
 /**
- Configure a cell for the job.
+ Configure a jobs cell for the resume.
  
  @param cell        A cell to configure.
  @param indexPath   The indexPath of the section and row the cell represents.
+ @return            A configured table view cell.
  */
-- (void)configureCell: (OCRAccomplishmentTableViewCell *)cell
-          atIndexPath: (NSIndexPath *)indexPath
+- (UITableViewCell *)tableView: (UITableView *)tableView
+           accCellForIndexPath: (NSIndexPath *)indexPath
 {
     DLog();
     
+    // Get an accomplishment cell
+    OCRAccomplishmentTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: kOCRAccomplishmentTableCell];
+    
+    // ...and the Accomplishment object the cell will represent
+    Accomplishments *accomplishment = [self.accFetchedResultsController objectAtIndexPath: indexPath];
+    
     // Determine the background color for the fields based on whether or not we are editing
     UIColor *backgroundColor = isEditing? [self.view.tintColor colorWithAlphaComponent:0.1f] : [UIColor whiteColor];
-    
-    // Get an Accomplishment object the cell will represent
-    Accomplishments *accomplishment = [self.accFetchedResultsController objectAtIndexPath: indexPath];
     
     // ...set the name text content and dynamic text font
     cell.accomplishmentName.text            = accomplishment.name;
@@ -912,6 +930,8 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
     
     // ...and the accessory disclosure indicator
     cell.accessoryType              = UITableViewCellAccessoryNone;
+    
+    return cell;
 }
 
 //----------------------------------------------------------------------------------------------------------
@@ -945,9 +965,9 @@ commitEditingStyle: (UITableViewCellEditingStyle)editingStyle
     if (editingStyle == UITableViewCellEditingStyleDelete)
     {
         // Delete the managed object at the given index path.
-        NSManagedObjectContext *context = [self.accFetchedResultsController managedObjectContext];
-        Jobs *jobToDelete               = [self.accFetchedResultsController objectAtIndexPath: indexPath];
-        [context deleteObject: jobToDelete];
+        NSManagedObjectContext *context         = [self.accFetchedResultsController managedObjectContext];
+        Accomplishments *accomplishmentToDelete = [self.accFetchedResultsController objectAtIndexPath: indexPath];
+        [context deleteObject: accomplishmentToDelete];
         
         // Save the context so the delete is pushed to the persistent store
         [kAppDelegate saveContextAndWait];
@@ -992,53 +1012,28 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
         return;
     }
     
-    NSMutableArray *jobs = [[self.accFetchedResultsController fetchedObjects] mutableCopy];
+    NSMutableArray *accomplishments = [[self.accFetchedResultsController fetchedObjects] mutableCopy];
     
     // Grab the item we're moving.
-    Education *movingEducation = [self.accFetchedResultsController objectAtIndexPath: fromIndexPath];
+    Accomplishments *movingAccomplishment = [self.accFetchedResultsController objectAtIndexPath: fromIndexPath];
     
     // Remove the object we're moving from the array.
-    [jobs removeObject: movingEducation];
+    [accomplishments removeObject: movingAccomplishment];
     // ...re-insert it at the destination.
-    [jobs insertObject: movingEducation
-               atIndex: [toIndexPath row]];
+    [accomplishments insertObject: movingAccomplishment
+                          atIndex: [toIndexPath row]];
     
     // All of the objects are now in their correct order.
     // Update each object's sequence_number field by iterating through the array.
     int i = 1;
-    for (Jobs *job in jobs)
+    for (Accomplishments *accomplishment in accomplishments)
     {
-        [job setSequence_numberValue: i++];
+        [accomplishment setSequence_numberValue: i++];
     }
 }
 
 
 #pragma mark - Table view delegate methods
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Tells the delegate that a specified row is about to be selected.
- 
- This method is not called until users touch a row and then lift their finger; the row isn't selected until
- then, although it is highlighted on touch-down. You can use UITableViewCellSelectionStyleNone to disable the
- appearance of the cell highlight on touch-down. This method isn’t called when the table view is in editing
- mode (that is, the editing property of the table view is set to YES) unless the table view allows selection
- during editing (that is, the allowsSelectionDuringEditing property of the table view is set to YES).
- 
- We do not want to allow swipe to delete, so we return nil.
- 
- @param tableView       A table-view object informing the delegate about the new row selection.
- @param indexPath       An index path locating the new  in tableView.
- @return                An index-path object that confirms or alters the selected row. Return an NSIndexPath
- object other than indexPath if you want another cell to be selected. Return nil if you
- don't want the row selected.
- */
-- (NSIndexPath *) tableView: (UITableView *)tableView
-   willSelectRowAtIndexPath: (NSIndexPath *)indexPath
-{
-    return nil;
-}
-
 
 //----------------------------------------------------------------------------------------------------------
 /**
@@ -1129,7 +1124,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     // Set the text content and save a reference to the add button so they can be
     // shown or hidden whenever the user turns editing mode on or off
     headerCell.sectionLabel.text    = NSLocalizedString(@"Accomplishments", nil);
-    addAccomplishmentButton = headerCell.addButton;
+    addAccomplishmentButton         = headerCell.addButton;
     
     // Hide or show the addButton depending on whether we are in editing mode
     [addAccomplishmentButton setHidden: !isEditing];
@@ -1288,11 +1283,18 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
                            animated:YES
                          completion:nil];
         
-        if ([textField.text length] > 0)
+        // Check to see if there is something in the date field that is not the string "Current"
+        if ((textField.text.length > 0) && ![textField.text isEqualToString:NSLocalizedString(@"Current", nil)])
         {
             // If we already have a date, use it
+            DLog(@"textfield=%@", textField.text);
             [datePickerController.datePicker setDate: [dateFormatter dateFromString: textField.text]];
-        } // otherwise, let the picker use its default
+        }
+        else
+        {
+            // Default the date to now
+            [datePickerController.datePicker setDate: [NSDate date]];
+        }
         
         // Set the target for UIControlEventValueChanged.
         [datePickerController.datePicker addTarget: self
@@ -1438,9 +1440,9 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
      We use the tag field to find the next field, and if there is one we set it as firstResponder.
      */
     // Get the value of the next field's tag
-    int nextTag = (int)[textField tag] + 1;
+    int nextTag                 = (int)[textField tag] + 1;
     // ...and attempt to get it using the viewWithTag method
-    UIResponder *nextResponder = [textField.superview viewWithTag: nextTag];
+    UIResponder *nextResponder  = [textField.superview viewWithTag: nextTag];
     
     if (nextResponder)
     {
@@ -1530,30 +1532,17 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
 {
     DLog();
 
-#warning TODO need to update the source objects
-    // Get the eduction object represented by the cell at indexPath
-//    Jobs *job = [self.accFetchedResultsController objectAtIndexPath: indexPath];
+    // Get the object represented by the cell at indexPath
+    Accomplishments *accomplishment = [self.accFetchedResultsController objectAtIndexPath: indexPath];
     
-//    if (textField.tag == kTitleFieldTag)
-//    {
-//        education.title         = textField.text;
-//    }
-//    else if (textField.tag == kNameFieldTag)
-//    {
-//        education.name          = textField.text;
-//    }
-//    else if (textField.tag == kEarnedDateFieldTag)
-//    {
-//        education.earned_date   = [dateFormatter dateFromString: textField.text];
-//    }
-//    else if (textField.tag == kCityFieldTag)
-//    {
-//        education.city          = textField.text;
-//    }
-//    else if (textField.tag == kStateFieldTag)
-//    {
-//        education.state         = textField.text;
-//    }
+    if (textField.tag == kAccomplishmentNameFieldTag)
+    {
+        accomplishment.name     = textField.text;
+    }
+    else if (textField.tag == kAccomplishmentSummaryFieldTag)
+    {
+        accomplishment.summary  = textField.text;
+    }
 }
 
 

@@ -10,6 +10,6 @@
 
 @implementation OCRAccomplishmentTableViewCell
 
-CGFloat const kOCRAccomplishmentTableViewCellDefaultHeight = 115.0f;
+CGFloat const kOCRAccomplishmentTableViewCellDefaultHeight = 155.0f;
 
 @end

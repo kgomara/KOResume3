@@ -8,8 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-#define kNameFieldTag       100
-#define kSummaryFieldTag    101
+#define kAccomplishmentNameFieldTag       100
+#define kAccomplishmentSummaryFieldTag    101
 
 @interface OCRAccomplishmentTableViewCell : UITableViewCell  <UITextFieldDelegate>
 

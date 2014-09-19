@@ -504,16 +504,8 @@
     }
     else
     {
-        // The user pressed "Done", save the changes
-        selectedResume.name           = _resumeName.text;
-        selectedResume.street1        = _resumeStreet1.text;
-        selectedResume.city           = _resumeCity.text;
-        selectedResume.state          = _resumeState.text;
-        selectedResume.postal_code    = _resumePostalCode.text;
-        selectedResume.home_phone     = _resumeHomePhone.text;
-        selectedResume.mobile_phone   = _resumeMobilePhone.text;
-        selectedResume.email          = _resumeEmail.text;
-        selectedResume.summary        = _resumeSummary.text;
+        // Save the changes
+        [self updateSelectedObjectFromUI];
         
         // ...end the undo group
         [[[kAppDelegate managedObjectContext] undoManager] endUndoGrouping];
@@ -529,6 +521,27 @@
         [self resetView];
     }
 }
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Update the selected object's properties from the view's data fields
+ */
+- (void)updateSelectedObjectFromUI
+{
+    DLog();
+    
+    // The user pressed "Done", save the changes
+    selectedResume.name           = _resumeName.text;
+    selectedResume.street1        = _resumeStreet1.text;
+    selectedResume.city           = _resumeCity.text;
+    selectedResume.state          = _resumeState.text;
+    selectedResume.postal_code    = _resumePostalCode.text;
+    selectedResume.home_phone     = _resumeHomePhone.text;
+    selectedResume.mobile_phone   = _resumeMobilePhone.text;
+    selectedResume.email          = _resumeEmail.text;
+    selectedResume.summary        = _resumeSummary.text;
+}
+
 
 //----------------------------------------------------------------------------------------------------------
 /**
