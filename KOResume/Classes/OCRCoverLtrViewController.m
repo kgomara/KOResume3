@@ -145,15 +145,6 @@
                                                object: nil];
 }
 
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear: animated];
-    
-    DLog(@"no selection w,h=%f, %f", self.noSelectionView.frame.size.width, self.noSelectionView.frame.size.height);
-    DLog(@"subviews=%@", [[self.view subviews] debugDescription]);
-}
-
-
 //----------------------------------------------------------------------------------------------------------
 /**
  Update the text fields of the view from the selected cover_ltr.

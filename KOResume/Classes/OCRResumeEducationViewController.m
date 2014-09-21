@@ -13,6 +13,7 @@
 #import "OCREducationTableViewCell.h"
 #import "OCRTableViewHeaderCell.h"
 #import "OCRDatePickerViewController.h"
+#import "OCRNoSelectionView.h"
 
 /*
  Manage the table view (list) of the education objects associated with a Resume object.
@@ -29,7 +30,7 @@
     /**
      Reference to the button available in table edit mode that allows the user to add an Education/Certification.
      */
-    UIButton            *addEducationBtn;
+    UIButton            *addObjectBtn;
     
     /**
      A boolean flag to indicate whether the user is editing information or simply viewing.
@@ -59,6 +60,12 @@
  Reference to the fetchResultsController.
  */
 @property (nonatomic, strong) NSFetchedResultsController        *eduFetchedResultsController;
+
+/**
+ Reference to the noSelection view, which is displayed when there is no object to manage, or a
+ containing parent object is deleted.
+ */
+@property (strong, nonatomic) OCRNoSelectionView                *noSelectionView;
 
 /**
  Reference to the date picker view controller.
@@ -172,22 +179,31 @@
     // Check to see if we still have an object to work in - it may have been deleted in the Packages view
     if ([(Resumes *)self.selectedManagedObject package])
     {
-        // We have a selected object with data; hide the noSelectionView
-        [_noSelectionView setHidden:YES];
-        // ...and populate the UI with content from out managedObject
+        // We have a selected object with data; remove the noSelectionView if present
+        if (self.noSelectionView)
+        {
+            // It is, remove it from the view
+            [self.noSelectionView removeFromSuperview];
+            // ...and nil the reference
+            self.noSelectionView = nil;
+        }
+        // Populate the UI with content from our managedObject
         [self populateFieldsFromSelectedObject];
     }
     else
     {
+        // Create a OCRNoSelectionView and add it to our view
+        self.noSelectionView = [OCRNoSelectionView addNoSelectionViewToView: self.view];
+        
         if (self.selectedManagedObject)
         {
             // We have a selected object, but no data
-            _noSelectionLabel.text = NSLocalizedString(@"Press Edit to enter text.", nil);
+            self.noSelectionView.messageLabel.text = NSLocalizedString(@"Press Edit to enter information.", nil);
         }
         else
         {
             // Nothing is selected
-            _noSelectionLabel.text = NSLocalizedString(@"Nothing selected.", nil);
+            self.noSelectionView.messageLabel.text = NSLocalizedString(@"Nothing selected.", nil);
         }
         [_noSelectionView setHidden:NO];
         [self.view bringSubviewToFront:_noSelectionView];
@@ -259,7 +275,21 @@
     [self.tableView setEditing: NO];
     
     // ...and hide the add buttons
-    [addEducationBtn setHidden: YES];
+    [addObjectBtn setHidden: YES];
+}
+
+
+#pragma mark - OCRDetailViewProtocol delegates
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Configure the view items.
+ */
+- (void)configureView
+{
+    DLog();
+    
+    // As a simple UITableView, there is nothing to do. Implemented because the OCRDetailViewProtocol requires it.
 }
 
 
@@ -283,20 +313,6 @@
         [self loadViewFromSelectedObject];
         [self.tableView reloadData];
     }
-}
-
-
-#pragma mark - OCRDetailViewProtocol delegates
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Configure the view items.
- */
-- (void)configureView
-{
-    DLog();
-    
-    // As a simple UITableView, there is nothing to do. Implemented because the OCRDetailViewProtocol requires it.
 }
 
 
@@ -371,7 +387,7 @@
     education.created_date          = [NSDate date];
     // ...the resume link to this resume
     education.resume                = selectedResume;
-    // ...and set its sequence_number to be the last Package
+    // ...and set its sequence_number to be the last object
     education.sequence_numberValue  = [[self.eduFetchedResultsController fetchedObjects] count] + 1;
     
     // Save the context so the adds are pushed to the persistent store
@@ -424,9 +440,6 @@
     [super setEditing: editing
              animated: animated];
     
-    // Configure the UI to represent the editing state we are entering
-    [self configureUIForEditing: editing];
-    
     if (editing)
     {
         // Start an undo group...it will either be commited here when the User presses Done, or
@@ -453,6 +466,9 @@
         // Set up the default navBar
         [self configureDefaultNavBar];
     }
+    
+    // Configure the UI to represent the editing state we are entering
+    [self configureUIForEditing: editing];
 }
 
 
@@ -462,7 +478,7 @@
  */
 - (void)updateSelectedObjectFromUI
 {
-
+    // The objects are updated as they are edited in the table view cell.
 }
 
 
@@ -507,6 +523,8 @@
     [self.tableView reloadData];
     // ...and turn off editing in the UI
     [self configureUIForEditing: NO];
+    // ...and set up the default navBar
+    [self configureDefaultNavBar];
 }
 
 
@@ -526,7 +544,7 @@
     isEditing = isEditingMode;
     
     // Set the add button hidden state (hidden should be the boolean opposite of isEditingMode)
-    [addEducationBtn    setHidden: !isEditingMode];
+    [addObjectBtn    setHidden: !isEditingMode];
     
     // ...enable/disable resume fields
     [self configureFieldsForEditing: isEditingMode];
@@ -647,14 +665,14 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
 {
     DLog();
     
-    // Determine the background color for the fields based on whether or not we are editing
-    UIColor *backgroundColor = isEditing? [self.view.tintColor colorWithAlphaComponent:0.1f] : [UIColor whiteColor];
-    
     // Get an Education cell
     OCREducationTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier: kOCREducationTableCell];
     
     // ...and the Education object the cell will represent
     Education *education = [self.eduFetchedResultsController objectAtIndexPath: indexPath];
+    
+    // Determine the background color for the fields based on whether or not we are editing
+    UIColor *backgroundColor = isEditing? [self.view.tintColor colorWithAlphaComponent:0.1f] : [UIColor whiteColor];
     
     // Set the title text content, dynamic font, enable state, and backgroundColor
     cell.title.text                 = [education title];
@@ -731,8 +749,8 @@ commitEditingStyle: (UITableViewCellEditingStyle)editingStyle
     {
         // Delete the managed object at the given index path.
         NSManagedObjectContext *context = [self.eduFetchedResultsController managedObjectContext];
-        Education *educationToDelete    = [self.eduFetchedResultsController objectAtIndexPath: indexPath];
-        [context deleteObject: educationToDelete];
+        NSManagedObject *objectToDelete = [self.eduFetchedResultsController objectAtIndexPath: indexPath];
+        [context deleteObject: objectToDelete];
         
         // Save the context so the delete is pushed to the persistent store
         [kAppDelegate saveContextAndWait];
@@ -740,10 +758,10 @@ commitEditingStyle: (UITableViewCellEditingStyle)editingStyle
         [self reloadFetchedResults: nil];
         
         // Delete the row from the table view
-        [self.tableView beginUpdates];
+        [tableView beginUpdates];
         [tableView deleteRowsAtIndexPaths: @[indexPath]
                          withRowAnimation: UITableViewRowAnimationFade];
-        [self.tableView endUpdates];
+        [tableView endUpdates];
     }
     else
     {
@@ -776,25 +794,25 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
         // Cannot move between sections
         [kAppDelegate showWarningWithMessage: NSLocalizedString(@"Sorry, move between sections not allowed.", nil)
                                       target: self];
-        [self.tableView reloadData];
+        [tableView reloadData];
         return;
     }
     
-    NSMutableArray *educations = [[self.eduFetchedResultsController fetchedObjects] mutableCopy];
+    NSMutableArray *array = [[self.eduFetchedResultsController fetchedObjects] mutableCopy];
     
     // Grab the item we're moving.
-    Education *movingEducation = [self.eduFetchedResultsController objectAtIndexPath: fromIndexPath];
+    NSManagedObject *objectToMove = [self.eduFetchedResultsController objectAtIndexPath: fromIndexPath];
     
     // Remove the object we're moving from the array.
-    [educations removeObject: movingEducation];
+    [array removeObject: objectToMove];
     // ...re-insert it at the destination.
-    [educations insertObject: movingEducation
+    [array insertObject: objectToMove
                      atIndex: [toIndexPath row]];
     
     // All of the objects are now in their correct order.
     // Update each object's sequence_number field by iterating through the array.
     int i = 1;
-    for (Education *education in educations)
+    for (Education *education in array)
     {
         [education setSequence_numberValue: i++];
     }
@@ -891,10 +909,10 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     // Set the text content and save a reference to the add button so they can be
     // shown or hidden whenever the user turns editing mode on or off
     headerCell.sectionLabel.text    = NSLocalizedString(@"Education/Certification", nil);
-    addEducationBtn                 = headerCell.addButton;
+    addObjectBtn                    = headerCell.addButton;
     
     // Hide or show the addButton depending on whether we are in editing mode
-    [addEducationBtn setHidden: !isEditing];
+    [addObjectBtn setHidden: !isEditing];
     
     return wrapperView;
 }
@@ -962,6 +980,9 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
  */
 - (BOOL) textFieldShouldBeginEditing:(UITextField *)textField
 {
+    DLog();
+    
+    // Check to see if the tap occured in a date field
     if (textField.tag == kEarnedDateFieldTag)
     {
         // Bring up date picker
@@ -1142,15 +1163,24 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
 {
     DLog(@"textField=%@", textField.description);
     
+    /*
+     Another use of the tag field...in Interface Builder, each of the UITextFields is given a sequential tag value,
+     and the keyboard Return key is set to "Next". When the user taps the Next key, this delegate method is invoked
+     We use the tag field to find the next field, and if there is one we set it as firstResponder.
+     */
+    // Get the value of the next field's tag
     NSInteger nextTag           = [textField tag] + 1;
+    // ...and attempt to get it using the viewWithTag method
     UIResponder *nextResponder  = [textField.superview viewWithTag: nextTag];
     
     if (nextResponder)
     {
+        // If there is a nextResponser, make it firstResponder - i.e., give it focus
         [nextResponder becomeFirstResponder];
     }
     else
     {
+        // ...otherwise this textfield must be the last.
         [textField resignFirstResponder];       // Dismisses the keyboard
     }
     

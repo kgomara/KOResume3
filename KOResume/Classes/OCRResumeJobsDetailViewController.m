@@ -33,7 +33,7 @@
     /**
      Reference to the button available in table edit mode that allows the user to add an Accomplishment.
      */
-    UIButton            *addAccomplishmentButton;
+    UIButton            *addObjectBtn;
     
     /**
      A boolean flag to indicate whether the user is editing information or simply viewing.
@@ -131,9 +131,6 @@
     
     // Initialize estimate row height to support dynamic text sizing
     self.tableView.estimatedRowHeight = kOCRAccomplishmentTableViewCellDefaultHeight;
-    
-//    // Set the default button title
-//    self.backButtonTitle    = NSLocalizedString(@"Resume", nil);
     
     // Set up button items
     cancelBtn   = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel
@@ -344,7 +341,8 @@
     [_jobState     setEnabled: editable];
     [_jobStartDate setEnabled: editable];
     [_jobEndDate   setEnabled: editable];
-    [_jobSummary   setEditable: editable];     // resumeSummary is a UITextView
+    // jobSummary is a UITextView and has an editable property whereas UITextFields have an enabled property
+    [_jobSummary   setEditable: editable];
     
     // Determine the background color for the fields based on the editable param
     UIColor *backgroundColor = editable? [self.view.tintColor colorWithAlphaComponent:0.1f] : [UIColor clearColor];
@@ -360,6 +358,13 @@
     [_jobSummary   setBackgroundColor: backgroundColor];
     
     // Reload the accomplishments table so the cells are configured for editing
+    /*
+     We are using reloadRowsAtIndexPaths:withRowAnimation: to reload on the table cells that are currently visible.
+     
+     In the case of a typical resume, there simply won't be a large number of job rows so a simple reloadData: would
+     be fine. However, if the tableview could contain hundreds or more cells, this technique would be highly
+     recommended.
+     */
     [self.tableView reloadRowsAtIndexPaths: [self.tableView indexPathsForVisibleRows]
                           withRowAnimation: UITableViewRowAnimationFade];
 }
@@ -400,7 +405,22 @@
     [self.tableView setEditing: NO];
     
     // ...and hide the add buttons
-    [addAccomplishmentButton setHidden: YES];
+    [addObjectBtn setHidden: YES];
+}
+
+
+#pragma mark - OCRDetailViewProtocol delegate methods
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Configure the view items.
+ */
+- (void)configureView
+{
+    DLog();
+    
+    // Use the information in the selected managed object to update the UI fields
+    [self loadViewFromSelectedObject];
 }
 
 
@@ -424,21 +444,6 @@
         [self loadViewFromSelectedObject];
         [self.tableView reloadData];
     }
-}
-
-
-#pragma mark - OCRDetailViewProtocol delegate methods
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Configure the view items.
- */
-- (void)configureView
-{
-    DLog();
-    
-    // Use the information in the selected managed object to update the UI fields
-    [self loadViewFromSelectedObject];
 }
 
 
@@ -546,6 +551,8 @@
     accomplishment.created_date    = [NSDate date];
     // ...and the resume link to the resume we are managing
     accomplishment.job              = selectedJob;
+    // ...and set its sequence_number to be the last object
+    accomplishment.sequence_numberValue  = [[self.accFetchedResultsController fetchedObjects] count] + 1;
     
     // Save the context so the adds are pushed to the persistent store
     [kAppDelegate saveContextAndWait];
@@ -597,9 +604,6 @@
     [super setEditing: editing
              animated: animated];
     
-    // Configure the UI to represent the editing state we are entering
-    [self configureUIForEditing: editing];
-    
     if (editing)
     {
         // Start an undo group...it will either be commited here when the User presses Done, or
@@ -626,6 +630,9 @@
         // Set up the default navBar
         [self configureDefaultNavBar];
     }
+    
+    // Configure the UI to represent the editing state we are entering
+    [self configureUIForEditing: editing];
 }
 
 
@@ -694,8 +701,10 @@
     
     // Load the tableView from the (unchanged) packages
     [self.tableView reloadData];
-    // ...and turn off editing in the UI
+    // ...turn off editing in the UI
     [self configureUIForEditing: NO];
+    // ...and set up the default navBar
+    [self configureDefaultNavBar];
 }
 
 
@@ -715,10 +724,13 @@
     isEditing = isEditingMode;
     
     // Set the add button hidden state (hidden should be the boolean opposite of isEditingMode)
-    [addAccomplishmentButton setHidden: !isEditingMode];
+    [addObjectBtn setHidden: !isEditingMode];
     
     // ...enable/disable resume fields
     [self configureFieldsForEditing: isEditingMode];
+    
+    // ...enable/disable table view editing
+    [self.tableView setEditing: isEditingMode];
     
     if (isEditingMode)
     {
@@ -758,7 +770,7 @@
     
     if (self.isEditing)
     {
-        [self promptForJobURI];
+        [self promptForJobUri];
     }
     else
     {
@@ -784,7 +796,7 @@
 /**
  Prompts the user to enter a name for the new Jobs entity.
  */
-- (void)promptForJobURI
+- (void)promptForJobUri
 {
     DLog();
 
@@ -794,7 +806,7 @@
                                                             preferredStyle: UIAlertControllerStyleAlert];
     // Add a text field to the alert
     [alert addTextFieldWithConfigurationHandler: ^(UITextField *textField) {
-        textField.placeholder = NSLocalizedString(@"Enter website address", nil);
+        textField.placeholder = NSLocalizedString(@"Website address", nil);
     }];
     
     // ...add a cancel action
@@ -805,7 +817,7 @@
     [alert addAction: [UIAlertAction actionWithTitle: NSLocalizedString(@"OK", nil)
                                                style: UIAlertActionStyleDefault
                                              handler: ^(UIAlertAction *action) {
-                                                 // Get the Education name from the alert and pass it to addEducation
+                                                 // Get the uri from the alert and update the uri field
                                                  selectedJob.uri = ((UITextField *) alert.textFields[0]).text;
                                              }]];
     
@@ -928,6 +940,8 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
     cell.accomplishmentSummary.backgroundColor  = backgroundColor;
     cell.accomplishmentSummary.delegate         = self;
     
+    // Make the cell not selectable
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     // ...and the accessory disclosure indicator
     cell.accessoryType              = UITableViewCellAccessoryNone;
     
@@ -965,9 +979,9 @@ commitEditingStyle: (UITableViewCellEditingStyle)editingStyle
     if (editingStyle == UITableViewCellEditingStyleDelete)
     {
         // Delete the managed object at the given index path.
-        NSManagedObjectContext *context         = [self.accFetchedResultsController managedObjectContext];
-        Accomplishments *accomplishmentToDelete = [self.accFetchedResultsController objectAtIndexPath: indexPath];
-        [context deleteObject: accomplishmentToDelete];
+        NSManagedObjectContext *context = [self.accFetchedResultsController managedObjectContext];
+        NSManagedObject *objectToDelete = [self.accFetchedResultsController objectAtIndexPath: indexPath];
+        [context deleteObject: objectToDelete];
         
         // Save the context so the delete is pushed to the persistent store
         [kAppDelegate saveContextAndWait];
@@ -975,10 +989,10 @@ commitEditingStyle: (UITableViewCellEditingStyle)editingStyle
         [self reloadFetchedResults: nil];
         
         // Delete the row from the table view
-        [self.tableView beginUpdates];
+        [tableView beginUpdates];
         [tableView deleteRowsAtIndexPaths: @[indexPath]
                          withRowAnimation: UITableViewRowAnimationFade];
-        [self.tableView endUpdates];
+        [tableView endUpdates];
     }
     else
     {
@@ -1008,27 +1022,27 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
         // Cannot move between sections
         [kAppDelegate showWarningWithMessage: NSLocalizedString(@"Sorry, move between sections not allowed.", nil)
                                       target: self];
-        [self.tableView reloadData];
+        [tableView reloadData];
         return;
     }
     
-    NSMutableArray *accomplishments = [[self.accFetchedResultsController fetchedObjects] mutableCopy];
+    NSMutableArray *array = [[self.accFetchedResultsController fetchedObjects] mutableCopy];
     
     // Grab the item we're moving.
-    Accomplishments *movingAccomplishment = [self.accFetchedResultsController objectAtIndexPath: fromIndexPath];
+    NSManagedObject *objectToMove = [self.accFetchedResultsController objectAtIndexPath: fromIndexPath];
     
     // Remove the object we're moving from the array.
-    [accomplishments removeObject: movingAccomplishment];
+    [array removeObject: objectToMove];
     // ...re-insert it at the destination.
-    [accomplishments insertObject: movingAccomplishment
-                          atIndex: [toIndexPath row]];
+    [array insertObject: objectToMove
+                atIndex: [toIndexPath row]];
     
     // All of the objects are now in their correct order.
     // Update each object's sequence_number field by iterating through the array.
     int i = 1;
-    for (Accomplishments *accomplishment in accomplishments)
+    for (Accomplishments *object in array)
     {
-        [accomplishment setSequence_numberValue: i++];
+        [object setSequence_numberValue: i++];
     }
 }
 
@@ -1124,10 +1138,10 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     // Set the text content and save a reference to the add button so they can be
     // shown or hidden whenever the user turns editing mode on or off
     headerCell.sectionLabel.text    = NSLocalizedString(@"Accomplishments", nil);
-    addAccomplishmentButton         = headerCell.addButton;
+    addObjectBtn                    = headerCell.addButton;
     
     // Hide or show the addButton depending on whether we are in editing mode
-    [addAccomplishmentButton setHidden: !isEditing];
+    [addObjectBtn setHidden: !isEditing];
     
     return wrapperView;
 }
@@ -1226,7 +1240,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
 - (void)textViewDidEndEditing: (UITextView *)textView
 {
     DLog();
-    
+#warning summary not getting updated, mimic textFieldDidEndEditing? check resume overview...
     // nil activeField - if we have finished editing, there can be no activeField
     activeField = nil;
 }
@@ -1252,7 +1266,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
 {
     DLog();
     
-    // Check to see if the tap occured in one of the date fields
+    // Check to see if the tap occured in a date field
     if (textField.tag == kJobStartDateFieldTag ||
         textField.tag == kJobEndDateFieldTag)
     {
@@ -1672,7 +1686,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     if (selectedJob.isDeleted)
     {
         // Need to display a message
-        [kAppDelegate showWarningWithMessage: @"Resume deleted."
+        [kAppDelegate showWarningWithMessage: @"Job deleted."
                                       target: self];
     }
 }

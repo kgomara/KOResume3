@@ -39,7 +39,7 @@
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                             </state>
                                             <connections>
-                                                <action selector="didPressAddPackageButton:" destination="IHU-8C-GKu" eventType="touchUpInside" id="nsT-cx-f7Z"/>
+                                                <action selector="didPressAddButton:" destination="IHU-8C-GKu" eventType="touchUpInside" id="LaR-4e-sgK"/>
                                             </connections>
                                         </button>
                                     </subviews>
@@ -192,13 +192,13 @@
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="542"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" placeholderIntrinsicWidth="600" placeholderIntrinsicHeight="600" translatesAutoresizingMaskIntoConstraints="NO" id="9KN-Pa-xZg" userLabel="Content View">
-                                        <rect key="frame" x="0.0" y="0.0" width="600" height="655"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="911"/>
                                         <subviews>
                                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="S0h-TU-gcf">
-                                                <rect key="frame" x="0.0" y="285" width="600" height="370"/>
+                                                <rect key="frame" x="0.0" y="285" width="600" height="626"/>
                                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="370" id="C2o-fG-8jR" userLabel="Height - (≥370) - Table View"/>
+                                                    <constraint firstAttribute="height" constant="626" id="C2o-fG-8jR" userLabel="Height - (≥370) - Table View"/>
                                                 </constraints>
                                                 <prototypes>
                                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="OCRHeaderCell" id="9rz-W4-p4X" customClass="OCRTableViewHeaderCell">
@@ -265,6 +265,7 @@
                                                                     <color key="backgroundColor" red="0.80000000000000004" green="0.80000000000000004" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="height" constant="90" id="uFB-g8-1z3"/>
+                                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="300" id="zhA-uB-QcV"/>
                                                                     </constraints>
                                                                     <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -419,7 +420,7 @@
                                         <color key="backgroundColor" red="0.80000000000000004" green="0.80000000000000004" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstItem="Yu8-Mo-Alv" firstAttribute="trailing" secondItem="9KN-Pa-xZg" secondAttribute="trailing" id="2ob-U7-QXb"/>
-                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="487" id="ClO-lm-PJ7"/>
+                                            <constraint firstAttribute="bottom" secondItem="S0h-TU-gcf" secondAttribute="bottom" id="AEB-iB-CRp"/>
                                             <constraint firstItem="S0h-TU-gcf" firstAttribute="leading" secondItem="9KN-Pa-xZg" secondAttribute="leading" id="IHn-9v-05Q"/>
                                             <constraint firstAttribute="trailing" secondItem="S0h-TU-gcf" secondAttribute="trailing" id="JnN-L0-ejt"/>
                                             <constraint firstItem="Yu8-Mo-Alv" firstAttribute="top" secondItem="9KN-Pa-xZg" secondAttribute="top" id="bFn-EC-mCK"/>
@@ -934,29 +935,10 @@
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <navigationItem key="navigationItem" id="0SU-VR-ddG"/>
                     <connections>
-                        <outlet property="noSelectionLabel" destination="7mI-DO-KZd" id="AtD-ma-BRk"/>
-                        <outlet property="noSelectionView" destination="29V-hR-bIY" id="kvQ-CZ-FaF"/>
                         <outlet property="tableView" destination="hGR-Kh-QYC" id="B5E-0W-MIF"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="orU-Q1-UZO" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <view hidden="YES" contentMode="scaleToFill" id="29V-hR-bIY" userLabel="No Selection View">
-                    <rect key="frame" x="0.0" y="0.0" width="600" height="536"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Nothing selected." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7mI-DO-KZd">
-                            <rect key="frame" x="235" y="258" width="131" height="20"/>
-                            <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
-                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                            <nil key="highlightedColor"/>
-                        </label>
-                    </subviews>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    <constraints>
-                        <constraint firstAttribute="centerX" secondItem="7mI-DO-KZd" secondAttribute="centerX" id="P1k-55-vW4"/>
-                        <constraint firstAttribute="centerY" secondItem="7mI-DO-KZd" secondAttribute="centerY" id="zBX-Fa-qlf"/>
-                    </constraints>
-                </view>
             </objects>
             <point key="canvasLocation" x="4643" y="641"/>
         </scene>

@@ -34,7 +34,7 @@
     /**
      Reference to the button available in table edit mode that allows the user to add a package.
      */
-    UIButton                *addPackageBtn;
+    UIButton                *addObjectBtn;
 
     /**
      A boolean flag to indicate whether the user is editing information or simply viewing.
@@ -260,7 +260,7 @@
 /**
  Invoked when the user taps the '+' button in the section header
  */
-- (IBAction)didPressAddPackageButton: (id)sender
+- (IBAction)didPressAddButton: (id)sender
 {
     DLog();
     
@@ -309,28 +309,28 @@
     DLog();
     
     // Insert a new Package into the managed object context
-    Packages *nuPackage = (Packages *)[NSEntityDescription insertNewObjectForEntityForName: kOCRPackagesEntity
-                                                                    inManagedObjectContext: [kAppDelegate managedObjectContext]];
+    Packages *package = (Packages *)[NSEntityDescription insertNewObjectForEntityForName: kOCRPackagesEntity
+                                                                  inManagedObjectContext: [kAppDelegate managedObjectContext]];
     // Set the name of the Package (provided by the user)
-    nuPackage.name                  = packageName;
+    package.name                  = packageName;
     // ...the created_date to "now"
-    nuPackage.created_date          = [NSDate date];
+    package.created_date          = [NSDate date];
     // ...and set its sequence_number to be the last Package
-    nuPackage.sequence_numberValue  = [[self.fetchedResultsController fetchedObjects] count] + 1;
+    package.sequence_numberValue  = [[self.fetchedResultsController fetchedObjects] count] + 1;
     
     // Add a Resume for the package
     // First, insert a new Resume into the managed object context
-    Resumes *nuResume  = (Resumes *)[NSEntityDescription insertNewObjectForEntityForName: kOCRResumesEntity
-                                                                  inManagedObjectContext: [kAppDelegate managedObjectContext]];
+    Resumes *resume  = (Resumes *)[NSEntityDescription insertNewObjectForEntityForName: kOCRResumesEntity
+                                                                inManagedObjectContext: [kAppDelegate managedObjectContext]];
     // Set the default name of the resume
-    nuResume.name                   = NSLocalizedString(@"Resume", nil);
+    resume.name                   = NSLocalizedString(@"Resume", nil);
     // ...the created_date to "now"
-    nuResume.created_date           = [NSDate date];
+    resume.created_date           = [NSDate date];
     // ...and set its sequence_number to 1 (there can be only 1)
-    nuResume.sequence_numberValue   = 1;
+    resume.sequence_numberValue   = 1;
     
     // Set the relationship between the Package and Resume objects
-    nuPackage.resume                = nuResume;
+    package.resume                = resume;
     
     // Save the context so the adds are pushed to the persistent store
     [kAppDelegate saveContextAndWait];
@@ -481,7 +481,7 @@
     isEditing = isEditingMode;
     
     // Set the add button hidden state to the opposite of editable
-    [addPackageBtn setHidden: !isEditingMode];
+    [addObjectBtn setHidden: !isEditingMode];
     
     if (isEditingMode)
     {
@@ -706,8 +706,8 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
     {
         // Delete the managed object at the given index path.
         NSManagedObjectContext *context = [self.fetchedResultsController managedObjectContext];
-        Packages *packageToDelete       = [self.fetchedResultsController objectAtIndexPath: indexPath];
-        [context deleteObject: packageToDelete];
+        NSManagedObject *objectToDelete = [self.fetchedResultsController objectAtIndexPath: indexPath];
+        [context deleteObject: objectToDelete];
         
         // Save the context so the delete is pushed to the persistent store
         [kAppDelegate saveContextAndWait];
@@ -715,10 +715,10 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
         [self reloadFetchedResults: nil];
         
         // Delete the row from the table view
-        [self.tableView beginUpdates];
+        [tableView beginUpdates];
         [tableView deleteRowsAtIndexPaths: @[indexPath]
                          withRowAnimation: UITableViewRowAnimationFade];
-        [self.tableView endUpdates];
+        [tableView endUpdates];
         
         // Set the global flag to indicate at least one package is deleted
         packageDeleted = YES;
@@ -755,25 +755,25 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
         // Cannot move between sections
         [kAppDelegate showWarningWithMessage: NSLocalizedString(@"Move between sections is not supported.", nil)
                                       target: self];
-        [self.tableView reloadData];
+        [tableView reloadData];
         return;
     }
     
-    NSMutableArray *packages = [[self.fetchedResultsController fetchedObjects] mutableCopy];
+    NSMutableArray *array = [[self.fetchedResultsController fetchedObjects] mutableCopy];
     
     // Grab the item we're moving.
-    Packages *movingPackage = [[self fetchedResultsController] objectAtIndexPath: fromIndexPath];
+    NSManagedObject *objectToMove = [[self fetchedResultsController] objectAtIndexPath: fromIndexPath];
     
     // Remove the object we're moving from the array.
-    [packages removeObject: movingPackage];
+    [array removeObject: objectToMove];
     // ...re-insert it at the destination.
-    [packages insertObject: movingPackage
+    [array insertObject: objectToMove
                    atIndex: [toIndexPath row]];
     
     // All of the objects are now in their correct order.
     // Update each object's sequence_number field by iterating through the array.
     int i = 0;
-    for (Packages *package in packages)
+    for (Packages *package in array)
     {
         [package setSequence_numberValue: i++];
     }
@@ -875,10 +875,10 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
     // Set the text content and save a reference to the add button so they can be
     // shown or hidden whenever the user turns editing mode on or off
     headerCell.sectionLabel.text    = NSLocalizedString(@"Packages", nil);
-    addPackageBtn                   = headerCell.addButton;
+    addObjectBtn                    = headerCell.addButton;
 
     // Hide or show the addButton depending on whether we are in editing mode
-    [addPackageBtn setHidden: !isEditing];
+    [addObjectBtn setHidden: !isEditing];
     
     return wrapperView;
 }

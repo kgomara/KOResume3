@@ -29,7 +29,7 @@
     /**
      Reference to the button available in table edit mode that allows the user to add a Job.
      */
-    UIButton            *addJobBtn;
+    UIButton            *addObjectBtn;
 
     /**
      A boolean flag to indicate whether the user is editing information or simply viewing.
@@ -115,6 +115,9 @@
     
     [super viewWillAppear: animated];
     
+    // Configure the view
+    [self configureView];
+    
     // Observe the app delegate telling us when it's finished asynchronously adding the store coordinator
     [[NSNotificationCenter defaultCenter] addObserver: self
                                              selector: @selector(reloadFetchedResults:)
@@ -145,14 +148,6 @@
 {
     // Nothing to here - the jobs are loaded in table view cells.
 }
-
-//----------------------------------------------------------------------------------------------------------
-/*
- Notice there is no viewWillDisappear.
- 
- This class inherits viewWillDisappear from the base class, which calls removeObserver and saves the context; hence
- we have no need to implement the method in this class. Similarly, we don't implement didReceiveMemoryWarning.
- */
 
 
 //----------------------------------------------------------------------------------------------------------
@@ -210,7 +205,7 @@
     [self.tableView setEditing: NO];
     
     // ...and hide the add buttons
-    [addJobBtn setHidden: YES];
+    [addObjectBtn setHidden: YES];
 }
 
 
@@ -373,9 +368,6 @@
     [super setEditing: editing
              animated: animated];
     
-    // Configure the UI to represent the editing state we are entering
-    [self configureUIForEditing: editing];
-    
     if (editing)
     {
         // Start an undo group...it will either be commited here when the User presses Done, or
@@ -402,6 +394,9 @@
         // Set up the default navBar
         [self configureDefaultNavBar];
     }
+    
+    // Configure the UI to represent the editing state we are entering
+    [self configureUIForEditing: editing];
 }
 
 
@@ -455,6 +450,8 @@
     [self.tableView reloadData];
     // ...and turn off editing in the UI
     [self configureUIForEditing: NO];
+    // ...and set up the default navBar
+    [self configureDefaultNavBar];
 }
 
 
@@ -474,7 +471,7 @@
     isEditing = isEditingMode;
     
     // Set the add button hidden state (hidden should be the boolean opposite of isEditingMode)
-    [addJobBtn setHidden: !isEditingMode];
+    [addObjectBtn setHidden: !isEditingMode];
     
     // ...enable/disable resume fields
     [self configureFieldsForEditing: isEditingMode];
@@ -646,8 +643,8 @@ commitEditingStyle: (UITableViewCellEditingStyle)editingStyle
     {
         // Delete the managed object at the given index path.
         NSManagedObjectContext *context = [self.jobsFetchedResultsController managedObjectContext];
-        Jobs *jobToDelete               = [self.jobsFetchedResultsController objectAtIndexPath: indexPath];
-        [context deleteObject: jobToDelete];
+        NSManagedObject *objectToDelete = [self.jobsFetchedResultsController objectAtIndexPath: indexPath];
+        [context deleteObject: objectToDelete];
         
         // Save the context so the delete is pushed to the persistent store
         [kAppDelegate saveContextAndWait];
@@ -655,10 +652,10 @@ commitEditingStyle: (UITableViewCellEditingStyle)editingStyle
         [self reloadFetchedResults: nil];
         
         // Delete the row from the table view
-        [self.tableView beginUpdates];
+        [tableView beginUpdates];
         [tableView deleteRowsAtIndexPaths: @[indexPath]
                          withRowAnimation: UITableViewRowAnimationFade];
-        [self.tableView endUpdates];
+        [tableView endUpdates];
     }
     else
     {
@@ -691,25 +688,25 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
         // Cannot move between sections
         [kAppDelegate showWarningWithMessage: NSLocalizedString(@"Sorry, move between sections not allowed.", nil)
                                       target: self];
-        [self.tableView reloadData];
+        [tableView reloadData];
         return;
     }
     
-    NSMutableArray *jobs = [[self.jobsFetchedResultsController fetchedObjects] mutableCopy];
+    NSMutableArray *array = [[self.jobsFetchedResultsController fetchedObjects] mutableCopy];
     
     // Grab the item we're moving.
-    Jobs *movingJob = [self.jobsFetchedResultsController objectAtIndexPath: fromIndexPath];
+    NSManagedObject *objectToMove = [self.jobsFetchedResultsController objectAtIndexPath: fromIndexPath];
     
     // Remove the object we're moving from the array.
-    [jobs removeObject: movingJob];
+    [array removeObject: objectToMove];
     // ...re-insert it at the destination.
-    [jobs insertObject: movingJob
+    [array insertObject: objectToMove
                atIndex: [toIndexPath row]];
     
     // All of the objects are now in their correct order.
     // Update each object's sequence_number field by iterating through the array.
     int i = 1;
-    for (Jobs *job in jobs)
+    for (Jobs *job in array)
     {
         [job setSequence_numberValue: i++];
     }
@@ -811,10 +808,10 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     // Set the text content and save a reference to the add button so they can be
     // shown or hidden whenever the user turns editing mode on or off
     headerCell.sectionLabel.text    = NSLocalizedString(@"Jobs", nil);
-    addJobBtn                       = headerCell.addButton;
+    addObjectBtn                    = headerCell.addButton;
     
     // Hide or show the addButton depending on whether we are in editing mode
-    [addJobBtn setHidden: !isEditing];
+    [addObjectBtn setHidden: !isEditing];
     
     return wrapperView;
 }

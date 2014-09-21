@@ -10,18 +10,13 @@
 #import "OCRAppDelegate.h"
 #import "Resumes.h"
 #import "Jobs.h"
+#import "OCRNoSelectionView.h"
 
 #define k_OKButtonIndex     1
 
 @interface OCRResumeOverviewViewController ()
 {
 @private
-    /**
-     Reference to the back button to facilitate swapping buttons between display and edit modes.
-     */
-    UIBarButtonItem     *backBtn;
-    
-
     /**
      Reference to the cancel button to facilitate swapping buttons between display and edit modes.
      */
@@ -50,6 +45,12 @@
      */
     Resumes             *selectedResume;
 }
+
+/**
+ Reference to the noSelection view, which is displayed when there is no object to manage, or a
+ containing parent object is deleted.
+ */
+@property (strong, nonatomic) OCRNoSelectionView                *noSelectionView;
 
 @end
 
@@ -107,8 +108,6 @@
     self.backButtonTitle = NSLocalizedString(@"Resume", nil);
     
     // Set up button items
-    backBtn     = self.navigationItem.leftBarButtonItem;
-    
     cancelBtn   = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel
                                                                 target: self
                                                                 action: @selector(didPressCancelButton)];
@@ -190,6 +189,8 @@
                                                object: nil];
 }
 
+
+//----------------------------------------------------------------------------------------------------------
 /*
  Notice there is no viewWillDisappear.
  
@@ -209,25 +210,32 @@
     // Check to see if we still have an object to work in - it may have been deleted in the Packages view
     if ([(Resumes *)self.selectedManagedObject package])
     {
-        // We have a selected object with data; hide the noSelectionView
-//        [_noSelectionView setHidden:YES];
-        // ...and populate the UI with content from out managedObject
+        // We have a selected object with data; remove the noSelectionView if present
+        if (self.noSelectionView)
+        {
+            // It is, remove it from the view
+            [self.noSelectionView removeFromSuperview];
+            // ...and nil the reference
+            self.noSelectionView = nil;
+        }
+        // Populate the UI with content from our managedObject
         [self populateFieldsFromSelectedObject];
     }
     else
     {
+        // Create a OCRNoSelectionView and add it to our view
+        self.noSelectionView = [OCRNoSelectionView addNoSelectionViewToView: self.view];
+        
         if (self.selectedManagedObject)
         {
             // We have a selected object, but no data
-//            _noSelectionLabel.text = NSLocalizedString(@"Press Edit to enter text.", nil);
+            self.noSelectionView.messageLabel.text = NSLocalizedString(@"Press Edit to enter information.", nil);
         }
         else
         {
             // Nothing is selected
-//            _noSelectionLabel.text = NSLocalizedString(@"Nothing selected.", nil);
+            self.noSelectionView.messageLabel.text = NSLocalizedString(@"Nothing selected.", nil);
         }
-//        [_noSelectionView setHidden:NO];
-//        [self.view bringSubviewToFront:_noSelectionView];
     }
 }
 
@@ -243,17 +251,16 @@
     [_resumeName setText: selectedResume.name
            orPlaceHolder: NSLocalizedString(@"Resume name", nil)];
     
-    // Get the jobs sorted by sequence_number
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey: kOCRSequenceNumberAttributeName
-                                                                   ascending: YES];
-    NSArray *sortDescriptors    = @[sortDescriptor];
-    NSArray *jobsArray          = [NSMutableArray arrayWithArray: [selectedResume.job sortedArrayUsingDescriptors: sortDescriptors]];
-    
     /*
      Note there is a difference between iPhone and iPad - or more correctly, between horizontal size compact and regular. In Interface
      Builder, this Scene has "uninstalled" the currentJobTitle, currentJobName, and atLabel for the size class W:Compact H:Regular. Even
      though we assign text to these fields, they do not appear in Compact width (which includes iPhone landscape).
      */
+    // Get the jobs sorted by sequence_number
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey: kOCRSequenceNumberAttributeName
+                                                                   ascending: YES];
+    NSArray *sortDescriptors    = @[sortDescriptor];
+    NSArray *jobsArray          = [NSMutableArray arrayWithArray: [selectedResume.job sortedArrayUsingDescriptors: sortDescriptors]];
     // Check to see if there is at least 1 Job...
     if ([jobsArray count] > 0)
     {
@@ -306,7 +313,6 @@
      resumeSummary is a textView, and always has width and height, so the autolayout concern mentioned
      above is not a concern here.
      */
-    // resumeSummary is a UITextView
     _resumeSummary.text = selectedResume.summary;
     [_resumeSummary scrollRangeToVisible: NSMakeRange(0, 0)];
 }
@@ -336,7 +342,8 @@
     [_resumeHomePhone   setEnabled: editable];
     [_resumeMobilePhone setEnabled: editable];
     [_resumeEmail       setEnabled: editable];
-    [_resumeSummary     setEditable: editable];     // resumeSummary is a UITextView
+    // resumeSummary is a UITextView and has an editable property whereas UITextFields have an enabled property
+    [_resumeSummary     setEditable: editable];
     
     // Set the background color for the fields based on the editable param
     UIColor *backgroundColor = editable? [self.view.tintColor colorWithAlphaComponent:0.1f] : [UIColor clearColor];
@@ -398,9 +405,6 @@
     
     // Use the information in the selected managed object to update the UI fields
     [self loadViewFromSelectedObject];
-
-    // ...and configure the fields for the current editing state
-    [self configureFieldsForEditing: isEditing];
 }
 
 
@@ -420,6 +424,8 @@
         [self.selectedManagedObject isDeleted])
     {
         self.selectedManagedObject = nil;
+        [self reloadFetchedResults: nil];
+        [self loadViewFromSelectedObject];
     }
 }
 
@@ -490,17 +496,11 @@
     [super setEditing: editing
              animated: animated];
     
-    // Configure the UI to represent the editing state we are entering
-    [self configureUIForEditing: editing];
-    
     if (editing)
     {
         // Start an undo group...it will either be commited here when the User presses Done, or
         //    undone in didPressCancelButton
         [[[kAppDelegate managedObjectContext] undoManager] beginUndoGrouping];
-        
-        // ...and bring the keyboard onscreen with the cursor in resume name
-        [_resumeName becomeFirstResponder];
     }
     else
     {
@@ -516,10 +516,12 @@
         // ...cleanup the undoManager
         [[[kAppDelegate managedObjectContext] undoManager] removeAllActionsWithTarget: self];
         
-        // ...and turn off editing in the UI
-        [self configureUIForEditing: NO];
-        [self resetView];
+        // Reload the fetched results
+        [self reloadFetchedResults: nil];
     }
+    
+    // Configure the UI to represent the editing state we are entering
+    [self configureUIForEditing: editing];
 }
 
 //----------------------------------------------------------------------------------------------------------
@@ -574,18 +576,18 @@
     // ...and reload the fetchedResults to bring them into memory
     [self reloadFetchedResults: nil];
 
-    // ...re-load the view with the data from the (unchanged) resume
-    [self loadViewFromSelectedObject];
-    
     /*
      This may look odd - one usually sees a call to super in a method with the same name. But we need to inform
      the tableView that we are no longer editing the table.
      */
     [super setEditing: NO
              animated: YES];
+    
     // ...turn off editing in the UI
     [self configureUIForEditing: NO];
     [self resetView];
+    // ...and set up the default navBar
+    [self configureDefaultNavBar];
 }
 
 
@@ -748,6 +750,7 @@
 {
     DLog();
     
+    // nil activeField - if we have finished editing, there can be no activeField
     activeField = nil;
 }
 
@@ -824,10 +827,6 @@
         // Need to display a message
         [kAppDelegate showWarningWithMessage: @"Resume deleted."
                                       target: self];
-    }
-    else
-    {
-        [self loadViewFromSelectedObject];
     }
 }
 

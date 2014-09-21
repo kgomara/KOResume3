@@ -223,8 +223,6 @@
 		D6C61A0A18FD071900D5BB5D /* OCRDatePickerTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRDatePickerTableViewCell.m; path = Classes/OCRDatePickerTableViewCell.m; sourceTree = "<group>"; };
 		D6C61A0D18FD072E00D5BB5D /* OCRDateClearTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRDateClearTableViewCell.h; path = Classes/OCRDateClearTableViewCell.h; sourceTree = "<group>"; };
 		D6C61A0E18FD072F00D5BB5D /* OCRDateClearTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRDateClearTableViewCell.m; path = Classes/OCRDateClearTableViewCell.m; sourceTree = "<group>"; };
-		D6C61B37189DF1F6003E996B /* OCRResumeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRResumeViewController.h; path = Classes/OCRResumeViewController.h; sourceTree = "<group>"; };
-		D6C61B38189DF1F6003E996B /* OCRResumeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRResumeViewController.m; path = Classes/OCRResumeViewController.m; sourceTree = "<group>"; };
 		D6C6F14D18AFD58B003A8C92 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		D6C6F15818B27AD3003A8C92 /* KOResume.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = KOResume.xcdatamodel; sourceTree = "<group>"; };
 		D6C8D2DD18F1D3E200E76376 /* OCRResumeJobsDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRResumeJobsDetailViewController.h; path = Classes/OCRResumeJobsDetailViewController.h; sourceTree = "<group>"; };
@@ -305,8 +303,6 @@
 				D61163CC199481D2001A24B4 /* OCRResumeJobsTableViewController.m */,
 				D66D87CE1991D55900644D39 /* OCRResumeOverviewViewController.h */,
 				D66D87CF1991D55900644D39 /* OCRResumeOverviewViewController.m */,
-				D6C61B37189DF1F6003E996B /* OCRResumeViewController.h */,
-				D6C61B38189DF1F6003E996B /* OCRResumeViewController.m */,
 				D67C0F14199707F20053C04C /* OCRResumeEducationViewController.h */,
 				D67C0F15199707F20053C04C /* OCRResumeEducationViewController.m */,
 			);
