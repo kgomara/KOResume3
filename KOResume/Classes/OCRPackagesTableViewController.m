@@ -777,6 +777,16 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
     {
         [package setSequence_numberValue: i++];
     }
+    
+    /*
+     The user may edit cell contents after a move operation. The updateSourceObjectWithTextField:forTableCell:atIndexPath:
+     method expects the table view cells and fetched results to be in the same order, so we must save work in progress
+     and reload. (If the user subsequently cancels, the undo manager will back out the saved work.)
+     */
+    // Save the re-ordered objects
+    [kAppDelegate saveContextAndWait];
+    // ...and reload the fetchedResults
+    [self reloadFetchedResults: nil];
 }
 
 

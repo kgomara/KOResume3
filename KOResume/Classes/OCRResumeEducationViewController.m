@@ -816,6 +816,16 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     {
         [education setSequence_numberValue: i++];
     }
+    
+    /*
+     The user may edit cell contents after a move operation. The updateSourceObjectWithTextField:forTableCell:atIndexPath:
+     method expects the table view cells and fetched results to be in the same order, so we must save work in progress
+     and reload. (If the user subsequently cancels, the undo manager will back out the saved work.)
+     */
+    // Save the re-ordered objects
+    [kAppDelegate saveContextAndWait];
+    // ...and reload the fetchedResults
+    [self reloadFetchedResults: nil];
 }
 
 
@@ -1232,6 +1242,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     {
         // ...get the indexPath
         NSIndexPath* indexPath = [self.tableView indexPathForCell: cell];
+        DLog(@"indexPath=%@", indexPath);
         // ...and update the source object
         [self updateSourceObjectWithTextField: textField
                                  forTableCell: cell
