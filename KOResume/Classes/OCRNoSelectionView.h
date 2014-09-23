@@ -18,7 +18,9 @@
 /**
  IBOutlet to the label.
  */
-@property (weak, nonatomic)   IBOutlet UILabel  *messageLabel;
+@property (weak, nonatomic) IBOutlet UILabel    *messageLabel;
+
+@property (weak, nonatomic) IBOutlet UIView     *containerView;
 
 + (instancetype)addNoSelectionViewToView:(UIView *)aView;
 

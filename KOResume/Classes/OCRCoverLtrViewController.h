@@ -24,16 +24,5 @@
  */
 @property (nonatomic, weak) IBOutlet UITextView             *coverLtrFld;
 
-///**
-// IBOutlet to the no selection view.
-// 
-// This view is used when there is no coverLtr currently selected.
-// */
-//@property (weak, nonatomic) IBOutlet UIView                 *noSelectionView;
-//
-///**
-// IBOutlet to the no selection label
-// */
-//@property (weak, nonatomic) IBOutlet UILabel                *noSelectionLabel;
 
 @end

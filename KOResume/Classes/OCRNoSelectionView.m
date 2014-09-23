@@ -16,14 +16,15 @@
     DLog();
     
     OCRNoSelectionView *container = [[OCRNoSelectionView alloc] init];
-    [[NSBundle mainBundle] loadNibNamed:@"OCRNoSelectionView"
-                                  owner:container
-                                options:nil];
-    [container setFrame: aView.frame];
+    [[NSBundle mainBundle] loadNibNamed: @"OCRNoSelectionView"
+                                  owner: container
+                                options: nil];
+    [container setFrame: aView.bounds];
+    DLog(@"size=%f,%f", container.frame.size.width, container.frame.size.height);
     
     [aView addSubview: container];
     
-    [container setTranslatesAutoresizingMaskIntoConstraints: NO];
+    [container setTranslatesAutoresizingMaskIntoConstraints: YES];
     
     NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem: container
                                                                   attribute: NSLayoutAttributeLeading
@@ -60,6 +61,9 @@
                                              multiplier: 1.0
                                                constant: 0];
     [aView addConstraint: constraint];
+
+    DLog(@"size=%f,%f", container.frame.size.width, container.frame.size.height);
+
     return container;
 }
 

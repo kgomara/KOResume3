@@ -35,6 +35,7 @@ FOUNDATION_EXPORT NSString *const kOCRCoverLtrID;
 FOUNDATION_EXPORT NSString *const kOCRResumeViewController;
 FOUNDATION_EXPORT NSString *const kOCRInfoViewController;
 FOUNDATION_EXPORT NSString *const kOCRDateTableViewController;
+FOUNDATION_EXPORT NSString *const kOCRNoSelectionViewController;
 
 // Storyboard segues
 FOUNDATION_EXPORT NSString *const kOCRCvrLtrSegue;

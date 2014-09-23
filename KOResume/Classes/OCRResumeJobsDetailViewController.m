@@ -13,7 +13,7 @@
 #import "Resumes.h"
 #import "Accomplishments.h"
 #import "SVWebViewController.h"
-#import "OCRNoSelectionView.h"
+#import "OCRNoSelectionViewController.h"
 #import "OCRAccomplishmentTableViewCell.h"
 #import "OCRDatePickerViewController.h"
 
@@ -68,7 +68,7 @@
  Reference to the noSelection view, which is displayed when there is no object to manage, or a
  containing parent object is deleted.
  */
-@property (strong, nonatomic) OCRNoSelectionView                *noSelectionView;
+@property (strong, nonatomic) OCRNoSelectionViewController      *noSelectionView;
 
 /**
  Reference to the date picker view controller.
@@ -234,8 +234,9 @@
         // We have a selected object with data; remove the noSelectionView if present
         if (self.noSelectionView)
         {
-            // It is, remove it from the view
-            [self.noSelectionView removeFromSuperview];
+            // No selection view is on-screen, remove it from the view
+            [self.noSelectionView removeFromParentViewController];
+            [self.noSelectionView.view removeFromSuperview];
             // ...and nil the reference
             self.noSelectionView = nil;
         }
@@ -244,8 +245,17 @@
     }
     else
     {
-        // Create a OCRNoSelectionView and add it to our view
-        self.noSelectionView = [OCRNoSelectionView addNoSelectionViewToView: self.view];
+        // Check to see if we already have a no selection view up
+        if ( !self.noSelectionView)
+        {
+            // Create a OCRNoSelectionView and add it to our view
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName: @"Main_iPad"
+                                                                 bundle:nil];
+            self.noSelectionView = [storyboard instantiateViewControllerWithIdentifier: kOCRNoSelectionViewController];
+            [self addChildViewController: self.noSelectionView];
+            [self.view addSubview: self.noSelectionView.view];
+            [self.noSelectionView didMoveToParentViewController: self];
+        }
         
         if (self.selectedManagedObject)
         {
@@ -322,6 +332,15 @@
 - (void)configureFieldsForEditing: (BOOL)editable
 {
     DLog();
+    
+    if (self.noSelectionView)
+    {
+        // No selection view is on-screen, remove it from the view
+        [self.noSelectionView removeFromParentViewController];
+        [self.noSelectionView.view removeFromSuperview];
+        // ...and nil the reference
+        self.noSelectionView = nil;
+    }
     
     // Set all the text fields enable property (and text view's editable)
     [_jobName      setEnabled: editable];
@@ -750,6 +769,14 @@
         else
         {
             self.navigationItem.rightBarButtonItems = @[self.editButtonItem, cancelBtn];
+        }
+        
+        // Check to see if the noSelectedView is present
+        if (self.noSelectionView)
+        {
+            // It is, get rid of it to expose the editable cover letter
+            [self.noSelectionView removeFromParentViewController];
+            self.noSelectionView = nil;
         }
     }
     else

@@ -9,26 +9,11 @@
 #import "OCRCoverLtrViewController.h"
 #import "OCRAppDelegate.h"
 #import "Packages.h"
-#import "OCRNoSelectionView.h"
+#import "OCRNoSelectionViewController.h"
 
 @interface OCRCoverLtrViewController ()
 {
 @private
-    /**
-     Reference to the back button to facilitate swapping buttons between display and edit modes
-     */
-    UIBarButtonItem     *backBtn;
-    
-    /**
-     Reference to the edit button to facilitate swapping buttons between display and edit modes
-     */
-    UIBarButtonItem     *editBtn;
-    
-    /**
-     Reference to the save button to facilitate swapping buttons between display and edit modes
-     */
-    UIBarButtonItem     *doneBtn;
-    
     /**
      Reference to the cancel button to facilitate swapping buttons between display and edit modes
      */
@@ -44,7 +29,7 @@
  Reference to the noSelection view, which is displayed when there is no object to manage, or a
  containing parent object is deleted.
  */
-@property (strong, nonatomic) OCRNoSelectionView    *noSelectionView;
+@property (strong, nonatomic) OCRNoSelectionViewController  *noSelectionView;
 
 @end
 
@@ -72,22 +57,15 @@
     self.backButtonTitle        = NSLocalizedString(@"Packages", nil);
     
     // Set up button items
-    backBtn     = self.navigationItem.leftBarButtonItem;
-    editBtn     = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemEdit
-                                                                target: self
-                                                                action: @selector(didPressEditButton)];
-    
-    doneBtn     = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemDone
-                                                                target: self
-                                                                action: @selector(didPressDoneButton)];
-    
     cancelBtn   = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel
                                                                 target: self
                                                                 action: @selector(didPressCancelButton)];
     
+    // Set up the navigation bar items
+    [self configureDefaultNavBar];
+    
     // Set editing off
     isEditing = NO;
-    [self configureUIForEditing: NO];
 }
 
 
@@ -114,9 +92,6 @@
 {
     DLog();
     [super viewWillAppear: animated];
-    
-    // Set up the navigation bar items
-    [self configureDefaultNavBar];
     
     // ...and configure the view
     [self configureView];
@@ -145,6 +120,16 @@
                                                object: nil];
 }
 
+
+//----------------------------------------------------------------------------------------------------------
+/*
+ Notice there is no viewWillDisappear.
+ 
+ This class inherits viewWillDisappear from the base class, which calls removeObserver and saves the context; hence
+ we have no need to implement the method in this class. Similarly, we don't implement didReceiveMemoryWarning.
+ */
+
+
 //----------------------------------------------------------------------------------------------------------
 /**
  Update the text fields of the view from the selected cover_ltr.
@@ -159,8 +144,9 @@
         // We have a selected object with data; remove the noSelectionView if present
         if (self.noSelectionView)
         {
-            // It is, remove it from the view
-            [self.noSelectionView removeFromSuperview];
+            // No selection view is on-screen, remove it from the view
+            [self.noSelectionView removeFromParentViewController];
+            [self.noSelectionView.view removeFromSuperview];
             // ...and nil the reference
             self.noSelectionView = nil;
         }
@@ -169,8 +155,17 @@
     }
     else
     {
-        // Create a OCRNoSelectionView and add it to our view
-        self.noSelectionView = [OCRNoSelectionView addNoSelectionViewToView: self.view];
+        // Check to see if we already have a no selection view up
+        if ( !self.noSelectionView)
+        {
+            // Create a OCRNoSelectionView and add it to our view
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName: @"Main_iPad"
+                                                                 bundle: nil];
+            self.noSelectionView = [storyboard instantiateViewControllerWithIdentifier: kOCRNoSelectionViewController];
+            [self addChildViewController: self.noSelectionView];
+            [self.view addSubview: self.noSelectionView.view];
+            [self.noSelectionView didMoveToParentViewController: self];
+        }
         
         if (self.selectedManagedObject)
         {
@@ -213,6 +208,15 @@
 {
     DLog();
     
+    if (self.noSelectionView)
+    {
+        // No selection view is on-screen, remove it from the view
+        [self.noSelectionView removeFromParentViewController];
+        [self.noSelectionView.view removeFromSuperview];
+        // ...and nil the reference
+        self.noSelectionView = nil;
+    }
+    
     // Set all the text fields (and the text view as well) enable property
     [_coverLtrFld        setEditable: editable];
     
@@ -233,56 +237,7 @@
     DLog();
     
     // Set the buttons.
-    self.navigationItem.rightBarButtonItems = @[editBtn];
-    if (self.selectedManagedObject && !self.selectedManagedObject.isDeleted)
-    {
-        // We have an object to work with - allow editing
-        [editBtn setEnabled:YES];
-    }
-    else
-    {
-        // The object we were given has been deleted - can't edit "nothing"
-        [editBtn setEnabled:NO];
-    }
-    
-    // ...by default, the user cannot edit the text, make it un-editable until the user taps the edit button
-    [self.coverLtrFld setEditable:NO];
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Update internal state of the view controller when a package has been deleted.
- 
- Invoked by notification posted by OCRPackagesViewController when it performs a package deletion.
- 
- @param aNotification   The NSNotification object associated with the event.
- */
-- (void)packageWasDeleted: (NSNotification *)aNotification
-{
-    DLog();
-    
-    if ( ![(Packages *)self.selectedManagedObject cover_ltr] ||
-          [self.selectedManagedObject isDeleted])
-    {
-        self.selectedManagedObject = nil;
-    }
-}
-
-#pragma mark - UITextKit handlers
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Called when the user changes the size of dynamic text.
- 
- @param aNotification   The notification sent with the UIContentSizeCategoryDidChangeNotification notification
- */
-- (void)userTextSizeDidChange: (NSNotification *)aNotification
-{
-    DLog();
-    
-    // Reload the table view, which in turn causes the tableView cells to update their fonts
-    _coverLtrFld.font = [UIFont preferredFontForTextStyle: UIFontTextStyleBody];
+    self.navigationItem.rightBarButtonItems = @[self.editButtonItem];
 }
 
 
@@ -312,61 +267,110 @@
 }
 
 
+//----------------------------------------------------------------------------------------------------------
+/**
+ Update internal state of the view controller when a package has been deleted.
+ 
+ Invoked by notification posted by OCRPackagesViewController when it performs a package deletion.
+ 
+ @param aNotification   The NSNotification object associated with the event.
+ */
+- (void)packageWasDeleted: (NSNotification *)aNotification
+{
+    DLog();
+    
+    if ( ![(Packages *)self.selectedManagedObject cover_ltr] ||
+        [self.selectedManagedObject isDeleted])
+    {
+        self.selectedManagedObject = nil;
+    }
+}
+
+#pragma mark - UITextKit handlers
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Called when the user changes the size of dynamic text.
+ 
+ @param aNotification   The notification sent with the UIContentSizeCategoryDidChangeNotification notification
+ */
+- (void)userTextSizeDidChange: (NSNotification *)aNotification
+{
+    DLog();
+    
+    // Reload the table view, which in turn causes the tableView cells to update their fonts
+    _coverLtrFld.font = [UIFont preferredFontForTextStyle: UIFontTextStyleBody];
+}
+
+
 #pragma mark - UI handlers
 
 //----------------------------------------------------------------------------------------------------------
 /**
- Invoked when the user taps the Edit button.
+ Sets whether the view controller shows an editable view.
  
- * Setup the navigation bar for editing.
- * Enable editable fields.
- * Start an undo group on the NSManagedObjectContext.
+ Subclasses that use an edit-done button must override this method to change their view to an editable state
+ if editing is YES and a non-editable state if it is NO. This method should invoke super’s implementation
+ before updating its view.
  
+ @param editing     If YES, the view controller should display an editable view; otherwise, NO. If YES and one
+ of the custom views of the navigationItem property is set to the value returned by the
+ editButtonItem method, the associated navigation controller displays a Done button;
+ otherwise, an Edit button.
+ @param animate     If YES, animates the transition; otherwise, does not.
  */
-- (void)didPressEditButton
+- (void)setEditing: (BOOL)editing
+          animated: (BOOL)animated
 {
-    DLog();
+    DLog(@"editing=%@", editing? @"YES" : @"NO");
+    [super setEditing: editing
+             animated: animated];
     
-    // Turn on editing in the UI
-    [self configureUIForEditing: YES];
+    if (editing)
+    {
+        // Start an undo group...it will either be commited here when the User presses Done, or
+        //    undone in didPressCancelButton
+        [[[kAppDelegate managedObjectContext] undoManager] beginUndoGrouping];
+    }
+    else
+    {
+        // Save the changes
+        [self updateSelectedObjectFromUI];
+        
+        // The user pressed "Done", end the undo group
+        [[[kAppDelegate managedObjectContext] undoManager] endUndoGrouping];
+        
+        // ...save changes to the database
+        [kAppDelegate saveContextAndWait];
+        
+        // ...cleanup the undoManager
+        [[[kAppDelegate managedObjectContext] undoManager] removeAllActionsWithTarget: self];
+        
+        // Reload the fetched results
+        [self reloadFetchedResults: nil];
+        
+        // Set up the default navBar
+        [self configureDefaultNavBar];
+        
+        // ...and bring the keyboard onscreen with the cursor in coverLtrFld
+        [_coverLtrFld becomeFirstResponder];
+    }
     
-    // Start an undo group...it will either be commited in didPressSaveButton or
-    //    undone in didPressCancelButton
-    [[[kAppDelegate managedObjectContext] undoManager] beginUndoGrouping];
-    
-    // ...and bring the keyboard onscreen with the cursor in coverLtrFld
-    [_coverLtrFld becomeFirstResponder];
+    // Configure the UI to represent the editing state we are entering
+    [self configureUIForEditing: editing];
 }
 
 
 //----------------------------------------------------------------------------------------------------------
 /**
- Invoked when the user taps the Done button.
- 
- * Save the changes to the NSManagedObjectContext.
- * Cleanup the undo group on the NSManagedObjectContext.
- * Reset the navigation bar to its default state.
- 
+ Update the selected object's properties from the view's data fields
  */
-- (void)didPressDoneButton
+- (void)updateSelectedObjectFromUI
 {
     DLog();
     
     // Save the changes from the textView into the selected cover letter
     [(Packages *)self.selectedManagedObject setCover_ltr: self.coverLtrFld.text];
-    
-    // ...end the undo group
-    [[[kAppDelegate managedObjectContext] undoManager] endUndoGrouping];
-    
-    // ...save changes to the database
-    [kAppDelegate saveContext];
-    
-    // ...cleanup the undoManager
-    [[[kAppDelegate managedObjectContext] undoManager] removeAllActionsWithTarget:self];
-    
-    // ...and reset the UI defaults
-    [self configureUIForEditing: NO];
-    [self resetView];
 }
 
 
@@ -397,12 +401,20 @@
     // Cleanup the undoManager
     [[[kAppDelegate managedObjectContext] undoManager] removeAllActionsWithTarget: self];
     
-    // ...re-load the view with the data from the (unchanged) cover letter
-    [self loadViewFromSelectedObject];
+    // ...and reload the fetchedResults to bring them into memory
+    [self reloadFetchedResults: nil];
     
-    // ...and reset the UI defaults
+    /*
+     This may look odd - one usually sees a call to super in a method with the same name. But we need to inform
+     the tableView that we are no longer editing the table.
+     */
+    [super setEditing: NO
+             animated: YES];
+    
+    // Turn off editing in the UI
     [self configureUIForEditing: NO];
-    [self resetView];
+    // ...and set up the default navBar
+    [self configureDefaultNavBar];
 }
 
 
@@ -427,13 +439,13 @@
     if (isEditingMode)
     {
         // Set up the navigation items and save/cancel buttons
-        self.navigationItem.rightBarButtonItems = @[doneBtn, cancelBtn];
+        self.navigationItem.rightBarButtonItems = @[self.editButtonItem, cancelBtn];
         
         // Check to see if the noSelectedView is present
         if (self.noSelectionView)
         {
             // It is, get rid of it to expose the editable cover letter
-            [self.noSelectionView removeFromSuperview];
+            [self.noSelectionView removeFromParentViewController];
             self.noSelectionView = nil;
         }
     }
@@ -532,19 +544,6 @@
 - (void)textViewDidEndEditing: (UITextView *)textView
 {
     DLog();;
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Reset the view to it default state.
- */
-- (void)resetView
-{
-    DLog();
-    
-    [self.scrollView setContentOffset: CGPointZero
-                             animated: YES];
 }
 
 

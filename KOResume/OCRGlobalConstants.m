@@ -35,6 +35,7 @@ NSString *const kOCRCoverLtrID                                              = @"
 NSString *const kOCRResumeViewController                                    = @"ResumeViewController";
 NSString *const kOCRInfoViewController                                      = @"InfoViewController";
 NSString *const kOCRDateTableViewController                                 = @"OCRDateTableViewController";
+NSString *const kOCRNoSelectionViewController                               = @"OCRNoSelectionView";
 
 // Storyboard segues
 NSString *const kOCRCvrLtrSegue                                             = @"OCRCvrLtrSegue";

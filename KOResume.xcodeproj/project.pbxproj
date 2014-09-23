@@ -50,6 +50,8 @@
 		D63D82EA179311350065F0A9 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D63D82C2179311350065F0A9 /* CoreData.framework */; };
 		D63D82F2179311350065F0A9 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D63D82F0179311350065F0A9 /* InfoPlist.strings */; };
 		D63D82F4179311350065F0A9 /* KOResumeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D63D82F3179311350065F0A9 /* KOResumeTests.m */; };
+		D65D47D319D1014500D9FD8D /* OCRNoSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D65D47D219D1014500D9FD8D /* OCRNoSelectionViewController.m */; };
+		D65D47D419D1014500D9FD8D /* OCRNoSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D65D47D219D1014500D9FD8D /* OCRNoSelectionViewController.m */; };
 		D66D87D01991D55900644D39 /* OCRResumeOverviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D66D87CF1991D55900644D39 /* OCRResumeOverviewViewController.m */; };
 		D66D87D11991D55900644D39 /* OCRResumeOverviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D66D87CF1991D55900644D39 /* OCRResumeOverviewViewController.m */; };
 		D67C0F16199707F20053C04C /* OCRResumeEducationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D67C0F15199707F20053C04C /* OCRResumeEducationViewController.m */; };
@@ -167,6 +169,8 @@
 		D63D82E6179311350065F0A9 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		D63D82EF179311350065F0A9 /* KOResumeTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "KOResumeTests-Info.plist"; sourceTree = "<group>"; };
 		D63D82F3179311350065F0A9 /* KOResumeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KOResumeTests.m; sourceTree = "<group>"; };
+		D65D47D119D1014500D9FD8D /* OCRNoSelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRNoSelectionViewController.h; path = Classes/OCRNoSelectionViewController.h; sourceTree = "<group>"; };
+		D65D47D219D1014500D9FD8D /* OCRNoSelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRNoSelectionViewController.m; path = Classes/OCRNoSelectionViewController.m; sourceTree = "<group>"; };
 		D66D87CE1991D55900644D39 /* OCRResumeOverviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRResumeOverviewViewController.h; path = Classes/OCRResumeOverviewViewController.h; sourceTree = "<group>"; };
 		D66D87CF1991D55900644D39 /* OCRResumeOverviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRResumeOverviewViewController.m; path = Classes/OCRResumeOverviewViewController.m; sourceTree = "<group>"; };
 		D67C0F14199707F20053C04C /* OCRResumeEducationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRResumeEducationViewController.h; path = Classes/OCRResumeEducationViewController.h; sourceTree = "<group>"; };
@@ -435,6 +439,8 @@
 				D6BE16D719AAF05100147081 /* OCRPackagesTableViewController.m */,
 				D6B256BB18C00554006A0343 /* OCRTableViewHeaderCell.h */,
 				D6B256BC18C00554006A0343 /* OCRTableViewHeaderCell.m */,
+				D65D47D119D1014500D9FD8D /* OCRNoSelectionViewController.h */,
+				D65D47D219D1014500D9FD8D /* OCRNoSelectionViewController.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -666,6 +672,7 @@
 				D61163CD199481D2001A24B4 /* OCRResumeJobsTableViewController.m in Sources */,
 				D67D6E6819C1470700F97694 /* OCRDatePickerViewController.m in Sources */,
 				D6B4735118F7B00F004E9D84 /* SVModalWebViewController.m in Sources */,
+				D65D47D319D1014500D9FD8D /* OCRNoSelectionViewController.m in Sources */,
 				D6C8D2DF18F1D3E200E76376 /* OCRResumeJobsDetailViewController.m in Sources */,
 				D6D572191793A78600034AF3 /* _Resumes.m in Sources */,
 				D6B4735518F7B00F004E9D84 /* SVWebViewController.m in Sources */,
@@ -708,6 +715,7 @@
 				D6C6F15A18B27AD3003A8C92 /* KOResume.xcdatamodeld in Sources */,
 				D6B4864D17964882009E6A14 /* Resumes.m in Sources */,
 				D63D82F4179311350065F0A9 /* KOResumeTests.m in Sources */,
+				D65D47D419D1014500D9FD8D /* OCRNoSelectionViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
