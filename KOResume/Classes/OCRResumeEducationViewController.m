@@ -13,7 +13,7 @@
 #import "OCREducationTableViewCell.h"
 #import "OCRTableViewHeaderCell.h"
 #import "OCRDatePickerViewController.h"
-#import "OCRNoSelectionView.h"
+#import "OCRNoSelectionViewController.h"
 
 /*
  Manage the table view (list) of the education objects associated with a Resume object.
@@ -65,7 +65,7 @@
  Reference to the noSelection view, which is displayed when there is no object to manage, or a
  containing parent object is deleted.
  */
-@property (strong, nonatomic) OCRNoSelectionView                *noSelectionView;
+@property (strong, nonatomic) OCRNoSelectionViewController      *noSelectionView;
 
 /**
  Reference to the date picker view controller.
@@ -182,8 +182,9 @@
         // We have a selected object with data; remove the noSelectionView if present
         if (self.noSelectionView)
         {
-            // It is, remove it from the view
-            [self.noSelectionView removeFromSuperview];
+            // No selection view is on-screen, remove it from the view
+            [self.noSelectionView removeFromParentViewController];
+            [self.noSelectionView.view removeFromSuperview];
             // ...and nil the reference
             self.noSelectionView = nil;
         }
@@ -192,8 +193,17 @@
     }
     else
     {
-        // Create a OCRNoSelectionView and add it to our view
-        self.noSelectionView = [OCRNoSelectionView addNoSelectionViewToView: self.view];
+        // Check to see if we already have a no selection view up
+        if ( !self.noSelectionView)
+        {
+            // Create a OCRNoSelectionView and add it to our view
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName: @"Main_iPad"
+                                                                 bundle: nil];
+            self.noSelectionView = [storyboard instantiateViewControllerWithIdentifier: kOCRNoSelectionViewController];
+            [self addChildViewController: self.noSelectionView];
+            [self.view addSubview: self.noSelectionView.view];
+            [self.noSelectionView didMoveToParentViewController: self];
+        }
         
         if (self.selectedManagedObject)
         {
@@ -205,8 +215,6 @@
             // Nothing is selected
             self.noSelectionView.messageLabel.text = NSLocalizedString(@"Nothing selected.", nil);
         }
-        [_noSelectionView setHidden:NO];
-        [self.view bringSubviewToFront:_noSelectionView];
     }
 }
 
@@ -289,7 +297,9 @@
 {
     DLog();
     
-    // As a simple UITableView, there is nothing to do. Implemented because the OCRDetailViewProtocol requires it.
+    
+    // Load the data fields with updated data from the selected object.
+    [self loadViewFromSelectedObject];
 }
 
 
@@ -308,10 +318,8 @@
     if ( ![(Resumes *)self.selectedManagedObject package] ||
         [self.selectedManagedObject isDeleted])
     {
+        // Setting the selected management object nil will cause the base class to call configureView:
         self.selectedManagedObject = nil;
-        [self reloadFetchedResults: nil];
-        [self loadViewFromSelectedObject];
-        [self.tableView reloadData];
     }
 }
 
@@ -544,7 +552,7 @@
     isEditing = isEditingMode;
     
     // Set the add button hidden state (hidden should be the boolean opposite of isEditingMode)
-    [addObjectBtn    setHidden: !isEditingMode];
+    [addObjectBtn setHidden: !isEditingMode];
     
     // ...enable/disable resume fields
     [self configureFieldsForEditing: isEditingMode];

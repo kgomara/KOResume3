@@ -95,8 +95,6 @@
 		D6BE16D919AAF05100147081 /* OCRPackagesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6BE16D719AAF05100147081 /* OCRPackagesTableViewController.m */; };
 		D6C1DCB619C4D8A700D38336 /* OCRNoSelectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = D6C1DCB519C4D8A700D38336 /* OCRNoSelectionView.m */; };
 		D6C1DCB719C4D8A700D38336 /* OCRNoSelectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = D6C1DCB519C4D8A700D38336 /* OCRNoSelectionView.m */; };
-		D6C1DCBC19C4FB4100D38336 /* OCRNoSelectionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D6C1DCBB19C4FB4100D38336 /* OCRNoSelectionView.xib */; };
-		D6C1DCBD19C4FB4100D38336 /* OCRNoSelectionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D6C1DCBB19C4FB4100D38336 /* OCRNoSelectionView.xib */; };
 		D6C1DCC019C5F6DD00D38336 /* OCRAccomplishmentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D6C1DCBF19C5F6DD00D38336 /* OCRAccomplishmentTableViewCell.m */; };
 		D6C1DCC119C5F6DD00D38336 /* OCRAccomplishmentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D6C1DCBF19C5F6DD00D38336 /* OCRAccomplishmentTableViewCell.m */; };
 		D6C3FC43199F0F71000457F4 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6C3FC42199F0F71000457F4 /* SystemConfiguration.framework */; };
@@ -207,7 +205,6 @@
 		D6BE16D719AAF05100147081 /* OCRPackagesTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRPackagesTableViewController.m; path = Classes/OCRPackagesTableViewController.m; sourceTree = "<group>"; };
 		D6C1DCB419C4D8A700D38336 /* OCRNoSelectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRNoSelectionView.h; path = Classes/OCRNoSelectionView.h; sourceTree = "<group>"; };
 		D6C1DCB519C4D8A700D38336 /* OCRNoSelectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRNoSelectionView.m; path = Classes/OCRNoSelectionView.m; sourceTree = "<group>"; };
-		D6C1DCBB19C4FB4100D38336 /* OCRNoSelectionView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = OCRNoSelectionView.xib; path = Resources/OCRNoSelectionView.xib; sourceTree = "<group>"; };
 		D6C1DCBE19C5F6DD00D38336 /* OCRAccomplishmentTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRAccomplishmentTableViewCell.h; path = Classes/OCRAccomplishmentTableViewCell.h; sourceTree = "<group>"; };
 		D6C1DCBF19C5F6DD00D38336 /* OCRAccomplishmentTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRAccomplishmentTableViewCell.m; path = Classes/OCRAccomplishmentTableViewCell.m; sourceTree = "<group>"; };
 		D6C3FC42199F0F71000457F4 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
@@ -388,7 +385,6 @@
 			children = (
 				D6B016B41793C16900B86B8D /* KOResume.sqlite */,
 				D63D82D3179311350065F0A9 /* Main_iPad.storyboard */,
-				D6C1DCBB19C4FB4100D38336 /* OCRNoSelectionView.xib */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -572,7 +568,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D63D82D5179311350065F0A9 /* Main_iPad.storyboard in Resources */,
-				D6C1DCBC19C4FB4100D38336 /* OCRNoSelectionView.xib in Resources */,
 				D6B4734F18F7B00F004E9D84 /* SVWebViewController.strings in Resources */,
 				D6B4735318F7B00F004E9D84 /* SVWebViewController.bundle in Resources */,
 				D63D82E0179311350065F0A9 /* Images.xcassets in Resources */,
@@ -586,7 +581,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D6C1DCBD19C4FB4100D38336 /* OCRNoSelectionView.xib in Resources */,
 				D6B4735418F7B00F004E9D84 /* SVWebViewController.bundle in Resources */,
 				D6B016B61793C16900B86B8D /* KOResume.sqlite in Resources */,
 				D63D82F2179311350065F0A9 /* InfoPlist.strings in Resources */,

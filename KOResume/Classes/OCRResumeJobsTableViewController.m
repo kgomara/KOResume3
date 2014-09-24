@@ -12,6 +12,7 @@
 #import "Jobs.h"
 #import "OCRResumeJobsDetailViewController.h"
 #import "OCRTableViewHeaderCell.h"
+#import "OCRNoSelectionViewController.h"
 
 /*
  Manage the table view (list) of the jobs associated with a Resume object.
@@ -49,6 +50,12 @@
  Reference to the fetchResultsController.
  */
 @property (nonatomic, strong) NSFetchedResultsController    *jobsFetchedResultsController;
+
+/**
+ Reference to the noSelection view, which is displayed when there is no object to manage, or a
+ containing parent object is deleted.
+ */
+@property (strong, nonatomic) OCRNoSelectionViewController  *noSelectionView;
 
 @end
 
@@ -132,6 +139,7 @@
 }
 
 
+//----------------------------------------------------------------------------------------------------------
 /*
  Notice there is no viewWillDisappear.
  
@@ -146,7 +154,58 @@
  */
 - (void)loadViewFromSelectedObject
 {
-    // Nothing to here - the jobs are loaded in table view cells.
+    DLog();
+    
+    // Load the object into the view
+    if ([(Resumes *)self.selectedManagedObject package])
+    {
+        // We have a selected object with data; remove the noSelectionView if present
+        if (self.noSelectionView)
+        {
+            // No selection view is on-screen, remove it from the view
+            [self.noSelectionView removeFromParentViewController];
+            [self.noSelectionView.view removeFromSuperview];
+            // ...and nil the reference
+            self.noSelectionView = nil;
+        }
+        // Populate the UI with content from our managedObject
+        [self populateFieldsFromSelectedObject];
+    }
+    else
+    {
+        // Check to see if we already have a no selection view up
+        if ( !self.noSelectionView)
+        {
+            // Create a OCRNoSelectionView and add it to our view
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName: @"Main_iPad"
+                                                                 bundle: nil];
+            self.noSelectionView = [storyboard instantiateViewControllerWithIdentifier: kOCRNoSelectionViewController];
+            [self addChildViewController: self.noSelectionView];
+            [self.view addSubview: self.noSelectionView.view];
+            [self.noSelectionView didMoveToParentViewController: self];
+        }
+        
+        if (self.selectedManagedObject)
+        {
+            // We have a selected object, but no data
+            self.noSelectionView.messageLabel.text = NSLocalizedString(@"Press Edit to enter text.", nil);
+        }
+        else
+        {
+            // Nothing is selected
+            self.noSelectionView.messageLabel.text = NSLocalizedString(@"Nothing selected.", nil);
+        }
+    }
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Populate the user interface fields with data from the object we are managing.
+ */
+- (void)populateFieldsFromSelectedObject
+{
+    // As a simple table view, nothing to do here, included for the sake of consistency with other detail views
 }
 
 
@@ -219,7 +278,8 @@
 {
     DLog();
     
-    // As a simple UITableView, there is nothing to do. Implemented because the OCRDetailViewProtocol requires it.
+    // ...and load the data fields with updated data from the selected object.
+    [self loadViewFromSelectedObject];
 }
 
 
@@ -235,13 +295,11 @@
 {
     DLog();
     
-    if ( ![(Packages *)self.selectedManagedObject cover_ltr] ||
+    if ( ![(Resumes *)self.selectedManagedObject package] ||
         [self.selectedManagedObject isDeleted])
     {
+        // Setting the selected management object nil will cause the base class to call configureView:
         self.selectedManagedObject = nil;
-        [self reloadFetchedResults: nil];
-        [self loadViewFromSelectedObject];
-        [self.tableView reloadData];
     }
 }
 

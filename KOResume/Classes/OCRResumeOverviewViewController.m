@@ -10,7 +10,7 @@
 #import "OCRAppDelegate.h"
 #import "Resumes.h"
 #import "Jobs.h"
-#import "OCRNoSelectionView.h"
+#import "OCRNoSelectionViewController.h"
 
 #define k_OKButtonIndex     1
 
@@ -50,7 +50,7 @@
  Reference to the noSelection view, which is displayed when there is no object to manage, or a
  containing parent object is deleted.
  */
-@property (strong, nonatomic) OCRNoSelectionView                *noSelectionView;
+@property (strong, nonatomic) OCRNoSelectionViewController      *noSelectionView;
 
 @end
 
@@ -213,8 +213,9 @@
         // We have a selected object with data; remove the noSelectionView if present
         if (self.noSelectionView)
         {
-            // It is, remove it from the view
-            [self.noSelectionView removeFromSuperview];
+            // No selection view is on-screen, remove it from the view
+            [self.noSelectionView removeFromParentViewController];
+            [self.noSelectionView.view removeFromSuperview];
             // ...and nil the reference
             self.noSelectionView = nil;
         }
@@ -223,8 +224,18 @@
     }
     else
     {
-        // Create a OCRNoSelectionView and add it to our view
-        self.noSelectionView = [OCRNoSelectionView addNoSelectionViewToView: self.view];
+        // Check to see if we already have a no selection view up
+        if ( !self.noSelectionView)
+        {
+            // Create a OCRNoSelectionView and add it to our view
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName: @"Main_iPad"
+                                                                 bundle: nil];
+            self.noSelectionView = [storyboard instantiateViewControllerWithIdentifier: kOCRNoSelectionViewController];
+            [self addChildViewController: self.noSelectionView];
+            [self.view addSubview: self.noSelectionView.view];
+            [self.noSelectionView didMoveToParentViewController: self];
+        }
+        
         
         if (self.selectedManagedObject)
         {
@@ -333,6 +344,15 @@
 {
     DLog();
     
+    if (self.noSelectionView)
+    {
+        // No selection view is on-screen, remove it from the view
+        [self.noSelectionView removeFromParentViewController];
+        [self.noSelectionView.view removeFromSuperview];
+        // ...and nil the reference
+        self.noSelectionView = nil;
+    }
+    
     // Set all the text fields (and the text view as well) enable property
     [_resumeName        setEnabled: editable];
     [_resumeStreet1     setEnabled: editable];
@@ -423,9 +443,8 @@
     if ( ![(Resumes *)self.selectedManagedObject package] ||
         [self.selectedManagedObject isDeleted])
     {
+        // Setting the selected management object nil will cause the base class to call configureView:
         self.selectedManagedObject = nil;
-        [self reloadFetchedResults: nil];
-        [self loadViewFromSelectedObject];
     }
 }
 
@@ -518,6 +537,9 @@
         
         // Reload the fetched results
         [self reloadFetchedResults: nil];
+        
+        // Set up the default navBar
+        [self configureDefaultNavBar];
     }
     
     // Configure the UI to represent the editing state we are entering
@@ -585,7 +607,6 @@
     
     // ...turn off editing in the UI
     [self configureUIForEditing: NO];
-    [self resetView];
     // ...and set up the default navBar
     [self configureDefaultNavBar];
 }
@@ -788,23 +809,9 @@
     else
     {
         [textField resignFirstResponder];       // Dismisses the keyboard
-        [self resetView];
     }
     
     return NO;
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Reset the view to it default state
- */
-- (void)resetView
-{
-    DLog();
-    
-    [self.resumeSummary setContentOffset: CGPointZero
-                                animated: YES];
 }
 
 

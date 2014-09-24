@@ -138,7 +138,7 @@
 {
     DLog();
     
-    // Load the cover letter into the view
+    // Load the object into the view
     if ([(Packages *)self.selectedManagedObject cover_ltr])
     {
         // We have a selected object with data; remove the noSelectionView if present
@@ -282,6 +282,7 @@
     if ( ![(Packages *)self.selectedManagedObject cover_ltr] ||
         [self.selectedManagedObject isDeleted])
     {
+        // Setting the selected management object nil will cause the base class to call configureView:
         self.selectedManagedObject = nil;
     }
 }
