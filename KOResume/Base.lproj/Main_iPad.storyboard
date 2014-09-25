@@ -184,25 +184,38 @@
                         <viewControllerLayoutGuide type="top" id="8Ca-GV-Gix"/>
                         <viewControllerLayoutGuide type="bottom" id="F7d-oD-L8e"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="b0b-Cg-V9M" userLabel="Content View">
+                    <view key="view" contentMode="scaleToFill" id="b0b-Cg-V9M">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Nothing selected." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qiM-nS-yLz">
-                                <rect key="frame" x="235" y="290" width="131" height="20"/>
-                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NQF-Oe-pfa" userLabel="Content View">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Nothing selected." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qiM-nS-yLz">
+                                        <rect key="frame" x="235" y="226" width="131" height="20"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="centerY" secondItem="qiM-nS-yLz" secondAttribute="centerY" constant="64" id="5JW-EN-CKK"/>
+                                    <constraint firstAttribute="centerX" secondItem="qiM-nS-yLz" secondAttribute="centerX" id="fDW-K7-lLb"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="centerX" secondItem="qiM-nS-yLz" secondAttribute="centerX" id="OId-eT-2pm"/>
-                            <constraint firstAttribute="centerY" secondItem="qiM-nS-yLz" secondAttribute="centerY" id="TiH-Ow-Vmx"/>
+                            <constraint firstItem="NQF-Oe-pfa" firstAttribute="top" secondItem="b0b-Cg-V9M" secondAttribute="top" id="7MQ-QE-EmR"/>
+                            <constraint firstItem="F7d-oD-L8e" firstAttribute="top" secondItem="NQF-Oe-pfa" secondAttribute="bottom" id="CSY-hV-qTN"/>
+                            <constraint firstItem="NQF-Oe-pfa" firstAttribute="leading" secondItem="b0b-Cg-V9M" secondAttribute="leading" id="tkk-yh-raC"/>
+                            <constraint firstAttribute="trailing" secondItem="NQF-Oe-pfa" secondAttribute="trailing" id="zKJ-sd-HvC"/>
                         </constraints>
                     </view>
+                    <extendedEdge key="edgesForExtendedLayout"/>
                     <connections>
-                        <outlet property="contentView" destination="b0b-Cg-V9M" id="4pS-W9-3B7"/>
+                        <outlet property="contentView" destination="NQF-Oe-pfa" id="OWz-wu-thd"/>
                         <outlet property="messageLabel" destination="qiM-nS-yLz" id="UII-ou-FR6"/>
                     </connections>
                 </viewController>
