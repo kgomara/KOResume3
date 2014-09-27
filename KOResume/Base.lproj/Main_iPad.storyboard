@@ -365,7 +365,7 @@
                                                     </button>
                                                     <textField hidden="YES" opaque="NO" clipsSubviews="YES" tag="2" contentMode="scaleToFill" placeholderIntrinsicWidth="61" placeholderIntrinsicHeight="17" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Job URL" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Tdu-SU-uKK">
                                                         <rect key="frame" x="113" y="15" width="61" height="17"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                         <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="URL" returnKeyType="next"/>
                                                     </textField>
                                                     <textField opaque="NO" clipsSubviews="YES" tag="3" contentMode="scaleToFill" placeholderIntrinsicWidth="84" placeholderIntrinsicHeight="30" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Job Title" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="AZJ-qs-wEh">
@@ -455,8 +455,8 @@
                                                     <constraint firstAttribute="trailing" secondItem="sKW-k1-KJH" secondAttribute="trailing" constant="8" id="dvR-aZ-Omt"/>
                                                     <constraint firstItem="Tdu-SU-uKK" firstAttribute="leading" secondItem="hGn-j6-JBG" secondAttribute="trailing" constant="8" symbolic="YES" id="g6h-Iq-qxf"/>
                                                     <constraint firstItem="AZJ-qs-wEh" firstAttribute="top" secondItem="hGn-j6-JBG" secondAttribute="bottom" constant="8" id="kki-Zk-1KM"/>
+                                                    <constraint firstItem="Tdu-SU-uKK" firstAttribute="centerY" secondItem="hGn-j6-JBG" secondAttribute="centerY" constant="0.5" id="m0B-lu-RnY"/>
                                                     <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="n78-sl-XDD" secondAttribute="trailing" constant="20" symbolic="YES" id="o9b-pA-hpD"/>
-                                                    <constraint firstItem="Tdu-SU-uKK" firstAttribute="top" secondItem="Yu8-Mo-Alv" secondAttribute="top" constant="15" id="rYa-ka-cuE"/>
                                                     <constraint firstItem="sKW-k1-KJH" firstAttribute="leading" secondItem="Yu8-Mo-Alv" secondAttribute="leading" constant="8" id="thU-I4-kKA"/>
                                                     <constraint firstItem="OmE-vc-sLk" firstAttribute="leading" secondItem="ZjF-uu-GFZ" secondAttribute="trailing" constant="3" id="vfZ-xH-dTw"/>
                                                     <constraint firstItem="hGn-j6-JBG" firstAttribute="top" secondItem="Yu8-Mo-Alv" secondAttribute="top" constant="8" id="vms-00-Hvs"/>

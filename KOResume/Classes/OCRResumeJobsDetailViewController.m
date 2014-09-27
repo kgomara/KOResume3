@@ -1280,6 +1280,28 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
 
     // nil activeField - if we have finished editing, there can be no activeField
     activeField = nil;
+    
+    // Update the source object represented by the activeField
+    // ...First, traverse the view heirarchy to get the parentCell of the textField
+    UITableViewCell* cell = [self parentCellForView: textView];
+    // ...If we found the cell
+    if (cell)
+    {
+        // ...get the indexPath
+        NSIndexPath* indexPath = [self.tableView indexPathForCell: cell];
+        // ...and update the source object
+        /*
+         
+         */
+        [self updateSourceObjectWithString: textView.text
+                                    forTag: textView.tag
+                               atIndexPath: indexPath];
+    }
+    
+    // Invalidate the contentsize as the contents have changed
+    [textView invalidateIntrinsicContentSize];
+    // ...and ask the view to update constraints
+    [self.view setNeedsUpdateConstraints];
 }
 
 
@@ -1382,9 +1404,9 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
         // ...get the indexPath
         NSIndexPath* indexPath = [self.tableView indexPathForCell: cell];
         // ...and update the source object
-        [self updateSourceObjectWithTextField: activeField
-                                 forTableCell: cell
-                                  atIndexPath: indexPath];
+        [self updateSourceObjectWithString: activeField.text
+                                    forTag: activeField.tag
+                               atIndexPath: indexPath];
     }
 }
 
@@ -1556,9 +1578,9 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
         // ...get the indexPath
         NSIndexPath* indexPath = [self.tableView indexPathForCell: cell];
         // ...and update the source object
-        [self updateSourceObjectWithTextField: textField
-                                 forTableCell: cell
-                                  atIndexPath: indexPath];
+        [self updateSourceObjectWithString: textField.text
+                                    forTag: textField.tag
+                               atIndexPath: indexPath];
     }
     
     // Invalidate the contentsize as the contents have changed
@@ -1572,27 +1594,27 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
 
 //----------------------------------------------------------------------------------------------------------
 /**
- Update the object represented by the updated text field.
+ Update the object represented by the tagged field in the cell at indexPath.
  
- @param textField       The UITextField updated by OCREducationTextViewCell
+ @param string            The string data
  @param cell            The OCREducationTextViewCell representing the education object
  */
-- (void)updateSourceObjectWithTextField: (UITextField *)textField
-                           forTableCell: (UITableViewCell *)cell
-                            atIndexPath: (NSIndexPath *)indexPath
+- (void)updateSourceObjectWithString: (NSString *)string
+                              forTag: (int)tag
+                         atIndexPath: (NSIndexPath *)indexPath
 {
     DLog();
 
     // Get the object represented by the cell at indexPath
     Accomplishments *accomplishment = [self.accFetchedResultsController objectAtIndexPath: indexPath];
     
-    if (textField.tag == kAccomplishmentNameFieldTag)
+    if (tag == kAccomplishmentNameFieldTag)
     {
-        accomplishment.name     = textField.text;
+        accomplishment.name     = string;
     }
-    else if (textField.tag == kAccomplishmentSummaryFieldTag)
+    else if (tag == kAccomplishmentSummaryFieldTag)
     {
-        accomplishment.summary  = textField.text;
+        accomplishment.summary  = string;
     }
 }
 
