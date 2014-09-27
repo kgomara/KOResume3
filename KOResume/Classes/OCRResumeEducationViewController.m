@@ -1001,16 +1001,17 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     DLog();
     
     // Check to see if the tap occured in a date field
-    if (textField.tag == kEarnedDateFieldTag)
+    if (textField.tag == kEarnedDateFieldTag)        // Bring up date picker
     {
-        // Bring up date picker
+        // Dismiss the keyboard (if any)
+        [activeField resignFirstResponder];
 
         // Save a reference to the textField we are working with
         activeField = textField;
 
         // Get the OCRDatePickerViewController from the UIStoryboard
-        UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"Main_iPad"
-                                                             bundle:nil];
+        UIStoryboard *storyBoard = [UIStoryboard storyboardWithName: @"Main_iPad"
+                                                             bundle: nil];
         // ...and instantiate it
         OCRDatePickerViewController *datePickerController   = [storyBoard instantiateViewControllerWithIdentifier: kOCRDatePickerIdentifier];
         datePickerController.modalPresentationStyle         = UIModalPresentationPopover;
@@ -1026,9 +1027,9 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
         popoverController.delegate      = self;
         
         // Present the view controller.
-        [self presentViewController:datePickerController
-                           animated:YES
-                         completion:nil];
+        [self presentViewController: datePickerController
+                           animated: YES
+                         completion: nil];
         
         if ([textField.text length] > 0)
         {
@@ -1076,6 +1077,111 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     }
 }
 
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Asks the delegate if the text field should process the pressing of the return button.
+ 
+ The text field calls this method whenever the user taps the return button. You can use this method to implement
+ any custom behavior when the button is tapped.
+ 
+ In our Storyboard scene, we set the textfield tag values incrementally, and then use the tag of the current
+ textField responder to determine what to do next. We also set the other keyboard atttributes appropriately for]
+ the data type we expect to see, and in particular set the return key to "Next" if hitting return will advance
+ the user to the next field.
+ 
+ Note the specific check for the date fields, in which case we bring up the data picker.
+ 
+ @param textField       The text field whose return button was pressed.
+ @return                YES if the text field should implement its default behavior for the return button; otherwise, NO.
+ */
+- (BOOL)textFieldShouldReturn: (UITextField *)textField
+{
+    DLog(@"textField=%@", textField.description);
+    
+    /*
+     Another use of the tag field...in Interface Builder, each of the UITextFields is given a sequential tag value,
+     and the keyboard Return key is set to "Next". When the user taps the Next key, this delegate method is invoked
+     We use the tag field to find the next field, and if there is one we set it as firstResponder.
+     */
+    // Get the value of the next field's tag
+    NSInteger nextTag           = [textField tag] + 1;
+    // ...and attempt to get it using the viewWithTag method
+    UIResponder *nextResponder  = [textField.superview viewWithTag: nextTag];
+    
+    if (nextResponder)
+    {
+        // If there is a nextResponser, make it firstResponder - i.e., give it focus
+        [nextResponder becomeFirstResponder];
+    }
+    else
+    {
+        // ...otherwise this textfield must be the last.
+        [textField resignFirstResponder];       // Dismisses the keyboard
+    }
+    
+    return NO;
+}
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Tells the delegate that editing began for the specified text field.
+ 
+ This method notifies the delegate that the specified text field just became the first responder. You can use
+ this method to update your delegate’s state information. For example, you might use this method to show overlay
+ views that should be visible while editing.
+ 
+ Implementation of this method by the delegate is optional.
+ 
+ @param textField       The text field for which an editing session began.
+ */
+- (void)textFieldDidBeginEditing: (UITextField*)textField
+{
+    DLog();
+    
+    // Save a reference to the textField we are editing
+    activeField = textField;
+}
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Tells the delegate that editing of the specified text view has ended.
+ 
+ Implementation of this method is optional. A text view sends this message to its delegate after it closes out
+ any pending edits and resigns its first responder status. You can use this method to tear down any data structures
+ or change any state information that you set when editing began.
+ 
+ @param textView The text view in which editing ended.
+ */
+- (void)textFieldDidEndEditing: (UITextField *)textField
+{
+    DLog();
+    
+    // Clear the reference to the text field that was being edited
+    activeField = nil;
+    
+    // Update the source object represented by the activeField
+    // ...First, traverse the view heirarchy to get the parentCell of the textField
+    UITableViewCell* cell = [self parentCellForView: textField];
+    // ...If we found the cell
+    if (cell)
+    {
+        // ...get the indexPath
+        NSIndexPath* indexPath = [self.tableView indexPathForCell: cell];
+        DLog(@"indexPath=%@", indexPath);
+        // ...and update the source object
+        [self updateSourceObjectWithTextField: textField
+                                 forTableCell: cell
+                                  atIndexPath: indexPath];
+    }
+    
+    // Invalidate the contentsize as the contents have changed
+    [textField invalidateIntrinsicContentSize];
+    // ...and ask the view to update constraints
+    [self.view setNeedsUpdateConstraints];
+}
+
+#pragma mark - UIAdaptivePresentationControllerDelegate methods
 
 //----------------------------------------------------------------------------------------------------------
 /**
@@ -1157,110 +1263,6 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     // Tell the datePickerController to dismiss
     [self.datePickerController dismissViewControllerAnimated: YES
                                                   completion: nil];
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Asks the delegate if the text field should process the pressing of the return button.
- 
- The text field calls this method whenever the user taps the return button. You can use this method to implement
- any custom behavior when the button is tapped.
- 
- In our Storyboard scene, we set the textfield tag values incrementally, and then use the tag of the current
- textField responder to determine what to do next. We also set the other keyboard atttributes appropriately for]
- the data type we expect to see, and in particular set the return key to "Next" if hitting return will advance
- the user to the next field.
- 
- Note the specific check for the date fields, in which case we bring up the data picker.
- 
- @param textField       The text field whose return button was pressed.
- @return                YES if the text field should implement its default behavior for the return button; otherwise, NO.
- */
-- (BOOL)textFieldShouldReturn: (UITextField *)textField
-{
-    DLog(@"textField=%@", textField.description);
-    
-    /*
-     Another use of the tag field...in Interface Builder, each of the UITextFields is given a sequential tag value,
-     and the keyboard Return key is set to "Next". When the user taps the Next key, this delegate method is invoked
-     We use the tag field to find the next field, and if there is one we set it as firstResponder.
-     */
-    // Get the value of the next field's tag
-    NSInteger nextTag           = [textField tag] + 1;
-    // ...and attempt to get it using the viewWithTag method
-    UIResponder *nextResponder  = [textField.superview viewWithTag: nextTag];
-    
-    if (nextResponder)
-    {
-        // If there is a nextResponser, make it firstResponder - i.e., give it focus
-        [nextResponder becomeFirstResponder];
-    }
-    else
-    {
-        // ...otherwise this textfield must be the last.
-        [textField resignFirstResponder];       // Dismisses the keyboard
-    }
-    
-    return NO;
-}
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Tells the delegate that editing began for the specified text field.
- 
- This method notifies the delegate that the specified text field just became the first responder. You can use 
- this method to update your delegate’s state information. For example, you might use this method to show overlay 
- views that should be visible while editing.
- 
- Implementation of this method by the delegate is optional.
- 
- @param textField       The text field for which an editing session began.
- */
-- (void)textFieldDidBeginEditing: (UITextField*)textField
-{
-    DLog();
-    
-    // Save a reference to the textField we are editing
-    activeField = textField;
-}
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Tells the delegate that editing of the specified text view has ended.
- 
- Implementation of this method is optional. A text view sends this message to its delegate after it closes out
- any pending edits and resigns its first responder status. You can use this method to tear down any data structures
- or change any state information that you set when editing began.
- 
- @param textView The text view in which editing ended.
- */
-- (void)textFieldDidEndEditing: (UITextField *)textField
-{
-    DLog();
-    
-    // Clear the reference to the text field that was being edited
-    activeField = nil;
-
-    // Update the source object represented by the activeField
-    // ...First, traverse the view heirarchy to get the parentCell of the textField
-    UITableViewCell* cell = [self parentCellForView: textField];
-    // ...If we found the cell
-    if (cell)
-    {
-        // ...get the indexPath
-        NSIndexPath* indexPath = [self.tableView indexPathForCell: cell];
-        DLog(@"indexPath=%@", indexPath);
-        // ...and update the source object
-        [self updateSourceObjectWithTextField: textField
-                                 forTableCell: cell
-                                  atIndexPath: indexPath];
-    }
-    
-    // Invalidate the contentsize as the contents have changed
-    [textField invalidateIntrinsicContentSize];
-    // ...and ask the view to update constraints
-    [self.view setNeedsUpdateConstraints];
 }
 
 

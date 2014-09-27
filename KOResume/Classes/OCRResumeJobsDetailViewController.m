@@ -1410,88 +1410,6 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     }
 }
 
-//----------------------------------------------------------------------------------------------------------
-/**
- Asks the delegate for the new presentation style to use.
- 
- The presentation controller calls this method when the app is about to change to a horizontally compact environment.
- Use this method to indicate that you want the presented view controller to transition to one of the full-screen
- presentation styles.
- 
- If you do not implement this method or return any style other than UIModalPresentationFullScreen or
- UIModalPresentationOverFullScreen, the presentation controller adjusts the presentation style to the
- UIModalPresentationFullScreen style.
- 
- @param controller      The presentation controller that is managing the size change. Use this object to retrieve the
- view controllers involved in the presentation.
- @return                The new presentation style, which must be either UIModalPresentationFullScreen or
- UIModalPresentationOverFullScreen.
- */
-- (UIModalPresentationStyle)adaptivePresentationStyleForPresentationController: (UIPresentationController *)controller
-{
-    return UIModalPresentationFullScreen;
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Asks the delegate for the view controller to display when adapting to the specified presentation style.
- 
- When a size class change causes a change to the underlying presentation style, the presentation controller calls
- this method to ask for the view controller to display in that new style. This method is your opportunity to
- replace the current view controller with one that is better suited for the new presentation style. For example,
- you might use this method to insert a navigation controller into your view hierarchy to facilitate pushing new
- view controllers more easily in the compact environment. In that instance, you would return a navigation controller
- whose root view controller is the currently presented view controller. You could also return an entirely different
- view controller if you prefer.
- 
- If you do not implement this method or your implementation returns nil, the presentation controller uses its existing
- presented view controller.
- 
- @param controller      The presentation controller that is managing the size class change.
- @param style           The new presentation style that is about to be employed to display the view controller.
- @return                The view controller to display in place of the existing presented view controller.
- */
-- (UIViewController *)presentationController: (UIPresentationController *)controller
-  viewControllerForAdaptivePresentationStyle: (UIModalPresentationStyle)style
-{
-    DLog(@"presentedViewController class=%@", [controller.presentedViewController class]);
-    
-    // Save a reference to the OCRDatePickerViewController so we can dismiss it when the user taps the Done button
-    self.datePickerController = (OCRDatePickerViewController *)controller.presentedViewController;
-    
-    // Instantiate a navigation controller with the OCRDatePickerViewController as root.
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController: controller.presentedViewController];
-    
-    // ...create a done button
-    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemDone
-                                                                                target: self
-                                                                                action: @selector(didPressDoneButton:)];
-    // ...and install it as the right button
-    navController.topViewController.navigationItem.rightBarButtonItem = doneButton;
-    
-    // Set the title
-    navController.topViewController.title = NSLocalizedString( @"Earned Date", nil);
-    
-    return navController;
-}
-
-
-//----------------------------------------------------------------------------------------------------------
-/**
- Called when the user taps the Done button of a presented OCRDatePickerViewController.
- 
- @param sender          The object initiating the dismiss action (the Done UIBarButtonItem).
- */
-- (void)didPressDoneButton: (id)sender
-{
-    DLog(@"sender=%@", [sender class]);
-    
-    // Tell the datePickerController to dismiss
-    [self.datePickerController dismissViewControllerAnimated: YES
-                                                  completion: nil];
-}
-
 
 //----------------------------------------------------------------------------------------------------------
 /**
@@ -1587,6 +1505,91 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     [textField invalidateIntrinsicContentSize];
     // ...and ask the view to update constraints
     [self.view setNeedsUpdateConstraints];
+}
+
+
+#pragma mark - UIAdaptivePresentationControllerDelegate methods
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Asks the delegate for the new presentation style to use.
+ 
+ The presentation controller calls this method when the app is about to change to a horizontally compact environment.
+ Use this method to indicate that you want the presented view controller to transition to one of the full-screen
+ presentation styles.
+ 
+ If you do not implement this method or return any style other than UIModalPresentationFullScreen or
+ UIModalPresentationOverFullScreen, the presentation controller adjusts the presentation style to the
+ UIModalPresentationFullScreen style.
+ 
+ @param controller      The presentation controller that is managing the size change. Use this object to retrieve the
+ view controllers involved in the presentation.
+ @return                The new presentation style, which must be either UIModalPresentationFullScreen or
+ UIModalPresentationOverFullScreen.
+ */
+- (UIModalPresentationStyle)adaptivePresentationStyleForPresentationController: (UIPresentationController *)controller
+{
+    return UIModalPresentationFullScreen;
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Asks the delegate for the view controller to display when adapting to the specified presentation style.
+ 
+ When a size class change causes a change to the underlying presentation style, the presentation controller calls
+ this method to ask for the view controller to display in that new style. This method is your opportunity to
+ replace the current view controller with one that is better suited for the new presentation style. For example,
+ you might use this method to insert a navigation controller into your view hierarchy to facilitate pushing new
+ view controllers more easily in the compact environment. In that instance, you would return a navigation controller
+ whose root view controller is the currently presented view controller. You could also return an entirely different
+ view controller if you prefer.
+ 
+ If you do not implement this method or your implementation returns nil, the presentation controller uses its existing
+ presented view controller.
+ 
+ @param controller      The presentation controller that is managing the size class change.
+ @param style           The new presentation style that is about to be employed to display the view controller.
+ @return                The view controller to display in place of the existing presented view controller.
+ */
+- (UIViewController *)presentationController: (UIPresentationController *)controller
+  viewControllerForAdaptivePresentationStyle: (UIModalPresentationStyle)style
+{
+    DLog(@"presentedViewController class=%@", [controller.presentedViewController class]);
+    
+    // Save a reference to the OCRDatePickerViewController so we can dismiss it when the user taps the Done button
+    self.datePickerController = (OCRDatePickerViewController *)controller.presentedViewController;
+    
+    // Instantiate a navigation controller with the OCRDatePickerViewController as root.
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController: controller.presentedViewController];
+    
+    // ...create a done button
+    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemDone
+                                                                                target: self
+                                                                                action: @selector(didPressDoneButton:)];
+    // ...and install it as the right button
+    navController.topViewController.navigationItem.rightBarButtonItem = doneButton;
+    
+    // Set the title
+    navController.topViewController.title = NSLocalizedString( @"Earned Date", nil);
+    
+    return navController;
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Called when the user taps the Done button of a presented OCRDatePickerViewController.
+ 
+ @param sender          The object initiating the dismiss action (the Done UIBarButtonItem).
+ */
+- (void)didPressDoneButton: (id)sender
+{
+    DLog(@"sender=%@", [sender class]);
+    
+    // Tell the datePickerController to dismiss
+    [self.datePickerController dismissViewControllerAnimated: YES
+                                                  completion: nil];
 }
 
 

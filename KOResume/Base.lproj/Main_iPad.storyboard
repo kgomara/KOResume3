@@ -301,6 +301,9 @@
                                                                 <textField opaque="NO" clipsSubviews="YES" tag="100" contentMode="scaleToFill" horizontalHuggingPriority="750" horizontalCompressionResistancePriority="250" placeholderIntrinsicWidth="194" placeholderIntrinsicHeight="35" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Accomplishment Name" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="8RP-Qt-3bj" userLabel="Name">
                                                                     <rect key="frame" x="20" y="8" width="194" height="32"/>
                                                                     <color key="backgroundColor" red="0.80000000000000004" green="0.80000000000000004" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
+                                                                    <constraints>
+                                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="72" id="iM1-f4-X4m"/>
+                                                                    </constraints>
                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                                                     <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="next"/>
                                                                     <connections>
@@ -891,7 +894,7 @@
                                     <outlet property="sectionLabel" destination="nbd-iZ-TYw" id="Oft-hQ-gwX"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="OCREducationTableCell" rowHeight="160" id="eYe-co-7bk" customClass="OCREducationTableViewCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="OCREducationTableCell" rowHeight="161" id="eYe-co-7bk" customClass="OCREducationTableViewCell">
                                 <rect key="frame" x="0.0" y="143" width="663" height="161"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="eYe-co-7bk" id="vuU-YA-Kd3">
@@ -899,25 +902,55 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <textField opaque="NO" clipsSubviews="YES" tag="100" contentMode="scaleToFill" horizontalHuggingPriority="750" horizontalCompressionResistancePriority="250" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Organization title" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="mv2-Eo-0GW">
-                                            <rect key="frame" x="20" y="8" width="148" height="30"/>
+                                            <rect key="frame" x="20" y="8" width="144" height="30"/>
                                             <color key="backgroundColor" red="0.80000000000000004" green="0.80000000000000004" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
-                                            <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="72" id="ybB-Ji-IOQ"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                             <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="next"/>
                                             <connections>
                                                 <outlet property="delegate" destination="eYe-co-7bk" id="5ms-3r-X6g"/>
                                             </connections>
                                         </textField>
                                         <textField opaque="NO" clipsSubviews="YES" tag="101" contentMode="scaleToFill" verticalCompressionResistancePriority="749" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Degree/Certification Name" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="f0K-cp-foM">
-                                            <rect key="frame" x="20" y="46" width="218" height="29"/>
+                                            <rect key="frame" x="20" y="46" width="218" height="30"/>
                                             <color key="backgroundColor" red="0.80000000000000004" green="0.80000000000000004" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="72" id="ZmS-JK-TIi"/>
+                                            </constraints>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                             <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="no" returnKeyType="next"/>
                                             <connections>
                                                 <outlet property="delegate" destination="eYe-co-7bk" id="4QN-Xi-agy"/>
                                             </connections>
                                         </textField>
-                                        <textField opaque="NO" clipsSubviews="YES" tag="102" contentMode="scaleToFill" verticalHuggingPriority="251" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Date Granted" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Dvq-IV-ttv">
-                                            <rect key="frame" x="20" y="83" width="121" height="30"/>
+                                        <textField opaque="NO" clipsSubviews="YES" tag="102" contentMode="scaleToFill" horizontalCompressionResistancePriority="500" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="City" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="qP1-g8-l8G">
+                                            <rect key="frame" x="20" y="84" width="72" height="30"/>
+                                            <color key="backgroundColor" red="0.80000000000000004" green="0.80000000000000004" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="72" id="zhC-Q1-GFk"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                            <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="next"/>
+                                            <connections>
+                                                <outlet property="delegate" destination="eYe-co-7bk" id="SHM-ib-ZJ1"/>
+                                            </connections>
+                                        </textField>
+                                        <textField opaque="NO" clipsSubviews="YES" tag="103" contentMode="scaleToFill" horizontalCompressionResistancePriority="751" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="ST" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="A0J-KN-swN">
+                                            <rect key="frame" x="100" y="84" width="72" height="30"/>
+                                            <color key="backgroundColor" red="0.80000000000000004" green="0.80000000000000004" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" relation="greaterThanOrEqual" priority="750" constant="72" id="cd8-Sm-Yvs"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                            <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters" autocorrectionType="no" returnKeyType="next"/>
+                                            <connections>
+                                                <outlet property="delegate" destination="eYe-co-7bk" id="jJR-DN-ajf"/>
+                                            </connections>
+                                        </textField>
+                                        <textField opaque="NO" clipsSubviews="YES" tag="104" contentMode="scaleToFill" verticalHuggingPriority="251" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Date Granted" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Dvq-IV-ttv">
+                                            <rect key="frame" x="20" y="122" width="121" height="30"/>
                                             <color key="backgroundColor" red="0.80000000000000004" green="0.80000000000000004" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                             <textInputTraits key="textInputTraits"/>
@@ -925,44 +958,23 @@
                                                 <outlet property="delegate" destination="eYe-co-7bk" id="aBd-3U-DJC"/>
                                             </connections>
                                         </textField>
-                                        <textField opaque="NO" clipsSubviews="YES" tag="103" contentMode="scaleToFill" horizontalCompressionResistancePriority="500" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="City" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="qP1-g8-l8G">
-                                            <rect key="frame" x="20" y="121" width="51" height="30"/>
-                                            <color key="backgroundColor" red="0.80000000000000004" green="0.80000000000000004" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
-                                            <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
-                                            <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="next"/>
-                                            <connections>
-                                                <outlet property="delegate" destination="eYe-co-7bk" id="SHM-ib-ZJ1"/>
-                                            </connections>
-                                        </textField>
-                                        <textField opaque="NO" clipsSubviews="YES" tag="104" contentMode="scaleToFill" horizontalCompressionResistancePriority="751" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="ST" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="A0J-KN-swN">
-                                            <rect key="frame" x="79" y="121" width="72" height="30"/>
-                                            <color key="backgroundColor" red="0.80000000000000004" green="0.80000000000000004" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" relation="greaterThanOrEqual" priority="750" constant="72" id="cd8-Sm-Yvs"/>
-                                            </constraints>
-                                            <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
-                                            <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters" autocorrectionType="no" returnKeyType="done"/>
-                                            <connections>
-                                                <outlet property="delegate" destination="eYe-co-7bk" id="jJR-DN-ajf"/>
-                                            </connections>
-                                        </textField>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="Dvq-IV-ttv" firstAttribute="top" secondItem="f0K-cp-foM" secondAttribute="bottom" constant="8" symbolic="YES" id="2RD-9T-ddg"/>
                                         <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="mv2-Eo-0GW" secondAttribute="trailing" id="56Y-Ku-1Bv"/>
                                         <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="A0J-KN-swN" secondAttribute="trailing" id="7sS-nw-r9S"/>
+                                        <constraint firstItem="qP1-g8-l8G" firstAttribute="top" secondItem="f0K-cp-foM" secondAttribute="bottom" constant="8" id="BOZ-u2-Woa"/>
                                         <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="Dvq-IV-ttv" secondAttribute="trailing" id="IbI-gI-3w6"/>
                                         <constraint firstItem="qP1-g8-l8G" firstAttribute="leading" secondItem="Dvq-IV-ttv" secondAttribute="leading" id="KEN-cA-Ple"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="Dvq-IV-ttv" secondAttribute="bottom" id="SP8-jx-fOa"/>
                                         <constraint firstItem="A0J-KN-swN" firstAttribute="leading" secondItem="qP1-g8-l8G" secondAttribute="trailing" constant="8" symbolic="YES" id="WkH-KF-bj7"/>
                                         <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="f0K-cp-foM" secondAttribute="trailing" id="bj1-SZ-7t8"/>
                                         <constraint firstItem="qP1-g8-l8G" firstAttribute="centerY" secondItem="A0J-KN-swN" secondAttribute="centerY" id="j5b-Sj-93y"/>
+                                        <constraint firstItem="Dvq-IV-ttv" firstAttribute="top" secondItem="A0J-KN-swN" secondAttribute="bottom" constant="8" id="kfO-Ef-4Gx"/>
                                         <constraint firstItem="f0K-cp-foM" firstAttribute="top" secondItem="mv2-Eo-0GW" secondAttribute="bottom" constant="8" symbolic="YES" id="mRE-4h-uJK"/>
                                         <constraint firstItem="mv2-Eo-0GW" firstAttribute="top" secondItem="vuU-YA-Kd3" secondAttribute="top" constant="8" id="nMb-8v-Phw"/>
                                         <constraint firstItem="Dvq-IV-ttv" firstAttribute="leading" secondItem="f0K-cp-foM" secondAttribute="leading" id="oqs-Kz-vk5"/>
-                                        <constraint firstItem="qP1-g8-l8G" firstAttribute="top" secondItem="Dvq-IV-ttv" secondAttribute="bottom" constant="8" symbolic="YES" id="qyE-QF-4LC"/>
                                         <constraint firstItem="f0K-cp-foM" firstAttribute="leading" secondItem="mv2-Eo-0GW" secondAttribute="leading" id="sXk-ra-HNJ"/>
                                         <constraint firstItem="mv2-Eo-0GW" firstAttribute="leading" secondItem="vuU-YA-Kd3" secondAttribute="leading" constant="20" symbolic="YES" id="teD-jO-bjO"/>
-                                        <constraint firstAttribute="bottom" secondItem="qP1-g8-l8G" secondAttribute="bottom" constant="8" id="zif-xD-lCs"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>

@@ -10,9 +10,9 @@
 
 #define kTitleFieldTag          100
 #define kNameFieldTag           101
-#define kEarnedDateFieldTag     102
-#define kCityFieldTag           103
-#define kStateFieldTag          104
+#define kCityFieldTag           102
+#define kStateFieldTag          103
+#define kEarnedDateFieldTag     104
 
 @interface OCREducationTableViewCell : UITableViewCell  <UITextFieldDelegate>
 
