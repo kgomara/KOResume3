@@ -239,7 +239,9 @@
             [self.noSelectionView.view removeFromSuperview];
             // ...and nil the reference
             self.noSelectionView = nil;
-        }
+            // Enable the edit button
+            [self.editButtonItem setEnabled: YES];
+       }
         // Populate the UI with content from our managedObject
         [self populateFieldsFromSelectedObject];
     }
@@ -255,16 +257,20 @@
             [self addChildViewController: self.noSelectionView];
             [self.view addSubview: self.noSelectionView.view];
             [self.noSelectionView didMoveToParentViewController: self];
+            // Disable the edit button
+            [self.editButtonItem setEnabled: NO];
         }
         
         if (self.selectedManagedObject)
         {
-            // We have a selected object, but no data
+            // We have a selected object, but no data - allow editing
+            [self.editButtonItem setEnabled: YES];
             self.noSelectionView.messageLabel.text = NSLocalizedString(@"Press Edit to enter information.", nil);
         }
         else
         {
             // Nothing is selected
+            [self.editButtonItem setEnabled: NO];
             self.noSelectionView.messageLabel.text = NSLocalizedString(@"Nothing selected.", nil);
         }
     }
@@ -1329,7 +1335,8 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     if (textField.tag == kJobStartDateFieldTag ||
         textField.tag == kJobEndDateFieldTag)
     {
-        // Bring up date picker
+        // Dismiss the keyboard (if any)
+        [activeField resignFirstResponder];
         
         // Save a reference to the textField we are working with
         activeField = textField;
@@ -1504,7 +1511,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     // Invalidate the contentsize as the contents have changed
     [textField invalidateIntrinsicContentSize];
     // ...and ask the view to update constraints
-    [self.view setNeedsUpdateConstraints];
+    [self.view layoutIfNeeded];
 }
 
 
