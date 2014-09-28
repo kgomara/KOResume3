@@ -145,6 +145,9 @@
     [dateFormatter setDateStyle: NSDateFormatterMediumStyle];
     [dateFormatter setTimeStyle: NSDateFormatterNoStyle];	//Not shown
     
+    // Configure the view
+    [self configureView];
+    
     // ...and the NavBar
     [self configureDefaultNavBar];
     
@@ -177,9 +180,6 @@
     DLog();
     
     [super viewWillAppear: animated];
-    
-    // Configure the view
-    [self configureView];
     
     // Observe the app delegate telling us when it's finished asynchronously adding the store coordinator
     [[NSNotificationCenter defaultCenter] addObserver: self
@@ -1595,8 +1595,8 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     DLog(@"sender=%@", [sender class]);
     
     // Tell the datePickerController to dismiss
-    [self.datePickerController dismissViewControllerAnimated: YES
-                                                  completion: nil];
+    [self.datePickerController.navigationController dismissViewControllerAnimated: YES
+                                                                       completion: nil];
 }
 
 

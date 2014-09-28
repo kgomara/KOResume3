@@ -1267,8 +1267,8 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     DLog(@"sender=%@", [sender class]);
     
     // Tell the datePickerController to dismiss
-    [self.datePickerController dismissViewControllerAnimated: YES
-                                                  completion: nil];
+    [self.datePickerController.navigationController dismissViewControllerAnimated: YES
+                                                                       completion: nil];
 }
 
 
