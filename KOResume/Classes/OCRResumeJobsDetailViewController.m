@@ -1300,7 +1300,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
          
          */
         [self updateSourceObjectWithString: textView.text
-                                    forTag: textView.tag
+                                    forTag: (int)textView.tag
                                atIndexPath: indexPath];
     }
     
@@ -1412,7 +1412,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
         NSIndexPath* indexPath = [self.tableView indexPathForCell: cell];
         // ...and update the source object
         [self updateSourceObjectWithString: activeField.text
-                                    forTag: activeField.tag
+                                    forTag: (int)activeField.tag
                                atIndexPath: indexPath];
     }
 }
@@ -1504,7 +1504,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
         NSIndexPath* indexPath = [self.tableView indexPathForCell: cell];
         // ...and update the source object
         [self updateSourceObjectWithString: textField.text
-                                    forTag: textField.tag
+                                    forTag: (int)textField.tag
                                atIndexPath: indexPath];
     }
     

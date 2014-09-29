@@ -59,8 +59,6 @@
 		D67D6E6919C1470700F97694 /* OCRDatePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D67D6E6719C1470700F97694 /* OCRDatePickerViewController.m */; };
 		D6AC3D3E179A3F21001D8D75 /* OCRPackagesCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D6AC3D3D179A3F21001D8D75 /* OCRPackagesCell.m */; };
 		D6AC3D3F179A3F21001D8D75 /* OCRPackagesCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D6AC3D3D179A3F21001D8D75 /* OCRPackagesCell.m */; };
-		D6B016B51793C16900B86B8D /* KOResume.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = D6B016B41793C16900B86B8D /* KOResume.sqlite */; };
-		D6B016B61793C16900B86B8D /* KOResume.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = D6B016B41793C16900B86B8D /* KOResume.sqlite */; };
 		D6B256BD18C00554006A0343 /* OCRTableViewHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D6B256BC18C00554006A0343 /* OCRTableViewHeaderCell.m */; };
 		D6B256BE18C00554006A0343 /* OCRTableViewHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D6B256BC18C00554006A0343 /* OCRTableViewHeaderCell.m */; };
 		D6B408111798E9ED00C567FF /* OCRAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D63D82CE179311350065F0A9 /* OCRAppDelegate.m */; };
@@ -95,6 +93,8 @@
 		D6BE16D919AAF05100147081 /* OCRPackagesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D6BE16D719AAF05100147081 /* OCRPackagesTableViewController.m */; };
 		D6C1DCC019C5F6DD00D38336 /* OCRAccomplishmentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D6C1DCBF19C5F6DD00D38336 /* OCRAccomplishmentTableViewCell.m */; };
 		D6C1DCC119C5F6DD00D38336 /* OCRAccomplishmentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D6C1DCBF19C5F6DD00D38336 /* OCRAccomplishmentTableViewCell.m */; };
+		D6C3161319D89FFC006B8297 /* KOResume.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = D6C3161219D89FFC006B8297 /* KOResume.sqlite */; };
+		D6C3161419D89FFC006B8297 /* KOResume.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = D6C3161219D89FFC006B8297 /* KOResume.sqlite */; };
 		D6C3FC43199F0F71000457F4 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6C3FC42199F0F71000457F4 /* SystemConfiguration.framework */; };
 		D6C6F14E18AFD58B003A8C92 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = D6C6F14D18AFD58B003A8C92 /* README.md */; };
 		D6C6F15918B27AD3003A8C92 /* KOResume.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D6C6F15718B27AD3003A8C92 /* KOResume.xcdatamodeld */; };
@@ -176,7 +176,6 @@
 		D6ABF9AA187A0DD700AECF28 /* OCRGlobalMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCRGlobalMacros.h; sourceTree = "<group>"; };
 		D6AC3D3C179A3F21001D8D75 /* OCRPackagesCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRPackagesCell.h; path = Classes/OCRPackagesCell.h; sourceTree = "<group>"; };
 		D6AC3D3D179A3F21001D8D75 /* OCRPackagesCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRPackagesCell.m; path = Classes/OCRPackagesCell.m; sourceTree = "<group>"; };
-		D6B016B41793C16900B86B8D /* KOResume.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; name = KOResume.sqlite; path = Resources/KOResume.sqlite; sourceTree = "<group>"; };
 		D6B256BB18C00554006A0343 /* OCRTableViewHeaderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRTableViewHeaderCell.h; path = Classes/OCRTableViewHeaderCell.h; sourceTree = "<group>"; };
 		D6B256BC18C00554006A0343 /* OCRTableViewHeaderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRTableViewHeaderCell.m; path = Classes/OCRTableViewHeaderCell.m; sourceTree = "<group>"; };
 		D6B4734318F7B00F004E9D84 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/SVWebViewController.strings; sourceTree = "<group>"; };
@@ -203,6 +202,7 @@
 		D6BE16D719AAF05100147081 /* OCRPackagesTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRPackagesTableViewController.m; path = Classes/OCRPackagesTableViewController.m; sourceTree = "<group>"; };
 		D6C1DCBE19C5F6DD00D38336 /* OCRAccomplishmentTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRAccomplishmentTableViewCell.h; path = Classes/OCRAccomplishmentTableViewCell.h; sourceTree = "<group>"; };
 		D6C1DCBF19C5F6DD00D38336 /* OCRAccomplishmentTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRAccomplishmentTableViewCell.m; path = Classes/OCRAccomplishmentTableViewCell.m; sourceTree = "<group>"; };
+		D6C3161219D89FFC006B8297 /* KOResume.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; name = KOResume.sqlite; path = Resources/KOResume.sqlite; sourceTree = "<group>"; };
 		D6C3FC42199F0F71000457F4 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		D6C6F14D18AFD58B003A8C92 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		D6C6F15818B27AD3003A8C92 /* KOResume.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = KOResume.xcdatamodel; sourceTree = "<group>"; };
@@ -379,7 +379,7 @@
 		D6B016B31793C12B00B86B8D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				D6B016B41793C16900B86B8D /* KOResume.sqlite */,
+				D6C3161219D89FFC006B8297 /* KOResume.sqlite */,
 				D63D82D3179311350065F0A9 /* Main_iPad.storyboard */,
 			);
 			name = Resources;
@@ -563,9 +563,9 @@
 			files = (
 				D63D82D5179311350065F0A9 /* Main_iPad.storyboard in Resources */,
 				D6B4734F18F7B00F004E9D84 /* SVWebViewController.strings in Resources */,
+				D6C3161319D89FFC006B8297 /* KOResume.sqlite in Resources */,
 				D6B4735318F7B00F004E9D84 /* SVWebViewController.bundle in Resources */,
 				D63D82E0179311350065F0A9 /* Images.xcassets in Resources */,
-				D6B016B51793C16900B86B8D /* KOResume.sqlite in Resources */,
 				D6C6F14E18AFD58B003A8C92 /* README.md in Resources */,
 				D63D82C9179311350065F0A9 /* InfoPlist.strings in Resources */,
 			);
@@ -576,8 +576,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				D6B4735418F7B00F004E9D84 /* SVWebViewController.bundle in Resources */,
-				D6B016B61793C16900B86B8D /* KOResume.sqlite in Resources */,
 				D63D82F2179311350065F0A9 /* InfoPlist.strings in Resources */,
+				D6C3161419D89FFC006B8297 /* KOResume.sqlite in Resources */,
 				D6B4735018F7B00F004E9D84 /* SVWebViewController.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

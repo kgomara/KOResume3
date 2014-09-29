@@ -161,7 +161,7 @@
             {
                 // ...load the store to the persistentStoreCoordinator
                 if ([self addStore: storeURL
-                           withOptions: options])
+                       withOptions: options])
                 {
                     dispatch_async( dispatch_get_main_queue(), ^{
                         DLog(@"Existing store added successfully!");
@@ -223,8 +223,14 @@
 //                   nil];
 //    } else {
         // iCloud is not available
+    NSMutableDictionary *pragmaOptions = [NSMutableDictionary dictionary];
+    [pragmaOptions setObject:@"DELETE" forKey:@"journal_mode"];
+//    NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption, [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption, pragmaOptions, NSSQLitePragmasOption, nil];
+
         options = @{NSMigratePersistentStoresAutomaticallyOption: @YES,
-                          NSInferMappingModelAutomaticallyOption: @YES};
+                          NSInferMappingModelAutomaticallyOption: @YES /*,
+                                           NSSQLitePragmasOption: pragmaOptions */};
+
 //    }
     
     return options;
