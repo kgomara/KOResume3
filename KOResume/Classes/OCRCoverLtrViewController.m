@@ -323,7 +323,7 @@
  of the custom views of the navigationItem property is set to the value returned by the
  editButtonItem method, the associated navigation controller displays a Done button;
  otherwise, an Edit button.
- @param animate     If YES, animates the transition; otherwise, does not.
+ @param animated    If YES, animates the transition; otherwise, does not.
  */
 - (void)setEditing: (BOOL)editing
           animated: (BOOL)animated

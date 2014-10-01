@@ -8,6 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
+/**
+ Category extensions for UITextField.
+ */
 @interface UITextField (OCRKOResume)
 
 //----------------------------------------------------------------------------------------------------------

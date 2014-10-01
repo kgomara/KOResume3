@@ -322,6 +322,8 @@
 //----------------------------------------------------------------------------------------------------------
 /**
  Invoked when the user taps the '+' button in the section header
+ 
+ @param sender          The UIButton object sending the message.
  */
 - (IBAction)didPressAddButton: (id)sender
 {
@@ -364,6 +366,8 @@
 //----------------------------------------------------------------------------------------------------------
 /**
  Add a Jobs entity for this resume.
+ 
+ @param jobName         The name to assign to the new jobs entity.
  */
 - (void)addJob: (NSString *)jobName
 {
@@ -423,7 +427,7 @@
                     of the custom views of the navigationItem property is set to the value returned by the
                     editButtonItem method, the associated navigation controller displays a Done button;
                     otherwise, an Edit button.
- @param animate     If YES, animates the transition; otherwise, does not.
+ @param animated    If YES, animates the transition; otherwise, does not.
  */
 - (void)setEditing: (BOOL)editing
           animated: (BOOL)animated
@@ -647,7 +651,7 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
 /**
  Configure a jobs cell for the resume.
  
- @param cell        A cell to configure.
+ @param tableView       A table-view object requesting the cell.
  @param indexPath   The indexPath of the section and row the cell represents.
  @return            A configured table view cell.
  */

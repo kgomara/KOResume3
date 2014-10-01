@@ -258,7 +258,9 @@
 
 //----------------------------------------------------------------------------------------------------------
 /**
- Invoked when the user taps the '+' button in the section header
+ Invoked when the user taps the '+' button in the section header.
+ 
+ @param sender          The UIButton object sending the message.
  */
 - (IBAction)didPressAddButton: (id)sender
 {
@@ -302,7 +304,7 @@
 /**
  Add a new Package object.
  
- @param aPackage    The name of the Package to add.
+ @param packageName     The name of the Package to add.
  */
 - (void)addPackage: (NSString *)packageName
 {
@@ -372,7 +374,7 @@
                     of the custom views of the navigationItem property is set to the value returned by the 
                     editButtonItem method, the associated navigation controller displays a Done button;     
                     otherwise, an Edit button.
- @param animate     If YES, animates the transition; otherwise, does not.
+ @param animated    If YES, animates the transition; otherwise, does not.
  */
 - (void)setEditing: (BOOL)editing
           animated: (BOOL)animated

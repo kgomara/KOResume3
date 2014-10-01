@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="html/html; charset=utf-8" />
-		<title>OCRTableViewHeaderCell Class Reference</title>
+		<title>OCRAccomplishmentTableViewCell Class Reference</title>
 		<meta id="xcode-display" name="xcode-display" content="render"/>
 		<link rel="stylesheet" type="text/css" href="../css/styles.css" media="all" />
 		<link rel="stylesheet" type="text/css" media="print" href="../css/stylesPrint.css" />
@@ -16,7 +16,7 @@
 			</div>
 			
 			<div id="title" role="banner">
-				<h1 class="hideInXcode">OCRTableViewHeaderCell Class Reference</h1>
+				<h1 class="hideInXcode">OCRAccomplishmentTableViewCell Class Reference</h1>
 			</div>
 			<ul id="headerButtons" role="toolbar">
 				<li id="toc_button">
@@ -39,9 +39,9 @@
 	
 	<option value="properties">Properties</option>
 	
-	<option value="//api/name/addButton">&nbsp;&nbsp;&nbsp;&nbsp;addButton</option>
+	<option value="//api/name/accomplishmentName">&nbsp;&nbsp;&nbsp;&nbsp;accomplishmentName</option>
 	
-	<option value="//api/name/sectionLabel">&nbsp;&nbsp;&nbsp;&nbsp;sectionLabel</option>
+	<option value="//api/name/accomplishmentSummary">&nbsp;&nbsp;&nbsp;&nbsp;accomplishmentSummary</option>
 	
 	
 	
@@ -71,9 +71,9 @@
 
 <li role="treeitem" class="children"><span class="disclosure"></span><span class="sectionName"><a href="#properties">Properties</a></span><ul>
 	
-	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/addButton">addButton</a></span></li>
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/accomplishmentName">accomplishmentName</a></span></li>
 	
-	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/sectionLabel">sectionLabel</a></span></li>
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/accomplishmentSummary">accomplishmentSummary</a></span></li>
 	
 </ul></li>
 
@@ -86,7 +86,7 @@
 		</nav>
 		<article>
 			<div id="contents" class="isShowingTOC" role="main">
-				<a title="OCRTableViewHeaderCell Class Reference" name="top"></a>
+				<a title="OCRAccomplishmentTableViewCell Class Reference" name="top"></a>
 				<div class="main-navigation navigation-top">
 					<ul>
 	<li><a href="../index.html">Index</a></li>
@@ -95,7 +95,7 @@
 				</div>
 				<div id="header">
 					<div class="section-header">
-						<h1 class="title title-header">OCRTableViewHeaderCell Class Reference</h1>
+						<h1 class="title title-header">OCRAccomplishmentTableViewCell Class Reference</h1>
 					</div>		
 				</div>
 				<div id="container">	
@@ -105,8 +105,11 @@
 	<td class="specification-title">Inherits from</td>
 	<td class="specification-value">UITableViewCell</td>
 </tr><tr>
+	<td class="specification-title">Conforms to</td>
+	<td class="specification-value">UITextFieldDelegate</td>
+</tr><tr>
 	<td class="specification-title">Declared in</td>
-	<td class="specification-value">OCRTableViewHeaderCell.h<br />OCRTableViewHeaderCell.m</td>
+	<td class="specification-value">OCRAccomplishmentTableViewCell.h<br />OCRAccomplishmentTableViewCell.m</td>
 </tr>
 						</tbody></table></div>
 					
@@ -116,7 +119,7 @@
 					<div class="section section-overview">
 						<a title="Overview" name="overview"></a>
 						<h2 class="subtitle subtitle-overview">Overview</h2>
-						<p>Manage a table view header cell object</p>
+						<p>Manage UITableViewCell objects representing accomplishments.</p>
 					</div>
 					
 					
@@ -134,13 +137,13 @@
 						<ul class="task-list">
 							<li>
 	<span class="tooltip">
-		<code><a href="#//api/name/sectionLabel">&nbsp;&nbsp;sectionLabel</a></code>
+		<code><a href="#//api/name/accomplishmentName">&nbsp;&nbsp;accomplishmentName</a></code>
 	</span>
 	<span class="task-item-suffix">property</span>
 	
 </li><li>
 	<span class="tooltip">
-		<code><a href="#//api/name/addButton">&nbsp;&nbsp;addButton</a></code>
+		<code><a href="#//api/name/accomplishmentSummary">&nbsp;&nbsp;accomplishmentSummary</a></code>
 	</span>
 	<span class="task-item-suffix">property</span>
 	
@@ -158,18 +161,18 @@
 						<h2 class="subtitle subtitle-methods">Properties</h2>
 						
 						<div class="section-method">
-	<a name="//api/name/addButton" title="addButton"></a>
-	<h3 class="subsubtitle method-title">addButton</h3>
+	<a name="//api/name/accomplishmentName" title="accomplishmentName"></a>
+	<h3 class="subsubtitle method-title">accomplishmentName</h3>
 	
 	
 	
 	<div class="method-subsection brief-description">
-		<p>IBOutlet to the addButton in the group header</p>
+		<p>IBOutlet to the accomplishment name text field.</p>
 	</div>		
 	
     
 
-	<div class="method-subsection method-declaration"><code>@property (weak, nonatomic) IBOutlet UIButton *addButton</code></div>
+	<div class="method-subsection method-declaration"><code>@property (weak, nonatomic) IBOutlet UITextField *accomplishmentName</code></div>
 
     
 	
@@ -187,25 +190,25 @@
 	
 	<div class="method-subsection declared-in-section">
 		<h4 class="method-subtitle">Declared In</h4>
-		<code class="declared-in-ref">OCRTableViewHeaderCell.h</code><br />
+		<code class="declared-in-ref">OCRAccomplishmentTableViewCell.h</code><br />
 	</div>				
 	
 	
 </div>
 						
 						<div class="section-method">
-	<a name="//api/name/sectionLabel" title="sectionLabel"></a>
-	<h3 class="subsubtitle method-title">sectionLabel</h3>
+	<a name="//api/name/accomplishmentSummary" title="accomplishmentSummary"></a>
+	<h3 class="subsubtitle method-title">accomplishmentSummary</h3>
 	
 	
 	
 	<div class="method-subsection brief-description">
-		<p>IBOutlet to the sectionLabel in the group header</p>
+		<p>IBOutlet to the accomplishment name text view.</p>
 	</div>		
 	
     
 
-	<div class="method-subsection method-declaration"><code>@property (weak, nonatomic) IBOutlet UILabel *sectionLabel</code></div>
+	<div class="method-subsection method-declaration"><code>@property (weak, nonatomic) IBOutlet UITextView *accomplishmentSummary</code></div>
 
     
 	
@@ -223,7 +226,7 @@
 	
 	<div class="method-subsection declared-in-section">
 		<h4 class="method-subtitle">Declared In</h4>
-		<code class="declared-in-ref">OCRTableViewHeaderCell.h</code><br />
+		<code class="declared-in-ref">OCRAccomplishmentTableViewCell.h</code><br />
 	</div>				
 	
 	

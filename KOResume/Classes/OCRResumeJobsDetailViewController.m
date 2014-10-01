@@ -561,6 +561,8 @@
 //----------------------------------------------------------------------------------------------------------
 /**
  Add an Accomplishments entity for this resume.
+ 
+ @param accomplishmentName      The name to assign to the new entity.
  */
 - (void)addAccomplishment: (NSString *)accomplishmentName
 {
@@ -620,7 +622,7 @@
  of the custom views of the navigationItem property is set to the value returned by the
  editButtonItem method, the associated navigation controller displays a Done button;
  otherwise, an Edit button.
- @param animate     If YES, animates the transition; otherwise, does not.
+ @param animated    If YES, animates the transition; otherwise, does not.
  */
 - (void)setEditing: (BOOL)editing
           animated: (BOOL)animated
@@ -941,7 +943,7 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
 /**
  Configure a jobs cell for the resume.
  
- @param cell        A cell to configure.
+ @param tableView       A table-view object requesting the cell.
  @param indexPath   The indexPath of the section and row the cell represents.
  @return            A configured table view cell.
  */
@@ -1485,7 +1487,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
  any pending edits and resigns its first responder status. You can use this method to tear down any data structures
  or change any state information that you set when editing began.
  
- @param textView The text view in which editing ended.
+ @param textField       The text view in which editing ended.
  */
 - (void)textFieldDidEndEditing: (UITextField *)textField
 {
@@ -1606,8 +1608,9 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
 /**
  Update the object represented by the tagged field in the cell at indexPath.
  
- @param string            The string data
- @param cell            The OCREducationTextViewCell representing the education object
+ @param string              The string data
+ @param tag                 The tag of the UITextField representing the object.
+ @param indexPath           An index path locating the new selected row in tableView.
  */
 - (void)updateSourceObjectWithString: (NSString *)string
                               forTag: (int)tag

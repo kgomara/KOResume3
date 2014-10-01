@@ -11,6 +11,9 @@
 #define kAccomplishmentNameFieldTag       100
 #define kAccomplishmentSummaryFieldTag    101
 
+/**
+ Manage UITableViewCell objects representing accomplishments.
+ */
 @interface OCRAccomplishmentTableViewCell : UITableViewCell  <UITextFieldDelegate>
 
 /**

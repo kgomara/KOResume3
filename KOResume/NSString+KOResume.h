@@ -8,6 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
+/**
+ Category extensions for NSString.
+ */
 @interface NSString (KOResume)
 
 //----------------------------------------------------------------------------------------------------------

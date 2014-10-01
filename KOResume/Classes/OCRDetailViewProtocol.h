@@ -61,7 +61,7 @@
 /**
  Reloads the fetched Results
  
- @param     note    The NSNotification object, or nil.
+ @param aNote           The NSNotification object, or nil.
  */
 
 - (void)reloadFetchedResults: (NSNotification*)aNote;

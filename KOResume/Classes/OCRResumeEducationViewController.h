@@ -8,6 +8,9 @@
 
 #import "OCRBaseDetailTableViewController.h"
 
+/**
+ Manage education object.
+ */
 @interface OCRResumeEducationViewController : OCRBaseDetailTableViewController <UITextFieldDelegate, NSFetchedResultsControllerDelegate,
                                                                                 UITableViewDataSource, UITableViewDelegate,
                                                                                 UIPopoverPresentationControllerDelegate>

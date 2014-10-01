@@ -10,6 +10,9 @@
 #import "OCRPackagesTableViewController.h"
 #import "OCRBaseDetailViewController.h"
 
+/**
+ Manage the Overview information of a resume object.
+ */
 @interface OCRResumeOverviewViewController : OCRBaseDetailViewController    <UITextFieldDelegate, UIScrollViewDelegate>
 
 /**

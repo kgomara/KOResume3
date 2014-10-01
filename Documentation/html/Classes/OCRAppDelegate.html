@@ -66,9 +66,15 @@
 	
 	<option value="//api/name/applicationWillTerminate:">&nbsp;&nbsp;&nbsp;&nbsp;- applicationWillTerminate:</option>
 	
-	<option value="//api/name/saveContext:">&nbsp;&nbsp;&nbsp;&nbsp;- saveContext:</option>
+	<option value="//api/name/saveContext">&nbsp;&nbsp;&nbsp;&nbsp;- saveContext</option>
 	
-	<option value="//api/name/saveContextAndWait:">&nbsp;&nbsp;&nbsp;&nbsp;- saveContextAndWait:</option>
+	<option value="//api/name/saveContextAndWait">&nbsp;&nbsp;&nbsp;&nbsp;- saveContextAndWait</option>
+	
+	<option value="//api/name/showAlertWithMessageAndType:alertType:target:">&nbsp;&nbsp;&nbsp;&nbsp;- showAlertWithMessageAndType:alertType:target:</option>
+	
+	<option value="//api/name/showErrorWithMessage:target:">&nbsp;&nbsp;&nbsp;&nbsp;- showErrorWithMessage:target:</option>
+	
+	<option value="//api/name/showWarningWithMessage:target:">&nbsp;&nbsp;&nbsp;&nbsp;- showWarningWithMessage:target:</option>
 	
 	
 	
@@ -122,9 +128,15 @@
 	
 	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/applicationWillTerminate:">applicationWillTerminate:</a></span></li>
 	
-	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/saveContext:">saveContext:</a></span></li>
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/saveContext">saveContext</a></span></li>
 	
-	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/saveContextAndWait:">saveContextAndWait:</a></span></li>
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/saveContextAndWait">saveContextAndWait</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/showAlertWithMessageAndType:alertType:target:">showAlertWithMessageAndType:alertType:target:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/showErrorWithMessage:target:">showErrorWithMessage:target:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/showWarningWithMessage:target:">showWarningWithMessage:target:</a></span></li>
 	
 </ul></li>
 
@@ -202,13 +214,31 @@
 	
 </li><li>
 	<span class="tooltip">
-		<code><a href="#//api/name/saveContext:">&ndash;&nbsp;saveContext:</a></code>
+		<code><a href="#//api/name/saveContext">&ndash;&nbsp;saveContext</a></code>
 	</span>
 	
 	
 </li><li>
 	<span class="tooltip">
-		<code><a href="#//api/name/saveContextAndWait:">&ndash;&nbsp;saveContextAndWait:</a></code>
+		<code><a href="#//api/name/saveContextAndWait">&ndash;&nbsp;saveContextAndWait</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/showAlertWithMessageAndType:alertType:target:">&ndash;&nbsp;showAlertWithMessageAndType:alertType:target:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/showErrorWithMessage:target:">&ndash;&nbsp;showErrorWithMessage:target:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/showWarningWithMessage:target:">&ndash;&nbsp;showWarningWithMessage:target:</a></code>
 	</span>
 	
 	
@@ -726,8 +756,8 @@
 </div>
 						
 						<div class="section-method">
-	<a name="//api/name/saveContext:" title="saveContext:"></a>
-	<h3 class="subsubtitle method-title">saveContext:</h3>
+	<a name="//api/name/saveContext" title="saveContext"></a>
+	<h3 class="subsubtitle method-title">saveContext</h3>
 	
 	
 	
@@ -737,19 +767,9 @@
 	
     
 
-	<div class="method-subsection method-declaration"><code>- (void)saveContext:(NSManagedObjectContext *)<em>moc</em></code></div>
+	<div class="method-subsection method-declaration"><code>- (void)saveContext</code></div>
 
     
-	
-	<div class="method-subsection arguments-section parameters">
-		<h4 class="method-subtitle parameter-title">Parameters</h4>
-		
-		<dl class="argument-def parameter-def">
-			<dt><em>moc</em></dt>
-			<dd><p>the managed object context to save.</p></dd>
-		</dl>
-		
-	</div>
 	
 	
 	
@@ -778,8 +798,8 @@ will return to its caller immediately.</p>
 </div>
 						
 						<div class="section-method">
-	<a name="//api/name/saveContextAndWait:" title="saveContextAndWait:"></a>
-	<h3 class="subsubtitle method-title">saveContextAndWait:</h3>
+	<a name="//api/name/saveContextAndWait" title="saveContextAndWait"></a>
+	<h3 class="subsubtitle method-title">saveContextAndWait</h3>
 	
 	
 	
@@ -789,19 +809,9 @@ will return to its caller immediately.</p>
 	
     
 
-	<div class="method-subsection method-declaration"><code>- (void)saveContextAndWait:(NSManagedObjectContext *)<em>moc</em></code></div>
+	<div class="method-subsection method-declaration"><code>- (void)saveContextAndWait</code></div>
 
     
-	
-	<div class="method-subsection arguments-section parameters">
-		<h4 class="method-subtitle parameter-title">Parameters</h4>
-		
-		<dl class="argument-def parameter-def">
-			<dt><em>moc</em></dt>
-			<dd><p>the managed object context to save.</p></dd>
-		</dl>
-		
-	</div>
 	
 	
 	
@@ -814,6 +824,164 @@ will return to its caller immediately.</p>
 		<p>This method adds the block to the backing queue to run on its own thread, however does not return until the
 block is finished executing.</p>
 	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">OCRAppDelegate.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/showAlertWithMessageAndType:alertType:target:" title="showAlertWithMessageAndType:alertType:target:"></a>
+	<h3 class="subsubtitle method-title">showAlertWithMessageAndType:alertType:target:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Display an alert message to the user.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)showAlertWithMessageAndType:(NSString *)<em>aMessage</em> alertType:(NSString *)<em>aType</em> target:(UIViewController *)<em>aTarget</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>aMessage</em></dt>
+			<dd><p>The message to display.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>aType</em></dt>
+			<dd><p>Alert type to display (typically, Information, Warning, Error).</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>aTarget</em></dt>
+			<dd><p>Target viewController for the alert.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">OCRAppDelegate.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/showErrorWithMessage:target:" title="showErrorWithMessage:target:"></a>
+	<h3 class="subsubtitle method-title">showErrorWithMessage:target:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Display an alert message to the user indicating Error.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)showErrorWithMessage:(NSString *)<em>theMessage</em> target:(UIViewController *)<em>aTarget</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>theMessage</em></dt>
+			<dd><p>The message to display.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>aTarget</em></dt>
+			<dd><p>Target viewController for the alert.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">OCRAppDelegate.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/showWarningWithMessage:target:" title="showWarningWithMessage:target:"></a>
+	<h3 class="subsubtitle method-title">showWarningWithMessage:target:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Display an alert message for the user indicating Warning.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)showWarningWithMessage:(NSString *)<em>theMessage</em> target:(UIViewController *)<em>aTarget</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>theMessage</em></dt>
+			<dd><p>The message to display.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>aTarget</em></dt>
+			<dd><p>Target viewController for the alert.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
 	
 	
 	
@@ -844,7 +1012,7 @@ block is finished executing.</p>
 				<div id="footer">
 					<hr />
 					<div class="footer-copyright">
-						<p><span class="copyright">&copy; 2014 OMaraConsultingAssociates. All rights reserved. (Last updated: 2014-05-25)</span><br />
+						<p><span class="copyright">&copy; 2014 OMaraConsultingAssociates. All rights reserved. (Last updated: 2014-09-30)</span><br />
 						
 						<span class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2 (build 963)</a>.</span></p>
 						

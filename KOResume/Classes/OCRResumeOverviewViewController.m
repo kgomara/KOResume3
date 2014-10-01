@@ -511,7 +511,7 @@
  of the custom views of the navigationItem property is set to the value returned by the
  editButtonItem method, the associated navigation controller displays a Done button;
  otherwise, an Edit button.
- @param animate     If YES, animates the transition; otherwise, does not.
+ @param animated    If YES, animates the transition; otherwise, does not.
  */
 - (void)setEditing: (BOOL)editing
           animated: (BOOL)animated
@@ -833,7 +833,7 @@
  any pending edits and resigns its first responder status. You can use this method to tear down any data structures
  or change any state information that you set when editing began.
  
- @param textView The text view in which editing ended.
+ @param textField       The text field in which editing ended.
  */
 - (void)textFieldDidEndEditing: (UITextField *)textField
 {

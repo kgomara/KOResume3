@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="html/html; charset=utf-8" />
-		<title>OCRCoverLtrViewController Class Reference</title>
+		<title>OCRResumeOverviewViewController Class Reference</title>
 		<meta id="xcode-display" name="xcode-display" content="render"/>
 		<link rel="stylesheet" type="text/css" href="../css/styles.css" media="all" />
 		<link rel="stylesheet" type="text/css" media="print" href="../css/stylesPrint.css" />
@@ -16,7 +16,7 @@
 			</div>
 			
 			<div id="title" role="banner">
-				<h1 class="hideInXcode">OCRCoverLtrViewController Class Reference</h1>
+				<h1 class="hideInXcode">OCRResumeOverviewViewController Class Reference</h1>
 			</div>
 			<ul id="headerButtons" role="toolbar">
 				<li id="toc_button">
@@ -39,9 +39,37 @@
 	
 	<option value="properties">Properties</option>
 	
-	<option value="//api/name/coverLtrFld">&nbsp;&nbsp;&nbsp;&nbsp;coverLtrFld</option>
+	<option value="//api/name/atLabel">&nbsp;&nbsp;&nbsp;&nbsp;atLabel</option>
+	
+	<option value="//api/name/contentView">&nbsp;&nbsp;&nbsp;&nbsp;contentView</option>
+	
+	<option value="//api/name/currentJobName">&nbsp;&nbsp;&nbsp;&nbsp;currentJobName</option>
+	
+	<option value="//api/name/currentJobTitle">&nbsp;&nbsp;&nbsp;&nbsp;currentJobTitle</option>
+	
+	<option value="//api/name/hmLabel">&nbsp;&nbsp;&nbsp;&nbsp;hmLabel</option>
+	
+	<option value="//api/name/mbLabel">&nbsp;&nbsp;&nbsp;&nbsp;mbLabel</option>
 	
 	<option value="//api/name/noSelectionView">&nbsp;&nbsp;&nbsp;&nbsp;noSelectionView</option>
+	
+	<option value="//api/name/resumeCity">&nbsp;&nbsp;&nbsp;&nbsp;resumeCity</option>
+	
+	<option value="//api/name/resumeEmail">&nbsp;&nbsp;&nbsp;&nbsp;resumeEmail</option>
+	
+	<option value="//api/name/resumeHomePhone">&nbsp;&nbsp;&nbsp;&nbsp;resumeHomePhone</option>
+	
+	<option value="//api/name/resumeMobilePhone">&nbsp;&nbsp;&nbsp;&nbsp;resumeMobilePhone</option>
+	
+	<option value="//api/name/resumeName">&nbsp;&nbsp;&nbsp;&nbsp;resumeName</option>
+	
+	<option value="//api/name/resumePostalCode">&nbsp;&nbsp;&nbsp;&nbsp;resumePostalCode</option>
+	
+	<option value="//api/name/resumeState">&nbsp;&nbsp;&nbsp;&nbsp;resumeState</option>
+	
+	<option value="//api/name/resumeStreet1">&nbsp;&nbsp;&nbsp;&nbsp;resumeStreet1</option>
+	
+	<option value="//api/name/resumeSummary">&nbsp;&nbsp;&nbsp;&nbsp;resumeSummary</option>
 	
 	<option value="//api/name/scrollView">&nbsp;&nbsp;&nbsp;&nbsp;scrollView</option>
 	
@@ -62,9 +90,9 @@
 	
 	<option value="//api/name/didPressCancelButton">&nbsp;&nbsp;&nbsp;&nbsp;- didPressCancelButton</option>
 	
-	<option value="//api/name/keyboardDidShow:">&nbsp;&nbsp;&nbsp;&nbsp;- keyboardDidShow:</option>
-	
 	<option value="//api/name/keyboardWillBeHidden:">&nbsp;&nbsp;&nbsp;&nbsp;- keyboardWillBeHidden:</option>
+	
+	<option value="//api/name/keyboardWillShow:">&nbsp;&nbsp;&nbsp;&nbsp;- keyboardWillShow:</option>
 	
 	<option value="//api/name/loadViewFromSelectedObject">&nbsp;&nbsp;&nbsp;&nbsp;- loadViewFromSelectedObject</option>
 	
@@ -75,6 +103,12 @@
 	<option value="//api/name/reloadFetchedResults:">&nbsp;&nbsp;&nbsp;&nbsp;- reloadFetchedResults:</option>
 	
 	<option value="//api/name/setEditing:animated:">&nbsp;&nbsp;&nbsp;&nbsp;- setEditing:animated:</option>
+	
+	<option value="//api/name/textFieldDidBeginEditing:">&nbsp;&nbsp;&nbsp;&nbsp;- textFieldDidBeginEditing:</option>
+	
+	<option value="//api/name/textFieldDidEndEditing:">&nbsp;&nbsp;&nbsp;&nbsp;- textFieldDidEndEditing:</option>
+	
+	<option value="//api/name/textFieldShouldReturn:">&nbsp;&nbsp;&nbsp;&nbsp;- textFieldShouldReturn:</option>
 	
 	<option value="//api/name/textViewDidEndEditing:">&nbsp;&nbsp;&nbsp;&nbsp;- textViewDidEndEditing:</option>
 	
@@ -114,9 +148,37 @@
 
 <li role="treeitem" class="children"><span class="disclosure"></span><span class="sectionName"><a href="#properties">Properties</a></span><ul>
 	
-	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/coverLtrFld">coverLtrFld</a></span></li>
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/atLabel">atLabel</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/contentView">contentView</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/currentJobName">currentJobName</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/currentJobTitle">currentJobTitle</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/hmLabel">hmLabel</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/mbLabel">mbLabel</a></span></li>
 	
 	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/noSelectionView">noSelectionView</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/resumeCity">resumeCity</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/resumeEmail">resumeEmail</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/resumeHomePhone">resumeHomePhone</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/resumeMobilePhone">resumeMobilePhone</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/resumeName">resumeName</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/resumePostalCode">resumePostalCode</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/resumeState">resumeState</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/resumeStreet1">resumeStreet1</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/resumeSummary">resumeSummary</a></span></li>
 	
 	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/scrollView">scrollView</a></span></li>
 	
@@ -138,9 +200,9 @@
 	
 	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/didPressCancelButton">didPressCancelButton</a></span></li>
 	
-	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/keyboardDidShow:">keyboardDidShow:</a></span></li>
-	
 	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/keyboardWillBeHidden:">keyboardWillBeHidden:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/keyboardWillShow:">keyboardWillShow:</a></span></li>
 	
 	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/loadViewFromSelectedObject">loadViewFromSelectedObject</a></span></li>
 	
@@ -151,6 +213,12 @@
 	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/reloadFetchedResults:">reloadFetchedResults:</a></span></li>
 	
 	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/setEditing:animated:">setEditing:animated:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/textFieldDidBeginEditing:">textFieldDidBeginEditing:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/textFieldDidEndEditing:">textFieldDidEndEditing:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/textFieldShouldReturn:">textFieldShouldReturn:</a></span></li>
 	
 	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/textViewDidEndEditing:">textViewDidEndEditing:</a></span></li>
 	
@@ -171,7 +239,7 @@
 		</nav>
 		<article>
 			<div id="contents" class="isShowingTOC" role="main">
-				<a title="OCRCoverLtrViewController Class Reference" name="top"></a>
+				<a title="OCRResumeOverviewViewController Class Reference" name="top"></a>
 				<div class="main-navigation navigation-top">
 					<ul>
 	<li><a href="../index.html">Index</a></li>
@@ -180,7 +248,7 @@
 				</div>
 				<div id="header">
 					<div class="section-header">
-						<h1 class="title title-header">OCRCoverLtrViewController Class Reference</h1>
+						<h1 class="title title-header">OCRResumeOverviewViewController Class Reference</h1>
 					</div>		
 				</div>
 				<div id="container">	
@@ -191,10 +259,10 @@
 	<td class="specification-value"><a href="../Classes/OCRBaseDetailViewController.html">OCRBaseDetailViewController</a> : UIViewController</td>
 </tr><tr>
 	<td class="specification-title">Conforms to</td>
-	<td class="specification-value"><a href="../Protocols/OCRDetailViewProtocol.html">OCRDetailViewProtocol</a><br />UISplitViewControllerDelegate<br />UITextViewDelegate</td>
+	<td class="specification-value">UIScrollViewDelegate<br />UITextFieldDelegate</td>
 </tr><tr>
 	<td class="specification-title">Declared in</td>
-	<td class="specification-value">OCRCoverLtrViewController.h<br />OCRCoverLtrViewController.m</td>
+	<td class="specification-value">OCRResumeOverviewViewController.h<br />OCRResumeOverviewViewController.m</td>
 </tr>
 						</tbody></table></div>
 					
@@ -204,7 +272,7 @@
 					<div class="section section-overview">
 						<a title="Overview" name="overview"></a>
 						<h2 class="subtitle subtitle-overview">Overview</h2>
-						<p>Manage cover letter objects.</p>
+						<p>Manage the Overview information of a resume object.</p>
 					</div>
 					
 					
@@ -228,7 +296,91 @@
 	
 </li><li>
 	<span class="tooltip">
-		<code><a href="#//api/name/coverLtrFld">&nbsp;&nbsp;coverLtrFld</a></code>
+		<code><a href="#//api/name/resumeName">&nbsp;&nbsp;resumeName</a></code>
+	</span>
+	<span class="task-item-suffix">property</span>
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/currentJobTitle">&nbsp;&nbsp;currentJobTitle</a></code>
+	</span>
+	<span class="task-item-suffix">property</span>
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/atLabel">&nbsp;&nbsp;atLabel</a></code>
+	</span>
+	<span class="task-item-suffix">property</span>
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/currentJobName">&nbsp;&nbsp;currentJobName</a></code>
+	</span>
+	<span class="task-item-suffix">property</span>
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/resumeStreet1">&nbsp;&nbsp;resumeStreet1</a></code>
+	</span>
+	<span class="task-item-suffix">property</span>
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/resumeCity">&nbsp;&nbsp;resumeCity</a></code>
+	</span>
+	<span class="task-item-suffix">property</span>
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/resumeState">&nbsp;&nbsp;resumeState</a></code>
+	</span>
+	<span class="task-item-suffix">property</span>
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/resumePostalCode">&nbsp;&nbsp;resumePostalCode</a></code>
+	</span>
+	<span class="task-item-suffix">property</span>
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/resumeHomePhone">&nbsp;&nbsp;resumeHomePhone</a></code>
+	</span>
+	<span class="task-item-suffix">property</span>
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/hmLabel">&nbsp;&nbsp;hmLabel</a></code>
+	</span>
+	<span class="task-item-suffix">property</span>
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/resumeMobilePhone">&nbsp;&nbsp;resumeMobilePhone</a></code>
+	</span>
+	<span class="task-item-suffix">property</span>
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/mbLabel">&nbsp;&nbsp;mbLabel</a></code>
+	</span>
+	<span class="task-item-suffix">property</span>
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/resumeEmail">&nbsp;&nbsp;resumeEmail</a></code>
+	</span>
+	<span class="task-item-suffix">property</span>
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/resumeSummary">&nbsp;&nbsp;resumeSummary</a></code>
+	</span>
+	<span class="task-item-suffix">property</span>
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/contentView">&nbsp;&nbsp;contentView</a></code>
 	</span>
 	<span class="task-item-suffix">property</span>
 	
@@ -320,7 +472,7 @@
 	
 </li><li>
 	<span class="tooltip">
-		<code><a href="#//api/name/keyboardDidShow:">&ndash;&nbsp;keyboardDidShow:</a></code>
+		<code><a href="#//api/name/keyboardWillShow:">&ndash;&nbsp;keyboardWillShow:</a></code>
 	</span>
 	
 	
@@ -338,7 +490,25 @@
 	
 </li><li>
 	<span class="tooltip">
+		<code><a href="#//api/name/textFieldDidBeginEditing:">&ndash;&nbsp;textFieldDidBeginEditing:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
 		<code><a href="#//api/name/textViewDidEndEditing:">&ndash;&nbsp;textViewDidEndEditing:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/textFieldShouldReturn:">&ndash;&nbsp;textFieldShouldReturn:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/textFieldDidEndEditing:">&ndash;&nbsp;textFieldDidEndEditing:</a></code>
 	</span>
 	
 	
@@ -376,18 +546,59 @@
 						<h2 class="subtitle subtitle-methods">Properties</h2>
 						
 						<div class="section-method">
-	<a name="//api/name/coverLtrFld" title="coverLtrFld"></a>
-	<h3 class="subsubtitle method-title">coverLtrFld</h3>
+	<a name="//api/name/atLabel" title="atLabel"></a>
+	<h3 class="subsubtitle method-title">atLabel</h3>
 	
 	
 	
 	<div class="method-subsection brief-description">
-		<p>IBOutlet to the cover letter text</p>
+		<p>IBOutlet to the &ldquo;at&rdquo; label.</p>
 	</div>		
 	
     
 
-	<div class="method-subsection method-declaration"><code>@property (nonatomic, weak) IBOutlet UITextView *coverLtrFld</code></div>
+	<div class="method-subsection method-declaration"><code>@property (weak, nonatomic) IBOutlet UILabel *atLabel</code></div>
+
+    
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>Declared so the UIFont can be dynamically re-sized.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">OCRResumeOverviewViewController.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/contentView" title="contentView"></a>
+	<h3 class="subsubtitle method-title">contentView</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>IBOutlet to the contentView containing all the UI elements.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>@property (weak, nonatomic) IBOutlet UIView *contentView</code></div>
 
     
 	
@@ -405,7 +616,161 @@
 	
 	<div class="method-subsection declared-in-section">
 		<h4 class="method-subtitle">Declared In</h4>
-		<code class="declared-in-ref">OCRCoverLtrViewController.h</code><br />
+		<code class="declared-in-ref">OCRResumeOverviewViewController.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/currentJobName" title="currentJobName"></a>
+	<h3 class="subsubtitle method-title">currentJobName</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>IBOutlet to the name of the current job.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>@property (weak, nonatomic) IBOutlet UILabel *currentJobName</code></div>
+
+    
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">OCRResumeOverviewViewController.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/currentJobTitle" title="currentJobTitle"></a>
+	<h3 class="subsubtitle method-title">currentJobTitle</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>IBOutlet to the title of the current job.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>@property (weak, nonatomic) IBOutlet UILabel *currentJobTitle</code></div>
+
+    
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">OCRResumeOverviewViewController.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/hmLabel" title="hmLabel"></a>
+	<h3 class="subsubtitle method-title">hmLabel</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>IBOutlet to the &ldquo;Hm&rdquo; label.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>@property (weak, nonatomic) IBOutlet UILabel *hmLabel</code></div>
+
+    
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>Declared so the UIFont can be dynamically re-sized.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">OCRResumeOverviewViewController.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/mbLabel" title="mbLabel"></a>
+	<h3 class="subsubtitle method-title">mbLabel</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>IBOutlet to the &ldquo;Mb&rdquo; label.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>@property (weak, nonatomic) IBOutlet UILabel *mbLabel</code></div>
+
+    
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>Declared so the UIFont can be dynamically re-sized.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">OCRResumeOverviewViewController.h</code><br />
 	</div>				
 	
 	
@@ -442,25 +807,25 @@ containing parent object is deleted.</p>
 	
 	<div class="method-subsection declared-in-section">
 		<h4 class="method-subtitle">Declared In</h4>
-		<code class="declared-in-ref">OCRCoverLtrViewController.m</code><br />
+		<code class="declared-in-ref">OCRResumeOverviewViewController.m</code><br />
 	</div>				
 	
 	
 </div>
 						
 						<div class="section-method">
-	<a name="//api/name/scrollView" title="scrollView"></a>
-	<h3 class="subsubtitle method-title">scrollView</h3>
+	<a name="//api/name/resumeCity" title="resumeCity"></a>
+	<h3 class="subsubtitle method-title">resumeCity</h3>
 	
 	
 	
 	<div class="method-subsection brief-description">
-		<p>IBOutlet to the scrollView</p>
+		<p>IBOutlet to city of the resume.</p>
 	</div>		
 	
     
 
-	<div class="method-subsection method-declaration"><code>@property (nonatomic, weak) IBOutlet UIScrollView *scrollView</code></div>
+	<div class="method-subsection method-declaration"><code>@property (weak, nonatomic) IBOutlet UITextField *resumeCity</code></div>
 
     
 	
@@ -478,7 +843,331 @@ containing parent object is deleted.</p>
 	
 	<div class="method-subsection declared-in-section">
 		<h4 class="method-subtitle">Declared In</h4>
-		<code class="declared-in-ref">OCRCoverLtrViewController.h</code><br />
+		<code class="declared-in-ref">OCRResumeOverviewViewController.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/resumeEmail" title="resumeEmail"></a>
+	<h3 class="subsubtitle method-title">resumeEmail</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>IBOutlet to the email of the resume.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>@property (weak, nonatomic) IBOutlet UITextField *resumeEmail</code></div>
+
+    
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">OCRResumeOverviewViewController.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/resumeHomePhone" title="resumeHomePhone"></a>
+	<h3 class="subsubtitle method-title">resumeHomePhone</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>IBOutlet to the home_phone of the resume.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>@property (weak, nonatomic) IBOutlet UITextField *resumeHomePhone</code></div>
+
+    
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">OCRResumeOverviewViewController.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/resumeMobilePhone" title="resumeMobilePhone"></a>
+	<h3 class="subsubtitle method-title">resumeMobilePhone</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>IBOutlet to the mobile_phone of the resume.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>@property (weak, nonatomic) IBOutlet UITextField *resumeMobilePhone</code></div>
+
+    
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">OCRResumeOverviewViewController.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/resumeName" title="resumeName"></a>
+	<h3 class="subsubtitle method-title">resumeName</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>IBOutlet to the name of the resume.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>@property (weak, nonatomic) IBOutlet UITextField *resumeName</code></div>
+
+    
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">OCRResumeOverviewViewController.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/resumePostalCode" title="resumePostalCode"></a>
+	<h3 class="subsubtitle method-title">resumePostalCode</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>IBOutlet to the postalCode of the resume.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>@property (weak, nonatomic) IBOutlet UITextField *resumePostalCode</code></div>
+
+    
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">OCRResumeOverviewViewController.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/resumeState" title="resumeState"></a>
+	<h3 class="subsubtitle method-title">resumeState</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>IBOutlet to the state of the resume.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>@property (weak, nonatomic) IBOutlet UITextField *resumeState</code></div>
+
+    
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">OCRResumeOverviewViewController.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/resumeStreet1" title="resumeStreet1"></a>
+	<h3 class="subsubtitle method-title">resumeStreet1</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>IBOutlet to street1 of the resume.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>@property (weak, nonatomic) IBOutlet UITextField *resumeStreet1</code></div>
+
+    
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">OCRResumeOverviewViewController.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/resumeSummary" title="resumeSummary"></a>
+	<h3 class="subsubtitle method-title">resumeSummary</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>IBOutlet to the summary of the resume.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>@property (weak, nonatomic) IBOutlet UITextView *resumeSummary</code></div>
+
+    
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">OCRResumeOverviewViewController.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/scrollView" title="scrollView"></a>
+	<h3 class="subsubtitle method-title">scrollView</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>IBOutlet to the scrollview</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>@property (weak, nonatomic) IBOutlet UIScrollView *scrollView</code></div>
+
+    
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">OCRResumeOverviewViewController.h</code><br />
 	</div>				
 	
 	
@@ -524,7 +1213,7 @@ containing parent object is deleted.</p>
 	
 	<div class="method-subsection declared-in-section">
 		<h4 class="method-subtitle">Declared In</h4>
-		<code class="declared-in-ref">OCRCoverLtrViewController.m</code><br />
+		<code class="declared-in-ref">OCRResumeOverviewViewController.m</code><br />
 	</div>				
 	
 	
@@ -578,7 +1267,7 @@ changes the background color to make &ldquo;edit mode&rdquo; more visually disti
 	
 	<div class="method-subsection declared-in-section">
 		<h4 class="method-subtitle">Declared In</h4>
-		<code class="declared-in-ref">OCRCoverLtrViewController.m</code><br />
+		<code class="declared-in-ref">OCRResumeOverviewViewController.m</code><br />
 	</div>				
 	
 	
@@ -618,7 +1307,7 @@ changes the background color to make &ldquo;edit mode&rdquo; more visually disti
 	
 	<div class="method-subsection discussion-section">
 		<h4 class="method-subtitle">Discussion</h4>
-		<p>Called when the user presses the Edit, Done, or Cancel buttons.</p>
+		<p>Called when the user presses the Edit, Save, or Cancel buttons.</p>
 	</div>
 	
 	
@@ -629,7 +1318,7 @@ changes the background color to make &ldquo;edit mode&rdquo; more visually disti
 	
 	<div class="method-subsection declared-in-section">
 		<h4 class="method-subtitle">Declared In</h4>
-		<code class="declared-in-ref">OCRCoverLtrViewController.m</code><br />
+		<code class="declared-in-ref">OCRResumeOverviewViewController.m</code><br />
 	</div>				
 	
 	
@@ -657,11 +1346,6 @@ changes the background color to make &ldquo;edit mode&rdquo; more visually disti
 	
 	
 	
-	<div class="method-subsection discussion-section">
-		<h4 class="method-subtitle">Discussion</h4>
-		<p>This method is called when the selectedManagedObject changes.</p>
-	</div>
-	
 	
 	
 	
@@ -670,7 +1354,7 @@ changes the background color to make &ldquo;edit mode&rdquo; more visually disti
 	
 	<div class="method-subsection declared-in-section">
 		<h4 class="method-subtitle">Declared In</h4>
-		<code class="declared-in-ref">OCRCoverLtrViewController.m</code><br />
+		<code class="declared-in-ref">OCRResumeOverviewViewController.m</code><br />
 	</div>				
 	
 	
@@ -717,59 +1401,7 @@ changes the background color to make &ldquo;edit mode&rdquo; more visually disti
 	
 	<div class="method-subsection declared-in-section">
 		<h4 class="method-subtitle">Declared In</h4>
-		<code class="declared-in-ref">OCRCoverLtrViewController.m</code><br />
-	</div>				
-	
-	
-</div>
-						
-						<div class="section-method">
-	<a name="//api/name/keyboardDidShow:" title="keyboardDidShow:"></a>
-	<h3 class="subsubtitle method-title">keyboardDidShow:</h3>
-	
-	
-	
-	<div class="method-subsection brief-description">
-		<p>Invoked when the keyboard is about to show.</p>
-	</div>		
-	
-    
-
-	<div class="method-subsection method-declaration"><code>- (void)keyboardDidShow:(NSNotification *)<em>aNotification</em></code></div>
-
-    
-	
-	<div class="method-subsection arguments-section parameters">
-		<h4 class="method-subtitle parameter-title">Parameters</h4>
-		
-		<dl class="argument-def parameter-def">
-			<dt><em>aNotification</em></dt>
-			<dd><p>the NSNotification containing information about the keyboard.</p></dd>
-		</dl>
-		
-	</div>
-	
-	
-	
-	
-	
-	
-	
-	<div class="method-subsection discussion-section">
-		<h4 class="method-subtitle">Discussion</h4>
-		<p>Adjust the scrollview contentInsets to ensure the content of the textView can be scrolled by the user to
-wherever they wish to edit the text.</p>
-	</div>
-	
-	
-	
-	
-	
-	
-	
-	<div class="method-subsection declared-in-section">
-		<h4 class="method-subtitle">Declared In</h4>
-		<code class="declared-in-ref">OCRCoverLtrViewController.m</code><br />
+		<code class="declared-in-ref">OCRResumeOverviewViewController.m</code><br />
 	</div>				
 	
 	
@@ -782,7 +1414,7 @@ wherever they wish to edit the text.</p>
 	
 	
 	<div class="method-subsection brief-description">
-		<p>Invoked when the keyboard is about to be hidden.</p>
+		<p>Invoked when the keyboard is about to be hidden</p>
 	</div>		
 	
     
@@ -796,7 +1428,7 @@ wherever they wish to edit the text.</p>
 		
 		<dl class="argument-def parameter-def">
 			<dt><em>aNotification</em></dt>
-			<dd><p>the NSNotification containing information about the keyboard.</p></dd>
+			<dd><p>the NSNotification containing information about the keyboard</p></dd>
 		</dl>
 		
 	</div>
@@ -809,7 +1441,7 @@ wherever they wish to edit the text.</p>
 	
 	<div class="method-subsection discussion-section">
 		<h4 class="method-subtitle">Discussion</h4>
-		<p>Reset the contentInsets to &ldquo;zero&rdquo;.</p>
+		<p>Reset the contentInsets to &ldquo;zero&rdquo;</p>
 	</div>
 	
 	
@@ -820,7 +1452,58 @@ wherever they wish to edit the text.</p>
 	
 	<div class="method-subsection declared-in-section">
 		<h4 class="method-subtitle">Declared In</h4>
-		<code class="declared-in-ref">OCRCoverLtrViewController.m</code><br />
+		<code class="declared-in-ref">OCRResumeOverviewViewController.m</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/keyboardWillShow:" title="keyboardWillShow:"></a>
+	<h3 class="subsubtitle method-title">keyboardWillShow:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Invoked when the keyboard is about to show</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)keyboardWillShow:(NSNotification *)<em>aNotification</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>aNotification</em></dt>
+			<dd><p>the NSNotification containing information about the keyboard</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>Scroll the content to ensure the active field is visible</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">OCRResumeOverviewViewController.m</code><br />
 	</div>				
 	
 	
@@ -833,7 +1516,7 @@ wherever they wish to edit the text.</p>
 	
 	
 	<div class="method-subsection brief-description">
-		<p>Update the text fields of the view from the selected cover_ltr.</p>
+		<p>Update the data fields of the view from the resume managed object.</p>
 	</div>		
 	
     
@@ -856,7 +1539,7 @@ wherever they wish to edit the text.</p>
 	
 	<div class="method-subsection declared-in-section">
 		<h4 class="method-subtitle">Declared In</h4>
-		<code class="declared-in-ref">OCRCoverLtrViewController.m</code><br />
+		<code class="declared-in-ref">OCRResumeOverviewViewController.m</code><br />
 	</div>				
 	
 	
@@ -907,7 +1590,7 @@ wherever they wish to edit the text.</p>
 	
 	<div class="method-subsection declared-in-section">
 		<h4 class="method-subtitle">Declared In</h4>
-		<code class="declared-in-ref">OCRCoverLtrViewController.m</code><br />
+		<code class="declared-in-ref">OCRResumeOverviewViewController.m</code><br />
 	</div>				
 	
 	
@@ -943,7 +1626,7 @@ wherever they wish to edit the text.</p>
 	
 	<div class="method-subsection declared-in-section">
 		<h4 class="method-subtitle">Declared In</h4>
-		<code class="declared-in-ref">OCRCoverLtrViewController.m</code><br />
+		<code class="declared-in-ref">OCRResumeOverviewViewController.m</code><br />
 	</div>				
 	
 	
@@ -956,7 +1639,7 @@ wherever they wish to edit the text.</p>
 	
 	
 	<div class="method-subsection brief-description">
-		<p>Reloads the fetched results.</p>
+		<p>Reloads the fetched results</p>
 	</div>		
 	
     
@@ -970,7 +1653,7 @@ wherever they wish to edit the text.</p>
 		
 		<dl class="argument-def parameter-def">
 			<dt><em>aNote</em></dt>
-			<dd><p>the NSNotification describing the changes.</p></dd>
+			<dd><p>the NSNotification describing the changes (ignored)</p></dd>
 		</dl>
 		
 	</div>
@@ -983,7 +1666,7 @@ wherever they wish to edit the text.</p>
 	
 	<div class="method-subsection discussion-section">
 		<h4 class="method-subtitle">Discussion</h4>
-		<p>Invoked by notification whhen the underlying data objects may have changed.</p>
+		<p>Invoked by notification when the underlying data objects may have changed</p>
 	</div>
 	
 	
@@ -994,7 +1677,7 @@ wherever they wish to edit the text.</p>
 	
 	<div class="method-subsection declared-in-section">
 		<h4 class="method-subtitle">Declared In</h4>
-		<code class="declared-in-ref">OCRCoverLtrViewController.m</code><br />
+		<code class="declared-in-ref">OCRResumeOverviewViewController.m</code><br />
 	</div>				
 	
 	
@@ -1043,7 +1726,7 @@ otherwise, an Edit button.</p></dd>
 	<div class="method-subsection discussion-section">
 		<h4 class="method-subtitle">Discussion</h4>
 		<p>Subclasses that use an edit-done button must override this method to change their view to an editable state
-if editing is YES and a non-editable state if it is NO. This method should invoke super’s implementation
+if editing is YES and a non-editable state if it is NO. This method should invoke super’s implementation
 before updating its view.</p>
 	</div>
 	
@@ -1055,7 +1738,182 @@ before updating its view.</p>
 	
 	<div class="method-subsection declared-in-section">
 		<h4 class="method-subtitle">Declared In</h4>
-		<code class="declared-in-ref">OCRCoverLtrViewController.m</code><br />
+		<code class="declared-in-ref">OCRResumeOverviewViewController.m</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/textFieldDidBeginEditing:" title="textFieldDidBeginEditing:"></a>
+	<h3 class="subsubtitle method-title">textFieldDidBeginEditing:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Tells the delegate that editing began for the specified text field.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)textFieldDidBeginEditing:(UITextField *)<em>textField</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>textField</em></dt>
+			<dd><p>The text field for which an editing session began.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>This method notifies the delegate that the specified text field just became the first responder. You can use
+this method to update your delegate’s state information. For example, you might use this method to show overlay
+views that should be visible while editing.</p>
+
+<p>Implementation of this method by the delegate is optional.</p>
+
+<p>In our case, we set the activeField property which is used in in the calculation to scroll fields so they are
+visible when the keyboard is on-screen.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">OCRResumeOverviewViewController.m</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/textFieldDidEndEditing:" title="textFieldDidEndEditing:"></a>
+	<h3 class="subsubtitle method-title">textFieldDidEndEditing:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Tells the delegate that editing of the specified text view has ended.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)textFieldDidEndEditing:(UITextField *)<em>textField</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>textField</em></dt>
+			<dd><p>The text field in which editing ended.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>Implementation of this method is optional. A text view sends this message to its delegate after it closes out
+any pending edits and resigns its first responder status. You can use this method to tear down any data structures
+or change any state information that you set when editing began.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">OCRResumeOverviewViewController.m</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/textFieldShouldReturn:" title="textFieldShouldReturn:"></a>
+	<h3 class="subsubtitle method-title">textFieldShouldReturn:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Asks the delegate if the text field should proc</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (BOOL)textFieldShouldReturn:(UITextField *)<em>textField</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>textField</em></dt>
+			<dd><p>The text field whose return button was pressed.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	<div class="method-subsection return">
+		<h4 class="method-subtitle parameter-title">Return Value</h4>
+		<p>YES if the text field should implement its default behavior for the return button; otherwise, NO.</p>
+	</div>
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>The text field calls this method whenever the user taps the return button. You can use this method to implement
+any custom behavior when the button is tapped.</p>
+
+<p>In our Storyboard scene, we set the textfield tag values incrementally, and then use the tag of the current
+textField responder to determine what to do next. We also set the other keyboard atttributes appropriately for]
+the data type we expect to see, and in particular set the return key to &ldquo;Next&rdquo; if hitting return will advance
+the user to the next field.</p>
+
+<p>Note the specific check for the date fields, in which case we bring up the data picker.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">OCRResumeOverviewViewController.m</code><br />
 	</div>				
 	
 	
@@ -1108,7 +1966,7 @@ or change any state information that you set when editing began.</p>
 	
 	<div class="method-subsection declared-in-section">
 		<h4 class="method-subtitle">Declared In</h4>
-		<code class="declared-in-ref">OCRCoverLtrViewController.m</code><br />
+		<code class="declared-in-ref">OCRResumeOverviewViewController.m</code><br />
 	</div>				
 	
 	
@@ -1169,7 +2027,7 @@ method had returned YES.</p>
 	
 	<div class="method-subsection declared-in-section">
 		<h4 class="method-subtitle">Declared In</h4>
-		<code class="declared-in-ref">OCRCoverLtrViewController.m</code><br />
+		<code class="declared-in-ref">OCRResumeOverviewViewController.m</code><br />
 	</div>				
 	
 	
@@ -1205,7 +2063,7 @@ method had returned YES.</p>
 	
 	<div class="method-subsection declared-in-section">
 		<h4 class="method-subtitle">Declared In</h4>
-		<code class="declared-in-ref">OCRCoverLtrViewController.m</code><br />
+		<code class="declared-in-ref">OCRResumeOverviewViewController.m</code><br />
 	</div>				
 	
 	
@@ -1218,7 +2076,7 @@ method had returned YES.</p>
 	
 	
 	<div class="method-subsection brief-description">
-		<p>Called when the user changes the size of dynamic text.</p>
+		<p>Handle the notification that the user changed the dynamic text size.</p>
 	</div>		
 	
     
@@ -1232,7 +2090,7 @@ method had returned YES.</p>
 		
 		<dl class="argument-def parameter-def">
 			<dt><em>aNotification</em></dt>
-			<dd><p>The notification sent with the UIContentSizeCategoryDidChangeNotification notification</p></dd>
+			<dd><p>The NSNotification associated with the event.</p></dd>
 		</dl>
 		
 	</div>
@@ -1243,6 +2101,12 @@ method had returned YES.</p>
 	
 	
 	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>This method is invoked by notification when the user changes the text size. We apply a new UIFont instance
+to each label, text field, and text view that uses dynamic font styles.</p>
+	</div>
+	
 	
 	
 	
@@ -1251,7 +2115,7 @@ method had returned YES.</p>
 	
 	<div class="method-subsection declared-in-section">
 		<h4 class="method-subtitle">Declared In</h4>
-		<code class="declared-in-ref">OCRCoverLtrViewController.m</code><br />
+		<code class="declared-in-ref">OCRResumeOverviewViewController.m</code><br />
 	</div>				
 	
 	
@@ -1295,7 +2159,7 @@ were loaded from nib files.</p>
 	
 	<div class="method-subsection declared-in-section">
 		<h4 class="method-subtitle">Declared In</h4>
-		<code class="declared-in-ref">OCRCoverLtrViewController.m</code><br />
+		<code class="declared-in-ref">OCRResumeOverviewViewController.m</code><br />
 	</div>				
 	
 	
@@ -1357,7 +2221,7 @@ presenting view controller after the presented controller is dismissed.</p>
 	
 	<div class="method-subsection declared-in-section">
 		<h4 class="method-subtitle">Declared In</h4>
-		<code class="declared-in-ref">OCRCoverLtrViewController.m</code><br />
+		<code class="declared-in-ref">OCRResumeOverviewViewController.m</code><br />
 	</div>				
 	
 	

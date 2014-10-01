@@ -8,6 +8,9 @@
 
 #import "OCRBaseDetailTableViewController.h"
 
+/**
+ Manage the UITableView representing jobs objects.
+ */
 @interface OCRResumeJobsTableViewController : OCRBaseDetailTableViewController   <NSFetchedResultsControllerDelegate>
 
 /**
