@@ -11,7 +11,7 @@
 /**
  Category extensions for UITextField.
  */
-@interface UITextField (OCRKOResume)
+@interface UITextField (KOResume)
 
 //----------------------------------------------------------------------------------------------------------
 /**

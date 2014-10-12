@@ -57,7 +57,7 @@ OBJC_EXTERN void CLSNSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 
 @property (nonatomic, assign)         NSObject <CrashlyticsDelegate> *delegate;
 
-/**
+/*
  *
  * The recommended way to install Crashlytics into your application is to place a call
  * to +startWithAPIKey: in your -application:didFinishLaunchingWithOptions: method.
@@ -69,7 +69,7 @@ OBJC_EXTERN void CLSNSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 + (Crashlytics *)startWithAPIKey:(NSString *)apiKey;
 + (Crashlytics *)startWithAPIKey:(NSString *)apiKey afterDelay:(NSTimeInterval)delay;
 
-/**
+/*
  *
  * If you need the functionality provided by the CrashlyticsDelegate protocol, you can use
  * these convenience methods to activate the framework and set the delegate in one call.
@@ -92,7 +92,7 @@ OBJC_EXTERN void CLSNSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
  **/
 - (void)crash;
 
-/**
+/*
  *
  * Many of our customers have requested the ability to tie crashes to specific end-users of their
  * application in order to facilitate responses to support requests or permit the ability to reach
@@ -120,7 +120,7 @@ OBJC_EXTERN void CLSNSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 + (void)setUserName:(NSString *)name;
 + (void)setUserEmail:(NSString *)email;
 
-/**
+/*
  *
  * Set a value for a key to be associated with your crash data.
  *
@@ -193,7 +193,7 @@ OBJC_EXTERN void CLSNSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
 @protocol CrashlyticsDelegate <NSObject>
 @optional
 
-/**
+/*
  *
  * Called once a Crashlytics instance has determined that the last execution of the
  * application ended in a crash.  This is called some time after the crash reporting
@@ -203,7 +203,7 @@ OBJC_EXTERN void CLSNSLog(NSString *format, ...) NS_FORMAT_FUNCTION(1,2);
  **/
 - (void)crashlyticsDidDetectCrashDuringPreviousExecution:(Crashlytics *)crashlytics;
 
-/**
+/*
  *
  * Just like crashlyticsDidDetectCrashDuringPreviousExecution this delegate method is
  * called once a Crashlytics instance has determined that the last execution of the
