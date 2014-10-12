@@ -38,6 +38,8 @@
  a performance and power consumption perspective. You can use DLog() liberally and not worry about
  impacting your customer's experience.
  
+ I've recently adopted Crashlytics for Crash reporting and am using it in place of my ALog() macro.
+ 
  ALog() - These log messages will remain in your shipping product (the Release schemes have
  DEBUG undefined). I use these for non-NSError error conditions that I hope never occur in a shipping
  product - but if they do occur I want to know about it. For example, I use ALog in didReceiveMemoryWarning,
@@ -59,9 +61,13 @@
 #   define DLog(...)
 #endif
 
-// ALog always display output regardless of the DEBUG setting.
+/**
+ ALog always display output regardless of the DEBUG setting. No longer used in favor of CLS_LOG()
+ 
+ See comment above about using the Crashlytics CLS_LOG() macro.
+ /*
 //----------------------------------------------------------------------------------------------------------
-#define ALog(_fmt, ...) NSLog((@"%s [Line %d] " _fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
+//#define ALog(_fmt, ...) NSLog((@"%s [Line %d] " _fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
 
 // ELog always displays output regardless of the DEBUG setting.
 // Elog accepts an NSError object and logs the detailed information. This may seem redundant
@@ -69,16 +75,15 @@
 //----------------------------------------------------------------------------------------------------------
 #define ELog(_error, _fmt, ...)                                                                                             \
 do {                                                                                                                        \
-NSLog(@"%s [Line %d] [Error %@] " _fmt, __PRETTY_FUNCTION__, __LINE__,  [_error localizedDescription], ##__VA_ARGS__);  \
-NSArray* detailedErrors = [[_error userInfo] objectForKey:NSDetailedErrorsKey];                                         \
-if (detailedErrors != nil && [detailedErrors count] > 0) {                                                              \
-for (NSError* detailedError in detailedErrors) {                                                                    \
-NSLog(@"  DetailedError: %@", [detailedError userInfo]);                                                        \
-}                                                                                                                   \
-}                                                                                                                       \
-else {                                                                                                                  \
-NSLog(@"  %@", [_error userInfo]);                                                                                  \
-}                                                                                                                       \
+    NSLog(@"%s [Line %d] [Error %@] " _fmt, __PRETTY_FUNCTION__, __LINE__,  [_error localizedDescription], ##__VA_ARGS__);  \
+    NSArray* detailedErrors = [[_error userInfo] objectForKey:NSDetailedErrorsKey];                                         \
+    if (detailedErrors != nil && [detailedErrors count] > 0) {                                                              \
+        for (NSError* detailedError in detailedErrors) {                                                                    \
+            NSLog(@"  DetailedError: %@", [detailedError userInfo]);                                                        \
+        }                                                                                                                   \
+    }                                                                                                                       \
+    else {                                                                                                                  \
+        NSLog(@"  %@", [_error userInfo]);                                                                                  \
+    }                                                                                                                       \
 } while(0)
-
 

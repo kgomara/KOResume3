@@ -173,18 +173,18 @@
                 }
                 else
                 {
-                    ALog(@"Failed to add store to coordinator");
+                    CLS_LOG(@"Failed to add store to coordinator");
                 }
             }
             else
             {
-                ALog(@"Failed to create options");
+                CLS_LOG(@"Failed to create options");
             }
         });
     }
     else
     {
-        ALog(@"Could not inititialize NSPersistentStoreCoordinator");
+        CLS_LOG(@"Could not inititialize NSPersistentStoreCoordinator");
     }
     
     return __persistentStoreCoordinator;
@@ -268,7 +268,7 @@
 //            if (error) {
 //                ELog(error, @"Failed to migrate seed store from bundle");
 //            } else {
-//                ALog(@"Failed to migrate seed store from bundle, no error returned");
+//                CLS_LOG(@"Failed to migrate seed store from bundle, no error returned");
 //            }
 //        }
 //    }

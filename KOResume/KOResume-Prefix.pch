@@ -6,6 +6,7 @@
 
 #import <Availability.h>
 #import "OCRGlobalConstants.h"
+#import <Crashlytics/Crashlytics.h>
 #import "OCRGlobalMacros.h"
 #import "UITextField+KOResume.h"
 #import "NSString+KOResume.h"

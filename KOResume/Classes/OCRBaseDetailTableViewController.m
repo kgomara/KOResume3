@@ -9,6 +9,7 @@
 #import "OCRBaseDetailTableViewController.h"
 #import "OCRAppDelegate.h"
 #import "Resumes.h"
+#import <Crashlytics/Crashlytics.h>
 
 #define kSummaryTableCell   0
 #define kResumeTableCell    1
@@ -159,7 +160,7 @@
  */
 - (void)didReceiveMemoryWarning
 {
-    ALog();
+    CLS_LOG(@"%@ %@", self, NSStringFromSelector(_cmd));
     
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];

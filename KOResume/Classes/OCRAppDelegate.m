@@ -48,7 +48,7 @@
     _managedObjectContext = self.coreDataController.managedObjectContext;
     if (!_managedObjectContext)
     {
-        ALog(@"Could not get managedObjectContext");
+        CLS_LOG(@"Could not get managedObjectContext");
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Error", nil)
                                                         message: NSLocalizedString(@"Failed to open database.", nil)
                                                        delegate: self
@@ -174,7 +174,7 @@
      Free up as much memory as possible by purging cached data objects that can be recreated (or reloaded
      from disk) later.
      */
-    ALog();
+    CLS_LOG();
 }
 
 

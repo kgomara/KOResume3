@@ -38,7 +38,6 @@
 		D63D82BF179311350065F0A9 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D63D82BE179311350065F0A9 /* CoreGraphics.framework */; };
 		D63D82C1179311350065F0A9 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D63D82C0179311350065F0A9 /* UIKit.framework */; };
 		D63D82C3179311350065F0A9 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D63D82C2179311350065F0A9 /* CoreData.framework */; };
-		D63D82C9179311350065F0A9 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D63D82C7179311350065F0A9 /* InfoPlist.strings */; };
 		D63D82CB179311350065F0A9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D63D82CA179311350065F0A9 /* main.m */; };
 		D63D82CF179311350065F0A9 /* OCRAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D63D82CE179311350065F0A9 /* OCRAppDelegate.m */; };
 		D63D82D5179311350065F0A9 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D63D82D3179311350065F0A9 /* Main_iPad.storyboard */; };
@@ -48,7 +47,6 @@
 		D63D82E8179311350065F0A9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D63D82BC179311350065F0A9 /* Foundation.framework */; };
 		D63D82E9179311350065F0A9 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D63D82C0179311350065F0A9 /* UIKit.framework */; };
 		D63D82EA179311350065F0A9 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D63D82C2179311350065F0A9 /* CoreData.framework */; };
-		D63D82F2179311350065F0A9 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D63D82F0179311350065F0A9 /* InfoPlist.strings */; };
 		D63D82F4179311350065F0A9 /* KOResumeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D63D82F3179311350065F0A9 /* KOResumeTests.m */; };
 		D65D47D319D1014500D9FD8D /* OCRNoSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D65D47D219D1014500D9FD8D /* OCRNoSelectionViewController.m */; };
 		D65D47D419D1014500D9FD8D /* OCRNoSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D65D47D219D1014500D9FD8D /* OCRNoSelectionViewController.m */; };
@@ -133,20 +131,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		04F0CFBC17FF4F5800930FC9 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Main_iPad.strings; sourceTree = "<group>"; };
-		04F0CFBD17FF4F5800930FC9 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		04F0CFBE17FF4F5800930FC9 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		04F0CFC017FF4F8100930FC9 /* fr-CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr-CA"; path = "fr-CA.lproj/Main_iPad.strings"; sourceTree = "<group>"; };
-		04F0CFC117FF4F8100930FC9 /* fr-CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr-CA"; path = "fr-CA.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
-		04F0CFC217FF4F8100930FC9 /* fr-CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr-CA"; path = "fr-CA.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
-		04F0CFC417FF4F9800930FC9 /* fr-FR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr-FR"; path = "fr-FR.lproj/Main_iPad.strings"; sourceTree = "<group>"; };
-		04F0CFC517FF4F9800930FC9 /* fr-FR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr-FR"; path = "fr-FR.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
-		04F0CFC617FF4F9800930FC9 /* fr-FR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr-FR"; path = "fr-FR.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		D61163C219947D5F001A24B4 /* OCRDetailViewProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRDetailViewProtocol.h; path = Classes/OCRDetailViewProtocol.h; sourceTree = "<group>"; };
 		D61163C719947FEF001A24B4 /* OCRBaseDetailTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRBaseDetailTableViewController.h; path = Classes/OCRBaseDetailTableViewController.h; sourceTree = "<group>"; };
-		D61163C819947FEF001A24B4 /* OCRBaseDetailTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRBaseDetailTableViewController.m; path = Classes/OCRBaseDetailTableViewController.m; sourceTree = "<group>"; };
+		D61163C819947FEF001A24B4 /* OCRBaseDetailTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = OCRBaseDetailTableViewController.m; path = Classes/OCRBaseDetailTableViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		D61163CB199481D2001A24B4 /* OCRResumeJobsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRResumeJobsTableViewController.h; path = Classes/OCRResumeJobsTableViewController.h; sourceTree = "<group>"; };
-		D61163CC199481D2001A24B4 /* OCRResumeJobsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRResumeJobsTableViewController.m; path = Classes/OCRResumeJobsTableViewController.m; sourceTree = "<group>"; };
+		D61163CC199481D2001A24B4 /* OCRResumeJobsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = OCRResumeJobsTableViewController.m; path = Classes/OCRResumeJobsTableViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		D63D82B9179311350065F0A9 /* koresume.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = koresume.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D63D82BC179311350065F0A9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D63D82BE179311350065F0A9 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -156,10 +145,10 @@
 		D63D82CA179311350065F0A9 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		D63D82CC179311350065F0A9 /* KOResume-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "KOResume-Prefix.pch"; sourceTree = "<group>"; };
 		D63D82CD179311350065F0A9 /* OCRAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OCRAppDelegate.h; path = Classes/OCRAppDelegate.h; sourceTree = "<group>"; };
-		D63D82CE179311350065F0A9 /* OCRAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = OCRAppDelegate.m; path = Classes/OCRAppDelegate.m; sourceTree = "<group>"; };
+		D63D82CE179311350065F0A9 /* OCRAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = OCRAppDelegate.m; path = Classes/OCRAppDelegate.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		D63D82D4179311350065F0A9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPad.storyboard; sourceTree = "<group>"; };
 		D63D82DC179311350065F0A9 /* OCRBaseDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OCRBaseDetailViewController.h; path = Classes/OCRBaseDetailViewController.h; sourceTree = "<group>"; };
-		D63D82DD179311350065F0A9 /* OCRBaseDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = OCRBaseDetailViewController.m; path = Classes/OCRBaseDetailViewController.m; sourceTree = "<group>"; };
+		D63D82DD179311350065F0A9 /* OCRBaseDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = OCRBaseDetailViewController.m; path = Classes/OCRBaseDetailViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		D63D82DF179311350065F0A9 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		D63D82E5179311350065F0A9 /* KOResumeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KOResumeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D63D82E6179311350065F0A9 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -170,26 +159,20 @@
 		D66D87CE1991D55900644D39 /* OCRResumeOverviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRResumeOverviewViewController.h; path = Classes/OCRResumeOverviewViewController.h; sourceTree = "<group>"; };
 		D66D87CF1991D55900644D39 /* OCRResumeOverviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRResumeOverviewViewController.m; path = Classes/OCRResumeOverviewViewController.m; sourceTree = "<group>"; };
 		D67C0F14199707F20053C04C /* OCRResumeEducationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRResumeEducationViewController.h; path = Classes/OCRResumeEducationViewController.h; sourceTree = "<group>"; };
-		D67C0F15199707F20053C04C /* OCRResumeEducationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRResumeEducationViewController.m; path = Classes/OCRResumeEducationViewController.m; sourceTree = "<group>"; };
+		D67C0F15199707F20053C04C /* OCRResumeEducationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = OCRResumeEducationViewController.m; path = Classes/OCRResumeEducationViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		D67D6E6619C1470700F97694 /* OCRDatePickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRDatePickerViewController.h; path = Classes/OCRDatePickerViewController.h; sourceTree = "<group>"; };
 		D67D6E6719C1470700F97694 /* OCRDatePickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRDatePickerViewController.m; path = Classes/OCRDatePickerViewController.m; sourceTree = "<group>"; };
-		D6ABF9AA187A0DD700AECF28 /* OCRGlobalMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCRGlobalMacros.h; sourceTree = "<group>"; };
+		D6ABF9AA187A0DD700AECF28 /* OCRGlobalMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = OCRGlobalMacros.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		D6AC3D3C179A3F21001D8D75 /* OCRPackagesCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRPackagesCell.h; path = Classes/OCRPackagesCell.h; sourceTree = "<group>"; };
 		D6AC3D3D179A3F21001D8D75 /* OCRPackagesCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRPackagesCell.m; path = Classes/OCRPackagesCell.m; sourceTree = "<group>"; };
 		D6B256BB18C00554006A0343 /* OCRTableViewHeaderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRTableViewHeaderCell.h; path = Classes/OCRTableViewHeaderCell.h; sourceTree = "<group>"; };
 		D6B256BC18C00554006A0343 /* OCRTableViewHeaderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRTableViewHeaderCell.m; path = Classes/OCRTableViewHeaderCell.m; sourceTree = "<group>"; };
-		D6B4734318F7B00F004E9D84 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/SVWebViewController.strings; sourceTree = "<group>"; };
 		D6B4734418F7B00F004E9D84 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/SVWebViewController.strings; sourceTree = "<group>"; };
-		D6B4734518F7B00F004E9D84 /* es-ES */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-ES"; path = "es-ES.lproj/SVWebViewController.strings"; sourceTree = "<group>"; };
-		D6B4734618F7B00F004E9D84 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/SVWebViewController.strings; sourceTree = "<group>"; };
-		D6B4734718F7B00F004E9D84 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/SVWebViewController.strings; sourceTree = "<group>"; };
 		D6B4734818F7B00F004E9D84 /* SVModalWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVModalWebViewController.h; sourceTree = "<group>"; };
 		D6B4734918F7B00F004E9D84 /* SVModalWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVModalWebViewController.m; sourceTree = "<group>"; };
 		D6B4734A18F7B00F004E9D84 /* SVWebViewController.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = SVWebViewController.bundle; sourceTree = "<group>"; };
 		D6B4734B18F7B00F004E9D84 /* SVWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVWebViewController.h; sourceTree = "<group>"; };
 		D6B4734C18F7B00F004E9D84 /* SVWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVWebViewController.m; sourceTree = "<group>"; };
-		D6B4734D18F7B00F004E9D84 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/SVWebViewController.strings"; sourceTree = "<group>"; };
-		D6B4734E18F7B00F004E9D84 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/SVWebViewController.strings"; sourceTree = "<group>"; };
 		D6BA20EC17B881E90068F4D9 /* OCRCoverLtrViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRCoverLtrViewController.h; path = Classes/OCRCoverLtrViewController.h; sourceTree = "<group>"; };
 		D6BA20ED17B881E90068F4D9 /* OCRCoverLtrViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRCoverLtrViewController.m; path = Classes/OCRCoverLtrViewController.m; sourceTree = "<group>"; };
 		D6BC469219BA2A3700B9C33F /* UITextField+KOResume.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextField+KOResume.h"; sourceTree = "<group>"; };
@@ -199,7 +182,7 @@
 		D6BE16D019A97BBF00147081 /* OCRGlobalConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCRGlobalConstants.h; sourceTree = "<group>"; };
 		D6BE16D119A98AA200147081 /* OCRPrivateKeys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCRPrivateKeys.h; sourceTree = "<group>"; };
 		D6BE16D619AAF05100147081 /* OCRPackagesTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRPackagesTableViewController.h; path = Classes/OCRPackagesTableViewController.h; sourceTree = "<group>"; };
-		D6BE16D719AAF05100147081 /* OCRPackagesTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRPackagesTableViewController.m; path = Classes/OCRPackagesTableViewController.m; sourceTree = "<group>"; };
+		D6BE16D719AAF05100147081 /* OCRPackagesTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = OCRPackagesTableViewController.m; path = Classes/OCRPackagesTableViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		D6C1DCBE19C5F6DD00D38336 /* OCRAccomplishmentTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRAccomplishmentTableViewCell.h; path = Classes/OCRAccomplishmentTableViewCell.h; sourceTree = "<group>"; };
 		D6C1DCBF19C5F6DD00D38336 /* OCRAccomplishmentTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRAccomplishmentTableViewCell.m; path = Classes/OCRAccomplishmentTableViewCell.m; sourceTree = "<group>"; };
 		D6C3161219D89FFC006B8297 /* KOResume.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; name = KOResume.sqlite; path = Resources/KOResume.sqlite; sourceTree = "<group>"; };
@@ -207,12 +190,12 @@
 		D6C6F14D18AFD58B003A8C92 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		D6C6F15818B27AD3003A8C92 /* KOResume.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = KOResume.xcdatamodel; sourceTree = "<group>"; };
 		D6C8D2DD18F1D3E200E76376 /* OCRResumeJobsDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCRResumeJobsDetailViewController.h; path = Classes/OCRResumeJobsDetailViewController.h; sourceTree = "<group>"; };
-		D6C8D2DE18F1D3E200E76376 /* OCRResumeJobsDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCRResumeJobsDetailViewController.m; path = Classes/OCRResumeJobsDetailViewController.m; sourceTree = "<group>"; };
+		D6C8D2DE18F1D3E200E76376 /* OCRResumeJobsDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = OCRResumeJobsDetailViewController.m; path = Classes/OCRResumeJobsDetailViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		D6CB27CB194D419C009E8D50 /* OCREducationTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCREducationTableViewCell.h; path = Classes/OCREducationTableViewCell.h; sourceTree = "<group>"; };
 		D6CB27CC194D419C009E8D50 /* OCREducationTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OCREducationTableViewCell.m; path = Classes/OCREducationTableViewCell.m; sourceTree = "<group>"; };
 		D6CB27D3194E4079009E8D50 /* OCRCellTextFieldDelegateProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OCRCellTextFieldDelegateProtocol.h; path = Classes/OCRCellTextFieldDelegateProtocol.h; sourceTree = "<group>"; };
 		D6D571AF179335FF00034AF3 /* OCRCoreDataController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OCRCoreDataController.h; path = Classes/DataModel/OCRCoreDataController.h; sourceTree = "<group>"; };
-		D6D571B0179335FF00034AF3 /* OCRCoreDataController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = OCRCoreDataController.m; path = Classes/DataModel/OCRCoreDataController.m; sourceTree = "<group>"; };
+		D6D571B0179335FF00034AF3 /* OCRCoreDataController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = OCRCoreDataController.m; path = Classes/DataModel/OCRCoreDataController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		D6D571B31793395F00034AF3 /* OCRGlobalConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCRGlobalConstants.m; sourceTree = "<group>"; };
 		D6D571FD1793991400034AF3 /* Resumes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Resumes.h; path = Classes/DataModel/Resumes.h; sourceTree = "<group>"; };
 		D6D571FE1793991400034AF3 /* Resumes.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = Resumes.m; path = Classes/DataModel/Resumes.m; sourceTree = "<group>"; };
@@ -347,7 +330,6 @@
 				D6D571B31793395F00034AF3 /* OCRGlobalConstants.m */,
 				D6ABF9AA187A0DD700AECF28 /* OCRGlobalMacros.h */,
 				D63D82C6179311350065F0A9 /* KOResume-Info.plist */,
-				D63D82C7179311350065F0A9 /* InfoPlist.strings */,
 				D63D82CA179311350065F0A9 /* main.m */,
 				D63D82CC179311350065F0A9 /* KOResume-Prefix.pch */,
 				D6BC469219BA2A3700B9C33F /* UITextField+KOResume.h */,
@@ -371,7 +353,6 @@
 			isa = PBXGroup;
 			children = (
 				D63D82EF179311350065F0A9 /* KOResumeTests-Info.plist */,
-				D63D82F0179311350065F0A9 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -534,14 +515,6 @@
 			knownRegions = (
 				en,
 				Base,
-				fr,
-				"fr-CA",
-				"fr-FR",
-				da,
-				"es-ES",
-				es,
-				"zh-Hans",
-				"zh-Hant",
 			);
 			mainGroup = D63D82B0179311350065F0A9;
 			productRefGroup = D63D82BA179311350065F0A9 /* Products */;
@@ -567,7 +540,6 @@
 				D6B4735318F7B00F004E9D84 /* SVWebViewController.bundle in Resources */,
 				D63D82E0179311350065F0A9 /* Images.xcassets in Resources */,
 				D6C6F14E18AFD58B003A8C92 /* README.md in Resources */,
-				D63D82C9179311350065F0A9 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -576,7 +548,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D6B4735418F7B00F004E9D84 /* SVWebViewController.bundle in Resources */,
-				D63D82F2179311350065F0A9 /* InfoPlist.strings in Resources */,
 				D6C3161419D89FFC006B8297 /* KOResume.sqlite in Resources */,
 				D6B4735018F7B00F004E9D84 /* SVWebViewController.strings in Resources */,
 			);
@@ -716,47 +687,18 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		D63D82C7179311350065F0A9 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				04F0CFBD17FF4F5800930FC9 /* fr */,
-				04F0CFC117FF4F8100930FC9 /* fr-CA */,
-				04F0CFC517FF4F9800930FC9 /* fr-FR */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
 		D63D82D3179311350065F0A9 /* Main_iPad.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
 				D63D82D4179311350065F0A9 /* Base */,
-				04F0CFBC17FF4F5800930FC9 /* fr */,
-				04F0CFC017FF4F8100930FC9 /* fr-CA */,
-				04F0CFC417FF4F9800930FC9 /* fr-FR */,
 			);
 			name = Main_iPad.storyboard;
-			sourceTree = "<group>";
-		};
-		D63D82F0179311350065F0A9 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				04F0CFBE17FF4F5800930FC9 /* fr */,
-				04F0CFC217FF4F8100930FC9 /* fr-CA */,
-				04F0CFC617FF4F9800930FC9 /* fr-FR */,
-			);
-			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
 		D6B4734218F7B00F004E9D84 /* SVWebViewController.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				D6B4734318F7B00F004E9D84 /* da */,
 				D6B4734418F7B00F004E9D84 /* en */,
-				D6B4734518F7B00F004E9D84 /* es-ES */,
-				D6B4734618F7B00F004E9D84 /* es */,
-				D6B4734718F7B00F004E9D84 /* fr */,
-				D6B4734D18F7B00F004E9D84 /* zh-Hans */,
-				D6B4734E18F7B00F004E9D84 /* zh-Hant */,
 			);
 			name = SVWebViewController.strings;
 			sourceTree = "<group>";

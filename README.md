@@ -1,8 +1,10 @@
 ##About KOResume
 
-KOResume is a simple resume app.
+KOResume is a simple resume app. It can be used to keep an up-to-date resume handy to show friends, family, and of course, potential employers. Of equal importance is its use as a learning tool for people relatively new to programming. It is "open source" under the MIT license and you are free to copy and modify it. If you are interested in extending it please fork the repository and check the open issues list to see if there is something you'd like to work on.
 
-IMPORTANT - do not use Xcode to generate the Core Data model - if you do you will have hundreds of errors and have to restore all the data model source. See the section below on database
+The code is thoroughly commented and I am interested in any feedback to improve or add explanations where needed. One of the things the project demonstrates is the use of documentation generators - specifically AppleDoc. There is an article in my [blog](http://omaraconsultingassoc.com/blog/api-documentation/) that discusses the topic in detail - see [KOResume Reference](http://omaraconsultingassoc.com/api-documentation/koresume/index.html).
+
+
 
 ##Database Maintenance
 

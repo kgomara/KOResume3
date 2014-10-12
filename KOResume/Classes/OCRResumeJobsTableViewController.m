@@ -727,7 +727,7 @@ commitEditingStyle: (UITableViewCellEditingStyle)editingStyle
     }
     else
     {
-        ALog(@"Unexpected editingStyle=%d", (int)editingStyle);
+        CLS_LOG(@"Unexpected editingStyle=%d", (int)editingStyle);
     }
 }
 

@@ -155,7 +155,7 @@
  */
 - (void)didReceiveMemoryWarning
 {
-    ALog();
+    CLS_LOG();
     
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];

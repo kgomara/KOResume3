@@ -206,7 +206,7 @@
  */
 - (void)didReceiveMemoryWarning
 {
-    ALog();
+    CLS_LOG();
     
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
@@ -727,7 +727,7 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
     }
     else
     {
-        ALog(@"Unexpected editingStyle=%d", (int)editingStyle);
+        CLS_LOG(@"Unexpected editingStyle=%d", (int)editingStyle);
     }
 }
 
