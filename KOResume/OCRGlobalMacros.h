@@ -65,7 +65,7 @@
  ALog always display output regardless of the DEBUG setting. No longer used in favor of CLS_LOG()
  
  See comment above about using the Crashlytics CLS_LOG() macro.
- /*
+ */
 //----------------------------------------------------------------------------------------------------------
 //#define ALog(_fmt, ...) NSLog((@"%s [Line %d] " _fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
 
