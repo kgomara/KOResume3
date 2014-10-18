@@ -267,7 +267,7 @@
     DLog();
     
     [_resumeName setText: selectedResume.name
-           orPlaceHolder: NSLocalizedString(@"Resume name", nil)];
+           orPlaceHolder: NSLocalizedString(@"Name", nil)];
     
     /*
      Note there is a difference between iPhone and iPad - or more correctly, between horizontal size compact and regular. In Interface

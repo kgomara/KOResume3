@@ -295,19 +295,28 @@
      */
     // For each of the tableHeaderView's text fields, set either it's text or placeholder property
     [_jobName setText: selectedJob.name
-        orPlaceHolder: NSLocalizedString(@"Enter resume name", nil)];
+        orPlaceHolder: NSLocalizedString(@"Company name", nil)];
     
     [_jobCity setText: selectedJob.city
-        orPlaceHolder: NSLocalizedString(@"Enter city", nil)];
+        orPlaceHolder: NSLocalizedString(@"City", nil)];
     [_jobTitle setText: selectedJob.title
-         orPlaceHolder: NSLocalizedString(@"Enter job title", nil)];
+         orPlaceHolder: NSLocalizedString(@"Job title", nil)];
     [_jobUri setText: selectedJob.uri
-       orPlaceHolder: NSLocalizedString(@"Enter job url", nil)];
+       orPlaceHolder: NSLocalizedString(@"Companny url", nil)];
     
     [_jobState setText: selectedJob.state
-         orPlaceHolder: NSLocalizedString(@"Enter State", nil)];
+         orPlaceHolder: NSLocalizedString(@"ST", nil)];
     
+    /* 
+     We set the job's start_date to an initial value when the job entity is created (in OCRResumeJobsTableViewController,
+     so we are guaranteed to always have a valid date. Just format it for display and don't worry about a placeHolder.
+     */
     self.jobStartDate.text = [dateFormatter stringFromDate: selectedJob.start_date];
+    /*
+     However, the end date is a different matter. If there is no end date, we assume this is a "current" job and
+     display "Current" in the textField. Still, as with start_date, there is no placeHolder text - we set the text of
+     the jobEndDate UITextField to either the end_date from the job entity, or the (localized) literal "Current".
+     */
     if (selectedJob.end_date)
     {
         self.jobEndDate.text = [dateFormatter stringFromDate: selectedJob.end_date];

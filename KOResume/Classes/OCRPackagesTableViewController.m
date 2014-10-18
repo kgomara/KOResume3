@@ -325,7 +325,7 @@
     Resumes *resume  = (Resumes *)[NSEntityDescription insertNewObjectForEntityForName: kOCRResumesEntity
                                                                 inManagedObjectContext: [kAppDelegate managedObjectContext]];
     // Set the default name of the resume
-    resume.name                   = NSLocalizedString(@"Resume", nil);
+    resume.name                   = NSLocalizedString(@"Name", nil);
     // ...the created_date to "now"
     resume.created_date           = [NSDate date];
     // ...and set its sequence_number to 1 (there can be only 1)

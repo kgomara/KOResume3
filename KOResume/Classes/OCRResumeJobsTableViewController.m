@@ -330,12 +330,12 @@
     DLog();
     
     // Set up a UIAlertController to get the user's input
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle: NSLocalizedString(@"Enter Job Name", nil)
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle: NSLocalizedString(@"Enter Company Name", nil)
                                                                    message: nil
                                                             preferredStyle: UIAlertControllerStyleAlert];
     // Add a text field to the alert
     [alert addTextFieldWithConfigurationHandler: ^(UITextField *textField) {
-        textField.placeholder = NSLocalizedString(@"Job Name", nil);
+        textField.placeholder = NSLocalizedString(@"Company Name", nil);
     }];
     
     // ...add a cancel action
@@ -383,8 +383,10 @@
     job.created_date            = [NSDate date];
     // ...the resume link to the resume we are managing
     job.resume                  = selectedResume;
-    // ...and set its sequence_number to be the last Package
+    // ...set its sequence_number to be the last Package
     job.sequence_numberValue    = [[self.jobsFetchedResultsController fetchedObjects] count] + 1;
+    // ...and default the start date to today
+    job.start_date              = [NSDate date];
     
     // Save the context so the adds are pushed to the persistent store
     [kAppDelegate saveContextAndWait];
