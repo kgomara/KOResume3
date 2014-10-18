@@ -45,6 +45,14 @@
      A boolean flag to indicate if any package was deleted.
      */
     BOOL                    packageDeleted;
+    
+    /**
+     Reference to the currently selected resume.
+     
+     Used in the KVO methods to observe when the resume name is changed by another view controller so
+     we can update our UI.
+     */
+    Resumes                 *observedResume;
 }
 
 /**
@@ -1138,12 +1146,21 @@ collapseSecondaryViewController:(UIViewController *)secondaryViewController
     }
     else if ([[segue identifier] isEqualToString: kOCRResumeSegue])
     {
+        // Check to see if we are currently observing changes to a resume.
+        if (observedResume)
+        {
+            // ...we are observing a resume. Remove that observer.
+            [observedResume removeObserver: observedResume
+                                forKeyPath: @"name"];
+        }
         Packages *aPackage = [self.fetchedResultsController objectAtIndexPath: indexPath];
         /*
          In this case, there is a UITabBarController intermediary container, which contains 3 controller objects, each of
          which is embedded in a UINavigationController.
          */
+        // Get the tabBarController containing our view controllers
         UITabBarController *tabBarController = (UITabBarController *)[segue destinationViewController];
+        // ...loop through the view controllers to set up necessary parameters
         for (UINavigationController *navigationController in tabBarController.viewControllers)
         {
             OCRBaseDetailViewController *detailViewController = [navigationController viewControllers][0];
@@ -1163,8 +1180,46 @@ collapseSecondaryViewController:(UIViewController *)secondaryViewController
         {
             [self.packagesPopoverController dismissPopoverAnimated: YES];
         }
+        // Add our KVO observer to get notified whenever the resume.name is changed
+        observedResume = aPackage.resume;
+        [observedResume addObserver:self
+                         forKeyPath:@"name"
+                            options:NSKeyValueObservingOptionNew 
+                            context:nil];
     }
 }
+
+#pragma mark - Key Value Observing callback
+
+/**
+ This message is sent to the receiver when the value at the specified key path relative to the given object has changed.
+ 
+ The receiver must be registered as an observer for the specified keyPath and object.
+ 
+ In our case, we are observing the name field of the resume selected by the user. When the value changes we want to
+ update the user interface to reflect the new value.
+
+ @param keyPath         The key path, relative to object, to the value that has changed.
+ @param object          The source object of the key path keyPath.
+ @param change          A dictionary that describes the changes that have been made to the value of the property at the key 
+                        path keyPath relative to object. Entries are described in Change Dictionary Keys.
+ @param context         The value that was provided when the receiver was registered to receive key-value observation notifications.
+ */
+- (void)observeValueForKeyPath: (NSString *)keyPath
+                      ofObject: (id)object
+                        change: (NSDictionary *)change
+                       context: (void *)context
+{
+    DLog();
+    
+    if ([keyPath isEqualToString:@"name"])
+    {
+        // The name of the observedResume has been changed. Update our tableView to relect the new name.
+        [self reloadFetchedResults: nil];
+        [self.tableView reloadData];
+    }
+}
+
 
 #pragma mark - Fetched Results Controller
 
