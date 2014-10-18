@@ -1150,8 +1150,9 @@ collapseSecondaryViewController:(UIViewController *)secondaryViewController
         if (observedResume)
         {
             // ...we are observing a resume. Remove that observer.
-            [observedResume removeObserver: observedResume
+            [observedResume removeObserver: self
                                 forKeyPath: @"name"];
+            observedResume = nil;
         }
         Packages *aPackage = [self.fetchedResultsController objectAtIndexPath: indexPath];
         /*

@@ -105,7 +105,7 @@
     selectedResume = (Resumes *)self.selectedManagedObject;
     
     // Set the default button title
-    self.backButtonTitle = NSLocalizedString(@"Resume", nil);
+    self.backButtonTitle = NSLocalizedString(@"Packages", nil);
     
     // Set up button items
     cancelBtn   = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel
