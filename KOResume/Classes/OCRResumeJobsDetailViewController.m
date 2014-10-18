@@ -153,6 +153,8 @@
     
     // Set editing off
     isEditing = NO;
+    // ...and ensure editing is initially off
+    [self configureUIForEditing:NO];
 }
 
 
