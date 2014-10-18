@@ -92,10 +92,12 @@
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="wd7-4K-dy3" firstAttribute="top" secondItem="8dI-Sm-fwo" secondAttribute="topMargin" id="6l7-P5-hT4"/>
+                                        <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="ae5-ic-AZT" secondAttribute="trailing" constant="20" id="E6B-wY-kbf"/>
                                         <constraint firstItem="ae5-ic-AZT" firstAttribute="leading" secondItem="wd7-4K-dy3" secondAttribute="leading" constant="25" id="Hd9-Ou-2LX"/>
                                         <constraint firstItem="wd7-4K-dy3" firstAttribute="leading" secondItem="8dI-Sm-fwo" secondAttribute="leadingMargin" id="JWg-HV-Mq4"/>
                                         <constraint firstAttribute="bottomMargin" secondItem="duT-Mf-Uue" secondAttribute="bottom" constant="5" id="SL4-Gh-dVk"/>
                                         <constraint firstItem="duT-Mf-Uue" firstAttribute="leading" secondItem="ae5-ic-AZT" secondAttribute="leading" id="Tbc-Um-6Y4"/>
+                                        <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="duT-Mf-Uue" secondAttribute="trailing" constant="20" id="gAG-1o-0LY"/>
                                         <constraint firstItem="duT-Mf-Uue" firstAttribute="top" secondItem="ae5-ic-AZT" secondAttribute="bottom" constant="6" id="ktO-VR-ven"/>
                                         <constraint firstItem="ae5-ic-AZT" firstAttribute="top" secondItem="wd7-4K-dy3" secondAttribute="bottom" constant="6" id="r2h-pt-We2"/>
                                     </constraints>
@@ -1185,7 +1187,7 @@
         <image name="worker-32.png" width="32" height="32"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Q9H-LK-qvS"/>
+        <segue reference="g3d-AK-SmG"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
 </document>
