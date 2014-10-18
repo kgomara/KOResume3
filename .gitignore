@@ -36,3 +36,7 @@ build/*
 ehthumbs.db
 Icon?
 Thumbs.db
+######################
+# Private files
+######################
+OCRPrivateKeys.h
