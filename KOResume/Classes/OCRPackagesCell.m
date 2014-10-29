@@ -96,30 +96,6 @@ CGFloat const kOCRPackagesCellWidthPadding  =  20.0f;
 
 //----------------------------------------------------------------------------------------------------------
 /**
- Called to change the cell's highlighted property. Currently, not used.
- 
- Not currently used, but considering that it might be nice to provide a visual indication of which package is
- currently selected (ignore the remaining). In our cell prototype we created a view inset of a few pixels and set its background to white.
- Our highlight visual effect is acheived by changing the background color of the cell, which is
- occluded by our inset view, leaving a border of the background color.
- 
- @param highlighted YES to show the cell in its highlighted state, NO to show it "normal"
- */
-//- (void)setHighlighted: (BOOL)highlighted
-//{
-//    DLog(@"highlighted=%@", highlighted ? @"YES" : @"NO");
-//    
-//    // Set the highlighted property on the cell
-//    [super setHighlighted: highlighted];
-//    
-//
-//    // Update the UI to manifest the highlight effect
-//    [self setBackgroundColor: highlighted ? [UIColor redColor] : [UIColor darkGrayColor]];
-//}
-
-
-//----------------------------------------------------------------------------------------------------------
-/**
  Update the UI when the user changes their preference of text size.
  
  @param aNotification the notifcation object.

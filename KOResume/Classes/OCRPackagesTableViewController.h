@@ -39,7 +39,8 @@
 
 @end
 
-@interface OCRPackagesTableViewController : UITableViewController   <NSFetchedResultsControllerDelegate, UISplitViewControllerDelegate,
+@interface OCRPackagesTableViewController : UITableViewController   <NSFetchedResultsControllerDelegate,
+                                                                     UISplitViewControllerDelegate,
                                                                      UITableViewDataSource, UITableViewDelegate>
 
 

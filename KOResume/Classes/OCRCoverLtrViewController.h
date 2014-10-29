@@ -12,7 +12,8 @@
 /**
  Manage cover letter objects.
  */
-@interface OCRCoverLtrViewController : OCRBaseDetailViewController <UITextViewDelegate, UISplitViewControllerDelegate, OCRDetailViewProtocol>
+@interface OCRCoverLtrViewController : OCRBaseDetailViewController <UITextViewDelegate, UISplitViewControllerDelegate,
+                                                                    OCRDetailViewProtocol>
 
 /**
  IBOutlet to the scrollView

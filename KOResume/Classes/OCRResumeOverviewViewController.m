@@ -22,11 +22,11 @@
      */
     UIBarButtonItem     *cancelBtn;
     
-    /**
-     A boolean flag to indicate whether the user is editing information or simply viewing.
-     */
-    BOOL                isEditing;
-
+//    /**
+//     A boolean flag to indicate whether the user is editing information or simply viewing.
+//     */
+//    BOOL                isEditing;
+//
     /**
      Reference to the date formatter object.
      */
@@ -78,7 +78,7 @@
      From http://spin.atomicobject.com/2014/03/05/uiscrollview-autolayout-ios/
      
      I feel this is a work-around to a poor implementation of autolayout with scrollview - perhaps Apple
-     will come up with a better Storyboard/IB paradigm in a later Beta of Xcode 6.
+     will come up with a better Storyboard/IB paradigm in a subsequent release.
      
      Bascially, the above post points out that the "content view" (contained in our scrollView) needs to
      be pinned to the scrollView's superview (self.view) - which cannot be done in IB. 
@@ -125,7 +125,7 @@
     [self configureDefaultNavBar];
     
     // Set editing off
-    isEditing = NO;
+//    self.editing = NO;
     // ...and ensure editing is initially off
     [self configureUIForEditing:NO];
 }
@@ -270,9 +270,10 @@
            orPlaceHolder: NSLocalizedString(@"Name", nil)];
     
     /*
-     Note there is a difference between iPhone and iPad - or more correctly, between horizontal size compact and regular. In Interface
-     Builder, this Scene has "uninstalled" the currentJobTitle, currentJobName, and atLabel for the size class W:Compact H:Regular. Even
-     though we assign text to these fields, they do not appear in Compact width (which includes iPhone landscape).
+     Note there is a difference between iPhone and iPad - or more correctly, between horizontal size compact 
+     and regular. In Interface Builder, this Scene has "uninstalled" the currentJobTitle, currentJobName, and 
+     atLabel for the size class W:Compact H:Regular. Even though we assign text to these fields, they do not
+     appear in Compact width (which includes iPhone landscape).
      */
     // Get the jobs sorted by sequence_number
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey: kOCRSequenceNumberAttributeName
@@ -349,7 +350,7 @@
  */
 - (void)configureFieldsForEditing: (BOOL)editable
 {
-    DLog();
+    DLog(@"editable=%@", editable? @"YES" : @"NO");
     
     if (self.noSelectionView)
     {
@@ -510,15 +511,15 @@
  before updating its view.
  
  @param editing     If YES, the view controller should display an editable view; otherwise, NO. If YES and one
- of the custom views of the navigationItem property is set to the value returned by the
- editButtonItem method, the associated navigation controller displays a Done button;
- otherwise, an Edit button.
+                    of the custom views of the navigationItem property is set to the value returned by the
+                    editButtonItem method, the associated navigation controller displays a Done button;
+                    otherwise, an Edit button.
  @param animated    If YES, animates the transition; otherwise, does not.
  */
 - (void)setEditing: (BOOL)editing
           animated: (BOOL)animated
 {
-    DLog(@"editing=%@", editing? @"YES" : @"NO");
+    DLog(@"editing=%@, self.editing=%@", editing? @"YES" : @"NO", self.editing? @"YES" : @"NO");
     [super setEditing: editing
              animated: animated];
     
@@ -629,11 +630,11 @@
  */
 - (void)configureUIForEditing: (BOOL)isEditingMode
 {
-    DLog();
+    DLog(@"isEditingMode=%@, self.editing=%@", isEditingMode? @"YES" : @"NO", self.editing? @"YES" : @"NO");
     
-    // Update editing flag
-    isEditing = isEditingMode;
-    
+//    // Update editing flag
+//    isEditing = isEditingMode;
+//    
     // ...enable/disable resume fields
     [self configureFieldsForEditing: isEditingMode];
     
@@ -659,6 +660,7 @@
     else
     {
         // Reset the nav bar defaults
+#warning may not be necessary
         [self configureDefaultNavBar];
     }
 }
@@ -756,7 +758,6 @@
  visible when the keyboard is on-screen.
 
  @param textField       The text field for which an editing session began.
-
  */
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
@@ -805,7 +806,8 @@
  Note the specific check for the date fields, in which case we bring up the data picker.
  
  @param textField       The text field whose return button was pressed.
- @return                YES if the text field should implement its default behavior for the return button; otherwise, NO.
+ @return                YES if the text field should implement its default behavior for the return button;
+                        otherwise, NO.
  */
 - (BOOL)textFieldShouldReturn: (UITextField *)textField
 {

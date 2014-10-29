@@ -131,9 +131,6 @@
 {
     DLog();
     
-//    // Hide the subclass' back button
-//    [self invalidateRootPopoverButtonItem: _backButtonCached];
-    
     // Remove all observers
     [[NSNotificationCenter defaultCenter] removeObserver: self];
     

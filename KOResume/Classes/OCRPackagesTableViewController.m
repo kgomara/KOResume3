@@ -18,7 +18,8 @@
 /**
  Manage Packages objects.
  
- It uses a UITableView to display the list of Packages, and dispatches OCRCoverLtrViewController or OCRResumeOverViewController.
+ It uses a UITableView to display the list of Packages, and dispatches OCRCoverLtrViewController or 
+ OCRResumeOverViewController.
  */
 
 #define k_OKButtonIndex     1
@@ -656,8 +657,8 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
     Packages *aPackage  = [self.fetchedResultsController objectAtIndexPath:indexPath];
     /*
      Set the tag for the cell and its buttons to the row of the Packages object.
-     The tag property is often used to carry identifying information for later use. In our case, we'll use it in the
-     button handling routines to know which cover_ltr or resume to segue to.
+     The tag property is often used to carry identifying information for later use. In our case, we'll use it 
+     in the button handling routines to know which cover_ltr or resume to segue to.
      */
     cell.tag                = indexPath.row;
     cell.coverLtrButton.tag = indexPath.row;
@@ -789,9 +790,9 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
     }
     
     /*
-     The user may edit cell contents after a move operation. The updateSourceObjectWithTextField:forTableCell:atIndexPath:
-     method expects the table view cells and fetched results to be in the same order, so we must save work in progress
-     and reload. (If the user subsequently cancels, the undo manager will back out the saved work.)
+     The cell may be edited after a move operation. The updateSourceObjectWithTextField:forTableCell:atIndexPath:
+     method expects the table view cells and fetched results to be in the same order, so we must save work in 
+     progress and reload. (If the user subsequently cancels, the undo manager will back out the saved work.)
      */
     // Save the re-ordered objects
     [kAppDelegate saveContextAndWait];
@@ -954,21 +955,24 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
 {
     DLog();
     
-    // Keep references to the popover controller and the popover button, and tell the detail view controller to show the button.
+    // Keep references to the popover controller and button objects,
+    //  and tell the detail view controller to show the button.
     barButtonItem.title             = NSLocalizedString( @"Packages", nil);
     self.packagesPopoverController  = aPopoverController;
     self.rootPopoverButtonItem      = barButtonItem;
     
     /*
-     The detail view may be the cover letter - a simple UIViewController, or the resume - a UITabBarController containing several
-     aspects of the resume. Figure out which one we have and tell any and all subordinate objects to showRootPopoverButtonItem
+     The detail view may be the cover letter - a simple UIViewController, or the resume - a UITabBarController 
+     containing several aspects of the resume. Figure out which one we have and tell any and all subordinate 
+     objects to showRootPopoverButtonItem
      */
     // Let's guess we are doing a resume segue, in which case we have a UITabBarController
     UITabBarController *tabBarController = (svc.viewControllers)[1];
     // Check to see if we have a UITabBarController
     if ([tabBarController isMemberOfClass:[UITabBarController class]])
     {
-        // We have a UITabBarController, loop through all its children (which are embedded in UINavigationController objects) and tell them to showRootPopoverButtonItem
+        // We have a UITabBarController, loop through all its children (each of which is embedded in
+        //  UINavigationController objects) and tell them to showRootPopoverButtonItem
         for (UINavigationController *navigationController in tabBarController.childViewControllers)
         {
             // Get the topViewController
@@ -998,7 +1002,8 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
  once more. If you added the specified button to your toolbar to facilitate the display of the hidden view
  controller in a popover, you must implement this method and use it to remove that button.
  
- Nil out references to the popover controller and the popover button, and tell the detail view controller to hide the button.
+ Nil out references to the popover controller and the popover button, and tell the detail view controller to 
+ hide the button.
  
  @param svc                 The split view controller that owns the specified view controller.
  @param aViewController     The view controller being hidden.
@@ -1011,15 +1016,17 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
     DLog();
     
     /*
-     The detail view may be the cover letter - a simple UIViewController, or the resume - a UITabBarController containing several
-     aspects of the resume. Figure out which one we have and tell any and all subordinate objects to invalidateRootPopoverButtonItem
+     The detail view may be the cover letter - a simple UIViewController, or the resume - a UITabBarController 
+     containing several aspects of the resume. Figure out which one we have and tell any and all subordinate 
+     objects to invalidateRootPopoverButtonItem
      */
     // Let's guess we are doing a resume segue, in which case we have a UITabBarController
     UITabBarController *tabBarController = (svc.viewControllers)[1];
     // Check to see if we have a UITabBarController
     if ([tabBarController isMemberOfClass:[UITabBarController class]])
     {
-        // We have a UITabBarController, loop through all its children (which are embedded in UINavigationController objects) and tell them to invalidateRootPopoverButtonItem
+        // We have a UITabBarController, loop through all its children (each of which is embedded in
+        //  UINavigationController objects) and tell them to invalidateRootPopoverButtonItem
         for (UINavigationController *navigationController in tabBarController.childViewControllers)
         {
             // Get the topViewController
@@ -1039,31 +1046,32 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
 
 
 /**
- Asks the delegate to adjust the primary view controller and to incorporate the secondary view controller into the collapsed interface.
+ Asks the delegate to adjust the primary view controller and to incorporate the secondary view controller into 
+ the collapsed interface.
  
- This method is your opportunity to perform any necessary tasks related to the transition to a collapsed interface. After this
- method returns, the split view controller removes the secondary view controller from its viewControllers array, leaving the
- primary view controller as its only child. In your implementation of this method, you might prepare the primary view controller
- for display in a compact environment or you might attempt to incorporate the secondary view controller’s content into the newly
- collapsed interface.
+ This method is your opportunity to perform any necessary tasks related to the transition to a collapsed interface. 
+ After this method returns, the split view controller removes the secondary view controller from its viewControllers 
+ array, leaving the primary view controller as its only child. In your implementation of this method, you might 
+ prepare the primary view controller for display in a compact environment or you might attempt to incorporate the 
+ secondary view controller’s content into the newly collapsed interface.
  
- Returning NO tells the split view controller to use its default behavior to try and incorporate the secondary view controller 
- into the collapsed interface. When you return NO, the split view controller calls the collapseSecondaryViewController:forSplitViewController: 
- method of the primary view controller, giving it a chance to do something with the secondary view controller’s content. Most view
- controllers do nothing by default but the UINavigationController class responds by pushing the secondary view controller onto its
- navigation stack.
+ Returning NO tells the split view controller to use its default behavior to try and incorporate the secondary view 
+ controller into the collapsed interface. When you return NO, the split view controller calls the 
+ collapseSecondaryViewController:forSplitViewController: method of the primary view controller, giving it a chance 
+ to do something with the secondary view controller’s content. Most view controllers do nothing by default but the 
+ UINavigationController class responds by pushing the secondary view controller onto its navigation stack.
  
- Returning YES from this method tells the split view controller not to apply any default behavior. You might return YES in cases
- where you do not want the secondary view controller’s content incorporated into the resulting interface.
+ Returning YES from this method tells the split view controller not to apply any default behavior. You might return 
+ YES in cases where you do not want the secondary view controller’s content incorporated into the resulting interface.
 
  @param splitViewController     The split view controller whose interface is collapsing.
  @param secondaryViewController The secondary view controller of the split view interface.
  @param primaryViewController   The primary view controller of the split view interface. If you implement the
-                                primaryViewControllerForCollapsingSplitViewController: method in your delegate, this object is the 
-                                one returned by that method.
- @return                        NO to let the split view controller try and incorporate the secondary view controller’s content 
-                                into the collapsed interface or YES to indicate that you do not want the split view controller to
-                                do anything with the secondary view controller.
+                                primaryViewControllerForCollapsingSplitViewController: method in your delegate, this 
+                                object is the one returned by that method.
+ @return                        NO to let the split view controller try and incorporate the secondary view 
+                                controller’s content into the collapsed interface or YES to indicate that you do not
+                                want the split view controller to do anything with the secondary view controller.
  */
 - (BOOL)splitViewController:(UISplitViewController *)splitViewController
 collapseSecondaryViewController:(UIViewController *)secondaryViewController
@@ -1099,7 +1107,7 @@ collapseSecondaryViewController:(UIViewController *)secondaryViewController
 {
     DLog();
     /*
-     See the comment in - configureCell:atIndexPath: to understand how we are using sender.tag with fetchedResultsController
+     See the comment in - configureCell:atIndexPath: to understand how we are using sender.tag
      
      The sender is one of the buttons in a UICollectionViewCell (not the cell itself). To construct the indexPath
      we use the tag on the UIButton, which is set in configureCell:atIndexPath:
@@ -1110,8 +1118,8 @@ collapseSecondaryViewController:(UIViewController *)secondaryViewController
     {
         Packages *aPackage = [self.fetchedResultsController objectAtIndexPath: indexPath];
         /*
-         We want to pass a few data object references to the cover letter controller (discussed in more detail below) - so we
-         first get a reference to the cover letter controller, which is embedded in a UINavigationController.
+         We want to pass a few data object references to the cover letter controller - so we first get a reference 
+         to the cover letter controller, which is embedded in a UINavigationController.
          */
         OCRBaseDetailViewController *cvrLtrController = [(UINavigationController *)[segue destinationViewController] viewControllers][0];
         // Check to see if we have a popover button
@@ -1127,18 +1135,22 @@ collapseSecondaryViewController:(UIViewController *)secondaryViewController
             [self.packagesPopoverController dismissPopoverAnimated: YES];
         }
         /*
-         A common strategy for passing data between controller objects is to declare public properties in the receiving object
-         and have the instantiator set those properties. Here we pass the Package represented by the cell the user tapped.
+         A common strategy for passing data between controller objects is to declare public properties in the 
+         receiving object and have the instantiator set those properties. Here we pass the Package represented 
+         by the cell the user tapped.
          
-         An alternative strategy for data that is global scope by nature is to set those properties on the UIApplication
-         delegate and reference them as [[[UIApplication sharedApplication] delegate] foo_bar]. In our case, there is only one
-         managedObjectContext used throughout the app, which is a public property on OCRAppDelegate
+         An alternative strategy for data that is global scope by nature is to set those properties on the 
+         UIApplication delegate and reference them as [[[UIApplication sharedApplication] delegate] foo_bar]. 
+         In our case, there is only one managedObjectContext used throughout the app, which is a public property
+         on OCRAppDelegate
          
          I also created a macro (see GlobalMacros.h):
          
-         #define kAppDelegate    (OCRAppDelegate *)[[UIApplication sharedApplication] delegate]      // Note it DOES NOT end with a ';'
+         #define kAppDelegate (OCRAppDelegate *)[[UIApplication sharedApplication] delegate] 
+         Note the define DOES NOT end with a ';'
          
-         Thus, in other source files [kAppDelegate managedObjectContext] returns a reference to our managedObjectContext.
+         Thus, in other source files [kAppDelegate managedObjectContext] returns a reference to our 
+         managedObjectContext.
          */
         [cvrLtrController setSelectedManagedObject: aPackage];
         [cvrLtrController setBackButtonTitle: NSLocalizedString(@"Packages", nil)];
@@ -1156,8 +1168,8 @@ collapseSecondaryViewController:(UIViewController *)secondaryViewController
         }
         Packages *aPackage = [self.fetchedResultsController objectAtIndexPath: indexPath];
         /*
-         In this case, there is a UITabBarController intermediary container, which contains 3 controller objects, each of
-         which is embedded in a UINavigationController.
+         In this case, there is a UITabBarController intermediary container, which contains 3 controller objects, 
+         each of which is embedded in a UINavigationController.
          */
         // Get the tabBarController containing our view controllers
         UITabBarController *tabBarController = (UITabBarController *)[segue destinationViewController];
@@ -1270,7 +1282,8 @@ collapseSecondaryViewController:(UIViewController *)secondaryViewController
     if (![self.fetchedResultsController performFetch:&error])
     {
         /*
-         This is a case where something serious has gone wrong. Let the user know and try to give them some options that might actually help.
+         This is a case where something serious has gone wrong. Let the user know and try to give them some 
+         options that might actually help.
          I'm providing my direct contact information in the hope I can help the user and avoid a bad review.
          */
         ELog(error, @"Unresolved error");

@@ -75,10 +75,11 @@
  Returns the managed object model for the application.
  If the model doesn't already exist, it is created from the app's model.
  
- I use Mogenerator to generate the concrete classes for the data model (KOResume.xcdatamodel). You can download Mogenerator from
- [GitHub](http://rentzsch.github.io/mogenerator/)
+ I use Mogenerator to generate the concrete classes for the data model (KOResume.xcdatamodel). You can download 
+ Mogenerator from [GitHub](http://rentzsch.github.io/mogenerator/)
 
- The key thing with Mogenerator is you DO NOT WANT TO use Xcode's built in model generator. I've create a build target (Mogenerator) to generate the model.
+ The key thing with Mogenerator is you DO NOT WANT TO use Xcode's built in model generator. I've create a build 
+ target (Mogenerator) to generate the model.
  If you prefer using terminal, navigate to the folder containing KOResume.xcodeproj and run the command:
  
         mogenerator -m Classes/DataModel/KOResume.xcdatamodeld/KOResume.xcdatamodel  -O Classes
@@ -129,9 +130,9 @@
         NSURL *storeURL             = [[self applicationDocumentsDirectory] URLByAppendingPathComponent: dbFileName];
         DLog(@"Core Data store path = \"%@\"", [storeURL path]);
         
-        // TODO - implement HUD
         dispatch_queue_t queue;
-        queue = dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0);        // User is waiting - dispatch at high priority
+        // User is waiting - dispatch at high priority
+        queue = dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0);
         
         dispatch_async(queue, ^{
             NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -204,7 +205,7 @@
     
     /*
      *  iCloud has some fundamentals flaws making it (IMO), too brittle at this time
-     *  ...will try again in iOS7
+     *  ...will try again in iOS 9?
      */
     
 //    NSURL *cloudURL                 = [[NSFileManager defaultManager] URLForUbiquityContainerIdentifier: kOCRUbiquityID];
@@ -225,7 +226,9 @@
         // iCloud is not available
     NSMutableDictionary *pragmaOptions = [NSMutableDictionary dictionary];
     [pragmaOptions setObject:@"DELETE" forKey:@"journal_mode"];
-//    NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption, [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption, pragmaOptions, NSSQLitePragmasOption, nil];
+//    NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption,
+//                                                                       [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption,
+//                                                                        pragmaOptions, NSSQLitePragmasOption, nil];
 
         options = @{NSMigratePersistentStoresAutomaticallyOption: @YES,
                           NSInferMappingModelAutomaticallyOption: @YES /*,

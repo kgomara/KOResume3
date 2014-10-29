@@ -544,8 +544,8 @@
  Tells the delegate that editing of the specified text view has ended.
  
  Implementation of this method is optional. A text view sends this message to its delegate after it closes out
- any pending edits and resigns its first responder status. You can use this method to tear down any data structures
- or change any state information that you set when editing began.
+ any pending edits and resigns its first responder status. You can use this method to tear down any data 
+ structures or change any state information that you set when editing began.
  
  @param textView The text view in which editing ended.
  */

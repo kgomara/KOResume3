@@ -10,21 +10,13 @@
 	<string>KOResume</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>7AF9D398DD352529E61A6611104D40C04D6CB75E</key>
-		<string>https://github.com/kgomara/OCAEditableCollectionViewFlowLayout.git</string>
-		<key>D049786119D00829BC67FDE4F5CE0871F4B18CC4</key>
-		<string>https://github.com/kgomara/OCAUtilities.git</string>
 		<key>E72AB269AF8D18291BC7CFFEABCAD0DC0B4C5414</key>
 		<string>https://github.com/kgomara/KOResume3.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>KOResume.xcodeproj/project.xcworkspace</string>
+	<string>KOResume.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>7AF9D398DD352529E61A6611104D40C04D6CB75E</key>
-		<string>../../OCAEditableCollectionViewFlowLayout</string>
-		<key>D049786119D00829BC67FDE4F5CE0871F4B18CC4</key>
-		<string>../../OCAUtilities</string>
 		<key>E72AB269AF8D18291BC7CFFEABCAD0DC0B4C5414</key>
 		<string>../..</string>
 	</dict>
@@ -43,22 +35,6 @@
 			<string>E72AB269AF8D18291BC7CFFEABCAD0DC0B4C5414</string>
 			<key>IDESourceControlWCCName</key>
 			<string>KOResume3</string>
-		</dict>
-		<dict>
-			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
-			<string>public.vcs.git</string>
-			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>7AF9D398DD352529E61A6611104D40C04D6CB75E</string>
-			<key>IDESourceControlWCCName</key>
-			<string>OCAEditableCollectionViewFlowLayout</string>
-		</dict>
-		<dict>
-			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
-			<string>public.vcs.git</string>
-			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>D049786119D00829BC67FDE4F5CE0871F4B18CC4</string>
-			<key>IDESourceControlWCCName</key>
-			<string>OCAUtilities</string>
 		</dict>
 	</array>
 </dict>

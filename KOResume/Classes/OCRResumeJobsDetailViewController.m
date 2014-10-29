@@ -1092,9 +1092,10 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     }
     
     /*
-     The user may edit cell contents after a move operation. The updateSourceObjectWithTextField:forTableCell:atIndexPath:
-     method expects the table view cells and fetched results to be in the same order, so we must save work in progress
-     and reload. (If the user subsequently cancels, the undo manager will back out the saved work.)
+     The user may edit cell contents after a move operation. 
+     The updateSourceObjectWithTextField:forTableCell:atIndexPath: method expects the table view cells and 
+     fetched results to be in the same order, so we must save work in progress and reload. (If the user 
+     subsequently cancels, the undo manager will back out the saved work.)
      */
     // Save the re-ordered objects
     [kAppDelegate saveContextAndWait];
@@ -1112,7 +1113,8 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
  The delegate handles selections in this method. One of the things it can do is exclusively assign the check-mark
  image (UITableViewCellAccessoryCheckmark) to one row in a section (radio-list style). This method isn’t called
  when the editing property of the table is set to YES (that is, the table view is in editing mode). See "Managing
- Selections" in Table View Programming Guide for iOS for further information (and code examples) related to this method.
+ Selections" in Table View Programming Guide for iOS for further information (and code examples) related to this 
+ method.
  
  @param tableView       A table-view object informing the delegate about the new row selection.
  @param indexPath       An index path locating the new selected row in tableView.
@@ -1120,7 +1122,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
 - (void)        tableView: (UITableView *)tableView
   didSelectRowAtIndexPath: (NSIndexPath *)indexPath
 {
-    // We display all the content of an Accomplishments object in its cell, and edit in place. Selection not necessary.
+    // We display and edit all the content of an Accomplishments object in place. Selection not necessary.
     
     // Clear the selection highlight
     [tableView deselectRowAtIndexPath: indexPath
@@ -1466,7 +1468,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
         [textField resignFirstResponder];       // Dismisses the keyboard
     }
     
-    return NO;                                  // We always return NO as we are implementing the textField's behavior
+    return NO;              // We always return NO as we are implementing the textField's behavior
 }
 
 
@@ -1543,9 +1545,9 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
  UIModalPresentationFullScreen style.
  
  @param controller      The presentation controller that is managing the size change. Use this object to retrieve the
- view controllers involved in the presentation.
+                        view controllers involved in the presentation.
  @return                The new presentation style, which must be either UIModalPresentationFullScreen or
- UIModalPresentationOverFullScreen.
+                        UIModalPresentationOverFullScreen.
  */
 - (UIModalPresentationStyle)adaptivePresentationStyleForPresentationController: (UIPresentationController *)controller
 {
@@ -1565,8 +1567,8 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
  whose root view controller is the currently presented view controller. You could also return an entirely different
  view controller if you prefer.
  
- If you do not implement this method or your implementation returns nil, the presentation controller uses its existing
- presented view controller.
+ If you do not implement this method or your implementation returns nil, the presentation controller uses its 
+ existing presented view controller.
  
  @param controller      The presentation controller that is managing the size class change.
  @param style           The new presentation style that is about to be employed to display the view controller.
@@ -1727,7 +1729,8 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     if (![self.accFetchedResultsController performFetch:&error])
     {
         /*
-         This is a case where something serious has gone wrong. Let the user know and try to give them some options that might actually help.
+         This is a case where something serious has gone wrong. Let the user know and try to give them some 
+         options that might actually help.
          I'm providing my direct contact information in the hope I can help the user and avoid a bad review.
          */
         ELog(error, @"Unresolved error");

@@ -792,7 +792,8 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
  The delegate handles selections in this method. One of the things it can do is exclusively assign the check-mark
  image (UITableViewCellAccessoryCheckmark) to one row in a section (radio-list style). This method isn’t called
  when the editing property of the table is set to YES (that is, the table view is in editing mode). See "Managing
- Selections" in Table View Programming Guide for iOS for further information (and code examples) related to this method.
+ Selections" in Table View Programming Guide for iOS for further information (and code examples) related to this
+ method.
  
  @param tableView       A table-view object informing the delegate about the new row selection.
  @param indexPath       An index path locating the new selected row in tableView.
@@ -820,8 +821,8 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
  
  @param tableView       The table-view object requesting this information.
  @param section         An index number identifying a section of tableView .
- @return               A nonnegative floating-point value that specifies the height (in points) of the header
- for section.
+ @return                A nonnegative floating-point value that specifies the height (in points) of the header
+                        for section.
  */
 - (CGFloat)     tableView: (UITableView *)tableView
  heightForHeaderInSection: (NSInteger)section
@@ -842,7 +843,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
  
  @param tableView       The table-view object asking for the view object.
  @param section         An index number identifying a section of tableView .
- @return               A view object to be displayed in the header of section .
+ @return                A view object to be displayed in the header of section .
  */
 - (UIView *)    tableView: (UITableView *)tableView
    viewForHeaderInSection: (NSInteger)section
@@ -904,8 +905,8 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
  
  @param segue   The segue object containing information about the view controllers involved in the segue.
  @param sender  The object that initiated the segue. In this case, we set sender to be the Job or Education
- object represented by the selected tableViewCell.
- based on which control (or other object) initiated the segue.
+                object represented by the selected tableViewCell based on which control (or other object) 
+                initiated the segue.
  */
 - (void)prepareForSegue: (UIStoryboardSegue *)segue
                  sender: (id)sender
@@ -973,7 +974,8 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     if (![self.jobsFetchedResultsController performFetch:&error])
     {
         /*
-         This is a case where something serious has gone wrong. Let the user know and try to give them some options that might actually help.
+         This is a case where something serious has gone wrong. Let the user know and try to give them some 
+         options that might actually help.
          I'm providing my direct contact information in the hope I can help the user and avoid a bad review.
          */
         ELog(error, @"Unresolved error");
