@@ -38,11 +38,6 @@
     UIButton                *addObjectBtn;
 
     /**
-     A boolean flag to indicate whether the user is editing information or simply viewing.
-     */
-    BOOL                    isEditing;
-    
-    /**
      A boolean flag to indicate if any package was deleted.
      */
     BOOL                    packageDeleted;
@@ -116,8 +111,8 @@
     // Set up the defaults in the Navigation Bar
     [self configureDefaultNavBar];
 
-    // Set editing off
-    isEditing = NO;
+    // Turn off editing in the UI
+    [self configureUIForEditing: NO];
 }
 
 //----------------------------------------------------------------------------------------------------------
@@ -238,7 +233,7 @@
     
     // Set up the nav bar.
     /*
-     The editButtonItem is part of the UITableView "built-ins". It toggles state from Edit to Done - provided
+     The editButtonItem is part of the UIViewController "built-ins". It toggles state from Edit to Done - provided
      you implement the setEditing:animated method and call super.
      */
     self.navigationItem.rightBarButtonItem  = self.editButtonItem;
@@ -392,9 +387,6 @@
     [super setEditing: editing
              animated: animated];
     
-    // Configure the UI to represent the editing state we are entering
-    [self configureUIForEditing: editing];
-    
     if (editing)
     {
         // Start an undo group...it will either be commited here when the User presses Done, or
@@ -427,6 +419,9 @@
             packageDeleted = NO;
         }
     }
+    
+    // Configure the UI to represent the editing state we are entering
+    [self configureUIForEditing: editing];
 }
 
 
@@ -484,17 +479,14 @@
  
  @param isEditingMode   YES if we are going into edit mode, NO otherwise.
  */
-- (void)configureUIForEditing: (BOOL)isEditingMode
+- (void)configureUIForEditing: (BOOL)editing
 {
     DLog();
     
-    // Update editing flag
-    isEditing = isEditingMode;
-    
     // Set the add button hidden state to the opposite of editable
-    [addObjectBtn setHidden: !isEditingMode];
+    [addObjectBtn setHidden: !editing];
     
-    if (isEditingMode)
+    if (editing)
     {
         // Set up the navigation items and cancel buttons - the Edit button
         //  state is managed by the table view
@@ -521,7 +513,7 @@
     DLog(@"sender = %@", @([(UIButton *)sender tag]));
     
     // Check to see if we're in editMode
-    if (isEditing)
+    if (self.isEditing)
     {
         // If we are in edit mode, ignore the tap
         /*
@@ -552,7 +544,7 @@
     DLog(@"sender = %@", @([(UIButton *)sender tag]));
     
     // Check to see if we're in editMode
-    if (isEditing)
+    if (self.isEditing)
     {
         // If we are in edit mode, ignore the tap
     }
@@ -899,7 +891,7 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
     addObjectBtn                    = headerCell.addButton;
 
     // Hide or show the addButton depending on whether we are in editing mode
-    [addObjectBtn setHidden: !isEditing];
+    [addObjectBtn setHidden: !self.editing];
     
     return wrapperView;
 }
@@ -1037,7 +1029,8 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
     }
     else
     {
-        OCRBaseDetailViewController <SubstitutableDetailViewController> *detailViewController = (OCRBaseDetailViewController<SubstitutableDetailViewController>*)[(svc.viewControllers)[1] topViewController];
+        OCRBaseDetailViewController <SubstitutableDetailViewController> *detailViewController;
+        detailViewController = (OCRBaseDetailViewController<SubstitutableDetailViewController>*)[(svc.viewControllers)[1] topViewController];
         [detailViewController invalidateRootPopoverButtonItem: _rootPopoverButtonItem];
     }
     self.packagesPopoverController  = nil;

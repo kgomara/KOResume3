@@ -33,11 +33,6 @@
     UIButton            *addObjectBtn;
 
     /**
-     A boolean flag to indicate whether the user is editing information or simply viewing.
-     */
-    BOOL                isEditing;
-
-    /**
      Convenience reference to the managed object instance we are managing.
      
      OCRBaseDetailViewController, of which this is a subclass, declares a selectedManagedObject. We make this
@@ -92,8 +87,8 @@
     // ...and the NavBar
     [self configureDefaultNavBar];
     
-    // Set editing off
-    isEditing = NO;
+    // Turn off editing in the UI
+    [self configureUIForEditing: NO];
 }
 
 
@@ -533,20 +528,17 @@
  
  @param isEditingMode   YES if we are going into edit mode, NO otherwise.
  */
-- (void)configureUIForEditing: (BOOL)isEditingMode
+- (void)configureUIForEditing: (BOOL)editing
 {
     DLog();
     
-    // Update editing flag
-    isEditing = isEditingMode;
-    
     // Set the add button hidden state (hidden should be the boolean opposite of isEditingMode)
-    [addObjectBtn setHidden: !isEditingMode];
+    [addObjectBtn setHidden: !editing];
     
     // ...enable/disable resume fields
-    [self configureFieldsForEditing: isEditingMode];
+    [self configureFieldsForEditing: editing];
     
-    if (isEditingMode)
+    if (editing)
     {
         /*
          In iOS8 Apple has bridged much of the gap between iPhone and iPad. However some differences persist.
@@ -882,7 +874,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     addObjectBtn                    = headerCell.addButton;
     
     // Hide or show the addButton depending on whether we are in editing mode
-    [addObjectBtn setHidden: !isEditing];
+    [addObjectBtn setHidden: !self.editing];
     
     return wrapperView;
 }

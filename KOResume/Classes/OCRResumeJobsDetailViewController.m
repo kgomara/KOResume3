@@ -36,11 +36,6 @@
     UIButton            *addObjectBtn;
     
     /**
-     A boolean flag to indicate whether the user is editing information or simply viewing.
-     */
-    BOOL                isEditing;
-    
-    /**
      Reference to the active UITextField
      */
     UITextField         *activeField;
@@ -151,10 +146,8 @@
     // ...and the NavBar
     [self configureDefaultNavBar];
     
-    // Set editing off
-    isEditing = NO;
-    // ...and ensure editing is initially off
-    [self configureUIForEditing:NO];
+    // Turn off editing in the UI
+    [self configureUIForEditing: NO];
 }
 
 
@@ -754,23 +747,20 @@
  
  @param isEditingMode   YES if we are going into edit mode, NO otherwise.
  */
-- (void)configureUIForEditing: (BOOL)isEditingMode
+- (void)configureUIForEditing: (BOOL)editing
 {
     DLog();
     
-    // Update editing flag
-    isEditing = isEditingMode;
-    
     // Set the add button hidden state (hidden should be the boolean opposite of isEditingMode)
-    [addObjectBtn setHidden: !isEditingMode];
+    [addObjectBtn setHidden: !editing];
     
     // ...enable/disable resume fields
-    [self configureFieldsForEditing: isEditingMode];
+    [self configureFieldsForEditing: editing];
     
     // ...enable/disable table view editing
-    [self.tableView setEditing: isEditingMode];
+    [self.tableView setEditing: editing];
     
-    if (isEditingMode)
+    if (editing)
     {
         /*
          In iOS8 Apple has bridged much of the gap between iPhone and iPad. However some differences persist.
@@ -970,19 +960,19 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
     Accomplishments *accomplishment = [self.accFetchedResultsController objectAtIndexPath: indexPath];
     
     // Determine the background color for the fields based on whether or not we are editing
-    UIColor *backgroundColor = isEditing? [self.view.tintColor colorWithAlphaComponent:0.1f] : [UIColor whiteColor];
+    UIColor *backgroundColor = self.editing? [self.view.tintColor colorWithAlphaComponent:0.1f] : [UIColor whiteColor];
     
     // ...set the name text content and dynamic text font
     cell.accomplishmentName.text            = accomplishment.name;
     cell.accomplishmentName.font            = [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline];
-    cell.accomplishmentName.enabled         = isEditing;
+    cell.accomplishmentName.enabled         = self.editing;
     cell.accomplishmentName.backgroundColor = backgroundColor;
     cell.accomplishmentName.delegate        = self;
     
     // ...the summary text content and dynamic text font
     cell.accomplishmentSummary.text             = accomplishment.summary;
     cell.accomplishmentSummary.font             = [UIFont preferredFontForTextStyle: UIFontTextStyleSubheadline];
-    cell.accomplishmentSummary.editable         = isEditing;
+    cell.accomplishmentSummary.editable         = self.editing;
     cell.accomplishmentSummary.backgroundColor  = backgroundColor;
     cell.accomplishmentSummary.delegate         = self;
     
@@ -1199,7 +1189,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     addObjectBtn                    = headerCell.addButton;
     
     // Hide or show the addButton depending on whether we are in editing mode
-    [addObjectBtn setHidden: !isEditing];
+    [addObjectBtn setHidden: !self.editing];
     
     return wrapperView;
 }
@@ -1217,8 +1207,6 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
  */
 - (void)keyboardWillShow: (NSNotification*)aNotification
 {
-    DLog();
-    
     DLog();
     
     // Get the size of the keyboard
@@ -1610,8 +1598,19 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     DLog(@"sender=%@", [sender class]);
     
     // Tell the datePickerController to dismiss
-    [self.datePickerController.navigationController dismissViewControllerAnimated: YES
-                                                                       completion: nil];
+    if (self.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+    {
+        /*
+         In iOS8 Apple has bridged much of the gap between iPhone and iPad. However some differences persist.
+         */
+        [self.tabBarController.navigationController dismissViewControllerAnimated: YES
+                                                                       completion:nil];
+    }
+    else
+    {
+        [self.datePickerController.navigationController dismissViewControllerAnimated: YES
+                                                                           completion: nil];
+    }
 }
 
 

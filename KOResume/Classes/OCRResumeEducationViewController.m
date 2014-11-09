@@ -33,11 +33,6 @@
     UIButton            *addObjectBtn;
     
     /**
-     A boolean flag to indicate whether the user is editing information or simply viewing.
-     */
-    BOOL                isEditing;
-    
-    /**
      Reference to the active UITextField
      */
     UITextField         *activeField;
@@ -121,9 +116,7 @@
     // ...and the NavBar
     [self configureDefaultNavBar];
     
-    // Set editing off
-    isEditing = NO;
-    // ...and ensure editing is initially off
+    // Turn off editing in the UI
     [self configureUIForEditing:NO];
 }
 
@@ -554,20 +547,17 @@
  
  @param isEditingMode   YES if we are going into edit mode, NO otherwise.
  */
-- (void)configureUIForEditing: (BOOL)isEditingMode
+- (void)configureUIForEditing: (BOOL)editing
 {
     DLog();
     
-    // Update editing flag
-    isEditing = isEditingMode;
-    
     // Set the add button hidden state (hidden should be the boolean opposite of isEditingMode)
-    [addObjectBtn setHidden: !isEditingMode];
+    [addObjectBtn setHidden: !editing];
     
     // ...enable/disable resume fields
-    [self configureFieldsForEditing: isEditingMode];
+    [self configureFieldsForEditing: editing];
     
-    if (isEditingMode)
+    if (editing)
     {
         /*
          In iOS8 Apple has bridged much of the gap between iPhone and iPad. However some differences persist.
@@ -690,12 +680,12 @@ canEditRowAtIndexPath: (NSIndexPath *)indexPath
     Education *education = [self.eduFetchedResultsController objectAtIndexPath: indexPath];
     
     // Determine the background color for the fields based on whether or not we are editing
-    UIColor *backgroundColor = isEditing? [self.view.tintColor colorWithAlphaComponent:0.1f] : [UIColor whiteColor];
+    UIColor *backgroundColor = self.editing? [self.view.tintColor colorWithAlphaComponent:0.1f] : [UIColor whiteColor];
     
     // Set the title text content, dynamic font, enable state, and backgroundColor
     cell.title.text                 = [education title];
     cell.title.font                 = [UIFont preferredFontForTextStyle: UIFontTextStyleSubheadline];
-    cell.title.enabled              = isEditing;
+    cell.title.enabled              = self.editing;
     cell.title.backgroundColor      = backgroundColor;
     cell.title.delegate             = self;
     
@@ -942,7 +932,7 @@ moveRowAtIndexPath: (NSIndexPath *)fromIndexPath
     addObjectBtn                    = headerCell.addButton;
     
     // Hide or show the addButton depending on whether we are in editing mode
-    [addObjectBtn setHidden: !isEditing];
+    [addObjectBtn setHidden: !self.editing];
     
     return wrapperView;
 }

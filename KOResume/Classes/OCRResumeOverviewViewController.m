@@ -22,11 +22,6 @@
      */
     UIBarButtonItem     *cancelBtn;
     
-//    /**
-//     A boolean flag to indicate whether the user is editing information or simply viewing.
-//     */
-//    BOOL                isEditing;
-//
     /**
      Reference to the date formatter object.
      */
@@ -124,9 +119,7 @@
     // ...and the NavBar
     [self configureDefaultNavBar];
     
-    // Set editing off
-//    self.editing = NO;
-    // ...and ensure editing is initially off
+    // Turn off editing in the UI
     [self configureUIForEditing:NO];
 }
 
@@ -628,17 +621,14 @@
  
  @param isEditingMode   YES if we are going into edit mode, NO otherwise.
  */
-- (void)configureUIForEditing: (BOOL)isEditingMode
+- (void)configureUIForEditing: (BOOL)editing
 {
-    DLog(@"isEditingMode=%@, self.editing=%@", isEditingMode? @"YES" : @"NO", self.editing? @"YES" : @"NO");
+    DLog(@"editing=%@, self.editing=%@", editing? @"YES" : @"NO", self.editing? @"YES" : @"NO");
     
-//    // Update editing flag
-//    isEditing = isEditingMode;
-//    
-    // ...enable/disable resume fields
-    [self configureFieldsForEditing: isEditingMode];
+    // Enable/disable resume fields
+    [self configureFieldsForEditing: editing];
     
-    if (isEditingMode)
+    if (editing)
     {
         /*
          In iOS8 Apple has bridged much of the gap between iPhone and iPad. However some differences persist.
@@ -660,7 +650,7 @@
     else
     {
         // Reset the nav bar defaults
-#warning may not be necessary
+#warning may not be necessary?
         [self configureDefaultNavBar];
     }
 }

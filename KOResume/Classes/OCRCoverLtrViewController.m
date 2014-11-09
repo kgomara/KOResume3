@@ -18,11 +18,6 @@
      Reference to the cancel button to facilitate swapping buttons between display and edit modes
      */
     UIBarButtonItem     *cancelBtn;
-    
-    /**
-     A boolean flag to indicate whether the user is editing information or simply viewing.
-     */
-    BOOL                isEditing;
 }
 
 /**
@@ -64,10 +59,8 @@
     // Set up the navigation bar items
     [self configureDefaultNavBar];
     
-    // Set editing off
-    isEditing = NO;
-    // ...and ensure editing is initially off
-    [self configureUIForEditing:NO];
+    // Turn off editing in the UI
+    [self configureUIForEditing: NO];
 }
 
 
@@ -431,17 +424,14 @@
  
  @param isEditingMode   YES if we are going into edit mode, NO otherwise.
  */
-- (void)configureUIForEditing: (BOOL)isEditingMode
+- (void)configureUIForEditing: (BOOL)editing
 {
     DLog();
     
-    // Update editing flag
-    isEditing = isEditingMode;
-    
     // ...enable/disable resume fields
-    [self configureFieldsForEditing: isEditingMode];
+    [self configureFieldsForEditing: editing];
     
-    if (isEditingMode)
+    if (editing)
     {
         // Set up the navigation items and save/cancel buttons
         self.navigationItem.rightBarButtonItems = @[self.editButtonItem, cancelBtn];
