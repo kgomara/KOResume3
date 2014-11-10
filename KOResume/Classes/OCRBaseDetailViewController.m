@@ -158,6 +158,7 @@
     [super didReceiveMemoryWarning];
 }
 
+
 //----------------------------------------------------------------------------------------------------------
 /**
  Configure the view.
@@ -167,11 +168,12 @@
 - (void)configureView
 {
     /*
-     Subclasses must override this method, throw and exception if this base method is called.
+     Subclasses must override this method, throw an exception if this base method is called.
      */
     [NSException raise: @"Required method not implemented"
                 format: @"configureView is required"];
 }
+
 
 #pragma mark - SubstitutableDetailViewController protocols
 

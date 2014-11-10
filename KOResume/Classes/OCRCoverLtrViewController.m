@@ -236,7 +236,9 @@
 {
     DLog();
     
-    // Set the buttons.
+    // Set the title in the navigation bar.
+    self.navigationItem.title = NSLocalizedString(@"Cover Letter", nil);
+    // ...and edit button
     self.navigationItem.rightBarButtonItems = @[self.editButtonItem];
 }
 
@@ -259,9 +261,6 @@
      selected object changes.
      */
 
-    // Set the title in the navigation bar.
-    self.navigationItem.title = NSLocalizedString(@"Cover Letter", nil);
-    
     // ...and load the data fields with updated data from the selected object.
     [self loadViewFromSelectedObject];
 }
@@ -332,6 +331,8 @@
         // Start an undo group...it will either be commited here when the User presses Done, or
         //    undone in didPressCancelButton
         [[[kAppDelegate managedObjectContext] undoManager] beginUndoGrouping];
+        
+        [self addCancelBtn: cancelBtn];
     }
     else
     {
@@ -350,8 +351,8 @@
         // Reload the fetched results
         [self reloadFetchedResults: nil];
         
-        // Set up the default navBar
-        [self configureDefaultNavBar];
+        // Remove the cancel button from the nav bar
+        [self removeCancelBtn: cancelBtn];
     }
     
     // Configure the UI to represent the editing state we are entering
@@ -411,8 +412,8 @@
     
     // Turn off editing in the UI
     [self configureUIForEditing: NO];
-    // ...and set up the default navBar
-    [self configureDefaultNavBar];
+    // Remove the cancel button from the nav bar
+    [self removeCancelBtn: cancelBtn];
 }
 
 
@@ -433,26 +434,77 @@
     
     if (editing)
     {
-        // Set up the navigation items and save/cancel buttons
-        self.navigationItem.rightBarButtonItems = @[self.editButtonItem, cancelBtn];
-        
-        // Check to see if the noSelectedView is present
-        if (self.noSelectionView)
-        {
-            // It is, get rid of it to expose the editable cover letter
-            [self.noSelectionView removeFromParentViewController];
-            self.noSelectionView = nil;
-        }
-        
-        // ...and bring the keyboard onscreen with the cursor in coverLtrFld
-        [_coverLtrFld becomeFirstResponder];
+        // Add the cancel button to the nav bar
+        [self addCancelBtn: cancelBtn];
     }
     else
     {
-        // Reset the nav bar defaults
-        [self configureDefaultNavBar];
+        // Remove the cancel button from the nav bar
+        [self removeCancelBtn: cancelBtn];
     }
 }
+
+- (void)addCancelBtn: (UIBarButtonItem *)cancelButtonItem
+{
+    DLog();
+    
+    /*
+     In iOS8 Apple has bridged much of the gap between iPhone and iPad. However some differences persist.
+     Our view controller is embedded in a UITabBarController. On the iPhone, the tabBar owns the navigation bar,
+     whereas the on iPad, the our view controller owns the navigation bar.
+     */
+    if (self.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+    {
+        // Make a mutably copy of the rightBarButtonItems
+        NSMutableArray *rightBarButtonItems = [self.tabBarController.navigationItem.rightBarButtonItems mutableCopy];
+        // If the cancel button is not in the rightBarButtonItems,
+        if ( ![rightBarButtonItems containsObject: cancelButtonItem])
+        {
+            // ...add the cancel button to the array copy
+            [rightBarButtonItems addObject: cancelBtn];
+            // ...and set it in the navigation bar
+            [self.tabBarController.navigationItem setRightBarButtonItems: rightBarButtonItems];
+        }
+    }
+    else
+    {
+        // Same as above, except the navigation bar is owned by this view controller, not the tabBarController
+        NSMutableArray *rightBarButtonItems = [self.navigationItem.rightBarButtonItems mutableCopy];
+        if ( ![rightBarButtonItems containsObject: cancelButtonItem])
+        {
+            [rightBarButtonItems addObject: cancelBtn];
+            [self.navigationItem setRightBarButtonItems: rightBarButtonItems];
+        }
+    }
+}
+
+- (void)removeCancelBtn:  (UIBarButtonItem *)cancelButtonItem
+{
+    DLog();
+    
+    /*
+     In iOS8 Apple has bridged much of the gap between iPhone and iPad. However some differences persist.
+     Our view controller is embedded in a UITabBarController. On the iPhone, the tabBar owns the navigation bar,
+     whereas the on iPad, the our view controller owns the navigation bar.
+     */
+    if (self.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+    {
+        // Make a mutably copy of the rightBarButtonItems
+        NSMutableArray *rightBarButtonItems = [self.tabBarController.navigationItem.rightBarButtonItems mutableCopy];
+        // Remove the cancel button from the array copy
+        [rightBarButtonItems removeObject: cancelButtonItem];
+        // ...and set it in the navigation bar
+        [self.tabBarController.navigationItem setRightBarButtonItems: rightBarButtonItems];
+    }
+    else
+    {
+        // Same as above, except the navigation bar is owned by this view controller, not the tabBarController
+        NSMutableArray *rightBarButtonItems = [self.navigationItem.rightBarButtonItems mutableCopy];
+        [rightBarButtonItems removeObject: cancelButtonItem];
+        [self.navigationItem setRightBarButtonItems: rightBarButtonItems];
+    }
+}
+
 
 #pragma mark - Keyboard handlers
 

@@ -100,4 +100,6 @@
  */
 @property (weak, nonatomic) IBOutlet UIView                 *contentView;
 
+- (NSString *)navigationBarTitle;
+
 @end

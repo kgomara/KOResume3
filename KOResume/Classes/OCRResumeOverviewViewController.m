@@ -23,11 +23,6 @@
     UIBarButtonItem     *cancelBtn;
     
     /**
-     Reference to the date formatter object.
-     */
-    NSDateFormatter     *dateFormatter;
-    
-    /**
      Reference to the active UITextField
      */
     UITextField         *activeField;
@@ -39,6 +34,11 @@
      type-correct reference merely for convenience.
      */
     Resumes             *selectedResume;
+    
+    /**
+     Reference to the date formatter object.
+     */
+    NSDateFormatter     *dateFormatter;
 }
 
 /**
@@ -120,7 +120,19 @@
     [self configureDefaultNavBar];
     
     // Turn off editing in the UI
-    [self configureUIForEditing:NO];
+    [self configureUIForEditing: NO];
+}
+
+
+//----------------------------------------------------------------------------------------------------------
+/**
+ Returns the title to use in the UInavigationBar.
+ 
+ @return navigationBarTitle     The view's title.
+ */
+- (NSString *)navigationBarTitle
+{
+    return NSLocalizedString(@"Resume", nil);
 }
 
 
@@ -390,8 +402,6 @@
 {
     DLog();
     
-    NSString *title = NSLocalizedString(@"Resume", nil);
-    
     /*
      In iOS8 Apple has bridged much of the gap between iPhone and iPad. However some differences persist.
      */
@@ -402,13 +412,13 @@
          the title and buttons we must reference the navigation items in our tabBarController.
          */
         // Set the title
-        self.tabBarController.navigationItem.title = title;
+        self.tabBarController.navigationItem.title = [self navigationBarTitle];
         // ...and edit button
         self.tabBarController.navigationItem.rightBarButtonItems = @[self.editButtonItem];
     }
     else
     {
-        self.navigationItem.title = title;
+        self.navigationItem.title               = [self navigationBarTitle];
         self.navigationItem.rightBarButtonItems = @[self.editButtonItem];
     }
 }
@@ -521,6 +531,8 @@
         // Start an undo group...it will either be commited here when the User presses Done, or
         //    undone in didPressCancelButton
         [[[kAppDelegate managedObjectContext] undoManager] beginUndoGrouping];
+        // ...and add a cancel button to the nav bar
+        [self addCancelBtn: cancelBtn];
     }
     else
     {
@@ -539,8 +551,8 @@
         // Reload the fetched results
         [self reloadFetchedResults: nil];
         
-        // Set up the default navBar
-        [self configureDefaultNavBar];
+        // Remove the cancel button from the nav bar
+        [self removeCancelBtn: cancelBtn];
     }
     
     // Configure the UI to represent the editing state we are entering
@@ -606,10 +618,10 @@
     [super setEditing: NO
              animated: YES];
     
-    // ...turn off editing in the UI
+    // Turn off editing in the UI
     [self configureUIForEditing: NO];
-    // ...and set up the default navBar
-    [self configureDefaultNavBar];
+    // ...and remove the cancel button from the nav bar
+    [self removeCancelBtn: cancelBtn];
 }
 
 
@@ -619,7 +631,7 @@
  
  Called when the user presses the Edit, Save, or Cancel buttons.
  
- @param isEditingMode   YES if we are going into edit mode, NO otherwise.
+ @param editing     YES if we are going into edit mode, NO otherwise.
  */
 - (void)configureUIForEditing: (BOOL)editing
 {
@@ -630,28 +642,74 @@
     
     if (editing)
     {
-        /*
-         In iOS8 Apple has bridged much of the gap between iPhone and iPad. However some differences persist.
-         */
-        if (self.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+        // Add the cancel button to the nav bar
+        [self addCancelBtn: cancelBtn];
+    }
+    else
+    {
+        // Remove the cancel button from the nav bar
+        [self removeCancelBtn: cancelBtn];
+    }
+}
+
+- (void)addCancelBtn: (UIBarButtonItem *)cancelButtonItem
+{
+    DLog();
+    
+    /*
+     In iOS8 Apple has bridged much of the gap between iPhone and iPad. However some differences persist.
+     Our view controller is embedded in a UITabBarController. On the iPhone, the tabBar owns the navigation bar,
+     whereas the on iPad, the our view controller owns the navigation bar.
+     */
+    if (self.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+    {
+        // Make a mutably copy of the rightBarButtonItems
+        NSMutableArray *rightBarButtonItems = [self.tabBarController.navigationItem.rightBarButtonItems mutableCopy];
+        // If the cancel button is not in the rightBarButtonItems,
+        if ( ![rightBarButtonItems containsObject: cancelButtonItem])
         {
-            /*
-             Our view controller is embedded in a UITabBarController that owns the navigation bar. So to update
-             the title and buttons we must reference the navigation items in our tabBarController.
-             */
-            // Set the edit button
-            self.tabBarController.navigationItem.rightBarButtonItems = @[self.editButtonItem, cancelBtn];
-        }
-        else
-        {
-            self.navigationItem.rightBarButtonItems = @[self.editButtonItem, cancelBtn];
+            // ...add the cancel button to the array copy
+            [rightBarButtonItems addObject: cancelBtn];
+            // ...and set it in the navigation bar
+            [self.tabBarController.navigationItem setRightBarButtonItems: rightBarButtonItems];
         }
     }
     else
     {
-        // Reset the nav bar defaults
-#warning may not be necessary?
-        [self configureDefaultNavBar];
+        // Same as above, except the navigation bar is owned by this view controller, not the tabBarController
+        NSMutableArray *rightBarButtonItems = [self.navigationItem.rightBarButtonItems mutableCopy];
+        if ( ![rightBarButtonItems containsObject: cancelButtonItem])
+        {
+            [rightBarButtonItems addObject: cancelBtn];
+            [self.navigationItem setRightBarButtonItems: rightBarButtonItems];
+        }
+    }
+}
+
+- (void)removeCancelBtn:  (UIBarButtonItem *)cancelButtonItem
+{
+    DLog();
+    
+    /*
+     In iOS8 Apple has bridged much of the gap between iPhone and iPad. However some differences persist.
+     Our view controller is embedded in a UITabBarController. On the iPhone, the tabBar owns the navigation bar,
+     whereas the on iPad, the our view controller owns the navigation bar.
+     */
+    if (self.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+    {
+        // Make a mutably copy of the rightBarButtonItems
+        NSMutableArray *rightBarButtonItems = [self.tabBarController.navigationItem.rightBarButtonItems mutableCopy];
+        // Remove the cancel button from the array copy
+        [rightBarButtonItems removeObject: cancelButtonItem];
+        // ...and set it in the navigation bar
+        [self.tabBarController.navigationItem setRightBarButtonItems: rightBarButtonItems];
+    }
+    else
+    {
+        // Same as above, except the navigation bar is owned by this view controller, not the tabBarController
+        NSMutableArray *rightBarButtonItems = [self.navigationItem.rightBarButtonItems mutableCopy];
+        [rightBarButtonItems removeObject: cancelButtonItem];
+        [self.navigationItem setRightBarButtonItems: rightBarButtonItems];
     }
 }
 
